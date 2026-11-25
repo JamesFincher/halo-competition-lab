@@ -1,0 +1,63 @@
+# Halo SFT — Tiny CPU Smoke-Test & Policy-Compliance LoRA (SmolLM2-135M-Instruct)
+# Launch (CPU Linux venv):
+#   halo launch sft configs/smollm2-135m-policy-lora-cpu.yaml
+# On an NVIDIA GPU inside Halo Docker, set bf16: true and remove use_cpu: true.
+
+# --- Model ---
+model_name_or_path: HuggingFaceTB/SmolLM2-135M-Instruct
+attn_implementation: sdpa
+use_liger_kernel: false
+
+# --- Dataset ---
+dataset:
+- /home/ubuntu/halo-competition-lab/data/policy_train.jsonl
+conversation_field: messages
+assistant_message_template: "<|im_start|>assistant\n"
+test_size: 0.1
+
+# --- LoRA ---
+use_peft: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_modules:
+- q_proj
+- k_proj
+- v_proj
+- o_proj
+- gate_proj
+- up_proj
+- down_proj
+
+# --- Training ---
+use_cpu: true
+bf16: false
+fp16: false
+per_device_train_batch_size: 4
+per_device_eval_batch_size: 4
+gradient_accumulation_steps: 2
+num_train_epochs: 2.0
+learning_rate: 5.0e-04
+lr_scheduler_type: cosine
+warmup_steps: 5
+gradient_checkpointing: false
+seed: 42
+
+# --- Sequence Length & Packing ---
+max_length: 384
+packing: false
+
+# --- Output ---
+output_dir: /home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora
+eval_strategy: epoch
+save_strategy: epoch
+save_total_limit: 1
+save_only_model: true
+
+# --- Logging ---
+logging_steps: 5
+logging_first_step: true
+report_to: none
+
+# --- Data ---
+dataloader_num_workers: 0

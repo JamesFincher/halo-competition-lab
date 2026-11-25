@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+checkpoints/
+*.safetensors
+*.bin
+*.pt
+.DS_Store

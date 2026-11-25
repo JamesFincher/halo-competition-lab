@@ -1,0 +1,81 @@
+# Competition Track: White Circle Policy / Best Gemma Post-Train
+# Model: google/gemma-4-26B-A4B-it (MoE, 26B total / 4B active)
+# Hardware: 3x B200/B300 or H100/H200 (GPU 0 = vLLM rollout server, GPUs 1-2 = Halo trainer EP=2)
+#
+# 1. Start vLLM rollout server on GPU 0 (disjoint from trainer GPUs):
+#    CUDA_VISIBLE_DEVICES=0 docker compose -f docker-compose.vllm.yml up -d
+#    (serve google/gemma-4-26B-A4B-it with --moe-backend triton)
+# 2. Launch Halo Online GRPO inside halo:blackwell-1.3.0rc1 (or halo:hopper-1.3.0rc1):
+#    WHITECIRCLE_API_KEY=wc-... CUDA_VISIBLE_DEVICES=1,2 \
+#      halo launch grpo/online configs/gemma4-26b-a4b-policy-grpo-whitecircle.yaml -n 2
+
+# --- Model ---
+model_name_or_path: google/gemma-4-26B-A4B-it
+attn_implementation: sdpa
+moe_balancing: none
+
+# --- Parallelism ---
+expert_parallel_size: 2
+
+# --- Dataset ---
+dataset: data/policy_train.jsonl
+test_size: 0.05
+
+# --- White Circle Policy Rewards ---
+# Create policies via `halo run create-whitecircle-policies` and paste your IDs below.
+rewards:
+  - source: whitecircle
+    name: secret_exfil_and_destructive
+    environment_id: ${WHITECIRCLE_ENV_ID}
+    policies: [secret_exfil_policy, destructive_op_policy]
+    weight: 1.0
+    max_concurrency: 16
+  - source: whitecircle
+    name: prompt_injection_resistance
+    environment_id: ${WHITECIRCLE_ENV_ID}
+    policies: [prompt_injection_policy]
+    weight: 1.0
+    max_concurrency: 16
+  - source: whitecircle
+    name: schema_and_non_refusal_quality
+    environment_id: ${WHITECIRCLE_ENV_ID}
+    policies: [json_schema_policy, benign_helpfulness_policy]
+    weight: 0.5
+    max_concurrency: 16
+
+# --- GRPO ---
+beta: 0.04
+num_iterations: 1
+epsilon: 0.2
+scale_rewards: group
+num_generations: 8
+temperature: 1.0
+loss_type: grpo
+
+# --- Training ---
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 4
+max_steps: 200
+gradient_checkpointing_kwargs:
+  use_reentrant: true
+learning_rate: 1.0e-06
+lr_scheduler_type: constant
+
+# --- Lengths ---
+max_prompt_length: 1024
+max_completion_length: 1024
+
+# --- Rollout Server (disjoint GPU) ---
+use_vllm: true
+vllm_mode: server
+vllm_server_host: 127.0.0.1
+
+# --- Output & Logging ---
+output_dir: /data/checkpoints/grpo-gemma4-26b-a4b-policy-whitecircle
+save_strategy: steps
+save_steps: 50
+save_total_limit: 2
+logging_steps: 1
+logging_first_step: true
+report_to: wandb
+log_completions: true
