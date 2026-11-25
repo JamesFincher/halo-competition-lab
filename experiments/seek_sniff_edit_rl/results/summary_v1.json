@@ -1,0 +1,92 @@
+{
+  "fork": "v1",
+  "ortho_gamma": 0.0,
+  "sniff0_live_false_refusals": 7,
+  "sniff0_top5_layers": [
+    {
+      "layer": 29,
+      "afflicted_l2": 172.0105,
+      "false_l2": 172.0105,
+      "safety_cos": 0.5612,
+      "purity": 1.0
+    },
+    {
+      "layer": 28,
+      "afflicted_l2": 121.7099,
+      "false_l2": 121.7099,
+      "safety_cos": 0.6107,
+      "purity": 1.0
+    },
+    {
+      "layer": 27,
+      "afflicted_l2": 113.7763,
+      "false_l2": 113.7763,
+      "safety_cos": 0.6262,
+      "purity": 1.0
+    },
+    {
+      "layer": 26,
+      "afflicted_l2": 95.5646,
+      "false_l2": 95.5646,
+      "safety_cos": 0.6373,
+      "purity": 1.0
+    },
+    {
+      "layer": 25,
+      "afflicted_l2": 86.5173,
+      "false_l2": 86.5173,
+      "safety_cos": 0.6046,
+      "purity": 1.0
+    }
+  ],
+  "top2_afflicted_layers": [
+    29,
+    28
+  ],
+  "comp6_disjoint_layers": [
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ],
+  "forks": {
+    "v1_offset_sniff_edit_only": {
+      "wall_sec": 124.9,
+      "round1": {
+        "accepted": true,
+        "strength": 0.85,
+        "dev_reward_before": 0.68,
+        "dev_reward_after": 0.86,
+        "dev_exact_before": 60.0,
+        "dev_exact_after": 30.0,
+        "edit_layers": [
+          29,
+          28
+        ],
+        "edited_weights": 73728,
+        "edited_fraction_pct": 0.05481
+      },
+      "round2_live_fails": 0,
+      "round2": {
+        "accepted": false,
+        "base_dev_reward": 0.86,
+        "edit_layers": [
+          27,
+          26
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.89,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 92.5,
+        "policy_accuracy": 80.0,
+        "unsafe_refusal_rate": 90.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 67.5
+      }
+    }
+  }
+}

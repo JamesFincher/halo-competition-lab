@@ -1,0 +1,6 @@
+{"arm": "v2_single_pass_sniff_edit_rl", "step": 1, "mean_reward": 0.425, "active_groups": 1, "kl_from_ref": 0.0, "loss": -0.08222, "grad_norm": 0.09168, "step_wall_sec": 31.04}
+{"arm": "v2_single_pass_sniff_edit_rl", "step": 2, "mean_reward": 0.725, "active_groups": 2, "kl_from_ref": 0.00048, "loss": -0.10833, "grad_norm": 0.1032, "step_wall_sec": 39.58}
+{"arm": "v2_single_pass_sniff_edit_rl", "step": 3, "mean_reward": 0.85, "active_groups": 1, "kl_from_ref": 0.00097, "loss": 0.00352, "grad_norm": 0.07445, "step_wall_sec": 35.4}
+{"arm": "v2_single_pass_sniff_edit_rl", "step": 4, "mean_reward": 0.625, "active_groups": 2, "kl_from_ref": 0.00092, "loss": -0.03453, "grad_norm": 0.09868, "step_wall_sec": 32.46}
+{"arm": "v2_single_pass_sniff_edit_rl", "step": 5, "mean_reward": 0.675, "active_groups": 1, "kl_from_ref": 0.00243, "loss": -0.0276, "grad_norm": 0.07215, "step_wall_sec": 26.41}
+{"arm": "v2_single_pass_sniff_edit_rl", "step": 6, "mean_reward": 0.65, "active_groups": 2, "kl_from_ref": 0.00076, "loss": -0.02906, "grad_norm": 0.08999, "step_wall_sec": 32.66}

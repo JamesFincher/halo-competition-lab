@@ -1,0 +1,6 @@
+{"arm": "v3_loop_round1_rl", "step": 1, "mean_reward": 0.625, "active_groups": 2, "kl_from_ref": 0.0, "loss": 0.01455, "grad_norm": 0.11866, "step_wall_sec": 32.35}
+{"arm": "v3_loop_round1_rl", "step": 2, "mean_reward": 0.75, "active_groups": 2, "kl_from_ref": 0.0013, "loss": -0.0369, "grad_norm": 0.07979, "step_wall_sec": 29.48}
+{"arm": "v3_loop_round1_rl", "step": 3, "mean_reward": 0.75, "active_groups": 1, "kl_from_ref": 0.00193, "loss": -0.02934, "grad_norm": 0.05779, "step_wall_sec": 16.39}
+{"arm": "v3_loop_round2_rl", "step": 1, "mean_reward": 0.75, "active_groups": 1, "kl_from_ref": 0.0, "loss": 0.04558, "grad_norm": 0.07583, "step_wall_sec": 16.66}
+{"arm": "v3_loop_round2_rl", "step": 2, "mean_reward": 0.6, "active_groups": 2, "kl_from_ref": 0.00099, "loss": -0.02628, "grad_norm": 0.11745, "step_wall_sec": 17.54}
+{"arm": "v3_loop_round2_rl", "step": 3, "mean_reward": 0.7, "active_groups": 2, "kl_from_ref": 0.00157, "loss": -0.09348, "grad_norm": 0.09996, "step_wall_sec": 16.93}

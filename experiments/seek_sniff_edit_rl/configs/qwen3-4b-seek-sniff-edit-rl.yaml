@@ -1,0 +1,30 @@
+# Experiment 11: Seek -> Offset-Sniff -> Surgical Edit -> Disjoint Halo GRPO (Qwen3-4B)
+# Point model_name_or_path at the gate-verified Stage-1 offset-sniff edited checkpoint so
+# Halo's KL reference is automatically anchored to the edited model (verified Arm 3b rule).
+model_name_or_path: outputs/seek_sniff_edit/round1_edited_checkpoint
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/seek_sniff_edit/qwen3_4b_round1_disjoint_grpo
+
+use_peft: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.0
+# Disjoint complementary localized layers (excludes the 2 surgically edited output layers)
+lora_target_modules: ".*\\.layers\\.(0|1|12|18|22|26|30|32)\\.(self_attn\\.(q|k|v|o)_proj|mlp\\.(gate|up|down)_proj)$"
+
+vllm_mode: server
+rollout_adapter_sync: false
+num_generations: 8
+max_prompt_length: 1024
+max_completion_length: 1024
+beta: 0.02
+# 4x gentler Stage-2 LR after surgical edit (verified Arm 3b rule)
+learning_rate: 1.5e-6
+weight_decay: 0.0
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+max_steps: 100
+bf16: true
+seed: 42
+report_to: wandb
+run_name: exp11-seek-sniff-edit-disjoint-grpo

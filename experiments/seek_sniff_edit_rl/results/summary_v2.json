@@ -1,0 +1,99 @@
+{
+  "fork": "v2",
+  "ortho_gamma": 0.0,
+  "sniff0_live_false_refusals": 7,
+  "sniff0_top5_layers": [
+    {
+      "layer": 29,
+      "afflicted_l2": 184.5013,
+      "false_l2": 184.5013,
+      "safety_cos": 0.8148,
+      "purity": 1.0
+    },
+    {
+      "layer": 28,
+      "afflicted_l2": 138.3804,
+      "false_l2": 138.3804,
+      "safety_cos": 0.8396,
+      "purity": 1.0
+    },
+    {
+      "layer": 27,
+      "afflicted_l2": 129.0643,
+      "false_l2": 129.0643,
+      "safety_cos": 0.8431,
+      "purity": 1.0
+    },
+    {
+      "layer": 26,
+      "afflicted_l2": 107.6441,
+      "false_l2": 107.6441,
+      "safety_cos": 0.8426,
+      "purity": 1.0
+    },
+    {
+      "layer": 25,
+      "afflicted_l2": 98.5333,
+      "false_l2": 98.5333,
+      "safety_cos": 0.8332,
+      "purity": 1.0
+    }
+  ],
+  "top2_afflicted_layers": [
+    29,
+    28
+  ],
+  "comp6_disjoint_layers": [
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ],
+  "forks": {
+    "v2_single_pass_sniff_edit_rl": {
+      "wall_sec": 353.1,
+      "round1_edit": {
+        "accepted": false,
+        "base_dev_reward": 0.68,
+        "edit_layers": [
+          29,
+          28
+        ]
+      },
+      "rl_stats": {
+        "trainable_params": 976896,
+        "trainable_pct": 0.721,
+        "total_wall_sec": 197.5,
+        "mean_step_sec": 32.92,
+        "reward_curve": [
+          0.425,
+          0.725,
+          0.85,
+          0.625,
+          0.675,
+          0.65
+        ],
+        "kl_curve": [
+          0.0,
+          0.00048,
+          0.00097,
+          0.00092,
+          0.00243,
+          0.00076
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    }
+  }
+}
