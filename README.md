@@ -64,17 +64,20 @@ Combines **Stage-1 zero-gradient / surgical weight-space pre-edits** (emulating 
 | **V6** | `arm6_iterative_selfwrite_rl.yaml` | `2611.29513` (*SELFWRITE*) | Multi-round gate-verified weight edits → Targeted Halo GRPO |
 | **V7** | `arm7_random_control_grpo.yaml` | `2602.01599` (*Multiple Ticket Hypothesis*) | Mandatory matched-budget random-layer control |
 
-### All 7 Experiment Folders & Research Docs (`experiments/`)
+### All 10 Experiment Folders & Research Docs (`experiments/`)
 
 | # | Folder & Docs | Focus | Key 2026 Papers | Priority |
 |---|---|---|---|---:|
 | **1** | [`experiments/edit_then_target_rl/`](experiments/edit_then_target_rl/README.md) | **Flagship:** Manual/surgical pre-edit → Targeted Halo GRPO (V0–V7) | WSP, `2611.33133`, `2611.32064`, `2611.29513`, `2609.36262` | **8.5/10** |
-| **2** | [`experiments/fisher_sparse_rl/`](experiments/fisher_sparse_rl/README.md) | 1-Shot Diagonal Fisher + SNIP Top-K Module RL (6 B/param mem savings) | `2609.36262`, `2609.15064`, `2602.01599` | **8.0/10** |
-| **3** | [`experiments/verifiable_on_policy_distillation/`](experiments/verifiable_on_policy_distillation/README.md) | VOPD + Token Factory Teacher (works on Nemotron 3.5 & Mistral 4) | `2611.30325` (Stanford), `2611.32515` | **8.0/10** |
-| **4** | [`experiments/grail_orth_subspace_rl/`](experiments/grail_orth_subspace_rl/README.md) | GRAIL + GCPO Off-Principal Orthonormal LoRA Init (~$12–$25 pilot) | GRAIL (EMNLP '26), `2608.11674`, `2606.31813` | **7.5/10** |
-| **5** | [`experiments/moe_expert_subset_rl/`](experiments/moe_expert_subset_rl/README.md) | MoE Expert-Routing Localization + Soft Router-L2 + RDC (`gpt-oss-20b`) | `2610.07332`, `2610.21682`, `2609.08115` | **7.5/10** |
-| **6** | [`experiments/token_credit_saepo_rl/`](experiments/token_credit_saepo_rl/README.md) | U-Stats Jackknife Adaptive Group Size + SAEPO Token Credit Shaping | `2611.33064`, `2611.29936` | **7.5/10** |
-| **7** | [`experiments/dead_head_nullspace_rl/`](experiments/dead_head_nullspace_rl/README.md) | QO-Only Zero-Init Dead-Head Recycling & Null-Space QO-LoRA (optional gate) | `2503.02659`, `2609.25618`, `2603.09616` | **4.0/10** |
+| **2** | [`experiments/insep_abliteration_defense/`](experiments/insep_abliteration_defense/README.md) | **Security Track:** INSEP Refusal-Direction Inseparability vs Abliteration | `2611.28314` | **8.5/10** |
+| **3** | [`experiments/judge_loophole_audit/`](experiments/judge_loophole_audit/README.md) | **Pre-RL Gate:** Exposure Audit predicting LLM-Judge Reward Hacking | `2611.29651`, `2611.32037` | **8.5/10** |
+| **4** | [`experiments/fisher_sparse_rl/`](experiments/fisher_sparse_rl/README.md) | 1-Shot Diagonal Fisher + SNIP Top-K Module RL (6 B/param mem savings) | `2609.36262`, `2609.15064`, `2602.01599` | **8.0/10** |
+| **5** | [`experiments/verifiable_on_policy_distillation/`](experiments/verifiable_on_policy_distillation/README.md) | VOPD + Token Factory Teacher (works on Nemotron 3.5 & Mistral 4) | `2611.30325` (Stanford), `2611.32515` | **8.0/10** |
+| **6** | [`experiments/multi_turn_rlvb_and_budget/`](experiments/multi_turn_rlvb_and_budget/README.md) | Multi-Turn Verifiable Beliefs (RLVB) + Anti-Budget-Internalization RLVR | `2611.32884`, `2611.26172`, `2611.32013` | **8.0/10** |
+| **7** | [`experiments/grail_orth_subspace_rl/`](experiments/grail_orth_subspace_rl/README.md) | GRAIL + GCPO Off-Principal Orthonormal LoRA Init (~$12–$25 pilot) | GRAIL (EMNLP '26), `2608.11674`, `2606.31813` | **7.5/10** |
+| **8** | [`experiments/moe_expert_subset_rl/`](experiments/moe_expert_subset_rl/README.md) | MoE Expert-Routing Localization + Soft Router-L2 + RDC (`gpt-oss-20b`) | `2610.07332`, `2610.21682`, `2609.08115` | **7.5/10** |
+| **9** | [`experiments/token_credit_saepo_rl/`](experiments/token_credit_saepo_rl/README.md) | U-Stats Jackknife Adaptive Group Size + SAEPO Token Credit Shaping | `2611.33064`, `2611.29936` | **7.5/10** |
+| **10** | [`experiments/dead_head_nullspace_rl/`](experiments/dead_head_nullspace_rl/README.md) | QO-Only Zero-Init Dead-Head Recycling & Null-Space QO-LoRA (optional gate) | `2503.02659`, `2609.25618`, `2603.09616` | **4.0/10** |
 
 ---
 

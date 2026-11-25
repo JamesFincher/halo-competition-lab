@@ -1,0 +1,28 @@
+# Experiment 10: Multi-Turn RLVB (arXiv:2611.32884) + Anti-Budget-Internalization (arXiv:2611.26172)
+# Avoids fixed short rollout caps that destroy test-time scaling on Qwen / Gemma 4 / Nemotron.
+model_name_or_path: Qwen/Qwen3-4B
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/multi_turn_rlvb/qwen3_4b_grpo
+
+use_peft: true
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.0
+lora_target_modules: ".*\\.layers\\.(14|15|16|17|18|19|20|21|22)\\.(self_attn\\.(q|k|v|o)_proj|mlp\\.(gate|up|down)_proj)$"
+
+vllm_mode: server
+rollout_adapter_sync: false
+num_generations: 8
+max_prompt_length: 1024
+# Larger non-truncating rollout cap (stepped via multi-budget schedule) to preserve test-time scaling
+max_completion_length: 4096
+beta: 0.02
+learning_rate: 5.0e-6
+weight_decay: 0.0
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+max_steps: 150
+bf16: true
+seed: 42
+report_to: wandb
+run_name: exp10-multi-turn-rlvb-anti-budget-cap

@@ -1,0 +1,23 @@
+# Experiment 9: INSEP Refusal-Direction Inseparability LoRA (arXiv:2611.28314)
+# Targets peak-separability layers found by scripts/insep_separability_probe.py
+model_name_or_path: Qwen/Qwen3-4B
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/insep_defense/qwen3_4b_insep_lora
+
+use_peft: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.0
+lora_target_modules: ".*\\.layers\\.(12|14|16|18|20|22|24|26)\\.(self_attn\\.(q|k|v|o)_proj|mlp\\.(gate|up|down)_proj)$"
+
+learning_rate: 1.0e-5
+weight_decay: 0.0
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 4
+num_train_epochs: 2
+bf16: true
+seed: 42
+logging_steps: 5
+save_strategy: epoch
+report_to: wandb
+run_name: exp9-insep-abliteration-defense
