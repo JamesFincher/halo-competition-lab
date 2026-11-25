@@ -1,0 +1,6 @@
+{"arm": "arm4_projection_plus_early_disjoint_rl", "step": 1, "mean_reward": 0.45, "active_groups": 1, "kl_from_ref": 0.0, "loss": -0.01277, "grad_norm": 0.15675, "step_wall_sec": 27.01}
+{"arm": "arm4_projection_plus_early_disjoint_rl", "step": 2, "mean_reward": 0.775, "active_groups": 2, "kl_from_ref": 0.00076, "loss": -0.08057, "grad_norm": 0.16705, "step_wall_sec": 17.68}
+{"arm": "arm4_projection_plus_early_disjoint_rl", "step": 3, "mean_reward": 0.775, "active_groups": 2, "kl_from_ref": 0.00076, "loss": -0.05062, "grad_norm": 0.13501, "step_wall_sec": 24.72}
+{"arm": "arm4_projection_plus_early_disjoint_rl", "step": 4, "mean_reward": 0.6, "active_groups": 2, "kl_from_ref": 0.00365, "loss": -0.07273, "grad_norm": 0.16466, "step_wall_sec": 14.62}
+{"arm": "arm4_projection_plus_early_disjoint_rl", "step": 5, "mean_reward": 0.575, "active_groups": 2, "kl_from_ref": 0.00377, "loss": -0.0284, "grad_norm": 0.12014, "step_wall_sec": 14.51}
+{"arm": "arm4_projection_plus_early_disjoint_rl", "step": 6, "mean_reward": 0.7, "active_groups": 2, "kl_from_ref": 0.0028, "loss": -0.02714, "grad_norm": 0.15188, "step_wall_sec": 14.57}

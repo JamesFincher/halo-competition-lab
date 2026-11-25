@@ -1,0 +1,136 @@
+{
+  "top2_layers": [
+    29,
+    28
+  ],
+  "arms": {
+    "arm1_zero_mask": {
+      "meta": {
+        "accepted": false
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    },
+    "arm2_sign_flip": {
+      "meta": {
+        "accepted": false
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    },
+    "arm3_projection": {
+      "meta": {
+        "edit_layers": [
+          29,
+          28
+        ],
+        "top_nodes_per_layer": 64,
+        "edited_weights": 73728,
+        "edited_pct": 0.05481
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.815,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 80.0,
+        "policy_accuracy": 70.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 80.0,
+        "exact_compliance_rate": 67.5
+      }
+    },
+    "arm4_best_plus_early_disjoint_rl": {
+      "base_arm": "projection",
+      "rl_stats": {
+        "trainable_params": 976896,
+        "trainable_pct": 0.721,
+        "total_wall_sec": 113.1,
+        "mean_step_sec": 18.85,
+        "reward_curve": [
+          0.45,
+          0.775,
+          0.775,
+          0.6,
+          0.575,
+          0.7
+        ],
+        "kl_curve": [
+          0.0,
+          0.00076,
+          0.00076,
+          0.00365,
+          0.00377,
+          0.0028
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    }
+  },
+  "safety_bfa_audit": [
+    {
+      "k_per_layer": 1,
+      "neurons_flipped": 2,
+      "weights_pct": 0.00086,
+      "unsafe_refusal_rate": 93.3,
+      "json_valid_rate": 95.0,
+      "exact_compliance_rate": 32.5
+    },
+    {
+      "k_per_layer": 2,
+      "neurons_flipped": 4,
+      "weights_pct": 0.00171,
+      "unsafe_refusal_rate": 90.0,
+      "json_valid_rate": 92.5,
+      "exact_compliance_rate": 25.0
+    },
+    {
+      "k_per_layer": 4,
+      "neurons_flipped": 8,
+      "weights_pct": 0.00343,
+      "unsafe_refusal_rate": 53.3,
+      "json_valid_rate": 42.5,
+      "exact_compliance_rate": 15.0
+    },
+    {
+      "k_per_layer": 8,
+      "neurons_flipped": 16,
+      "weights_pct": 0.00685,
+      "unsafe_refusal_rate": 0.0,
+      "json_valid_rate": 0.0,
+      "exact_compliance_rate": 0.0
+    },
+    {
+      "k_per_layer": 16,
+      "neurons_flipped": 32,
+      "weights_pct": 0.0137,
+      "unsafe_refusal_rate": 0.0,
+      "json_valid_rate": 0.0,
+      "exact_compliance_rate": 0.0
+    }
+  ]
+}

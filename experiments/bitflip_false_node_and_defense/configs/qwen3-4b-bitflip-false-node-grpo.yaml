@@ -1,0 +1,26 @@
+# Experiment 13: Binary False-Node Edit -> Early+Mid Disjoint Halo GRPO (Qwen3-4B)
+model_name_or_path: outputs/bitflip_false_node/edited_checkpoint
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/bitflip_false_node/qwen3_4b_disjoint_grpo
+
+use_peft: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.0
+lora_target_modules: ".*\\.layers\\.(0|1|10|16|22|26|30|32)\\.(self_attn\\.(q|k|v|o)_proj|mlp\\.(gate|up|down)_proj)$"
+
+vllm_mode: server
+rollout_adapter_sync: false
+num_generations: 8
+max_prompt_length: 1024
+max_completion_length: 1024
+beta: 0.02
+learning_rate: 1.5e-6
+weight_decay: 0.0
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+max_steps: 100
+bf16: true
+seed: 42
+report_to: wandb
+run_name: exp13-bitflip-false-node-disjoint-grpo
