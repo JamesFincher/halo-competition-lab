@@ -1,0 +1,6 @@
+{"arm": "armD_head_node_double_check_rl", "step": 1, "mean_reward": 0.45, "active_groups": 1, "kl_from_ref": 0.0, "loss": -0.01277, "grad_norm": 0.07947, "step_wall_sec": 12.62}
+{"arm": "armD_head_node_double_check_rl", "step": 2, "mean_reward": 0.775, "active_groups": 2, "kl_from_ref": 0.00087, "loss": -0.08048, "grad_norm": 0.11018, "step_wall_sec": 19.04}
+{"arm": "armD_head_node_double_check_rl", "step": 3, "mean_reward": 0.775, "active_groups": 2, "kl_from_ref": 0.00091, "loss": -0.05112, "grad_norm": 0.10309, "step_wall_sec": 18.52}
+{"arm": "armD_head_node_double_check_rl", "step": 4, "mean_reward": 0.6, "active_groups": 2, "kl_from_ref": 0.00303, "loss": -0.0711, "grad_norm": 0.08495, "step_wall_sec": 15.09}
+{"arm": "armD_head_node_double_check_rl", "step": 5, "mean_reward": 0.575, "active_groups": 2, "kl_from_ref": 0.00316, "loss": -0.0282, "grad_norm": 0.07781, "step_wall_sec": 12.63}
+{"arm": "armD_head_node_double_check_rl", "step": 6, "mean_reward": 0.7, "active_groups": 2, "kl_from_ref": 0.00251, "loss": -0.02618, "grad_norm": 0.09786, "step_wall_sec": 15.81}

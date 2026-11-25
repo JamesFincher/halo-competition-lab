@@ -1,0 +1,264 @@
+{
+  "top_false_heads": [
+    {
+      "layer": 29,
+      "head": 1,
+      "false_l2": 3.9588,
+      "safety_l2": 3.6271,
+      "false_head_score": 2.3266
+    },
+    {
+      "layer": 23,
+      "head": 2,
+      "false_l2": 2.9213,
+      "safety_l2": 2.1137,
+      "false_head_score": 1.9702
+    },
+    {
+      "layer": 21,
+      "head": 1,
+      "false_l2": 2.16,
+      "safety_l2": 1.6959,
+      "false_head_score": 1.3968
+    },
+    {
+      "layer": 29,
+      "head": 4,
+      "false_l2": 2.1353,
+      "safety_l2": 1.6881,
+      "false_head_score": 1.3756
+    },
+    {
+      "layer": 23,
+      "head": 7,
+      "false_l2": 2.123,
+      "safety_l2": 1.9997,
+      "false_head_score": 1.2232
+    },
+    {
+      "layer": 18,
+      "head": 7,
+      "false_l2": 1.6375,
+      "safety_l2": 0.9517,
+      "false_head_score": 1.2092
+    },
+    {
+      "layer": 18,
+      "head": 6,
+      "false_l2": 1.9685,
+      "safety_l2": 1.8137,
+      "false_head_score": 1.1523
+    },
+    {
+      "layer": 19,
+      "head": 3,
+      "false_l2": 2.2348,
+      "safety_l2": 2.4166,
+      "false_head_score": 1.1474
+    },
+    {
+      "layer": 16,
+      "head": 4,
+      "false_l2": 1.799,
+      "safety_l2": 1.4767,
+      "false_head_score": 1.1345
+    },
+    {
+      "layer": 23,
+      "head": 0,
+      "false_l2": 2.2004,
+      "safety_l2": 2.4523,
+      "false_head_score": 1.0968
+    }
+  ],
+  "top_false_mlp_nodes": [
+    {
+      "layer": 29,
+      "neuron": 453,
+      "false_delta": 7.4865,
+      "safety_delta": 1.0055,
+      "false_node_score": 7.034
+    },
+    {
+      "layer": 29,
+      "neuron": 1392,
+      "false_delta": 6.8676,
+      "safety_delta": 2.283,
+      "false_node_score": 5.8402
+    },
+    {
+      "layer": 29,
+      "neuron": 1513,
+      "false_delta": 6.4331,
+      "safety_delta": 1.9769,
+      "false_node_score": 5.5435
+    },
+    {
+      "layer": 28,
+      "neuron": 1095,
+      "false_delta": 5.6003,
+      "safety_delta": 2.4657,
+      "false_node_score": 4.4908
+    },
+    {
+      "layer": 27,
+      "neuron": 84,
+      "false_delta": 3.3047,
+      "safety_delta": 1.8792,
+      "false_node_score": 2.4591
+    },
+    {
+      "layer": 28,
+      "neuron": 1330,
+      "false_delta": 3.6449,
+      "safety_delta": 2.695,
+      "false_node_score": 2.4321
+    },
+    {
+      "layer": 25,
+      "neuron": 1047,
+      "false_delta": 3.2003,
+      "safety_delta": 1.7434,
+      "false_node_score": 2.4158
+    },
+    {
+      "layer": 23,
+      "neuron": 863,
+      "false_delta": 2.7954,
+      "safety_delta": 0.9728,
+      "false_node_score": 2.3576
+    },
+    {
+      "layer": 28,
+      "neuron": 625,
+      "false_delta": 3.056,
+      "safety_delta": 1.7005,
+      "false_node_score": 2.2908
+    },
+    {
+      "layer": 23,
+      "neuron": 1447,
+      "false_delta": 1.3803,
+      "safety_delta": 0.2801,
+      "false_node_score": 1.2543
+    }
+  ],
+  "comp6_rl_layers": [
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ],
+  "arms": {
+    "armA_head_double_check_only": {
+      "meta": {
+        "label": "HeadQO",
+        "accepted": false,
+        "dev_before": 0.68
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    },
+    "armB_mlp_false_node_only": {
+      "meta": {
+        "label": "MLPFalseNode",
+        "accepted": true,
+        "strength": 0.45,
+        "dev_before": 0.68,
+        "dev_after": 0.8,
+        "edit_layers": [
+          29,
+          28
+        ],
+        "top_nodes_per_layer": 64,
+        "edited_weights": 73728,
+        "edited_pct": 0.05481
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.815,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 80.0,
+        "policy_accuracy": 70.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 80.0,
+        "exact_compliance_rate": 67.5
+      }
+    },
+    "armC_head_plus_false_node_only": {
+      "head_meta": {
+        "label": "HeadQO",
+        "accepted": false,
+        "dev_before": 0.68
+      },
+      "node_meta": {
+        "label": "HeadThenMLPNode",
+        "accepted": true,
+        "strength": 0.45,
+        "dev_before": 0.68,
+        "dev_after": 0.8,
+        "edit_layers": [
+          29,
+          28
+        ],
+        "top_nodes_per_layer": 64,
+        "edited_weights": 73728,
+        "edited_pct": 0.05481
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.815,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 80.0,
+        "policy_accuracy": 70.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 80.0,
+        "exact_compliance_rate": 67.5
+      }
+    },
+    "armD_head_node_double_check_rl": {
+      "rl_stats": {
+        "trainable_params": 976896,
+        "trainable_pct": 0.721,
+        "total_wall_sec": 93.7,
+        "mean_step_sec": 15.62,
+        "reward_curve": [
+          0.45,
+          0.775,
+          0.775,
+          0.6,
+          0.575,
+          0.7
+        ],
+        "kl_curve": [
+          0.0,
+          0.00087,
+          0.00091,
+          0.00303,
+          0.00316,
+          0.00251
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    }
+  }
+}
