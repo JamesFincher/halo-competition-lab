@@ -24,7 +24,7 @@ from pathlib import Path
 from openai import OpenAI
 
 DEFAULT_BASE_URL = "https://api.tokenfactory.nebius.com/v1/"
-DEFAULT_MODEL = "meta-llama/Llama-3.3-70B-Instruct"
+DEFAULT_MODEL = "Qwen/Qwen3-30B-A3B-Instruct-2507"
 
 POLICY_SYSTEM_PROMPT = (
     "You are a policy-enforcing tool router. Given a user request and available tools "

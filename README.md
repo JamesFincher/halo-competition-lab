@@ -43,6 +43,34 @@ With 3 refusal categories vs 1 benign category (75% refusal in SFT), pure SFT le
 
 ---
 
+## Flagship Research Track: Edit-Then-Target RL (`experiments/edit_then_target_rl/`)
+
+Combines **Stage-1 zero-gradient / surgical weight-space pre-edits** (emulating MIT CSAIL's [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/)) with **Stage-2 targeted Halo GRPO** restricted strictly to localized + 1-shot Fisher/reward-gradient weight subsets.
+
+### Why Both Halves Together?
+- **Manual weight edit unlocks RL:** Removing structural blockers (thinking/repetition loops, over-refusal, format drift) before step 0 eliminates GRPO's all-zero-reward dead groups.
+- **Targeted RL hardens the manual edit:** `arXiv:2611.26841` and MIT CSAIL's Gemma 3 270M control show zero-gradient edits degrade under prompt-wording shifts and cannot add missing reasoning; restricting Halo RL updates to the top 5–25% localized modules hardens generalization while preserving the rest of the model.
+- **Fresh empirical validation:** `arXiv:2611.33133` (*A Bias in Disguise*, Nov 24, 2026) independently showed combining a mid-layer weight-space edit with a half-strength sparse early-layer gradient edit boosted MATH-500 by **+10.1 pp (`p = 3e-9`)** with **50% fewer tokens**.
+
+### Runnable Ablation Variants (`experiments/edit_then_target_rl/configs/`)
+
+| Arm | Variant | Paper Basis | Halo Mechanism |
+|---|---|---|---|
+| **V0** | `arm0_full_grpo.yaml` | Baseline | All-layer LoRA GRPO |
+| **V2** | `arm2_targeted_grpo_only.yaml` | `2607.01232`, `2610.11620`, `2609.36262` | Bare YAML regex `lora_target_modules` on top-25% localized layers |
+| **V3** | `arm3_edit_then_target_grpo.yaml` | **Flagship** (WSP + Fisher/Contrastive RL) | Stage-1 surgical pre-edit → Stage-2 localized Halo GRPO (`weight_decay: 0.0`) |
+| **V4** | `arm4_dual_edit_synergy_grpo.yaml` | `2611.33133` (*A Bias in Disguise*) | Mid-layer contrastive edit + half-strength early-layer (0–2) edit → Targeted RL |
+| **V5** | `arm5_action_surgical_partial_ft.yaml` | `2611.32064` (*Fix How It Acts*) | `use_peft: false` + `unfreeze_layers_patterns` (zero LoRA BF16 merge-rounding loss; native MoE EP) |
+| **V6** | `arm6_iterative_selfwrite_rl.yaml` | `2611.29513` (*SELFWRITE*) | Multi-round gate-verified weight edits → Targeted Halo GRPO |
+| **V7** | `arm7_random_control_grpo.yaml` | `2602.01599` (*Multiple Ticket Hypothesis*) | Mandatory matched-budget random-layer control |
+
+### Companion Experiment Tracks
+- **`experiments/grail_orth_subspace_rl/` (Hypothesis C):** Reward-gradient SVD orthogonalized against top-k pretrained singular vectors (`GRAIL` + `GCPO`, `2608.11674`) → orthonormal `lora_A` init with 100% Halo vLLM NCCL sync parity.
+- **`experiments/moe_expert_subset_rl/` (Hypothesis B):** Contrastive MoE expert profiling + EP-rank-aware gradient masking on fused 3D `[E_local, K, N]` tensors + soft `Router-L2` (`2609.08115`) & RDC (`2610.21682`) for `unsloth/gpt-oss-20b-BF16`.
+- **`experiments/fisher_sparse_rl/` (Hypothesis D):** Standalone 1-shot diagonal Fisher + SNIP top-K module selector emitting `unfreeze_layers_patterns` for pre-FSDP2 wrap (6 B/param `AdamWBF16` memory savings).
+
+---
+
 ## Repository Layout
 
 ```text

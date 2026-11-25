@@ -1,0 +1,34 @@
+# Arm 4 (V4 — NEW from arXiv:2611.33133 "A Bias in Disguise", Nov 24, 2026):
+# Dual-Edit Synergy + Targeted Halo GRPO
+# Stage 1a: Contrastive MLP projection pre-edit on top failure-direction mid-layers
+# Stage 1b: Half-strength early-layer (layers 0,1,2) constant-channel bias-in-disguise edit
+# Stage 2: Targeted Halo GRPO on localized mid-stack + early-channel layers
+# Paper result: combining Astra's mid-layer edit + half-strength early-layer gradient edit gave +10.1 pp (p=3e-9) with 50% fewer tokens.
+model_name_or_path: outputs/edit_then_target/stage1_dual/checkpoint_edited
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/edit_then_target/arm4_dual_edit_synergy_grpo
+
+use_peft: true
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.0
+# Includes early layers 0-2 (bias-in-disguise residual shift) + localized middle reasoning layers
+lora_target_modules: ".*\\.layers\\.(0|1|2|15|16|17|18|19|20)\\.(self_attn\\.(q|k|v|o)_proj|mlp\\.(gate|up|down)_proj)$"
+
+vllm_mode: server
+rollout_adapter_sync: false
+num_generations: 8
+max_prompt_length: 1024
+max_completion_length: 1024
+beta: 0.02
+learning_rate: 4.0e-6
+weight_decay: 0.0
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+max_steps: 200
+bf16: true
+seed: 42
+logging_steps: 5
+save_steps: 50
+report_to: wandb
+run_name: ett-v4-dual-edit-synergy

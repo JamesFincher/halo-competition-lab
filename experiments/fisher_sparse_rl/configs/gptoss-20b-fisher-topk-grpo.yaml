@@ -1,0 +1,35 @@
+# Hypothesis D: 1-Shot Diagonal Fisher + SNIP Top-K Module Partial Full-FT GRPO
+# Zero Halo core forks: `use_peft: false` + `unfreeze_layers_patterns` applied rank-uniformly
+# BEFORE FSDP2 wrap (halo/trainers/distributed_trainer.py:365-432) -> true 6 B/param AdamWBF16 memory savings.
+# Generate exact `unfreeze_layers_patterns` with:
+#   python experiments/fisher_sparse_rl/scripts/fisher_module_select.py --model unsloth/gpt-oss-20b-BF16 ...
+model_name_or_path: unsloth/gpt-oss-20b-BF16
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/fisher_sparse/gptoss_20b_top5pct_grpo
+
+expert_parallel_size: 4
+use_grouped_gemm: true
+reset_sinks: false
+use_peft: false
+# Placeholder top-5% late/mid-stack modules — replace with fisher_module_select.py output
+unfreeze_layers_patterns:
+  - "*model.layers.18.*"
+  - "*model.layers.19.*"
+  - "*model.layers.20.*"
+  - "*model.layers.21.*"
+
+vllm_mode: server
+rollout_adapter_sync: false
+num_generations: 8
+max_prompt_length: 1024
+max_completion_length: 1024
+beta: 0.01
+learning_rate: 2.0e-6
+weight_decay: 0.0
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 4
+max_steps: 150
+bf16: true
+seed: 42
+report_to: wandb
+run_name: hyp-d-gptoss-20b-fisher-topk-grpo

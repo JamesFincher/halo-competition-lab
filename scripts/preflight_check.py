@@ -28,12 +28,20 @@ def check_datasets() -> None:
 
 def check_configs() -> None:
     yaml = YAML(typ="safe")
-    configs = sorted((ROOT / "configs").glob("*.yaml"))
+    configs = sorted((ROOT / "configs").glob("*.yaml")) + sorted((ROOT / "experiments").glob("**/configs/*.yaml"))
     assert configs, "No YAML configs found."
     for cfg in configs:
         data = yaml.load(cfg.read_text(encoding="utf-8"))
         assert isinstance(data, dict) and data, f"Empty or invalid YAML: {cfg}"
-        print(f"[OK] YAML syntax: {cfg.name} ({len(data)} top-level keys)")
+        rel = cfg.relative_to(ROOT)
+        # Guard against Halo script_arguments.py:120-127 ValueError (regex chars inside a YAML list)
+        ltm = data.get("lora_target_modules")
+        if isinstance(ltm, list):
+            for item in ltm:
+                assert not any(ch in str(item) for ch in ".*|()[]$"), (
+                    f"Regex chars inside lora_target_modules list will raise in Halo: {rel}"
+                )
+        print(f"[OK] YAML syntax: {rel} ({len(data)} top-level keys)")
 
 
 def check_env_hints() -> None:

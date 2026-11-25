@@ -1,0 +1,45 @@
+# Hypothesis B: MoE Sparse Expert-Subset RL + Soft Router-L2 + RDC on gpt-oss-20b
+# Target: unsloth/gpt-oss-20b-BF16 (32 experts/layer, full vLLM sync & routing_replay=True in Halo v1.3.0rc1)
+# Avoids Gemma 4 (48.9% bf16 router mismatch, no routing_replay) and Nemotron 3.5 (blocks online GRPO).
+model_name_or_path: unsloth/gpt-oss-20b-BF16
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/moe_expert_subset/gptoss_20b_ep4_grpo
+
+# Parallelism: 4 train GPUs (EP=4) + 2x TP=2 vLLM servers on 1x 8-GPU node
+expert_parallel_size: 4
+use_grouped_gemm: true
+reset_sinks: false
+moe_balancing: none
+
+# Native EP grouped-LoRA (r % 8 == 0 required by Halo expert_lora.py:26)
+use_peft: true
+lora_r: 64
+lora_alpha: 128
+lora_dropout: 0.0
+lora_target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+merge_expert_lora_on_save: true
+
+# MUST be false for native expert LoRA (adapter_sync.py:187-188 refuses expert LoRA)
+vllm_mode: server
+rollout_adapter_sync: false
+num_generations: 8
+max_prompt_length: 1024
+max_completion_length: 1024
+beta: 0.02
+learning_rate: 5.0e-6
+# MUST be 0.0 when gradient-masking non-selected [E_local] expert slices in AdamWBF16
+weight_decay: 0.0
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 4
+max_steps: 100
+bf16: true
+seed: 42
+report_to: wandb
+run_name: hyp-b-gptoss-20b-expert-subset-grpo

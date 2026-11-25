@@ -1,0 +1,37 @@
+# Arm 5 (V5 — NEW from arXiv:2611.32064 "Fix How It Acts, Not How It Thinks", Nov 24, 2026):
+# Action-Anchored Surgical Partial Full-FT GRPO (no LoRA merge-rounding loss!)
+# Why partial full-FT (use_peft: false + unfreeze_layers_patterns):
+#   arXiv:2611.32064 showed standard LoRA loses ~2/3 of its update norm when merged into BF16 (93% in NVFP4).
+#   Training localized layers directly in BF16 via Halo's unfreeze_layers_patterns avoids merge-rounding loss
+#   AND natively covers MoE EP routed experts on gpt-oss-20b / Gemma 4 / Nemotron 3.5!
+model_name_or_path: outputs/edit_then_target/stage1/checkpoint_edited
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/edit_then_target/arm5_action_surgical_partial_ft
+
+use_peft: false
+unfreeze_layers_patterns:
+  - "*model.layers.15.*"
+  - "*model.layers.16.*"
+  - "*model.layers.17.*"
+  - "*model.layers.18.*"
+  - "*model.layers.19.*"
+  - "*model.layers.20.*"
+
+vllm_mode: server
+rollout_adapter_sync: false
+num_generations: 8
+max_prompt_length: 1024
+max_completion_length: 1024
+# Stronger KL anchor (beta=0.04) keeps reasoning close to base while sharpening actions
+beta: 0.04
+learning_rate: 2.0e-6
+weight_decay: 0.0
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+max_steps: 200
+bf16: true
+seed: 42
+logging_steps: 5
+save_steps: 50
+report_to: wandb
+run_name: ett-v5-surgical-partial-ft-no-merge-loss
