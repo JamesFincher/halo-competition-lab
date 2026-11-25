@@ -1,0 +1,30 @@
+# Experiment 5: QO-Only Dead-Head Recycling / Null-Space QO-LoRA GRPO (Qwen3-4B)
+# Strictly targets q_proj and o_proj ONLY (zero GQA shared-KV blast radius).
+model_name_or_path: outputs/dead_head_nullspace/checkpoint_recycled
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/dead_head_nullspace/qwen3_4b_qo_grpo
+
+use_peft: true
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.0
+# Strictly QO-only — NEVER include k_proj or v_proj
+lora_target_modules:
+  - q_proj
+  - o_proj
+
+vllm_mode: server
+rollout_adapter_sync: false
+num_generations: 8
+max_prompt_length: 1024
+max_completion_length: 1024
+beta: 0.02
+learning_rate: 5.0e-6
+weight_decay: 0.0
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+max_steps: 200
+bf16: true
+seed: 42
+report_to: wandb
+run_name: exp5-dead-head-qo-only-grpo

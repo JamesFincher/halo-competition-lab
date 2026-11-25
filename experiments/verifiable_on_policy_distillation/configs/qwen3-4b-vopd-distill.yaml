@@ -1,0 +1,25 @@
+# Experiment 6: Verifiable On-Policy Distillation (VOPD, arXiv:2611.30325)
+# Uses Halo SFT/Distillation on Token Factory teacher-verifier weighted trajectories.
+# Works on ALL partner models (including Nemotron 3.5 Lightning & Mistral Small 4 where online GRPO is blocked).
+model_name_or_path: Qwen/Qwen3-4B
+dataset_name: outputs/vopd/vopd_weighted_train.jsonl
+output_dir: outputs/vopd/qwen3_4b_vopd_sft
+
+use_peft: true
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.0
+# Compose with localized top-25% layers from Experiment 1!
+lora_target_modules: ".*\\.layers\\.(14|15|16|17|18|19|20|21|22)\\.(self_attn\\.(q|k|v|o)_proj|mlp\\.(gate|up|down)_proj)$"
+
+learning_rate: 1.0e-5
+weight_decay: 0.0
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 4
+num_train_epochs: 2
+bf16: true
+seed: 42
+logging_steps: 5
+save_strategy: epoch
+report_to: wandb
+run_name: exp6-vopd-localized-distill
