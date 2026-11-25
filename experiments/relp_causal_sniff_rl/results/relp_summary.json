@@ -1,0 +1,167 @@
+{
+  "relp_wall_sec": 7.07,
+  "top_causal_layers": [
+    {
+      "layer": 29,
+      "total_causal": 6.26703
+    },
+    {
+      "layer": 27,
+      "total_causal": 4.14278
+    },
+    {
+      "layer": 28,
+      "total_causal": 3.43722
+    },
+    {
+      "layer": 20,
+      "total_causal": 2.99458
+    },
+    {
+      "layer": 26,
+      "total_causal": 2.86564
+    },
+    {
+      "layer": 22,
+      "total_causal": 2.72811
+    }
+  ],
+  "top_causal_nodes": [
+    {
+      "layer": 27,
+      "neuron": 110,
+      "causal_score": 0.33553
+    },
+    {
+      "layer": 27,
+      "neuron": 990,
+      "causal_score": 0.08783
+    },
+    {
+      "layer": 29,
+      "neuron": 453,
+      "causal_score": 0.08675
+    },
+    {
+      "layer": 29,
+      "neuron": 1512,
+      "causal_score": 0.08474
+    },
+    {
+      "layer": 25,
+      "neuron": 1281,
+      "causal_score": 0.07888
+    },
+    {
+      "layer": 24,
+      "neuron": 1488,
+      "causal_score": 0.05208
+    },
+    {
+      "layer": 28,
+      "neuron": 266,
+      "causal_score": 0.05048
+    },
+    {
+      "layer": 24,
+      "neuron": 177,
+      "causal_score": 0.03585
+    },
+    {
+      "layer": 28,
+      "neuron": 803,
+      "causal_score": 0.03512
+    },
+    {
+      "layer": 19,
+      "neuron": 868,
+      "causal_score": 0.03305
+    },
+    {
+      "layer": 21,
+      "neuron": 743,
+      "causal_score": 0.03234
+    },
+    {
+      "layer": 22,
+      "neuron": 201,
+      "causal_score": 0.03054
+    }
+  ],
+  "top_causal_heads": [
+    {
+      "layer": 24,
+      "head": 4,
+      "causal_score": 0.53082
+    },
+    {
+      "layer": 23,
+      "head": 2,
+      "causal_score": 0.41985
+    },
+    {
+      "layer": 24,
+      "head": 2,
+      "causal_score": 0.30107
+    },
+    {
+      "layer": 29,
+      "head": 1,
+      "causal_score": 0.28416
+    },
+    {
+      "layer": 28,
+      "head": 2,
+      "causal_score": 0.23727
+    },
+    {
+      "layer": 28,
+      "head": 1,
+      "causal_score": 0.21385
+    },
+    {
+      "layer": 23,
+      "head": 0,
+      "causal_score": 0.19345
+    },
+    {
+      "layer": 27,
+      "head": 8,
+      "causal_score": 0.18243
+    },
+    {
+      "layer": 21,
+      "head": 1,
+      "causal_score": 0.17858
+    },
+    {
+      "layer": 23,
+      "head": 7,
+      "causal_score": 0.14474
+    }
+  ],
+  "gate_meta": {
+    "label": "RelPCausalMLP",
+    "accepted": true,
+    "strength": 0.45,
+    "dev_before": 0.68,
+    "dev_after": 0.8,
+    "edit_layers": [
+      29,
+      27
+    ],
+    "top_nodes_per_layer": 64,
+    "edited_weights": 73728,
+    "edited_pct": 0.05481
+  },
+  "eval": {
+    "n_eval": 40,
+    "mean_reward": 0.805,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 80.0,
+    "policy_accuracy": 65.0,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 80.0,
+    "exact_compliance_rate": 62.5
+  }
+}

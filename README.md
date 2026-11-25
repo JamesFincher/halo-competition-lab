@@ -64,13 +64,16 @@ Combines **Stage-1 zero-gradient / surgical weight-space pre-edits** (emulating 
 | **V6** | `arm6_iterative_selfwrite_rl.yaml` | `2611.29513` (*SELFWRITE*) | Multi-round gate-verified weight edits → Targeted Halo GRPO |
 | **V7** | `arm7_random_control_grpo.yaml` | `2602.01599` (*Multiple Ticket Hypothesis*) | Mandatory matched-budget random-layer control |
 
-### All 13 Experiment Folders & Research Docs (`experiments/`)
+### All 16 Experiment Folders & Research Docs (`experiments/`)
 
 | # | Folder & Docs | Focus | Key 2026 Papers | Priority |
 |---|---|---|---|---:|
 | **1** | [`experiments/seek_sniff_edit_rl/`](experiments/seek_sniff_edit_rl/README.md) | **Flagship Fork:** Closed-Loop Seek → Offset-Sniff → Gated Edit → Disjoint RL (V1–V4 + 3-domain benchmark) | WSP, `2611.29513`, `2611.33133` + Arm 3b discovery | **9.0/10** |
-| **2** | [`experiments/head_and_node_sniff_rl/`](experiments/head_and_node_sniff_rl/README.md) | **Fine-Grained Fork:** Individual Attention-Head (0 KV) + MLP False-Node Sniff & Double-Check RL | CircuitLens `2609.07183`, WSP, `2611.29513` | **8.5/10** |
-| **3** | [`experiments/bitflip_false_node_and_defense/`](experiments/bitflip_false_node_and_defense/README.md) | **NEW Binary & Security Fork:** 1-Bit Sign-Flip vs Zero-Mask False-Node Edit + Safety Bit-Flip Attack Audit | WSP, `2611.28314`, `2611.32064` | **8.0/10** |
+| **2** | [`experiments/whitened_subspace_rfm_edit/`](experiments/whitened_subspace_rfm_edit/README.md) | **NEW Math Fork:** Safety-Nullspace Rank-k Subspace Projection (`RFM-AGOP` / `FORGE`) | `2607.02396`, `2603.27518`, `2605.05220`, `2610.05190` | **8.8/10** |
+| **3** | [`experiments/relp_causal_sniff_rl/`](experiments/relp_causal_sniff_rl/README.md) | **NEW Math Fork:** 1-Pass RelP Causal Attribution Patching Sniff | `2508.21258`, `2610.05190` | **8.5/10** |
+| **4** | [`experiments/zero_shock_stitched_head_rl/`](experiments/zero_shock_stitched_head_rl/README.md) | **NEW Architecture Fork:** Zero-Shock Stitched GQA Head (`W_O_new=0`) + Freeze-Base RL | `2410.11038`, `2609.37702` | **8.2/10** |
+| **5** | [`experiments/head_and_node_sniff_rl/`](experiments/head_and_node_sniff_rl/README.md) | **Fine-Grained Fork:** Individual Attention-Head (0 KV) + MLP False-Node Sniff & Double-Check RL | CircuitLens `2609.07183`, WSP, `2611.29513` | **8.5/10** |
+| **6** | [`experiments/bitflip_false_node_and_defense/`](experiments/bitflip_false_node_and_defense/README.md) | **Binary & Security Fork:** 1-Bit Sign-Flip vs Zero-Mask False-Node Edit + Safety Bit-Flip Attack Audit | WSP, `2611.28314`, `2611.32064` | **8.0/10** |
 | **2** | [`experiments/edit_then_target_rl/`](experiments/edit_then_target_rl/README.md) | **Flagship:** Manual/surgical pre-edit → Targeted Halo GRPO (V0–V7 + 6-arm micro benchmark) | WSP, `2611.33133`, `2611.32064`, `2611.29513`, `2609.36262` | **8.5/10** |
 | **2** | [`experiments/insep_abliteration_defense/`](experiments/insep_abliteration_defense/README.md) | **Security Track:** INSEP Refusal-Direction Inseparability vs Abliteration | `2611.28314` | **8.5/10** |
 | **3** | [`experiments/judge_loophole_audit/`](experiments/judge_loophole_audit/README.md) | **Pre-RL Gate:** Exposure Audit predicting LLM-Judge Reward Hacking | `2611.29651`, `2611.32037` | **8.5/10** |

@@ -1,0 +1,22 @@
+# Experiment 14: Zero-Shock Stitched GQA Head -> Freeze-Base Halo GRPO (Qwen3-4B)
+model_name_or_path: outputs/stitched_head/qwen3_4b_widened_checkpoint
+dataset_name: data/policy_train.jsonl
+output_dir: outputs/stitched_head/qwen3_4b_stitched_grpo
+
+use_peft: false
+unfreeze_layers_patterns: ".*\\.layers\\.(26|27|28|29)\\.self_attn\\.(q|k|v|o)_proj$"
+
+vllm_mode: server
+num_generations: 8
+max_prompt_length: 1024
+max_completion_length: 1024
+beta: 0.02
+learning_rate: 5.0e-6
+weight_decay: 0.0
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+max_steps: 100
+bf16: true
+seed: 42
+report_to: wandb
+run_name: exp14-zero-shock-stitched-head-grpo

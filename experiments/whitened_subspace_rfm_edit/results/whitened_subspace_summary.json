@@ -1,0 +1,154 @@
+{
+  "wall_sec": 759.16,
+  "edit_layers": [
+    29,
+    28
+  ],
+  "modes": {
+    "raw_rank1": {
+      "rank_k": 1,
+      "safety_null_m": 0,
+      "accepted_strength": 0.9,
+      "top_singular_values": {
+        "29": [
+          594.521,
+          118.687,
+          86.304,
+          59.61
+        ],
+        "28": [
+          421.378,
+          87.014,
+          65.829,
+          45.456
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.885,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 92.5,
+        "policy_accuracy": 80.0,
+        "unsafe_refusal_rate": 90.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 65.0
+      }
+    },
+    "safety_null_rank1": {
+      "rank_k": 1,
+      "safety_null_m": 1,
+      "accepted_strength": 0.9,
+      "top_singular_values": {
+        "29": [
+          525.317,
+          118.424,
+          86.024,
+          59.451
+        ],
+        "28": [
+          356.564,
+          86.484,
+          64.754,
+          45.205
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.76,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 50.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 47.5
+      }
+    },
+    "safety_null_rank2": {
+      "rank_k": 2,
+      "safety_null_m": 1,
+      "accepted_strength": 0.0,
+      "top_singular_values": {
+        "29": [
+          525.317,
+          118.424,
+          86.024,
+          59.451
+        ],
+        "28": [
+          356.564,
+          86.484,
+          64.754,
+          45.205
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    },
+    "safety_null_rank3": {
+      "rank_k": 3,
+      "safety_null_m": 1,
+      "accepted_strength": 0.0,
+      "top_singular_values": {
+        "29": [
+          525.317,
+          118.424,
+          86.024,
+          59.451
+        ],
+        "28": [
+          356.564,
+          86.484,
+          64.754,
+          45.205
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    },
+    "safety_null_rank4": {
+      "rank_k": 4,
+      "safety_null_m": 2,
+      "accepted_strength": 0.0,
+      "top_singular_values": {
+        "29": [
+          476.512,
+          117.5,
+          82.929,
+          58.621
+        ],
+        "28": [
+          330.87,
+          83.769,
+          60.419,
+          44.913
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "stitch_meta": {
+    "old_q_heads": 9,
+    "old_kv_heads": 3,
+    "new_q_heads": 12,
+    "new_kv_heads": 4,
+    "head_dim": 64,
+    "added_q_dim": 192,
+    "added_kv_dim": 64
+  },
+  "zero_shock_max_logit_diff": 0.0,
+  "zero_shock_kl_step0": 1.6157969184860121e-06,
+  "train_layers": [
+    0,
+    1,
+    28,
+    29
+  ],
+  "trainable_slice_params": 1179648,
+  "base_weight_max_drift": 0.0,
+  "layer29_new_wo_norm": 0.46324586868286133,
+  "wall_sec": 173.4,
+  "steps": [
+    {
+      "step": 1,
+      "mean_reward": 0.5,
+      "active_groups": 1,
+      "mean_kl": 0.0,
+      "step_sec": 19.09
+    },
+    {
+      "step": 2,
+      "mean_reward": 0.8,
+      "active_groups": 1,
+      "mean_kl": 0.0,
+      "step_sec": 16.75
+    },
+    {
+      "step": 3,
+      "mean_reward": 0.625,
+      "active_groups": 2,
+      "mean_kl": 1e-06,
+      "step_sec": 21.38
+    },
+    {
+      "step": 4,
+      "mean_reward": 0.475,
+      "active_groups": 1,
+      "mean_kl": 0.0,
+      "step_sec": 16.2
+    },
+    {
+      "step": 5,
+      "mean_reward": 0.625,
+      "active_groups": 2,
+      "mean_kl": 2e-05,
+      "step_sec": 19.0
+    },
+    {
+      "step": 6,
+      "mean_reward": 0.525,
+      "active_groups": 1,
+      "mean_kl": 1e-05,
+      "step_sec": 16.73
+    }
+  ],
+  "eval": {
+    "n_eval": 40,
+    "mean_reward": 0.74,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 75.0,
+    "policy_accuracy": 45.0,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 100.0,
+    "exact_compliance_rate": 45.0
+  }
+}
