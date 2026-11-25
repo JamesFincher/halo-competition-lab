@@ -1,0 +1,12 @@
+{"arm": "math_verifiable_full_rl", "step": 1, "mean_reward": 0.0938, "active": 2, "kl": 0.0, "grad": 0.245, "sec": 27.8}
+{"arm": "math_verifiable_full_rl", "step": 2, "mean_reward": 0.15, "active": 2, "kl": 0.0131, "grad": 0.2445, "sec": 24.7}
+{"arm": "math_verifiable_full_rl", "step": 3, "mean_reward": 0.3438, "active": 2, "kl": 0.00837, "grad": 0.2711, "sec": 33.5}
+{"arm": "math_verifiable_full_rl", "step": 4, "mean_reward": 0.3312, "active": 2, "kl": 0.05319, "grad": 0.5446, "sec": 25.6}
+{"arm": "math_verifiable_full_rl", "step": 5, "mean_reward": 0.2437, "active": 2, "kl": 0.05376, "grad": 0.5342, "sec": 27.7}
+{"arm": "math_verifiable_full_rl", "step": 6, "mean_reward": 0.4125, "active": 1, "kl": 0.09431, "grad": 0.3277, "sec": 22.3}
+{"arm": "math_verifiable_tuned_loop", "step": 1, "mean_reward": 0.0562, "active": 2, "kl": 0.0, "grad": 0.1168, "sec": 32.0}
+{"arm": "math_verifiable_tuned_loop", "step": 2, "mean_reward": 0.1875, "active": 1, "kl": 0.00037, "grad": 0.0812, "sec": 17.0}
+{"arm": "math_verifiable_tuned_loop", "step": 3, "mean_reward": 0.1312, "active": 2, "kl": 0.00041, "grad": 0.0898, "sec": 27.9}
+{"arm": "math_verifiable_tuned_loop", "step": 4, "mean_reward": 0.2, "active": 1, "kl": 0.00031, "grad": 0.0566, "sec": 23.6}
+{"arm": "math_verifiable_tuned_loop", "step": 5, "mean_reward": 0.1687, "active": 2, "kl": 0.0004, "grad": 0.0895, "sec": 25.4}
+{"arm": "math_verifiable_tuned_loop", "step": 6, "mean_reward": 0.1687, "active": 2, "kl": 0.00054, "grad": 0.0825, "sec": 26.7}

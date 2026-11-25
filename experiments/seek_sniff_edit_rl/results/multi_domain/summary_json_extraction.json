@@ -1,0 +1,74 @@
+{
+  "domain": "json_extraction",
+  "top2_edit_layers": [
+    29,
+    28
+  ],
+  "comp6_rl_layers": [
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ],
+  "n_hard_rows_sought": 16,
+  "edit_meta": {
+    "accepted": false,
+    "base_dev_reward": 0.0,
+    "edit_layers": [
+      29,
+      28
+    ]
+  },
+  "arms": {
+    "baseline": {
+      "eval": {
+        "n_eval": 24,
+        "mean_reward": 0.0,
+        "exact_rate": 0.0,
+        "json_valid_rate": 0.0,
+        "pure_raw_rate": 0.0
+      }
+    },
+    "full_rl": {
+      "stats": {
+        "trainable_params": 2442240,
+        "trainable_pct": 1.783,
+        "wall_sec": 207.3,
+        "final_kl": 0.0
+      },
+      "eval": {
+        "n_eval": 24,
+        "mean_reward": 0.0917,
+        "exact_rate": 0.0,
+        "json_valid_rate": 16.7,
+        "pure_raw_rate": 16.7
+      }
+    },
+    "sniff_edit_only": {
+      "eval": {
+        "n_eval": 24,
+        "mean_reward": 0.0,
+        "exact_rate": 0.0,
+        "json_valid_rate": 0.0,
+        "pure_raw_rate": 0.0
+      }
+    },
+    "tuned_seek_sniff_edit_rl": {
+      "stats": {
+        "trainable_params": 976896,
+        "trainable_pct": 0.721,
+        "wall_sec": 153.7,
+        "final_kl": 0.0
+      },
+      "eval": {
+        "n_eval": 24,
+        "mean_reward": 0.0,
+        "exact_rate": 0.0,
+        "json_valid_rate": 0.0,
+        "pure_raw_rate": 0.0
+      }
+    }
+  }
+}

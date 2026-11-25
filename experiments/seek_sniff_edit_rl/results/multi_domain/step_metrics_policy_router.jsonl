@@ -1,0 +1,12 @@
+{"arm": "policy_router_full_rl", "step": 1, "mean_reward": 0.75, "active": 2, "kl": 0.0, "grad": 0.1926, "sec": 34.5}
+{"arm": "policy_router_full_rl", "step": 2, "mean_reward": 0.625, "active": 2, "kl": 0.01106, "grad": 0.2144, "sec": 34.2}
+{"arm": "policy_router_full_rl", "step": 3, "mean_reward": 0.8, "active": 2, "kl": 0.00774, "grad": 0.1551, "sec": 34.5}
+{"arm": "policy_router_full_rl", "step": 4, "mean_reward": 0.7, "active": 1, "kl": 0.03266, "grad": 0.162, "sec": 27.1}
+{"arm": "policy_router_full_rl", "step": 5, "mean_reward": 0.375, "active": 2, "kl": 0.01782, "grad": 0.2263, "sec": 33.5}
+{"arm": "policy_router_full_rl", "step": 6, "mean_reward": 0.725, "active": 2, "kl": 0.03082, "grad": 0.1931, "sec": 32.9}
+{"arm": "policy_router_tuned_loop", "step": 1, "mean_reward": 0.35, "active": 1, "kl": 0.0, "grad": 0.0903, "sec": 22.8}
+{"arm": "policy_router_tuned_loop", "step": 2, "mean_reward": 0.8, "active": 1, "kl": 0.00026, "grad": 0.0672, "sec": 25.6}
+{"arm": "policy_router_tuned_loop", "step": 3, "mean_reward": 0.45, "active": 2, "kl": 0.00181, "grad": 0.1166, "sec": 27.4}
+{"arm": "policy_router_tuned_loop", "step": 4, "mean_reward": 0.4, "active": 2, "kl": 0.00258, "grad": 0.082, "sec": 25.5}
+{"arm": "policy_router_tuned_loop", "step": 5, "mean_reward": 0.575, "active": 2, "kl": 0.00411, "grad": 0.1352, "sec": 24.4}
+{"arm": "policy_router_tuned_loop", "step": 6, "mean_reward": 0.6, "active": 2, "kl": 0.00457, "grad": 0.0888, "sec": 28.2}

@@ -1,0 +1,78 @@
+{
+  "domain": "math_verifiable",
+  "top2_edit_layers": [
+    29,
+    28
+  ],
+  "comp6_rl_layers": [
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ],
+  "n_hard_rows_sought": 16,
+  "edit_meta": {
+    "accepted": true,
+    "strength": 0.35,
+    "dev_before": 0.0562,
+    "dev_after": 0.1688,
+    "edit_layers": [
+      29,
+      28
+    ],
+    "edited_weights": 73728,
+    "edited_fraction_pct": 0.05481
+  },
+  "arms": {
+    "baseline": {
+      "eval": {
+        "n_eval": 24,
+        "mean_reward": 0.0687,
+        "exact_rate": 0.0,
+        "has_fmt_rate": 8.3,
+        "ans_ok_rate": 0.0
+      }
+    },
+    "full_rl": {
+      "stats": {
+        "trainable_params": 2442240,
+        "trainable_pct": 1.783,
+        "wall_sec": 161.7,
+        "final_kl": 0.09431
+      },
+      "eval": {
+        "n_eval": 24,
+        "mean_reward": 0.45,
+        "exact_rate": 0.0,
+        "has_fmt_rate": 100.0,
+        "ans_ok_rate": 0.0
+      }
+    },
+    "sniff_edit_only": {
+      "eval": {
+        "n_eval": 24,
+        "mean_reward": 0.2313,
+        "exact_rate": 0.0,
+        "has_fmt_rate": 41.7,
+        "ans_ok_rate": 0.0
+      }
+    },
+    "tuned_seek_sniff_edit_rl": {
+      "stats": {
+        "trainable_params": 976896,
+        "trainable_pct": 0.721,
+        "wall_sec": 152.5,
+        "final_kl": 0.00054
+      },
+      "eval": {
+        "n_eval": 24,
+        "mean_reward": 0.2563,
+        "exact_rate": 0.0,
+        "has_fmt_rate": 45.8,
+        "ans_ok_rate": 0.0
+      }
+    }
+  }
+}

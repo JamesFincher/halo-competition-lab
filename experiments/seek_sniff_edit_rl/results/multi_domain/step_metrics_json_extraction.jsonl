@@ -1,0 +1,12 @@
+{"arm": "json_extraction_full_rl", "step": 1, "mean_reward": 0.0, "active": 0, "kl": 0.0, "grad": 0.0, "sec": 26.6}
+{"arm": "json_extraction_full_rl", "step": 2, "mean_reward": 0.0, "active": 0, "kl": 0.0, "grad": 0.0, "sec": 26.5}
+{"arm": "json_extraction_full_rl", "step": 3, "mean_reward": 0.1375, "active": 2, "kl": 0.0, "grad": 0.2893, "sec": 40.0}
+{"arm": "json_extraction_full_rl", "step": 4, "mean_reward": 0.05, "active": 2, "kl": 0.00655, "grad": 0.2103, "sec": 41.5}
+{"arm": "json_extraction_full_rl", "step": 5, "mean_reward": 0.0938, "active": 1, "kl": 0.01246, "grad": 0.1248, "sec": 39.2}
+{"arm": "json_extraction_full_rl", "step": 6, "mean_reward": 0.0, "active": 0, "kl": 0.0, "grad": 0.0, "sec": 33.5}
+{"arm": "json_extraction_tuned_loop", "step": 1, "mean_reward": 0.0, "active": 0, "kl": 0.0, "grad": 0.0, "sec": 22.8}
+{"arm": "json_extraction_tuned_loop", "step": 2, "mean_reward": 0.0, "active": 0, "kl": 0.0, "grad": 0.0, "sec": 24.4}
+{"arm": "json_extraction_tuned_loop", "step": 3, "mean_reward": 0.0125, "active": 1, "kl": 0.0, "grad": 0.0685, "sec": 32.6}
+{"arm": "json_extraction_tuned_loop", "step": 4, "mean_reward": 0.0, "active": 0, "kl": 0.0, "grad": 0.0, "sec": 24.9}
+{"arm": "json_extraction_tuned_loop", "step": 5, "mean_reward": 0.0, "active": 0, "kl": 0.0, "grad": 0.0, "sec": 26.3}
+{"arm": "json_extraction_tuned_loop", "step": 6, "mean_reward": 0.0, "active": 0, "kl": 0.0, "grad": 0.0, "sec": 22.7}

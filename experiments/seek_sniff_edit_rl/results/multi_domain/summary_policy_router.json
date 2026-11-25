@@ -1,0 +1,82 @@
+{
+  "domain": "policy_router",
+  "top2_edit_layers": [
+    29,
+    28
+  ],
+  "comp6_rl_layers": [
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ],
+  "n_hard_rows_sought": 10,
+  "edit_meta": {
+    "accepted": true,
+    "strength": 0.35,
+    "dev_before": 0.7333,
+    "dev_after": 0.8167,
+    "edit_layers": [
+      29,
+      28
+    ],
+    "edited_weights": 73728,
+    "edited_fraction_pct": 0.05481
+  },
+  "arms": {
+    "baseline": {
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "exact_rate": 55.0,
+        "json_valid_rate": 100.0,
+        "action_ok_rate": 77.5,
+        "policy_ok_rate": 57.5
+      }
+    },
+    "full_rl": {
+      "stats": {
+        "trainable_params": 2442240,
+        "trainable_pct": 1.783,
+        "wall_sec": 196.7,
+        "final_kl": 0.03082
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.835,
+        "exact_rate": 42.5,
+        "json_valid_rate": 97.5,
+        "action_ok_rate": 92.5,
+        "policy_ok_rate": 50.0
+      }
+    },
+    "sniff_edit_only": {
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.765,
+        "exact_rate": 50.0,
+        "json_valid_rate": 100.0,
+        "action_ok_rate": 77.5,
+        "policy_ok_rate": 52.5
+      }
+    },
+    "tuned_seek_sniff_edit_rl": {
+      "stats": {
+        "trainable_params": 976896,
+        "trainable_pct": 0.721,
+        "wall_sec": 153.9,
+        "final_kl": 0.00457
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.875,
+        "exact_rate": 67.5,
+        "json_valid_rate": 100.0,
+        "action_ok_rate": 90.0,
+        "policy_ok_rate": 72.5
+      }
+    }
+  }
+}
