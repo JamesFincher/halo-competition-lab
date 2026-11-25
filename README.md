@@ -64,11 +64,12 @@ Combines **Stage-1 zero-gradient / surgical weight-space pre-edits** (emulating 
 | **V6** | `arm6_iterative_selfwrite_rl.yaml` | `2611.29513` (*SELFWRITE*) | Multi-round gate-verified weight edits → Targeted Halo GRPO |
 | **V7** | `arm7_random_control_grpo.yaml` | `2602.01599` (*Multiple Ticket Hypothesis*) | Mandatory matched-budget random-layer control |
 
-### All 16 Experiment Folders & Research Docs (`experiments/`)
+### All 17 Experiment Folders & Research Docs (`experiments/`)
 
 | # | Folder & Docs | Focus | Key 2026 Papers | Priority |
 |---|---|---|---|---:|
 | **1** | [`experiments/seek_sniff_edit_rl/`](experiments/seek_sniff_edit_rl/README.md) | **Flagship Fork:** Closed-Loop Seek → Offset-Sniff → Gated Edit → Disjoint RL (V1–V4 + 3-domain benchmark) | WSP, `2611.29513`, `2611.33133` + Arm 3b discovery | **9.0/10** |
+| **2** | [`experiments/christmas_tree_node_probes/`](experiments/christmas_tree_node_probes/README.md) | **NEW Diagnostic Bake-Off:** 6-Probe "Christmas-Tree" Node-Tracking Benchmark (DLA, False-Node, RelP, IG-5, Flicker, RRF) + SVG Heatmap | `2508.21258`, WSP, `2610.05190` | **9.0/10** |
 | **2** | [`experiments/whitened_subspace_rfm_edit/`](experiments/whitened_subspace_rfm_edit/README.md) | **NEW Math Fork:** Safety-Nullspace Rank-k Subspace Projection (`RFM-AGOP` / `FORGE`) | `2607.02396`, `2603.27518`, `2605.05220`, `2610.05190` | **8.8/10** |
 | **3** | [`experiments/relp_causal_sniff_rl/`](experiments/relp_causal_sniff_rl/README.md) | **NEW Math Fork:** 1-Pass RelP Causal Attribution Patching Sniff | `2508.21258`, `2610.05190` | **8.5/10** |
 | **4** | [`experiments/zero_shock_stitched_head_rl/`](experiments/zero_shock_stitched_head_rl/README.md) | **NEW Architecture Fork:** Zero-Shock Stitched GQA Head (`W_O_new=0`) + Freeze-Base RL | `2410.11038`, `2609.37702` | **8.2/10** |
