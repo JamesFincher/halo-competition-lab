@@ -135,7 +135,7 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
-        "primary behavior_scaled120 surface is entity-disjoint corpus v2; behavior_scaled_v1_120_bridge is only a comparability bridge, so compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces"
+        "primary behavior_scaled120 surface is entity-disjoint corpus v2; behavior_scaled_v1_120_bridge is only a comparability bridge, so compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; H22 arms use 64 edited columns rather than the validated 135M 16-column operating point, so width/dose remains uncontrolled"
     ],
     "exp153_olmoe_expert_stage_zero": [
         "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
