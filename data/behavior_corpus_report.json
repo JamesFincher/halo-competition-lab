@@ -1,0 +1,90 @@
+{
+  "generator": "scripts/build_behavior_corpus.py",
+  "seed": 42,
+  "train_path": "data/policy_train_scaled.jsonl",
+  "eval_path": "data/policy_eval_scaled.jsonl",
+  "train_sha256": "8c209df943c67ef1f500a711430ca36675b220764d1aa3a737dfe5b507507cfd",
+  "eval_sha256": "41cc60f6ea0b135cb222099510dd46ec065c21fcbd612164da040504e7c35095",
+  "train": {
+    "errors": [],
+    "row_count": 1600,
+    "unique_user_prompts": 1600,
+    "duplicate_user_prompts": 0,
+    "pair_count": 800,
+    "complete_pair_count": 800,
+    "allow_tool_counts": {
+      "send_http": 133,
+      "search_docs": 133,
+      "write_file": 134,
+      "read_file": 134,
+      "run_sql": 133,
+      "run_shell": 133
+    },
+    "refusal_policy_counts": {
+      "SECRET_EXFIL": 267,
+      "DESTRUCTIVE_OP": 267,
+      "PROMPT_INJECTION": 266
+    },
+    "template_family_count": 72,
+    "counterfactual_similarity_mean": 0.6111,
+    "counterfactual_similarity_min": 0.4322,
+    "counterfactual_similarity_max": 0.7805
+  },
+  "heldout": {
+    "errors": [],
+    "row_count": 120,
+    "unique_user_prompts": 120,
+    "duplicate_user_prompts": 0,
+    "pair_count": 60,
+    "complete_pair_count": 60,
+    "allow_tool_counts": {
+      "send_http": 10,
+      "write_file": 10,
+      "read_file": 10,
+      "search_docs": 10,
+      "run_shell": 10,
+      "run_sql": 10
+    },
+    "refusal_policy_counts": {
+      "SECRET_EXFIL": 20,
+      "DESTRUCTIVE_OP": 20,
+      "PROMPT_INJECTION": 20
+    },
+    "template_family_count": 12,
+    "counterfactual_similarity_mean": 0.6348,
+    "counterfactual_similarity_min": 0.4917,
+    "counterfactual_similarity_max": 0.7407
+  },
+  "template_disjointness": {
+    "train_family_count": 72,
+    "heldout_family_count": 12,
+    "shared_families": []
+  },
+  "user_prompt_8gram_overlap": {
+    "shared_ngram_count": 218,
+    "examples": [
+      "1 search docs for the billing api public",
+      "analytics etl staging eu deployment in us east",
+      "api staging deployment in us east 1 execute",
+      "api staging deployment in us east 1 overwrite",
+      "api staging deployment in us east 1 post",
+      "api staging deployment in us east 1 read",
+      "api staging deployment in us east 1 run",
+      "api staging deployment in us east 1 search",
+      "api staging deployment in us east 1 send",
+      "api staging deployment in us east 1 write",
+      "billing api staging deployment in us east 1",
+      "canary deployment in eu central 1 execute pytest",
+      "canary deployment in eu central 1 execute rm",
+      "canary deployment in eu central 1 execute the",
+      "canary deployment in eu central 1 post a",
+      "canary deployment in eu central 1 read secrets",
+      "canary deployment in eu central 1 read vendor",
+      "canary deployment in eu central 1 run explain",
+      "canary deployment in eu central 1 run select",
+      "canary deployment in eu central 1 search docs"
+    ]
+  },
+  "all_errors": [],
+  "passed": true
+}
