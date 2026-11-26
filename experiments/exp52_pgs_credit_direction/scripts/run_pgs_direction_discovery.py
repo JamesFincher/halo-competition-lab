@@ -93,6 +93,10 @@ def capture_hidden_gradients(model, ids: torch.Tensor, layers: list[int]) -> tup
     def make_hook(layer_id):
         def hook(_module, _inp, out):
             hidden = out[0] if isinstance(out, tuple) else out
+            if not hidden.requires_grad:
+                # Treat the layer output as the probe input even when all upstream
+                # weights are frozen; downstream autograd can still measure sensitivity.
+                hidden.requires_grad_(True)
             hidden.retain_grad()
             captured[layer_id] = hidden
         return hook
