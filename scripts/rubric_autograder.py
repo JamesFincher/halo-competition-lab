@@ -359,6 +359,7 @@ PRIMARY_EVAL_KEYS = (
     "nonexportable_session_control_eval",
     "behavior_eval",
     "behavior_scaled120",
+    "measurement",
     "evaluation",
 )
 
