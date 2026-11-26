@@ -167,7 +167,26 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "columns_16 independently reproduces exp129 strength_0p9 exactly because it is the same canonical sparse configuration; treat as deterministic replication, then still require seed replication"
     ],
     "exp132_capability_objective_slider_ablation": [
-        "hybrid capability-primary objective is behaviorally positive, but benchmark evidence is mixed: coarse MMLU/ARC improve while normalized continuation metrics decline; behavior-only arm is destructive"
+        "legacy generation-cache artifact by provenance inference: 1167s runtime ending at 12:59 implies launch before the 12:41 cache fix; capability-only alpha/validation exactly match exp139 while behavioral metrics diverge in the cache-dependent arms, so treat exp132 behavior as cache-confounded and use exp139 as the corrected replication"
+    ],
+    "exp139_cache_corrected_capability_objective": [
+        "cache-corrected replication reverses exp132 behaviorally: hybrid preserves unsafe refusal and reduces benign false refusal but does not raise exactness; capability validation loss improves without reliable benchmark/continuation transfer; metadata says max_new_tokens=48 but behavioral eval omits the argument and therefore uses the library default 80, so do not compare directly with the 48-token capability-format experiments"
+    ],
+    "exp140_answer_focused_capability_objective": [
+        "answer-only validation loss improves but behavior loses unsafe refusal at answer-heavy weighting and benchmark/continuation transfer remains absent; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
+    ],
+    "exp141_benchmark_format_capability": [
+        "benchmark-direct formatting does not improve transfer and is worse behaviorally than the lettered reference; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
+    ],
+    "exp142_capability_training_budget_response": [
+        "larger capability-training budgets do not rescue benchmark transfer; validation loss is nonmonotonic and behavioral safety/exactness degrade; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
+    ],
+    "exp144_sparse_edit_anchored_mlp_lora": [
+        "H22 reaches 82.5/93.3/0 across seeds, but random-layer MLP control matches it exactly; layer-specific complementary transfer is falsified, and the residual +2.5pp gain over sparse edit is only one eval task at n=40",
+        "controls/vector lower bound are excluded as comparators"
+    ],
+    "exp147_additive_capability_behavior_union": [
+        "cache-corrected behavior-only head is near-baseline rather than destructive; capability/behavior unions and learned blends are exactness-negative, so composition interferes rather than synergizes; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
     ],
     "exp82_rank1_rl_trajectory_extrapolation": [
         "actual RL and persistence controls are excluded; rank-one trajectory fits look strong geometrically but extrapolation catastrophically collapses",
@@ -222,6 +241,9 @@ EXPERIMENT_REFERENCE_LABELS: dict[str, set[str]] = {
     "exp82_rank1_rl_trajectory_extrapolation": {"actual_step8_rl"},
     "exp87_multiperspective_abstention_factorization": {"no_steering"},
     "exp143_contrastive_choice_capability": {"correct_answer_causal_reference"},
+    "exp140_answer_focused_capability_objective": {"full_text_uniform_reference"},
+    "exp141_benchmark_format_capability": {"lettered_answer_only_reference"},
+    "exp144_sparse_edit_anchored_mlp_lora": {"vector_only_post_edit_lower_bound"},
 }
 
 
@@ -280,8 +302,11 @@ PRIMARY_EVAL_KEYS = (
     "eval_cap_off",
     "eval_greedy",
     "eval_zero_rl",
-    "behavior_eval",
+    "exported_eval",
     "export_eval",
+    "adapter_eval",
+    "nonexportable_session_control_eval",
+    "behavior_eval",
 )
 
 
@@ -293,6 +318,12 @@ def add_candidate(candidates: list[dict[str, Any]], label: str, obj: Any, path: 
         if isinstance(obj.get(key), dict):
             ev = obj[key]
             break
+    if isinstance(ev, dict) and "exact_compliance_rate" not in ev:
+        for nested_key in PRIMARY_EVAL_KEYS:
+            nested = ev.get(nested_key)
+            if isinstance(nested, dict) and "exact_compliance_rate" in nested:
+                ev = nested
+                break
     if ev is None:
         ev = obj
     if not isinstance(ev, dict) or "exact_compliance_rate" not in ev:
@@ -338,6 +369,14 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
     if isinstance(d.get("stages"), dict):
         for label, stage in d["stages"].items():
             add_candidate(candidates, str(label), stage, f"/stages/{label}")
+
+    if isinstance(d.get("seeded_h22_runs"), dict):
+        for label, run in d["seeded_h22_runs"].items():
+            add_candidate(candidates, f"h22_seed{label}", run, f"/seeded_h22_runs/{label}")
+
+    if isinstance(d.get("controls"), dict):
+        for label, control in d["controls"].items():
+            add_candidate(candidates, str(label), control, f"/controls/{label}")
 
     if isinstance(d.get("modes"), dict):
         for label, mode in d["modes"].items():

@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T14:31:47+00:00",
+  "generated_at_utc": "2026-11-26T14:56:42+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -274,10 +274,115 @@
       "metric_paths": 7
     },
     {
+      "file": "experiments/exp139_cache_corrected_capability_objective/results/cache_corrected_capability_objective_summary.json",
+      "bytes": 60051,
+      "warnings": [],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp140_answer_focused_capability_objective/results/answer_focused_capability_objective_summary.json",
+      "bytes": 49724,
+      "warnings": [],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp141_benchmark_format_capability/results/benchmark_format_capability_summary.json",
+      "bytes": 31662,
+      "warnings": [],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/exp142_capability_training_budget_response/results/capability_training_budget_response_summary.json",
+      "bytes": 214633,
+      "warnings": [],
+      "metric_paths": 7
+    },
+    {
       "file": "experiments/exp143_contrastive_choice_capability/results/contrastive_choice_capability_summary.json",
       "bytes": 26612,
       "warnings": [],
       "metric_paths": 5
+    },
+    {
+      "file": "experiments/exp144_sparse_edit_anchored_mlp_lora/results/sparse_edit_anchored_mlp_lora_summary.json",
+      "bytes": 95009,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/seeded_h22_runs/7/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/seeded_h22_runs/7/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/seeded_h22_runs/7/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/seeded_h22_runs/42/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/seeded_h22_runs/42/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/seeded_h22_runs/42/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/seeded_h22_runs/123/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/seeded_h22_runs/123/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/seeded_h22_runs/123/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/controls/lora_only_no_edit_control/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/controls/lora_only_no_edit_control/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/controls/random_layer_mlp_control/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/controls/random_layer_mlp_control/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/controls/random_layer_mlp_control/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/controls/edited_layer_inclusion_negative_control/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/controls/edited_layer_inclusion_negative_control/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/controls/edited_layer_inclusion_negative_control/exported_behavior_delta_vs_canonical"
+        }
+      ],
+      "metric_paths": 21
     },
     {
       "file": "experiments/exp145_inversion_logit_diagnostic/results/inversion_logit_diagnostic_summary.json",
@@ -299,6 +404,12 @@
         }
       ],
       "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp147_additive_capability_behavior_union/results/additive_capability_behavior_union_summary.json",
+      "bytes": 61083,
+      "warnings": [],
+      "metric_paths": 11
     },
     {
       "file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
@@ -1241,13 +1352,8 @@
     "exp128_trajectory_collateral_repair_adapter",
     "exp131_context_gated_dose_cancellation",
     "exp133_alpha_init_continuation_confirmation",
-    "exp139_cache_corrected_capability_objective",
-    "exp140_answer_focused_capability_objective",
-    "exp141_benchmark_format_capability",
-    "exp142_capability_training_budget_response",
-    "exp144_sparse_edit_anchored_mlp_lora",
-    "exp147_additive_capability_behavior_union",
     "exp148_legacy_scorer_flattening_audit",
+    "exp149_h22_continuation_followup",
     "exp150_l20_cache_corrected_seed_replication",
     "exp84_momentum_carryover_half_edit",
     "exp97_independent_alpha_init_scale",
@@ -1398,7 +1504,26 @@
       "columns_16 independently reproduces exp129 strength_0p9 exactly because it is the same canonical sparse configuration; treat as deterministic replication, then still require seed replication"
     ],
     "exp132_capability_objective_slider_ablation": [
-      "hybrid capability-primary objective is behaviorally positive, but benchmark evidence is mixed: coarse MMLU/ARC improve while normalized continuation metrics decline; behavior-only arm is destructive"
+      "legacy generation-cache artifact by provenance inference: 1167s runtime ending at 12:59 implies launch before the 12:41 cache fix; capability-only alpha/validation exactly match exp139 while behavioral metrics diverge in the cache-dependent arms, so treat exp132 behavior as cache-confounded and use exp139 as the corrected replication"
+    ],
+    "exp139_cache_corrected_capability_objective": [
+      "cache-corrected replication reverses exp132 behaviorally: hybrid preserves unsafe refusal and reduces benign false refusal but does not raise exactness; capability validation loss improves without reliable benchmark/continuation transfer; metadata says max_new_tokens=48 but behavioral eval omits the argument and therefore uses the library default 80, so do not compare directly with the 48-token capability-format experiments"
+    ],
+    "exp140_answer_focused_capability_objective": [
+      "answer-only validation loss improves but behavior loses unsafe refusal at answer-heavy weighting and benchmark/continuation transfer remains absent; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
+    ],
+    "exp141_benchmark_format_capability": [
+      "benchmark-direct formatting does not improve transfer and is worse behaviorally than the lettered reference; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
+    ],
+    "exp142_capability_training_budget_response": [
+      "larger capability-training budgets do not rescue benchmark transfer; validation loss is nonmonotonic and behavioral safety/exactness degrade; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
+    ],
+    "exp144_sparse_edit_anchored_mlp_lora": [
+      "H22 reaches 82.5/93.3/0 across seeds, but random-layer MLP control matches it exactly; layer-specific complementary transfer is falsified, and the residual +2.5pp gain over sparse edit is only one eval task at n=40",
+      "controls/vector lower bound are excluded as comparators"
+    ],
+    "exp147_additive_capability_behavior_union": [
+      "cache-corrected behavior-only head is near-baseline rather than destructive; capability/behavior unions and learned blends are exactness-negative, so composition interferes rather than synergizes; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
     ],
     "exp82_rank1_rl_trajectory_extrapolation": [
       "actual RL and persistence controls are excluded; rank-one trajectory fits look strong geometrically but extrapolation catastrophically collapses",
