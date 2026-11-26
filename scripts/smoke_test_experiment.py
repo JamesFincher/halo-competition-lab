@@ -42,6 +42,7 @@ TINY_VALUES = {
     "--cap-items-per-source": "2",
     "--continuation-n": "2",
     "--diagnostic-n": "2",
+    "--scale-count": "2",
     "--probe-rows": "4",
     "--population": "2",
     "--generations": "1",
