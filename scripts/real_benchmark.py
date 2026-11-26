@@ -50,7 +50,7 @@ def main():
         arc = load_dataset("allenai/ai2_arc", "ARC-Easy", split=f"test[:{args.n}]")
         items = [{"context": r["question"], "choices": r["choices"]["text"], "answer": r["choices"]["text"][r["choices"]["label"].index(r["answerKey"])]} for r in arc]
         res["arc_easy"] = round(score_mc(model, tok, device, items), 2)
-        print(f"  ARC-Easy: {res['arc_easy']}%, flush=True")
+        print(f"  ARC-Easy: {res['arc_easy']}%", flush=True)
     except Exception as e:
         print(f"  ARC failed: {str(e)[:80]}", flush=True)
     # HellaSwag
