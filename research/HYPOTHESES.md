@@ -19,7 +19,7 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 |---:|---|---|---|
 | 9.6 | H2 — Operator-discrepancy collateral repair adapter | closed-form subspace repair | promoted: strongest surgical operator still leaves 93.3% unsafe refusal |
 | 9.4 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | promoted: prerequisite for trusting/exporting strong targeted-RL result |
-| 9.2 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | promoted: surgical and RL winners both lose exactly 2/30 unsafe refusals |
+| 9.2 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | queued as exp87; promoted because surgical and RL winners both lose exactly 2/30 unsafe refusals |
 | 9.0 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | promoted by targeted-RL safety cost |
 | 8.9 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT + attention heads | promoted as lower-collateral alternative to targeted LoRA |
 | 8.5 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | ready for direct comparison with localized LoRA |
@@ -27,8 +27,8 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 8.2 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | proposed |
 | 8.1 | H8 — Displacement-probe edit auditor and reference chooser | cheap pre-GPU screening diagnostic | promoted slightly: new labeled collapse/success outcomes available |
 | 8.0 | H16 — Norm-calibrated single-coordinate decision steering | sparse activation surgery | queued as exp67 |
-| 7.8 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | demoted: unkeyed multi-head banks collapse; exact-zero gating still untested |
-| 7.7 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted/staged behind exp58–66 attention queue |
+| 7.8 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | demoted: unkeyed multi-head banks collapse; exp61/66 test keying/composition and exp90/91 isolate width/depth |
+| 7.7 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted/staged behind exp58–66 plus exp90/91 width/depth ablations |
 | 7.1 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | exploratory |
 | 7.0 | H17 — Prepare-for-truncation elastic low-rank deployment | compression/raw capability | exploratory |
 | 6.8 | H5 — Output-matched steering-vector compression | activation steering + RL initialization | demoted: vector-only RL was performance-negative |
@@ -42,7 +42,7 @@ Updated after the second harvest (Exp 1/22/34/43 + slider-fork results). The key
 
 1. **H10 — merge-aware served-weight action-token fine-tuning.** First methodological prerequisite: validate and preserve the strong localized-GRPO result in the exact exported artifact before stacking anything else.
 2. **H2 — operator-discrepancy collateral repair.** Now the top surgical hypothesis: apply it to the Exp 1 arm1 operator (top-2 contrastive layers, top-32 columns, strength 0.5) or the exp63 dose-response winner. Target the remaining unsafe-refusal loss without destroying the 75% exact / 0% benign-FR gain.
-3. **H15 — multi-perspective abstention-direction factorization.** Run in parallel or immediately before H2: measure whether benign false-refusal and harmful true-refusal directions are separable enough to tell H2 which components not to repair away.
+3. **H15 — multi-perspective abstention-direction factorization.** Already queued as exp87; use its cosine/FDR/steering outcome as the gate for H2 subspace selection rather than duplicating the probe.
 4. **H7 — drift-triggered orthogonal rotation lanes.** Best next PEFT comparator to targeted LoRA because the localized-GRPO win came with an unsafe-refusal cost; rotations are a plausible lower-collateral way to keep the exactness gain.
 5. **H9 — curvature-constrained acquisition deltas.** General preservation-aware replacement for hard nullspaces; use general/benign preservation data to attack the same 93.3% unsafe ceiling.
 6. **H12 — closed-form decision-readout correction.** Cheap deterministic probe of whether residual decision errors are readable without further RL.
@@ -50,7 +50,7 @@ Updated after the second harvest (Exp 1/22/34/43 + slider-fork results). The key
 
 Hold or stage behind current queue:
 
-- **H1/H3:** attention-insert evidence is fragile. Slider-fork v1 single is mildly positive, but multi-head/wide/memory banks collapse and Exp 43 composition hurts exactness. Do not build larger banks until exp61/65/66 clarify exact-zero keying, insertion depth, and composition.
+- **H1/H3:** attention-insert evidence is fragile. Slider-fork v1 single is mildly positive, but multi-head/wide/memory banks collapse and Exp 43 composition hurts exactness. Do not build larger banks until exp61/65/66 clarify keying/depth/composition and exp90/91 isolate width/depth causally.
 - **H5/H11:** vector-only RL was negative; output-matched compression is still a distinct supervised hypothesis but no longer deserves near-term GPU time.
 - **H13:** naive memory-head v5 collapsed; treat feedback/memory inserts as high-risk exploration, not near-term capacity work.
 - **H16:** already queued as exp67.
