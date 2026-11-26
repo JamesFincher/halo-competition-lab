@@ -1,13 +1,22 @@
 # Experiment Leaderboard — Rubric-Graded (see research/RUBRIC.md)
 
 Composite = 0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R (each /10).
-Baseline: SFT micro-model = **55.0% exact** / 40 unseen tasks, **100% unsafe refusal**, **90% benign false refusal**. Last regenerated: 2026-11-26 17:35 UTC.
+Baseline: SFT micro-model = **55.0% exact** / 40 unseen tasks, **100% unsafe refusal**, **90% benign false refusal**. Last regenerated: 2026-11-26 17:37 UTC.
 
-## Current canonical intervention ranking
+## Validated deployment snapshot
+
+| Recipe | Behavioral result | Validation status | Main caveat |
+|---|---|---|---|
+| Ultra-sparse output-side residual-subspace projection, L29/28, 16 columns/layer, strength 0.9 | **80.0% exact / 93.3% unsafe / 0% benign-FR** | Reproduced by Exp129 strength response and Exp130 column-count response | Exact Exp17 DLA/IG provenance remains unreplicated on GPU; recipe is validated as an operator family, not as the original experiment |
+| H22 sparse edit + post-edit anchored complementary MLP-only LoRA | **82.5% / 93.3% / 0% in seeds 7/42/123** | Exported merged artifact matches adapter eval in all three seeds | Random-layer MLP control also reaches 82.5%, and +2.5 pp is only one n=40 task |
+| Cache-corrected L20 width-64 inserted attention head | **72.5% / 90.0% / 0%** | Single cache-corrected seed/diagnostic | Exp150/151 seed replication and depth re-ablation are still pending |
+| Probe-forced policy readout (Exp102) | **95.0% / 100% / 0%** | Diagnostic upper bound; majority/random forced controls fail | Inference-time scaffold, not a weight-level intervention |
+
+## Rubric composite ranking (raw autograder)
 
 | Rank | Exp | Technique | Key Result | P | S | C | E | N | K | T | R | **Score** | Grade |
 |---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **17** | christmas_tree_node_probes | `probe4_integrated_grads_5`: 82.5% exact (+27.5 pp), 90.0% unsafe refusal, 0.0% benign FR | 10 | 8 | 10 | 10 | 8 | 9 | 8 | 7 | **9.05** | **S** |
+| 1 | **17** | christmas_tree_node_probes | `probe4_integrated_grads_5`: 82.5% exact (+27.5 pp), 90.0% unsafe refusal, 0.0% benign FR † | 10 | 8 | 10 | 10 | 8 | 9 | 8 | 7 | **9.05** | **S** |
 | 2 | **1** | edit_then_target_rl | `arm2_localized_grpo_only`: 80.0% exact (+25.0 pp), 93.3% unsafe refusal, 0.0% benign FR † | 10 | 8 | 10 | 4 | 7 | 8 | 7 | 5 | **8.10** | **A** |
 | 3 | **144** | exp144_sparse_edit_anchored_mlp_lora | `h22_seed7`: 82.5% exact (+27.5 pp), 93.3% unsafe refusal, 0.0% benign FR † | 10 | 8 | 10 | 2 | 7 | 8 | 7 | 5 | **7.90** | **A** |
 | 4 | **85** | exp85_evolution_strategies_32d_surgical_sub… | `es_final_center`: 82.5% exact (+27.5 pp), 93.3% unsafe refusal, 0.0% benign FR † | 10 | 8 | 10 | 2 | 7 | 8 | 7 | 5 | **7.90** | **A** |
@@ -38,7 +47,7 @@ Baseline: SFT micro-model = **55.0% exact** / 40 unseen tasks, **100% unsafe ref
 | 29 | **42** | slider_gated_attention_head | `after`: 42.5% exact (-12.5 pp), 90.0% unsafe refusal, 30.0% benign FR † | 0 | 8 | 5 | 6 | 10 | 10 | 9 | 5 | **5.65** | **C** |
 | 30 | **41** | original_operator_replication | `top2_gated`: 67.5% exact (+12.5 pp), 100.0% unsafe refusal, 80.0% benign FR † | 5 | 10 | 1 | 4 | 2 | 9 | 8 | 6 | **5.60** | **C** |
 
-† = validity warning. E is full experiment wall time as recorded by the harness, not always marginal deployment cost. The table is sorted by rubric composite, not by preference for deployment.
+† = validity warning. E is full experiment wall time as recorded by the harness, not always marginal deployment cost. The table is sorted by rubric composite, not by preference for deployment; use the validated snapshot above for the current recipe choice.
 
 ## Deployment-relevant interpretation
 

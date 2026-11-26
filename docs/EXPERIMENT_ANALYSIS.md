@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 17:35 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
+Last updated: 2026-11-26 17:37 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
 
 ## Executive synthesis — current validated state
 
@@ -78,7 +78,7 @@ This table is generated from `research/AUTOGRADED_SCORES.json` and covers every 
 | 14 | `zero_shock_stitched_head_rl` | `eval` | 45.0% | 100.0% | 100.0% | 45.0% | 4.70 | D | — |
 | 15 | `relp_causal_sniff_rl` | `eval` | 62.5% | 100.0% | 80.0% | 65.0% | 5.40 | D | — |
 | 16 | `whitened_subspace_rfm_edit` | `raw_rank1` | 65.0% | 90.0% | 0.0% | 80.0% | 6.70 | B | raw_rank1 is the valid positive arm; safety_null_rank2/3/4 are accepted_strength=0 no-op baseline copies, not active interventions |
-| 17 | `christmas_tree_node_probes` | `probe4_integrated_grads_5` | 82.5% | 90.0% | 0.0% | 92.5% | 9.05 | S | — |
+| 17 | `christmas_tree_node_probes` | `probe4_integrated_grads_5` | 82.5% | 90.0% | 0.0% | 92.5% | 9.05 | S | CPU-era probe result; exact Exp17 probe1-DLA/probe4-IG GPU replication remains open because exp41 used Exp12 false-node selection instead |
 | 20 | `random_node_control_proof` | `dla_top64` | 15.0% | 0.0% | 0.0% | 25.0% | 3.05 | D | same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected |
 | 21 | `ig5_dla_closed_loop_rl` | `st0.65` | 15.0% | 0.0% | 0.0% | 27.5% | 3.05 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | 22 | `multi_seed_stability_sweep` | `best_reported` | 37.5% | 46.7% | 0.0% | 50.0% | 3.05 | D | — |

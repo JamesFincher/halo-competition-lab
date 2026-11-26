@@ -43,7 +43,10 @@
     "n_eval": 40,
     "mean_reward": 0.92,
     "action_accuracy": 92.5,
-    "policy_accuracy": 92.5
+    "policy_accuracy": 92.5,
+    "validity_warnings": [
+      "CPU-era probe result; exact Exp17 probe1-DLA/probe4-IG GPU replication remains open because exp41 used Exp12 false-node selection instead"
+    ]
   },
   "collision_priced_allocation": {
     "best_arm": "pure_dla",

@@ -56,6 +56,9 @@ CONTROL_TOKENS = (
 # Semantic QC findings that cannot be inferred reliably from metrics alone. Keep these
 # attached to generated scores so later automated refreshes do not silently lose them.
 EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
+    "christmas_tree_node_probes": [
+        "CPU-era probe result; exact Exp17 probe1-DLA/probe4-IG GPU replication remains open because exp41 used Exp12 false-node selection instead"
+    ],
     "original_operator_replication": [
         "mislabeled replication target: implementation uses Exp12 false-node selection, not Exp17 probe1-DLA or probe4-IG selection; the 80-82.5% CPU-era DLA/IG result remains untested on GPU"
     ],

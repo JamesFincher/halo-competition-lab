@@ -247,11 +247,20 @@ def render_leaderboard(now: str) -> str:
 Composite = 0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R (each /10).
 Baseline: SFT micro-model = **55.0% exact** / 40 unseen tasks, **100% unsafe refusal**, **90% benign false refusal**. Last regenerated: {now} UTC.
 
-## Current canonical intervention ranking
+## Validated deployment snapshot
+
+| Recipe | Behavioral result | Validation status | Main caveat |
+|---|---|---|---|
+| Ultra-sparse output-side residual-subspace projection, L29/28, 16 columns/layer, strength 0.9 | **80.0% exact / 93.3% unsafe / 0% benign-FR** | Reproduced by Exp129 strength response and Exp130 column-count response | Exact Exp17 DLA/IG provenance remains unreplicated on GPU; recipe is validated as an operator family, not as the original experiment |
+| H22 sparse edit + post-edit anchored complementary MLP-only LoRA | **82.5% / 93.3% / 0% in seeds 7/42/123** | Exported merged artifact matches adapter eval in all three seeds | Random-layer MLP control also reaches 82.5%, and +2.5 pp is only one n=40 task |
+| Cache-corrected L20 width-64 inserted attention head | **72.5% / 90.0% / 0%** | Single cache-corrected seed/diagnostic | Exp150/151 seed replication and depth re-ablation are still pending |
+| Probe-forced policy readout (Exp102) | **95.0% / 100% / 0%** | Diagnostic upper bound; majority/random forced controls fail | Inference-time scaffold, not a weight-level intervention |
+
+## Rubric composite ranking (raw autograder)
 
 {leaderboard_table(30)}
 
-† = validity warning. E is full experiment wall time as recorded by the harness, not always marginal deployment cost. The table is sorted by rubric composite, not by preference for deployment.
+† = validity warning. E is full experiment wall time as recorded by the harness, not always marginal deployment cost. The table is sorted by rubric composite, not by preference for deployment; use the validated snapshot above for the current recipe choice.
 
 ## Deployment-relevant interpretation
 
