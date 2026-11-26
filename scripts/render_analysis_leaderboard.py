@@ -23,6 +23,7 @@ NON_TECHNIQUE_DIAGNOSTICS = {
     "exp159_olmoe_export_precision_diagnosis",
     "exp160_olmoe_checkpoint_transfer_export_eval",
     "exp161_olmoe_capability_corpus_generalization",
+    "exp162_qwen3_sparse_edit_width_response",
 }
 
 
@@ -176,6 +177,7 @@ def frontier_result_status() -> str:
             result_state("exp159", "Exp159 export precision diagnosis"),
             result_state("exp160", "Exp160 transfer/export evaluation"),
             result_state("exp161", "Exp161 corpus generalization"),
+            result_state("exp162", "Exp162 Qwen width response"),
         ]
     ) + "."
 
