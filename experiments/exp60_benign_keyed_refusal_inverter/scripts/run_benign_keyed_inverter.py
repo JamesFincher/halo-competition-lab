@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experiment 59: Benign-Keyed Negative-Image Refusal Inverter.
+"""Experiment 60: Benign-Keyed Negative-Image Refusal Inverter.
 
 Implements SUBAGENT3 rank-1: embed a conditional polarity flip in one MLP neuron.
 A benign/unsafe LDA key in up_proj carries the sign; the down_proj column writes
@@ -118,8 +118,8 @@ def main():
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args(); args.rl_steps = min(args.rl_steps, 6)
     t0 = time.time(); device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    out_dir = ROOT / "experiments/exp59_benign_keyed_refusal_inverter/results"; out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[Exp 59] Benign-Keyed Negative-Image Refusal Inverter on {device}", flush=True)
+    out_dir = ROOT / "experiments/exp60_benign_keyed_refusal_inverter/results"; out_dir.mkdir(parents=True, exist_ok=True)
+    print(f"[Exp 60] Benign-Keyed Negative-Image Refusal Inverter on {device}", flush=True)
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl")
     eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
     prompt_stream = vec_rl.make_prompt_stream(train_rows)
@@ -160,9 +160,9 @@ def main():
         trained, stats = base_rl.run_grpo_arm("inverter_then_complementary_lora", accepted, ref, tokenizer, prompt_stream, device, regex, 16, args.rl_steps, args.group_size, args.lr, args.beta, log, args.seed)
     rl_eval = base_rl.evaluate_heldout(trained, tokenizer, eval_rows, device)
     print(f"  [inverter+RL] exact={rl_eval['exact_compliance_rate']:.1f}% unsafe={rl_eval['unsafe_refusal_rate']:.1f}% benign_fr={rl_eval['benign_false_refusal_rate']:.1f}%", flush=True)
-    summary = {"experiment": "exp59_benign_keyed_refusal_inverter", "research_source": "research/SUBAGENT3_CREATIVE_HEURISTICS.md rank 1", "paper_inspiration": ["arXiv:2406.11717", "arXiv:2012.14913"], "config": vars(args), "device": str(device), "baseline_sft": sft_eval, "input_counts": {str(li): {k: len(v) for k, v in inputs[li].items()} for li in LAYERS}, "top_singular_values": singulars, "grid": grid, "accepted": {"name": best_name, "edit": best_info, "eval_zero_rl": best_eval}, "inverter_then_complementary_lora": {"train_stats": stats, "eval": rl_eval, "target_regex": regex}, "wall_sec": round(time.time() - t0, 2)}
+    summary = {"experiment": "exp60_benign_keyed_refusal_inverter", "research_source": "research/SUBAGENT3_CREATIVE_HEURISTICS.md rank 1", "paper_inspiration": ["arXiv:2406.11717", "arXiv:2012.14913"], "config": vars(args), "device": str(device), "baseline_sft": sft_eval, "input_counts": {str(li): {k: len(v) for k, v in inputs[li].items()} for li in LAYERS}, "top_singular_values": singulars, "grid": grid, "accepted": {"name": best_name, "edit": best_info, "eval_zero_rl": best_eval}, "inverter_then_complementary_lora": {"train_stats": stats, "eval": rl_eval, "target_regex": regex}, "wall_sec": round(time.time() - t0, 2)}
     path = out_dir / "benign_keyed_inverter_summary.json"; path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    print(f"[Exp 59 DONE] wrote {path} in {summary['wall_sec']}s", flush=True)
+    print(f"[Exp 60 DONE] wrote {path} in {summary['wall_sec']}s", flush=True)
 
 
 if __name__ == "__main__":

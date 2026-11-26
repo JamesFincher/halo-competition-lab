@@ -1,4 +1,4 @@
-# Experiment 59 — Benign-Keyed Negative-Image Refusal Inverter
+# Experiment 60 — Benign-Keyed Negative-Image Refusal Inverter
 
 **Research inspiration:** `research/SUBAGENT3_CREATIVE_HEURISTICS.md` rank **1** + **arXiv:2406.11717** (single-direction refusal mediation) and **arXiv:2012.14913** (feed-forward layers as key-value memories).
 
@@ -17,7 +17,7 @@ Refusal need not be globally erased. One carefully chosen MLP neuron can act as 
 ## Run
 
 ```bash
-python3 experiments/exp59_benign_keyed_refusal_inverter/scripts/run_benign_keyed_inverter.py
+python3 experiments/exp60_benign_keyed_refusal_inverter/scripts/run_benign_keyed_inverter.py
 ```
 
 ## Output
