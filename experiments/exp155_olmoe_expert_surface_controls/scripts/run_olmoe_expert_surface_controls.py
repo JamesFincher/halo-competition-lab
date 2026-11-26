@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-"""Staged exp154: benchmark-selective OLMoE expert output adapters.
+"""Exp155: OLMoE expert-surface controls for interpreting exp154.
 
-Activation note: this file is intentionally not named run_*.py, so autoqueue ignores it.
-After exp153 stage-zero validates OLMoE load/cache/memory on the H100, activate by copying
-to scripts/run_olmoe_expert_adapters.py, compile-checking, and running the full smoke test.
-
-Zero-init low-rank adapters are trained only inside expert down-projection surfaces:
-benchmark-selective experts (top answer-token routed), parameter-matched random experts,
-and a parameter-matched diffuse rank-1 control. Base weights and routers are frozen.
+Under identical answer-only capability training, compares adapters in the lowest
+answer-token-routed experts with exact-parameter-matched dense attention LoRA.
+Together with exp154's benchmark-selective and random-expert arms, this tests whether
+capability movement depends on activated MoE expert position or simply on generic
+adaptation capacity. Base weights and routers are frozen; behavior uses corpus v2 as
+primary and v1 only as a bridge.
 """
 from __future__ import annotations
 
@@ -134,7 +133,7 @@ def cache_consistency(model, tokenizer, device) -> dict:
 
 
 @torch.no_grad()
-def profile_answer_experts(model, tokenizer, rows: list[dict], device, top_n: int, max_rows: int) -> dict[int, list[int]]:
+def profile_answer_experts(model, tokenizer, rows: list[dict], device, top_n: int, max_rows: int) -> list[torch.Tensor]:
     caps = [[] for _ in model.model.layers]
     hooks = []
     def mk(idx):
@@ -372,7 +371,7 @@ def main():
     if device.type=="cuda": torch.cuda.empty_cache()
     hidden=2048 if not smoke() else 32; intermediate=1024 if not smoke() else 16
     arm_specs=[
-      {"arm":"inactive_expert_rank8_control","kind":"inactive_experts","selections":inactive,"rank":args.rank},
+      {"arm":"lowest_answer_token_expert_rank8_control","kind":"inactive_experts","selections":inactive,"rank":args.rank},
       {"arm":"dense_attention_lora_rank12_parameter_matched","kind":"dense_attention_lora","selections":None,"rank":12},
     ]
     done=completed_arms()
@@ -409,7 +408,7 @@ def main():
       if bank is not None: del bank
       if device.type=="cuda": torch.cuda.empty_cache()
     arms=[json.loads(x) for x in ARM_JSONL.read_text().splitlines() if x.strip()]
-    write_json(RESULTS_DIR/"olmoe_expert_surface_controls_summary.json",{"experiment":"exp155_olmoe_expert_surface_controls","model":MODEL_NAME,"question":"Do activated expert adapters outperform parameter-matched inactive-expert and dense-attention controls under identical answer-only capability training?","baseline":baseline,"arms":arms,"wall_sec":round(time.time()-t0,2),"smoke_test":smoke()})
+    write_json(RESULTS_DIR/"olmoe_expert_surface_controls_summary.json",{"experiment":"exp155_olmoe_expert_surface_controls","model":MODEL_NAME,"question":"Are exp154 expert-adapter effects specific to frequently activated expert positions when compared with lowest-answer-token experts and parameter-matched dense attention LoRA?","baseline":baseline,"arms":arms,"wall_sec":round(time.time()-t0,2),"smoke_test":smoke()})
     if smoke(): shutil.rmtree(ckpt_base,ignore_errors=True)
     print(f"[DONE] exp155 arms={len(arms)} wall={round(time.time()-t0,2)}s",flush=True)
 
