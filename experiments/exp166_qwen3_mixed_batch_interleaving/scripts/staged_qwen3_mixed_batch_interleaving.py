@@ -120,7 +120,7 @@ def train_mixed_lora(model,tokenizer,behavior_rows,capability_rows,device,checkp
 
 def measure(model,tok,eval_rows,device,max_new_tokens,continuation_n):
     return {
-        'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4),
+        'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4,include_rows=True),
         'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n),
         'transfer_benchmark':run_transfer_benchmark(model,tok,device,max(continuation_n//2,1)),
     }
