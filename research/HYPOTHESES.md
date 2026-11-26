@@ -11,6 +11,8 @@ Validated local assets:
 - **Capability transfer at 135M is falsified for tested inserted-head objectives:** cache-corrected full-text, answer-focused, benchmark-format, contrastive-choice, budget-scaling, and additive-union variants improve validation loss but not continuation-benchmark transfer, while behavior often degrades. Legacy benchmark movement is length/artifact-biased and must not be used as capability evidence.
 - **Attention-insert interpretation reset:** pre-fix slider conclusions were KV-cache-confounded. Cache-corrected L20 width64 reaches **72.5/90/0** in one seed, so attention insertion is not dead, but scale-pivot evidence now favors MoE activated-expert interventions over inserted dense heads for capability work.
 - **Repair geometry is still useful but not dominant:** exp87 shows stable false-refusal/ambiguity directions but no causal behavioral steering; exp136 oracle cancellation trades exactness for unsafe-refusal recovery. These are 135M behavioral refinements, not ceiling-breaking mechanisms.
+- **Decision-readout bottleneck is now strongly validated:** exp102 cross-fitted shrinkage-LDA probes reach 100% crossfit accuracy for action/tool/policy at layer 20, and probe-guided forcing yields **95% exact / 100% unsafe refusal / 0% benign-FR** in both SFT and validated-edit models versus 55% or 65% unguided. This is not yet a weight-space solution—it is an inference-time forced-probe upper bound—but it proves correct decisions are present in hidden states and makes H18 weight-folding the top 135M behavioral follow-up. Template leakage and rare-tool generalization remain untested, so H23 data scaling is still necessary.
+- **Legacy benchmark scalar is empirically artifact-flattened:** exp148 confirms legacy multiple-choice movement can reflect logit flattening/length bias; continuation-token scoring and behaviorally intact controls remain mandatory for capability claims.
 - **Orchestrated pivot queue:** corpus foundry, Qwen3-4B behavioral track, and OLMoE expert track are commissioned. Hypotheses that scale data/model class dominate; most 135M capability-transfer and architecture-complexity hypotheses are demoted or frozen.
 - **Known dead ends:** unembedding-direction weight edits collapse into always-call behavior at all tested strengths; fp32 does not rescue them; degenerate collinear push-pull is a sign/strength artifact; hard nullspaces and binary masks are too destructive on a 135M model.
 
@@ -23,12 +25,12 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 9.8 | H23 — Counterfactual tool-balanced corpus scaling | data-scale pivot + tool-readout repair | new top hypothesis; directly attacks the 144-row/tool-starved data bottleneck |
 | 9.6 | H24 — Qwen3-4B scale-pivot behavioral replication | model-scale pivot + plain LoRA | new; tests representational-crowding ceiling with the expanded corpus |
 | 9.4 | H25 — OLMoE activated-expert adapter surgery | MoE expert specialization + scale pivot | new; preferred manipulation surface for competition-scale models |
+| 9.3 | H18 — Protected FisherGate decision-readout edit | closed-form readout surgery | exp102 strongly positive as forced-probe upper bound; weight-folded version is top 135M behavioral follow-up |
 | 8.9 | H22 — Ultra-sparse edit anchored complementary MLP-only LoRA | 135M champion baseline | exp144 positive/replicated at 82.5/93.3/0, but random-layer control matches and ceiling remains |
 | 8.6 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance geometry | exp87 mixed: stable directions exist, steering does not move behavior |
 | 8.5 | H2 — Composite operator-discrepancy collateral repair | closed-form trajectory repair | queued as exp128; useful 135M refinement, not ceiling-breaking |
-| 8.3 | H18 — Protected FisherGate decision-readout edit | closed-form readout surgery | readout bottleneck is validated conceptually, but data/model scale come first |
 | 8.1 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | queued as exp121; 135M refinement |
-| 8.0 | H12 — Closed-form decision-readout correction | gradient-free readout surgery | queued as exp102; important diagnostic for tool-readout bottleneck |
+| 8.0 | H12 — Closed-form decision-readout correction | gradient-free readout surgery | exp102 positive diagnostic: 100% crossfit probes and 95/100/0 forced-probe upper bound |
 | 7.9 | H6 — Input-adaptive Kronecker lanes | parameter-efficient surgical adaptation | queued as exp123; must justify complexity after random-layer H22 control |
 | 7.8 | H19 — Context-gated rank-one dose cancellation | input-conditioned surgical repair | exp136 mixed; oracle works, learned gate weak |
 | 7.7 | H20 — Kolpona-style neuron ladder | gradient-free neuron programming | exp103 suppression negative; only paired closed-form writes remain interesting |
@@ -51,9 +53,9 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 Updated after the four pivot-lens analyses and the exp139–147/H22 harvest. The ranking rule has changed: **data scale and model scale dominate 135M method cleverness**. The 135M stack remains a baseline and safety-testbed, not the main capability frontier.
 
-1. **Build the data foundation first:** implement H23's counterfactual tool-balanced corpus and scaled capability/replay corpus. Measure action/tool/policy error decomposition, especially send_http and rare-tool coverage, before evaluating any new method.
-2. **Scale the model class:** use H24 to test Qwen3-4B + plain LoRA on the same expanded data. If Qwen3-4B exceeds the 82.5% ceiling while 135M does not, representational crowding is confirmed as the binding constraint.
-3. **Pivot surgical insertion to MoE experts:** use H25 to test OLMoE activated-expert adapters. This directly serves the competition path toward gpt-oss-20b-class models and replaces dense inserted-head expansion as the preferred architectural surface.
+1. **Build the data foundation first:** implement H23's counterfactual tool-balanced corpus and scaled capability/replay corpus. Measure action/tool/policy error decomposition, especially send_http and rare-tool coverage. This is now also the leakage/generalization control for exp102's perfect-looking readout probes.
+2. **Weight-fold the validated readout:** implement H18 using exp102's layer-20 probe directions, but evaluate on fresh counterfactual/paraphrase splits rather than template-matched rows. In parallel, scale the model class with H24/Qwen3-4B + plain LoRA on the same expanded data.
+3. **Pivot surgical insertion to MoE experts:** use H25 to test OLMoE activated-expert adapters. This directly serves the competition path toward gpt-oss-20b-class models and replaces dense inserted-head expansion as the preferred architectural surface. H24/H25 remain essential even if H18 works because competition scale and capability transfer are separate axes.
 4. **Use H22/exp144 as the 135M champion baseline.** It is replicated, export-consistent, and zero-variance, but random-layer control matches it; do not treat complement-layer specificity or the 82.5% ceiling as solved.
 5. **Finish already queued 135M diagnostics selectively:** exp102/H12 is valuable because it tests readout/tool-decision structure; exp128/H2, exp120/121/123, and exp124/125 are second-tier refinements. Do not let them delay corpus/Qwen/OLMoE tracks.
 6. **Cache-corrected attention work is behavioral-only for now.** L20 width64 is a valid behavioral actuator, but capability transfer through inserted dense heads is falsified at 135M. Any further attention work must either serve behavioral control or move to MoE experts.
@@ -62,7 +64,7 @@ Updated after the four pivot-lens analyses and the exp139–147/H22 harvest. The
 Unqueued but high-value after the gates:
 
 - **H23/H24/H25** are the only immediate high-priority unqueued directions.
-- **H18** remains useful if exp102 confirms linear decision readability, especially as a tool-readout repair.
+- **H18** is now immediate: exp102 confirms linear decision readability and a 95/100/0 forced-probe upper bound; the open question is exportable weight folding and fresh-split generalization.
 - **H8** is worth preserving only if the auditor is model-agnostic and can transfer to Qwen/OLMoE.
 
 Frozen or sharply demoted:
@@ -467,7 +469,7 @@ Expected: trajectory-aware decision-token steering achieves most of always-on st
 
 ## H12 — Closed-form decision-readout correction
 
-**Priority: 8.0/10** *(queued as exp102; H18 is the follow-on weight-folded version if this probe succeeds.)*
+**Priority: 8.0/10** *(exp102 positive diagnostic: layer-20 shrinkage-LDA probes are crossfit-perfect and forced-probe generation reaches 95/100/0; H18 is now the weight-folded follow-up.)*
 
 ### Novel idea
 
@@ -658,7 +660,7 @@ Expected: prepared checkpoints retain more benchmark and policy performance than
 
 ## H18 — Protected FisherGate decision-readout edit
 
-**Priority: 8.3/10** *(high potential but staged behind exp102 because it should only be implemented if decision errors are linearly/kernel-linearly readable.)*
+**Priority: 9.3/10** *(strongly upgraded after exp102: layer-20 closed-form probes are crossfit-perfect and probe-guided forcing reaches 95/100/0; the remaining question is whether this hidden decision information can be folded into weights without inference-time forcing.)*
 
 ### Novel idea
 
@@ -670,19 +672,19 @@ Halo's strict action decision is concentrated in a few token positions and may r
 
 ### Concrete experiment design
 
-1. Cache final hidden states immediately before action/tool/policy-code value tokens on teacher-forced train/dev rows. Build four state groups: correct benign `call_tool`, benign false refusal, correct unsafe refusal, and post-decision/schema-continuation states.
+1. Start from exp102's validated layer-20 shrinkage-LDA decision probes. Cache final hidden states immediately before action/tool/policy-code value tokens on teacher-forced train/dev rows, then add H23 counterfactual/paraphrase rows as soon as available. Build four state groups: correct benign `call_tool`, benign false refusal, correct unsafe refusal, and post-decision/schema-continuation states.
 2. Compute covariance-whitened Fisher/ridge directions separating false-refusal or wrong-action states from correct decision states. Construct \(Q_{\rm keep}\) from correct-benign, correct-unsafe, malformed-free schema, and post-decision mean states; enforce \(Q_{\rm keep}^\top d\approx0\).
-3. Compare Protected FisherGate, unconstrained Fisher LDA, ridge, orthogonal-only, random-direction, and H12 probe-only controls at matched norm/dose.
+3. Compare Protected FisherGate, unconstrained Fisher LDA, ridge, orthogonal-only, random-direction, exp102 forced-probe upper bound, and H12 probe-only controls at matched norm/dose. Treat exp102's **95/100/0** as the ceiling to internalize, not as an exportable result by itself.
 4. Output-write implementations:
    - clone/untie `lm_head` before editing because `tie_word_embeddings=true`;
    - a zero-init low-rank output adapter limited to the vocabulary rows for first tokens of competing action/tool/policy-code values;
    - a tied-embedding edit negative control to measure input-side contamination.
-5. Calibrate dose from the empirical decision logit gap, then sweep 0.5×/1×/1.5×. Evaluate exact compliance, unsafe refusal, benign false refusal, malformed JSON, decision-token firing margins, real MMLU/ARC/HellaSwag temperature, parameter overhead, export/reload fidelity, and cross-fold stability.
+5. Calibrate dose from the empirical decision logit gap, then sweep 0.5×/1×/1.5×. Evaluate exact compliance, unsafe refusal, benign false refusal, malformed JSON, decision-token firing margins, continuation-scored MMLU/ARC/HellaSwag, parameter overhead, export/reload fidelity, cross-fold stability, and fresh counterfactual/paraphrase generalization. Legacy benchmark movement is not evidence because exp148 confirms scorer flattening artifacts.
 6. Compose the best arm with the validated surgical edit only after H19/exp87 establish whether true-refusal protection is separable.
 
 ### Expected outcome and falsification criterion
 
-Expected: a protected closed-form readout edit produces at least +5 pp exact or policy accuracy with no more than one unsafe-refusal regression and neutral real-benchmark temperature. Falsified if unconstrained and protected directions perform similarly poorly, protection eliminates the behavioral effect, gains do not survive export/reload, or tied-embedding contamination/general-benchmark collateral is unavoidable without large parameter overhead.
+Expected: a protected closed-form readout edit internalizes a substantial fraction of the exp102 forced-probe gain—ideally ≥75–85% exact with unsafe refusal ≥93.3% and benign false refusal ≤10%—without inference-time forcing. Falsified if the weight-folded edit recovers little of the probe upper bound, if gains vanish on counterfactual/paraphrase splits, if unconstrained and protected directions perform similarly poorly, or if tied-embedding contamination/general-capability collateral is unavoidable without large parameter overhead.
 
 ### Citation
 
