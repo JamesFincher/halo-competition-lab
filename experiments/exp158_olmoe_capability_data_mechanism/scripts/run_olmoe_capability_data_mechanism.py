@@ -285,7 +285,7 @@ def main():
     diffuse={li:list(range(n_exp)) for li in range(n_layers)}
     behavior_eval=base_rl.load_rows(ROOT/"data/policy_eval_scaled_v2.jsonl")
     baseline={
-      "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4,include_rows=True),
+      "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=8,include_rows=True),
       "continuation_benchmark":run_continuation_benchmark(probe_model,tok,device,args.continuation_n,include_rows=True),
       "transfer_benchmark":run_transfer_benchmark(probe_model,tok,device,args.continuation_n,include_rows=True),
       "cache_consistency":cache_consistency(probe_model,tok,device),
@@ -331,7 +331,7 @@ def main():
         train_rows=train_rows[:min(source_counts.values())]
       train_info=train_bank(model,bank,tok,train_rows,device,args.steps,args.batch_size,args.max_len,args.lr,ckpt_base / arm,args.checkpoint_interval)
       train_info["training_source"]=source; train_info["training_rows"]=len(train_rows)
-      behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4,include_rows=True)
+      behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=8,include_rows=True)
       continuation=run_continuation_benchmark(model,tok,device,args.continuation_n,include_rows=True)
       transfer=run_transfer_benchmark(model,tok,device,args.continuation_n,include_rows=True)
       cache=cache_consistency(model,tok,device)
