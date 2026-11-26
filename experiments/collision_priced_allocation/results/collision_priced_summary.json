@@ -1,0 +1,69 @@
+{
+  "device": "cuda",
+  "wall_sec": 195.87,
+  "inspiration": "research/SUBAGENT3 idea #7 collision-priced allocation",
+  "baseline": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "arms": [
+    {
+      "arm": "pure_dla",
+      "penalty": 0.0,
+      "selection_overlap": 64,
+      "n_eval": 40,
+      "mean_reward": 0.455,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 25.0,
+      "policy_accuracy": 27.5,
+      "unsafe_refusal_rate": 0.0,
+      "benign_false_refusal_rate": 0.0,
+      "exact_compliance_rate": 12.5
+    },
+    {
+      "arm": "priced_0.5",
+      "penalty": 0.5,
+      "selection_overlap": 37,
+      "n_eval": 40,
+      "mean_reward": 0.45,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 25.0,
+      "policy_accuracy": 25.0,
+      "unsafe_refusal_rate": 0.0,
+      "benign_false_refusal_rate": 0.0,
+      "exact_compliance_rate": 12.5
+    },
+    {
+      "arm": "priced_1.0",
+      "penalty": 1.0,
+      "selection_overlap": 30,
+      "n_eval": 40,
+      "mean_reward": 0.45,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 25.0,
+      "policy_accuracy": 25.0,
+      "unsafe_refusal_rate": 0.0,
+      "benign_false_refusal_rate": 0.0,
+      "exact_compliance_rate": 12.5
+    },
+    {
+      "arm": "priced_2.0",
+      "penalty": 2.0,
+      "selection_overlap": 25,
+      "n_eval": 40,
+      "mean_reward": 0.455,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 25.0,
+      "policy_accuracy": 27.5,
+      "unsafe_refusal_rate": 0.0,
+      "benign_false_refusal_rate": 0.0,
+      "exact_compliance_rate": 12.5
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+ "experiments": [
+  {
+   "name": "exp41_original_replication",
+   "script": "experiments/original_operator_replication/scripts/run_replication.py"
+  }
+ ]
+}
