@@ -1,6 +1,6 @@
 {
   "device": "cuda",
-  "wall_sec": 5.29,
+  "wall_sec": 4.36,
   "base_target_margin": 3.125,
   "layer_deltas": [
     {

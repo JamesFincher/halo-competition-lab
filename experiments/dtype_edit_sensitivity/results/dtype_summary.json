@@ -1,0 +1,53 @@
+{
+  "device": "cuda",
+  "wall_sec": 125.54,
+  "results": {
+    "fp32": {
+      "baseline": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      },
+      "edited": {
+        "n_eval": 40,
+        "mean_reward": 0.455,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 25.0,
+        "policy_accuracy": 27.5,
+        "unsafe_refusal_rate": 0.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 12.5
+      },
+      "max_weight_delta": 0.065996
+    },
+    "bf16": {
+      "baseline": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 80.0,
+        "policy_accuracy": 50.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 80.0,
+        "exact_compliance_rate": 47.5
+      },
+      "edited": {
+        "n_eval": 40,
+        "mean_reward": 0.44,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 25.0,
+        "policy_accuracy": 25.0,
+        "unsafe_refusal_rate": 0.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 15.0
+      },
+      "max_weight_delta": 0.066406
+    }
+  },
+  "implication": "if bf16 degrades edits, production Halo pipelines need fp32 edit application then bf16 cast, or stochastic rounding"
+}

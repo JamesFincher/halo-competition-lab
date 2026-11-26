@@ -1,0 +1,211 @@
+{
+  "device": "cuda",
+  "wall_sec": 3.67,
+  "atlas": {
+    "comms_task": {
+      "n_rows": 40,
+      "depth_com": 20.74,
+      "top10_neurons": [
+        {
+          "layer": 29,
+          "neuron": 1512,
+          "score": 6.375
+        },
+        {
+          "layer": 29,
+          "neuron": 427,
+          "score": 4.837
+        },
+        {
+          "layer": 29,
+          "neuron": 1123,
+          "score": 3.622
+        },
+        {
+          "layer": 29,
+          "neuron": 1513,
+          "score": 2.199
+        },
+        {
+          "layer": 29,
+          "neuron": 676,
+          "score": 1.669
+        },
+        {
+          "layer": 27,
+          "neuron": 110,
+          "score": 1.648
+        },
+        {
+          "layer": 29,
+          "neuron": 355,
+          "score": 1.608
+        },
+        {
+          "layer": 29,
+          "neuron": 1128,
+          "score": 1.467
+        },
+        {
+          "layer": 29,
+          "neuron": 238,
+          "score": 1.433
+        },
+        {
+          "layer": 20,
+          "neuron": 832,
+          "score": 1.428
+        }
+      ]
+    },
+    "other_unsafe": {
+      "n_rows": 120,
+      "depth_com": 20.61,
+      "top10_neurons": [
+        {
+          "layer": 29,
+          "neuron": 1512,
+          "score": 6.479
+        },
+        {
+          "layer": 29,
+          "neuron": 427,
+          "score": 5.479
+        },
+        {
+          "layer": 29,
+          "neuron": 1123,
+          "score": 3.224
+        },
+        {
+          "layer": 29,
+          "neuron": 1513,
+          "score": 2.604
+        },
+        {
+          "layer": 27,
+          "neuron": 110,
+          "score": 1.959
+        },
+        {
+          "layer": 29,
+          "neuron": 676,
+          "score": 1.958
+        },
+        {
+          "layer": 29,
+          "neuron": 238,
+          "score": 1.629
+        },
+        {
+          "layer": 29,
+          "neuron": 355,
+          "score": 1.513
+        },
+        {
+          "layer": 29,
+          "neuron": 1128,
+          "score": 1.494
+        },
+        {
+          "layer": 29,
+          "neuron": 1023,
+          "score": 1.32
+        }
+      ]
+    }
+  },
+  "exclusive_neurons": [
+    {
+      "layer": 28,
+      "neuron": 451,
+      "exclusivity": 1.0,
+      "owner_type": "other_unsafe"
+    },
+    {
+      "layer": 29,
+      "neuron": 105,
+      "exclusivity": 1.0,
+      "owner_type": "comms_task"
+    },
+    {
+      "layer": 27,
+      "neuron": 1021,
+      "exclusivity": 1.0,
+      "owner_type": "other_unsafe"
+    },
+    {
+      "layer": 27,
+      "neuron": 127,
+      "exclusivity": 1.0,
+      "owner_type": "comms_task"
+    },
+    {
+      "layer": 28,
+      "neuron": 812,
+      "exclusivity": 1.0,
+      "owner_type": "other_unsafe"
+    },
+    {
+      "layer": 29,
+      "neuron": 1037,
+      "exclusivity": 1.0,
+      "owner_type": "other_unsafe"
+    },
+    {
+      "layer": 29,
+      "neuron": 578,
+      "exclusivity": 1.0,
+      "owner_type": "other_unsafe"
+    },
+    {
+      "layer": 20,
+      "neuron": 650,
+      "exclusivity": 1.0,
+      "owner_type": "comms_task"
+    },
+    {
+      "layer": 15,
+      "neuron": 960,
+      "exclusivity": 1.0,
+      "owner_type": "other_unsafe"
+    },
+    {
+      "layer": 27,
+      "neuron": 990,
+      "exclusivity": 1.0,
+      "owner_type": "other_unsafe"
+    },
+    {
+      "layer": 19,
+      "neuron": 547,
+      "exclusivity": 1.0,
+      "owner_type": "other_unsafe"
+    },
+    {
+      "layer": 22,
+      "neuron": 643,
+      "exclusivity": 1.0,
+      "owner_type": "other_unsafe"
+    },
+    {
+      "layer": 20,
+      "neuron": 313,
+      "exclusivity": 1.0,
+      "owner_type": "comms_task"
+    },
+    {
+      "layer": 20,
+      "neuron": 708,
+      "exclusivity": 1.0,
+      "owner_type": "comms_task"
+    },
+    {
+      "layer": 28,
+      "neuron": 736,
+      "exclusivity": 1.0,
+      "owner_type": "comms_task"
+    }
+  ],
+  "usage": "targeted RL: edit/freeze per-type top neurons; high-exclusivity neurons are safe single-type targets"
+}

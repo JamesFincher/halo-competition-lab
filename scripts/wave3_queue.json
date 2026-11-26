@@ -1,7 +1,28 @@
-{"experiments": [
-  {"name": "exp34_fp32pipeline", "script": "experiments/fp32_master_edit_pipeline/scripts/run_fp32_pipeline.py"},
-  {"name": "exp35_interference", "script": "experiments/interference_canceling_edit/scripts/run_interference_cancel.py"},
-  {"name": "exp36_vaccination", "script": "experiments/safety_vaccination_edit/scripts/run_vaccination.py"},
-  {"name": "exp37_collision_priced", "script": "experiments/collision_priced_allocation/scripts/run_collision_priced.py"},
-  {"name": "exp38_noncollinear_pp", "script": "experiments/noncollinear_pushpull/scripts/run_noncollinear.py"}
-]}
+{
+ "experiments": [
+  {
+   "name": "exp34_fp32pipeline",
+   "script": "experiments/fp32_master_edit_pipeline/scripts/run_fp32_pipeline.py"
+  },
+  {
+   "name": "exp35_interference",
+   "script": "experiments/interference_canceling_edit/scripts/run_interference_cancel.py"
+  },
+  {
+   "name": "exp36_vaccination",
+   "script": "experiments/safety_vaccination_edit/scripts/run_vaccination.py"
+  },
+  {
+   "name": "exp37_collision_priced",
+   "script": "experiments/collision_priced_allocation/scripts/run_collision_priced.py"
+  },
+  {
+   "name": "exp38_noncollinear_pp",
+   "script": "experiments/noncollinear_pushpull/scripts/run_noncollinear.py"
+  },
+  {
+   "name": "exp39_operator_showdown",
+   "script": "experiments/operator_sensitivity_showdown/scripts/run_operator_showdown.py"
+  }
+ ]
+}
