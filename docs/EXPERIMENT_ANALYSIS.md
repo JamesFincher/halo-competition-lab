@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 11:40 UTC. This document is updated continuously as H100 swarm results land.
+Last updated: 2026-11-26 12:05 UTC. This document is updated continuously as H100 swarm results land.
 
 ## Current ingestion status
 
@@ -51,24 +51,24 @@ Last updated: 2026-11-26 11:40 UTC. This document is updated continuously as H10
 | 65 | `exp65_slider_insertion_layer_sweep` | queued/running | Which insertion layer makes warm GQA sliders most effective? |
 | 66 | `exp66_edit_plus_warm_slider_composition` | queued/running | Does the validated edit compose with a warm slider better than Exp 43? |
 | 67 | `exp67_single_coordinate_decision_steering` | queued/running | Can one norm-calibrated MLP coordinate shift decision behavior? |
-| 80 | `exp80_edit_strength_scaffold_annealing` | queued/running | Can a strong edit act as temporary training wheels and then be removed? |
-| 81 | `exp81_principal_subspace_guardrailed_rl` | queued/running | Can low-dimensional guardrailed RL harden the validated edit? |
+| 80 | `exp80_edit_strength_scaffold_annealing` | result landed; major positive RL-only replication | Can a strong edit act as temporary training wheels and then be removed? |
+| 81 | `exp81_principal_subspace_guardrailed_rl` | result landed; collapse negative | Can low-dimensional guardrailed RL harden the validated edit? |
 | 82 | `exp82_rank1_rl_trajectory_extrapolation` | queued/running | Can rank-1 extrapolation predict/amplify RL direction? |
-| 83 | `exp83_self_modeling_failure_probe_router` | queued/running | Can self-modeling failure probes route advantage? |
+| 83 | `exp83_self_modeling_failure_probe_router` | result landed; probe routing negative | Can self-modeling failure probes route advantage? |
 | 84 | `exp84_momentum_carryover_half_edit` | queued/running | Does momentum carry over when scaffold strength halves? |
-| 85 | `exp85_evolution_strategies_32d_surgical_subspace` | queued/running | Can ES optimize a 32D surgical subspace? |
-| 86 | `exp86_oscillating_polarity_edit_cycling` | queued/running | Does oscillating edit polarity avoid destructive fixation? |
+| 85 | `exp85_evolution_strategies_32d_surgical_subspace` | result landed; strong but selection-caution positive | Can ES optimize a 32D surgical subspace? |
+| 86 | `exp86_oscillating_polarity_edit_cycling` | result landed; strong oscillation positive | Does oscillating edit polarity avoid destructive fixation? |
 | 87 | `exp87_multiperspective_abstention_factorization` | queued/running | Are true-refusal, false-refusal, and ambiguity directions factorizable enough for selective correction? |
 | 88–89 | — | unassigned numbering gaps | Reserved/missing, not active collisions. |
-| 90 | `exp90_single_slider_width_ablation` | queued/running | Does width alone explain v1-dim64 survival versus v4-dim128 collapse? |
+| 90 | `exp90_single_slider_width_ablation` | result landed; width response mixed | Does width alone explain v1-dim64 survival versus v4-dim128 collapse? |
 | 91 | `exp91_single_slider_depth_ablation` | queued/running | Is v1 survival specific to insertion layer 27? |
-| 92 | `exp92_shared_alpha_head_count_ablation` | queued/running | Does parallel head count alone cause collapse under one shared alpha? |
-| 93 | `exp93_v1_seed_replication` | queued/running | Is the v1 single-slider positive result seed-robust or a lucky stochastic replicate? |
-| 94 | `exp94_alpha_clamp_multilayer_bank` | queued/running | Does alpha clamping prevent the v2 multi-layer bank collapse? |
-| 95 | `exp95_validated_edit_strength_response` | queued/running | Does validated-edit gain scale monotonically with projection strength? |
-| 96 | `exp96_freeze_then_merge_schedule` | queued/running | Is bank collapse caused by simultaneous destructive interference during training? |
+| 92 | `exp92_shared_alpha_head_count_ablation` | result landed; shared-alpha count response | Does parallel head count alone cause collapse under one shared alpha? |
+| 93 | `exp93_v1_seed_replication` | result landed; seed replication not robust | Is the v1 single-slider positive result seed-robust or a lucky stochastic replicate? |
+| 94 | `exp94_alpha_clamp_multilayer_bank` | result landed; architectural collapse | Does alpha clamping prevent the v2 multi-layer bank collapse? |
+| 95 | `exp95_validated_edit_strength_response` | result landed; dose-response positive | Does validated-edit gain scale monotonically with projection strength? |
+| 96 | `exp96_freeze_then_merge_schedule` | result landed; freeze-merge positive | Is bank collapse caused by simultaneous destructive interference during training? |
 | 97 | `exp97_independent_alpha_init_scale` | queued/running | Does tiny nonzero independent-alpha initialization prevent bank collapse? |
-| 98 | `exp98_validated_edit_column_count_response` | queued/running | Does widening the validated edit across more columns improve behavior? |
+| 98 | `exp98_validated_edit_column_count_response` | result landed; column-count positive | Does widening the validated edit across more columns improve behavior? |
 | 99 | `exp99_validated_edit_layer_allocation` | queued/running | Is the validated effect specific to final-layer allocation? |
 | 94–99 | — | unassigned numbering gaps | Reserved/missing, not active collisions. |
 | 100 | `exp100_halo_native_transfer_path_showdown` | queued/running | Which post-edit restricted-RL transfer path best preserves the validated surgical edit? |
@@ -85,6 +85,11 @@ Last updated: 2026-11-26 11:40 UTC. This document is updated continuously as H10
 | 124 | `exp124_ems_anchor_preserving_subspace_edit` | queued/running | Can empirical-margin-sensitivity edits preserve the anchor while improving behavior? |
 | 125 | `exp125_displacement_probe_edit_auditor` | queued/running | Can displacement probes audit edits and choose better references? |
 | 126 | `exp126_spectral_sink_microgates` | queued/running | Can post-SDPA microgates suppress spectral attention sinks with low collateral? |
+| 127 | `exp127_budgeted_decision_token_steering` | queued/running | Can budgeted decision-token steering preserve trajectory quality? |
+| 128 | `exp128_trajectory_collateral_repair_adapter` | queued/running | Can output-trajectory collateral be repaired after adaptation? |
+| 129 | `exp129_sparse_edit_strength_response` | queued/running | Sparse strength replication of the validated-edit dose response. |
+| 130 | `exp130_sparse_edit_column_count_response` | queued/running | Sparse column-count replication of the validated-edit width response. |
+| 131 | `exp131_context_gated_dose_cancellation` | queued/running; tracker-renumbered from colliding exp129 | Can context-gated rank-one dose cancellation preserve safety while reducing false refusal? |
 
 ## Pipeline scheduling note — newest-first starvation risk
 
@@ -644,3 +649,13 @@ Commit `cfc91d7` was both a harvest and an experiment-generation commit. It intr
 **Mechanistic interpretation:** there is a narrow stability/utility boundary. One small positive-alpha L27 head can reduce benign false refusal by 30 pp while preserving unsafe refusal and slightly improving exactness. Once magnitude, width, depth, or number of simultaneous lanes rises, training enters zero-reward collapse. The collapse is self-locking in this trainer because zero-variance rewards produce zero advantages, so the head receives no recovery gradient.
 
 **Cross-experiment significance:** v1 is better than Exp42's original slider operating point on safety/exactness (57.5/100/60 versus 42.5/90/30) but much less aggressive at false-refusal reduction. It is also cleaner than Exp43's composition (50/96.7/70). The next attention experiments should sweep alpha/dose around v1 rather than jumping directly to multi-head banks, and should add a collapse-recovery or KL/damage constraint before interpreting negative bank results as architectural impossibilities. The newly queued exp90/91/92 are the correct controlled follow-up shape: width-only, depth-only, and shared-alpha head-count-only ablations with real benchmark scoring and zero-init identity checks.
+
+### 11:50 harvest — breakthrough replication and parameterization map
+
+**Headline results:** exp80 `rl_only` reaches **80.0 / 93.3 / 10.0** from the canonical 55/100/90 baseline, independently reproducing the Exp1-class targeted-RL operating point without the earlier overwrite/baseline-shift caveat. Exp85 `es_final_center` reaches **82.5 / 93.3 / 0**, the strongest final exactness yet, but requires caution because ES dev selection did not cleanly beat fixed-dose/random references; treat it as a high-priority replication candidate rather than established mechanism. Exp86 oscillating decay reaches **72.5–75.0 / 93.3 / 0** while constant-polarity controls degrade to 42.5–45.0 exact with 100% benign-FR, strong evidence that polarity cycling itself prevents destructive fixation.
+
+**Validated-edit parameterization:** exp98 shows narrow is better — 32 columns reach **72.5 / 90 / 0**, versus 65.0 at 64 columns and 57.5 at 128. Exp95 shows a dose tradeoff: strength 0.5 reaches **77.5 / 93.3 / 40**, while canonical 0.9 reaches **65 / 90 / 0**; strength 1.3 degrades exactness and unsafe refusal. The frontier is therefore not simply stronger/wider: exactness peaks at lower dose, precision/safety at moderate dose.
+
+**Slider architecture answer:** exp96 freeze-then-merge reaches **70 / 90 / 0** while joint training collapses to zero, so schedule/interference is a real causal variable. Yet exp94 shows independent multi-layer banks collapse even with alpha clamps, and exp93 shows the single-slider positive result is **not seed-robust** (only seed 42 reproduces; seeds 7/123 are negative). Exp92 shared-alpha count ablation does not fully collapse at 2–4 heads but also does not improve over count 1. Practical conclusion: freeze-then-merge is promising, independent simultaneous banks are not, and any single-slider result needs multi-seed gating.
+
+**Negative mechanism results:** exp81 low-dimensional guardrailed RL collapses; exp83 probe routing is worse than uniform/random controls; exp90 width effects are mixed rather than a simple monotonic width law. Benchmarks in the slider/edit ablations are mostly unchanged around MMLU 26 / ARC 38 / HellaSwag 32, so behavioral gains do not show large benchmark collateral, but the benchmark scorer is coarse and small differences should not be overread. Integrity note: the upstream 11:57–11:58 exp129 numbering collision was corrected by tracker rename of the context-gated experiment to exp131; no duplicate experiment numbers remain.

@@ -48,6 +48,7 @@ CONTROL_TOKENS = (
     "random_control",
     "random_",
     "uniform_control",
+    "uniform_",
     "anti_bottom",
 )
 
@@ -77,6 +78,15 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
         "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
         "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+    ],
+    "exp85_evolution_strategies_32d_surgical_subspace": [
+        "fixed-dose and random-search references are excluded as controls; ES dev selection did not beat the fixed-dose reference, so the strong final eval may be selection noise despite n=40"
+    ],
+    "exp93_v1_seed_replication": [
+        "seed replication is not robust: only seed 42 reproduces the positive v1 operating point; seeds 7 and 123 are exactness-negative"
+    ],
+    "exp94_alpha_clamp_multilayer_bank": [
+        "all clamped multi-layer bank arms collapse; this supports an architectural/destructive-interference boundary rather than a simple alpha-magnitude artifact"
     ],
 }
 
@@ -136,6 +146,7 @@ PRIMARY_EVAL_KEYS = (
     "eval_cap_off",
     "eval_greedy",
     "eval_zero_rl",
+    "behavior_eval",
 )
 
 
@@ -165,7 +176,17 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
                 add_candidate(candidates, label, arm, f"/arms[{i}]")
     if isinstance(d.get("arms"), dict):
         for label, arm in d["arms"].items():
-            add_candidate(candidates, str(label), arm, f"/arms/{label}")
+            endpoint = None
+            if isinstance(arm, dict):
+                endpoint = (((arm.get("train_stats") or {}).get("endpoint_evals_lambda0") or {}).get("final_vectors"))
+            if isinstance(endpoint, dict):
+                add_candidate(candidates, str(label), {"eval": endpoint, **arm}, f"/arms/{label}/final_vectors")
+            else:
+                add_candidate(candidates, str(label), arm, f"/arms/{label}")
+
+    if isinstance(d.get("final_policy_eval"), dict):
+        for label, result in d["final_policy_eval"].items():
+            add_candidate(candidates, str(label), result, f"/final_policy_eval/{label}")
 
     if isinstance(d.get("modes"), dict):
         for label, mode in d["modes"].items():
@@ -416,7 +437,7 @@ def grade_results() -> tuple[dict[str, Any], dict[str, Any]]:
             wall = meta.get("probe_wall_sec") or meta.get("wall_sec") or data.get("wall_sec") or 600
             scored_cand = score_intervention(cand["eval"], float(wall), exp)
             scored.append((cand, scored_cand))
-        best_cand, best_score = max(scored, key=lambda item: item[1]["composite"])
+        best_cand, best_score = max(scored, key=lambda item: (item[1]["composite"], item[1]["gain"], item[1]["unsafe"]))
         warnings = warnings_for_metrics(data, best_cand["eval"])
         warnings.extend(EXPERIMENT_VALIDITY_NOTES.get(exp, []))
         if best_cand["meta"].get("accepted") is False or best_cand["meta"].get("gate_accepted") is False:

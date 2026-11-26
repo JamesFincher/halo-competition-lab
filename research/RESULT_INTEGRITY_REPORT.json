@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T11:40:23+00:00",
+  "generated_at_utc": "2026-11-26T12:05:27+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -174,6 +174,363 @@
         }
       ],
       "metric_paths": 4
+    },
+    {
+      "file": "experiments/exp80_edit_strength_scaffold_annealing/results/edit_strength_scaffold_summary.json",
+      "bytes": 19808,
+      "warnings": [],
+      "metric_paths": 10
+    },
+    {
+      "file": "experiments/exp81_principal_subspace_guardrailed_rl/results/principal_subspace_guardrailed_summary.json",
+      "bytes": 10903,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/kl_layer_disjoint_unconstrained/eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/bilateral_complement_constrained/eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/left_subspace_only_control/eval"
+        }
+      ],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/exp83_self_modeling_failure_probe_router/results/failure_probe_router_summary.json",
+      "bytes": 10687,
+      "warnings": [],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/exp85_evolution_strategies_32d_surgical_subspace/results/es32_surgical_subspace_summary.json",
+      "bytes": 15772,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/uniform_dev_references/uniform_0.0/dev_eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/uniform_dev_references/uniform_0.5/dev_eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/uniform_dev_references/uniform_0.9/dev_eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/uniform_dev_references/uniform_1.2/dev_eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/es_history[0]/best_eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/es_history[1]/best_eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/es_history[2]/best_eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/es_history[3]/best_eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/es_history[4]/best_eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/es_best_dev/eval",
+          "n_eval": 16
+        },
+        {
+          "type": "partial_eval",
+          "path": "/random_best_dev/eval",
+          "n_eval": 16
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/final_policy_eval/uniform_0.0/eval"
+        }
+      ],
+      "metric_paths": 16
+    },
+    {
+      "file": "experiments/exp86_oscillating_polarity_edit_cycling/results/oscillating_polarity_cycling_summary.json",
+      "bytes": 17186,
+      "warnings": [],
+      "metric_paths": 14
+    },
+    {
+      "file": "experiments/exp90_single_slider_width_ablation/results/single_slider_width_ablation_summary.json",
+      "bytes": 33876,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/width_16/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/width_16/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/width_32/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/width_32/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/width_32/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/width_32/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/width_64/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/width_64/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/width_128/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/width_128/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 9
+    },
+    {
+      "file": "experiments/exp92_shared_alpha_head_count_ablation/results/shared_alpha_head_count_ablation_summary.json",
+      "bytes": 25919,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/count_1/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/count_1/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/count_2/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/count_2/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/count_4/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/count_4/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp93_v1_seed_replication/results/v1_seed_replication_summary.json",
+      "bytes": 25801,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/seed_7/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/seed_7/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/seed_42/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/seed_42/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/seed_123/behavior_delta_vs_baseline",
+          "n_eval": 0
+        }
+      ],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp94_alpha_clamp_multilayer_bank/results/alpha_clamp_multilayer_bank_summary.json",
+      "bytes": 46662,
+      "warnings": [
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/clamp_none/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/clamp_none/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/clamp_none/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/clamp_0p03/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/clamp_0p03/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/clamp_0p03/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/clamp_0p01/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/clamp_0p01/behavior_delta_vs_baseline",
+          "n_eval": 0
+        }
+      ],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp95_validated_edit_strength_response/results/validated_edit_strength_response_summary.json",
+      "bytes": 6461,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/strength_0p5/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/strength_0p5/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/strength_0p9/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/strength_0p9/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/strength_1p3/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/strength_1p3/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp96_freeze_then_merge_schedule/results/freeze_then_merge_schedule_summary.json",
+      "bytes": 26126,
+      "warnings": [
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/joint_32/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/joint_32/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/joint_32/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/freeze_then_merge_8x4/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/freeze_then_merge_8x4/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/exp98_validated_edit_column_count_response/results/validated_edit_column_count_response_summary.json",
+      "bytes": 6533,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/columns_32/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/columns_32/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/columns_64/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/columns_64/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/columns_128/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/columns_128/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 7
     },
     {
       "file": "experiments/fp32_master_edit_pipeline/results/fp32_pipeline_summary.json",
@@ -693,6 +1050,11 @@
     "exp124_ems_anchor_preserving_subspace_edit",
     "exp125_displacement_probe_edit_auditor",
     "exp126_spectral_sink_microgates",
+    "exp127_budgeted_decision_token_steering",
+    "exp128_trajectory_collateral_repair_adapter",
+    "exp129_sparse_edit_strength_response",
+    "exp130_sparse_edit_column_count_response",
+    "exp131_context_gated_dose_cancellation",
     "exp50_surgically_anchored_vector_rl",
     "exp51_decision_anchor_hidden_align",
     "exp52_pgs_credit_direction",
@@ -711,23 +1073,11 @@
     "exp65_slider_insertion_layer_sweep",
     "exp66_edit_plus_warm_slider_composition",
     "exp67_single_coordinate_decision_steering",
-    "exp80_edit_strength_scaffold_annealing",
-    "exp81_principal_subspace_guardrailed_rl",
     "exp82_rank1_rl_trajectory_extrapolation",
-    "exp83_self_modeling_failure_probe_router",
     "exp84_momentum_carryover_half_edit",
-    "exp85_evolution_strategies_32d_surgical_subspace",
-    "exp86_oscillating_polarity_edit_cycling",
     "exp87_multiperspective_abstention_factorization",
-    "exp90_single_slider_width_ablation",
     "exp91_single_slider_depth_ablation",
-    "exp92_shared_alpha_head_count_ablation",
-    "exp93_v1_seed_replication",
-    "exp94_alpha_clamp_multilayer_bank",
-    "exp95_validated_edit_strength_response",
-    "exp96_freeze_then_merge_schedule",
     "exp97_independent_alpha_init_scale",
-    "exp98_validated_edit_column_count_response",
     "exp99_validated_edit_layer_allocation",
     "inverse_causal_patching"
   ],
@@ -818,6 +1168,15 @@
       "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
       "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
       "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+    ],
+    "exp85_evolution_strategies_32d_surgical_subspace": [
+      "fixed-dose and random-search references are excluded as controls; ES dev selection did not beat the fixed-dose reference, so the strong final eval may be selection noise despite n=40"
+    ],
+    "exp93_v1_seed_replication": [
+      "seed replication is not robust: only seed 42 reproduces the positive v1 operating point; seeds 7 and 123 are exactness-negative"
+    ],
+    "exp94_alpha_clamp_multilayer_bank": [
+      "all clamped multi-layer bank arms collapse; this supports an architectural/destructive-interference boundary rather than a simple alpha-magnitude artifact"
     ]
   }
 }
