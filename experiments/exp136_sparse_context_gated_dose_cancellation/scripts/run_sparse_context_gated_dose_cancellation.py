@@ -23,6 +23,7 @@ from serialization_utils import write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import apply_validated_rank1_edit, build_validated_rank1_subspaces, top_projection_columns  # noqa: E402
+from real_benchmark import run_benchmark  # noqa: E402
 
 LAYERS = [29, 28]
 FIELDS = {"action": '"action": "', "tool": '"tool": "', "policy_code": '"policy_code": "'}
@@ -162,7 +163,7 @@ def eval_arm(model, tokenizer, rows, device, mode, fraction, vecs, gates, streng
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--n-pairs", type=int, default=12); ap.add_argument("--strength", type=float, default=.9); ap.add_argument("--top-columns", type=int, default=16); ap.add_argument("--max-new-tokens", type=int, default=64); ap.add_argument("--seed", type=int, default=42)
+    ap = argparse.ArgumentParser(); ap.add_argument("--n-pairs", type=int, default=12); ap.add_argument("--strength", type=float, default=.9); ap.add_argument("--top-columns", type=int, default=16); ap.add_argument("--max-new-tokens", type=int, default=64); ap.add_argument("--bench-n", type=int, default=50); ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args(); t0 = time.time(); device = torch.device("cuda" if torch.cuda.is_available() else "cpu"); smoke = os.environ.get("HALO_SMOKE_TEST") == "1"
     if smoke: args.max_new_tokens = 8
     out_dir = ROOT / "experiments/exp136_sparse_context_gated_dose_cancellation/results"; out_dir.mkdir(parents=True, exist_ok=True)
@@ -173,10 +174,15 @@ def main():
     dev_rows = benign[20:28] + unsafe[20:28]
     if smoke: dev_rows = benign[20:21] + unsafe[20:21]
     sft, tokenizer = vec_rl.load_sft(device, torch.float32)
+    baseline_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
+    baseline_bench = run_benchmark(sft, tokenizer, device, args.bench_n)
+    print(f"  [unedited baseline] exact={baseline_eval['exact_compliance_rate']:.1f}% unsafe={baseline_eval['unsafe_refusal_rate']:.1f}% benign_fr={baseline_eval['benign_false_refusal_rate']:.1f}% bench={baseline_bench}", flush=True)
     subspaces, singulars = build_validated_rank1_subspaces(sft, tokenizer, train_rows, device, LAYERS, args.n_pairs)
     selected = top_projection_columns(sft, subspaces, LAYERS, args.top_columns)
     vecs = cancellation_vectors(sft, subspaces, selected)
     edited = copy.deepcopy(sft); edit_info = apply_validated_rank1_edit(edited, tokenizer, train_rows, device, LAYERS, args.top_columns, args.strength, args.n_pairs)
+    edited_bench = run_benchmark(edited, tokenizer, device, args.bench_n)
+    print(f"  [edited before cancellation benchmark] {edited_bench}", flush=True)
     gates = fit_gates(edited, tokenizer, train_rows, device, args.n_pairs)
     print("  gates: " + " | ".join(f"L{li} auc={gates[li]['train_auroc']:.3f} tp={gates[li]['train_tp_rate']:.2f} fp={gates[li]['train_fp_rate']:.2f}" for li in LAYERS), flush=True)
     print("[Stage 1] Dev sweep of learned-gate cancellation fraction...", flush=True)
@@ -193,7 +199,7 @@ def main():
         m = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device) if mode == "none" else eval_arm(edited, tokenizer, eval_rows, device, mode, frac, vecs, gates, args.strength, args.max_new_tokens, decision_only, args.seed + 100, learned_fire_rate)
         final[name] = {"eval": m, "fraction": frac, "decision_only": decision_only}
         print(f"  [{name}] exact={m['exact_compliance_rate']:.1f}% unsafe={m['unsafe_refusal_rate']:.1f}% benign_fr={m['benign_false_refusal_rate']:.1f}%", flush=True)
-    result = {"experiment": "exp136_sparse_context_gated_dose_cancellation", "research_source": "research/HYPOTHESES.md H19 sparse-operating-point follow-up to exp131", "paper_inspiration": ["arXiv:2611.34762", "arXiv:2406.11717"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "top_singular_values": singulars, "gate_diagnostics": {str(k): {x: y for x, y in v.items() if x != "q"} for k, v in gates.items()}, "dev_fraction_sweep": dev, "best_fraction": best, "learned_dev_fire_rate": learned_fire_rate, "final_policy_eval": final, "wall_sec": round(time.time() - t0, 2)}
+    result = {"experiment": "exp136_sparse_context_gated_dose_cancellation", "research_source": "research/HYPOTHESES.md H19 sparse-operating-point follow-up to exp131", "paper_inspiration": ["arXiv:2611.34762", "arXiv:2406.11717"], "config": vars(args), "device": str(device), "baseline_eval": baseline_eval, "baseline_benchmark": baseline_bench, "edited_benchmark_before_cancellation": edited_bench, "validated_edit_operator": edit_info, "top_singular_values": singulars, "gate_diagnostics": {str(k): {x: y for x, y in v.items() if x != "q"} for k, v in gates.items()}, "dev_fraction_sweep": dev, "best_fraction": best, "learned_dev_fire_rate": learned_fire_rate, "final_policy_eval": final, "wall_sec": round(time.time() - t0, 2)}
     path = out_dir / "context_gated_dose_cancellation_summary.json"; write_json(path, result)
     print(f"[Exp 136 DONE] wrote {path} in {result['wall_sec']}s", flush=True)
 
