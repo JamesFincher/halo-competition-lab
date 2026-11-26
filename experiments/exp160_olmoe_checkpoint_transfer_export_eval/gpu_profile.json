@@ -1,0 +1,8 @@
+{
+  "estimated_model_gb": 14.4,
+  "estimated_peak_gb": 28.0,
+  "estimated_wall_hours": 0.75,
+  "exclusive_gpu": true,
+  "queue_priority": 84,
+  "notes": "No-training benchmark/export evaluation; loads one OLMoE copy at a time and reuses exp154 checkpoints."
+}
