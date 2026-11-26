@@ -1,4 +1,4 @@
-# Experiment 103 — Drift-Triggered Orthogonal Rotation Lanes
+# Experiment 104 — Drift-Triggered Orthogonal Rotation Lanes
 
 **Research inspiration:** `research/HYPOTHESES.md` **H7** + **arXiv:2611.33589** (*Drift-Triggered Restoration for Orthogonal Fine-Tuning*).
 
@@ -17,7 +17,7 @@ Rotation-only complementary-layer adaptation may redirect false-refusal computat
 ## Run
 
 ```bash
-python3 experiments/exp103_drift_triggered_orthogonal_lanes/scripts/run_drift_triggered_rotations.py
+python3 experiments/exp104_drift_triggered_orthogonal_lanes/scripts/run_drift_triggered_rotations.py
 ```
 
 ## Output
