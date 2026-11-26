@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T13:52:51+00:00",
+  "generated_at_utc": "2026-11-26T14:10:20+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1158,6 +1158,7 @@
     "exp145_inversion_logit_diagnostic",
     "exp146_cache_mode_inversion_diagnostic",
     "exp147_additive_capability_behavior_union",
+    "exp148_legacy_scorer_flattening_audit",
     "exp82_rank1_rl_trajectory_extrapolation",
     "exp84_momentum_carryover_half_edit",
     "exp87_multiperspective_abstention_factorization",
