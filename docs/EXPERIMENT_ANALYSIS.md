@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 10:35 UTC. This document is updated continuously as H100 swarm results land.
+Last updated: 2026-11-26 10:40 UTC. This document is updated continuously as H100 swarm results land.
 
 ## Current ingestion status
 
@@ -58,6 +58,11 @@ Last updated: 2026-11-26 10:35 UTC. This document is updated continuously as H10
 | 84 | `exp84_momentum_carryover_half_edit` | queued/running | Does momentum carry over when scaffold strength halves? |
 | 85 | `exp85_evolution_strategies_32d_surgical_subspace` | queued/running | Can ES optimize a 32D surgical subspace? |
 | 86 | `exp86_oscillating_polarity_edit_cycling` | queued/running | Does oscillating edit polarity avoid destructive fixation? |
+| 87 | `exp87_multiperspective_abstention_factorization` | queued/running | Are true-refusal, false-refusal, and ambiguity directions factorizable enough for selective correction? |
+| 88–89 | — | unassigned numbering gaps | Reserved/missing, not active collisions. |
+| 90 | `exp90_single_slider_width_ablation` | queued/running | Does width alone explain v1-dim64 survival versus v4-dim128 collapse? |
+| 91 | `exp91_single_slider_depth_ablation` | queued/running | Is v1 survival specific to insertion layer 27? |
+| 92 | `exp92_shared_alpha_head_count_ablation` | queued/running | Does parallel head count alone cause collapse under one shared alpha? |
 
 ## Measurement baseline and interpretation rules
 
@@ -612,4 +617,4 @@ Commit `cfc91d7` was both a harvest and an experiment-generation commit. It intr
 
 **Mechanistic interpretation:** there is a narrow stability/utility boundary. One small positive-alpha L27 head can reduce benign false refusal by 30 pp while preserving unsafe refusal and slightly improving exactness. Once magnitude, width, depth, or number of simultaneous lanes rises, training enters zero-reward collapse. The collapse is self-locking in this trainer because zero-variance rewards produce zero advantages, so the head receives no recovery gradient.
 
-**Cross-experiment significance:** v1 is better than Exp42's original slider operating point on safety/exactness (57.5/100/60 versus 42.5/90/30) but much less aggressive at false-refusal reduction. It is also cleaner than Exp43's composition (50/96.7/70). The next attention experiments should sweep alpha/dose around v1 rather than jumping directly to multi-head banks, and should add a collapse-recovery or KL/damage constraint before interpreting negative bank results as architectural impossibilities.
+**Cross-experiment significance:** v1 is better than Exp42's original slider operating point on safety/exactness (57.5/100/60 versus 42.5/90/30) but much less aggressive at false-refusal reduction. It is also cleaner than Exp43's composition (50/96.7/70). The next attention experiments should sweep alpha/dose around v1 rather than jumping directly to multi-head banks, and should add a collapse-recovery or KL/damage constraint before interpreting negative bank results as architectural impossibilities. The newly queued exp90/91/92 are the correct controlled follow-up shape: width-only, depth-only, and shared-alpha head-count-only ablations with real benchmark scoring and zero-init identity checks.

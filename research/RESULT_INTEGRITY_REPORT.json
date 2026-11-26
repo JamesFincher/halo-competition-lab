@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T10:37:46+00:00",
+  "generated_at_utc": "2026-11-26T10:39:04+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -705,6 +705,10 @@
     "exp84_momentum_carryover_half_edit",
     "exp85_evolution_strategies_32d_surgical_subspace",
     "exp86_oscillating_polarity_edit_cycling",
+    "exp87_multiperspective_abstention_factorization",
+    "exp90_single_slider_width_ablation",
+    "exp91_single_slider_depth_ablation",
+    "exp92_shared_alpha_head_count_ablation",
     "inverse_causal_patching"
   ],
   "duplicate_experiment_numbers": {},
@@ -726,7 +730,9 @@
     76,
     77,
     78,
-    79
+    79,
+    88,
+    89
   ],
   "inplace_result_overwrite_warnings": [
     {
