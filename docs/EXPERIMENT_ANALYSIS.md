@@ -79,10 +79,11 @@ Last updated: 2026-11-26 11:00 UTC. This document is updated continuously as H10
 | 105 | `exp105_slider_lr_response_bank` | queued/running | Is multi-layer slider collapse a learning-rate instability artifact? |
 | 111 | `exp111_alpha_norm_penalty_bank` | queued/running | Does penalizing independent-alpha magnitude prevent destructive negative drift? |
 | 120 | `exp120_drift_triggered_orthogonal_lanes` | queued/running | Can drift-triggered orthogonal rotations preserve capability lanes during adaptation? |
+| 121 | `exp121_curvature_constrained_delta_rl` | queued/running | Can low-curvature acquisition deltas improve exactness with less collateral damage? |
 
 ## Pipeline scheduling note — newest-first starvation risk
 
-At 11:00 UTC the feeder queue synthesis prioritizes missing experiments by highest experiment number and caps each auto-wave at 8. With the current tree, that queue is exp120/111/105/103/102/101/100/99, which means exp93 seed replication, exp90–92 controlled slider ablations, exp24/27 replications/fixes, and exp50–87 can be starved indefinitely if exploratory experiments continue landing faster than waves finish. This is a scheduling risk, not a result-integrity violation; it was reported to the parent orchestrator at 11:00 UTC. Queue files themselves have no duplicate experiment names, and the transient exp103/104 collision was renumbered upstream to exp111/120.
+At 11:00 UTC the feeder queue synthesis prioritizes missing experiments by highest experiment number and caps each auto-wave at 8. With the current tree, that queue is now exp121/120/111/105/103/102/101/100, which means exp93 seed replication, exp90–92 controlled slider ablations, exp24/27 replications/fixes, and exp50–87 can be starved indefinitely if exploratory experiments continue landing faster than waves finish. This is a scheduling risk, not a result-integrity violation; it was reported to the parent orchestrator at 11:00 UTC. Queue files themselves have no duplicate experiment names, and the transient exp103/104 collision was renumbered upstream to exp111/120.
 
 ## Measurement baseline and interpretation rules
 

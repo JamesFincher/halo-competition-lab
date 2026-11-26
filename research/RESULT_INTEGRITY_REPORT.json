@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T10:57:21+00:00",
+  "generated_at_utc": "2026-11-26T10:59:14+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -687,6 +687,7 @@
     "exp105_slider_lr_response_bank",
     "exp111_alpha_norm_penalty_bank",
     "exp120_drift_triggered_orthogonal_lanes",
+    "exp121_curvature_constrained_delta_rl",
     "exp50_surgically_anchored_vector_rl",
     "exp51_decision_anchor_hidden_align",
     "exp52_pgs_credit_direction",
