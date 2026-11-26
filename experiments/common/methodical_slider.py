@@ -81,6 +81,7 @@ def train_plain_slider(
     max_new_tokens: int = 48,
     alpha_clip: float | None = None,
     alpha_logit_scale: float = 1.0,
+    generation_use_cache: bool = False,
 ) -> tuple[object, list[dict]]:
     """Reproduce slider_head_fork optimization: head-only, grouped REINFORCE, no KL/BC."""
     handle = install_plain_slider(model, layer, head)
@@ -104,7 +105,7 @@ def train_plain_slider(
                 top_p=0.95,
                 num_return_sequences=group_size,
                 pad_token_id=tokenizer.eos_token_id,
-                use_cache=False,
+                use_cache=generation_use_cache,
             )
         rewards = []
         for gi in range(group_size):
