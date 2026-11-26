@@ -41,25 +41,6 @@ def done():
  return out
 
 
-def load_train_rows_with_meta(path: Path) -> list[dict]:
-    rows=[]
-    for line in path.read_text().splitlines():
-        if not line.strip():continue
-        raw=json.loads(line);msgs=raw['messages'];target=json.loads(msgs[2]['content'])
-        rows.append({'messages':msgs[:2],'target':target,'assistant_text':msgs[2]['content'],'meta':raw.get('meta',{})})
-    return rows
-
-def nested_complete_pair_subset(rows:list[dict],n_rows:int)->list[dict]:
- if n_rows%2:raise ValueError('row count must be even to preserve counterfactual pairs')
- want_pairs=n_rows//2;order=[];seen=set()
- for row in rows:
-  pid=row.get('meta',{}).get('pair_id')
-  if pid and pid not in seen:seen.add(pid);order.append(pid)
- keep=set(order[:want_pairs]);out=[r for r in rows if r.get('meta',{}).get('pair_id') in keep]
- pair_counts={pid:sum(1 for r in out if r.get('meta',{}).get('pair_id')==pid) for pid in keep}
- if len(out)!=n_rows or set(pair_counts.values())!={2}:raise ValueError(f'incomplete nested subset rows={len(out)} pair_sizes={sorted(set(pair_counts.values()))}')
- return out
-
 def measure(model,tok,eval_rows,device,max_new_tokens,continuation_n):
  return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n),'transfer_benchmark':run_transfer_benchmark(model,tok,device,max(continuation_n//2,1))}
 

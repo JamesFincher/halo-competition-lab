@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Exp163: Qwen3-4B behavior data-scaling curve.
+"""Exp163: Qwen3-4B fixed-compute behavior data-diversity scaling curve.
 
-Fixed-update LoRA replication of exp152's winning scaled-corpus recipe at 400/800/1600/3200
-unique rows. Nested complete-pair subsets make scale the intended causal variable; repetition
-is part of the operating point because the update budget is held fixed.
+Uses nested, complete-counterfactual-pair, tool/policy-stratified subsets of the v3
+corpus at 400/800/1600/2400 unique rows while holding the exp152 fixed 2400-example
+update budget constant. The curve therefore measures diversity versus repetition at
+6/3/1.5/1 epochs with no unseen rows. A 3200-row arm would be mislabeled under this
+budget because sequential batches cannot expose all rows; fixed-epoch scaling is separate.
 """
 from __future__ import annotations
 
@@ -23,7 +25,7 @@ def load_exp152():
  m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
 exp152=load_exp152()
 EXP_DIR=ROOT/'experiments/exp163_qwen3_behavior_data_scaling_curve';RESULTS_DIR=EXP_DIR/'results';ARM_JSONL=RESULTS_DIR/'arm_results.jsonl'
-ROW_COUNTS=[400,800,1600,3200]
+ROW_COUNTS=[400,800,1600,2400]
 
 def smoke():return os.environ.get('HALO_SMOKE_TEST')=='1'
 def append(rec):
@@ -129,7 +131,7 @@ def main():
   del model
   if device.type=='cuda':torch.cuda.empty_cache()
  arms=[json.loads(x) for x in ARM_JSONL.read_text().splitlines() if x.strip()] if ARM_JSONL.exists() else []
- write_json(RESULTS_DIR/'qwen3_behavior_data_scaling_summary.json',{'experiment':'exp163_qwen3_behavior_data_scaling_curve','model':exp152.MODEL_NAME,'question':'How does entity-disjoint behavior compliance scale with 400/800/1600/3200 unique counterfactual rows at fixed LoRA update budget?','arms':arms,'wall_sec':round(time.time()-t0,2),'smoke_test':smoke()})
+ write_json(RESULTS_DIR/'qwen3_behavior_data_scaling_summary.json',{'experiment':'exp163_qwen3_behavior_data_scaling_curve','model':exp152.MODEL_NAME,'question':'How does entity-disjoint behavior compliance scale with 400/800/1600/2400 exposed unique counterfactual rows at fixed LoRA update budget?','arms':arms,'wall_sec':round(time.time()-t0,2),'smoke_test':smoke()})
  if smoke():shutil.rmtree(ckpt_base,ignore_errors=True)
  print(f'[DONE] exp163 arms={len(arms)} wall={round(time.time()-t0,2)}s',flush=True)
 if __name__=='__main__':main()
