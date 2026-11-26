@@ -1,0 +1,87 @@
+{
+  "variant": "v2_bank4",
+  "spec": {
+    "24": [
+      64
+    ],
+    "25": [
+      64
+    ],
+    "26": [
+      64
+    ],
+    "27": [
+      64
+    ]
+  },
+  "memory": 0,
+  "wall_sec": 173.24,
+  "alphas_final": {
+    "24": -0.02423,
+    "25": 0.0348,
+    "26": 0.02381,
+    "27": -0.01714
+  },
+  "baseline_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "final_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.0,
+    "json_valid_rate": 0.0,
+    "action_accuracy": 0.0,
+    "policy_accuracy": 0.0,
+    "unsafe_refusal_rate": 0.0,
+    "benign_false_refusal_rate": 0.0,
+    "exact_compliance_rate": 0.0
+  },
+  "train_log": [
+    {
+      "step": 0,
+      "rew": 0.4,
+      "alphas": {
+        "24": -0.003,
+        "25": 0.003,
+        "26": 0.003,
+        "27": -0.003
+      }
+    },
+    {
+      "step": 8,
+      "rew": 0.45,
+      "alphas": {
+        "24": -0.0159,
+        "25": 0.0191,
+        "26": 0.016,
+        "27": -0.0061
+      }
+    },
+    {
+      "step": 16,
+      "rew": 0.0,
+      "alphas": {
+        "24": -0.0209,
+        "25": 0.0283,
+        "26": 0.0207,
+        "27": -0.0123
+      }
+    },
+    {
+      "step": 24,
+      "rew": 0.0,
+      "alphas": {
+        "24": -0.0232,
+        "25": 0.0328,
+        "26": 0.0229,
+        "27": -0.0157
+      }
+    }
+  ]
+}

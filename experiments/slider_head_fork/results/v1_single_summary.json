@@ -1,0 +1,63 @@
+{
+  "variant": "v1_single",
+  "spec": {
+    "27": [
+      64
+    ]
+  },
+  "memory": 0,
+  "wall_sec": 134.02,
+  "alphas_final": {
+    "27": 0.0117
+  },
+  "baseline_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "final_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.825,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 85.0,
+    "policy_accuracy": 62.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 60.0,
+    "exact_compliance_rate": 57.5
+  },
+  "train_log": [
+    {
+      "step": 0,
+      "rew": 0.35,
+      "alphas": {
+        "27": 0.003
+      }
+    },
+    {
+      "step": 8,
+      "rew": 0.45,
+      "alphas": {
+        "27": 0.0027
+      }
+    },
+    {
+      "step": 16,
+      "rew": 0.85,
+      "alphas": {
+        "27": 0.0064
+      }
+    },
+    {
+      "step": 24,
+      "rew": 0.55,
+      "alphas": {
+        "27": 0.0094
+      }
+    }
+  ]
+}

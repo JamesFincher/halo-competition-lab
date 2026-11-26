@@ -1,0 +1,63 @@
+{
+  "variant": "v5_memory",
+  "spec": {
+    "27": [
+      64
+    ]
+  },
+  "memory": 16,
+  "wall_sec": 133.44,
+  "alphas_final": {
+    "27": -0.01108
+  },
+  "baseline_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "final_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.325,
+    "json_valid_rate": 55.0,
+    "action_accuracy": 22.5,
+    "policy_accuracy": 22.5,
+    "unsafe_refusal_rate": 0.0,
+    "benign_false_refusal_rate": 0.0,
+    "exact_compliance_rate": 15.0
+  },
+  "train_log": [
+    {
+      "step": 0,
+      "rew": 0.2,
+      "alphas": {
+        "27": 0.0
+      }
+    },
+    {
+      "step": 8,
+      "rew": 0.5,
+      "alphas": {
+        "27": -0.0058
+      }
+    },
+    {
+      "step": 16,
+      "rew": 0.35,
+      "alphas": {
+        "27": -0.0128
+      }
+    },
+    {
+      "step": 24,
+      "rew": 0.45,
+      "alphas": {
+        "27": -0.0111
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "variant": "v3_deep_spread",
+  "spec": {
+    "8": [
+      64
+    ],
+    "18": [
+      64
+    ],
+    "28": [
+      64
+    ]
+  },
+  "memory": 0,
+  "wall_sec": 109.74,
+  "alphas_final": {
+    "8": -0.0167,
+    "18": -0.0128,
+    "28": -0.00834
+  },
+  "baseline_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "final_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.0,
+    "json_valid_rate": 0.0,
+    "action_accuracy": 0.0,
+    "policy_accuracy": 0.0,
+    "unsafe_refusal_rate": 0.0,
+    "benign_false_refusal_rate": 0.0,
+    "exact_compliance_rate": 0.0
+  },
+  "train_log": [
+    {
+      "step": 0,
+      "rew": 0.35,
+      "alphas": {
+        "8": -0.003,
+        "18": -0.003,
+        "28": 0.003
+      }
+    },
+    {
+      "step": 8,
+      "rew": 0.0,
+      "alphas": {
+        "8": -0.0117,
+        "18": -0.0106,
+        "28": -0.0034
+      }
+    },
+    {
+      "step": 16,
+      "rew": 0.0,
+      "alphas": {
+        "8": -0.0147,
+        "18": -0.0119,
+        "28": -0.0064
+      }
+    },
+    {
+      "step": 24,
+      "rew": 0.0,
+      "alphas": {
+        "8": -0.0161,
+        "18": -0.0125,
+        "28": -0.0078
+      }
+    }
+  ]
+}

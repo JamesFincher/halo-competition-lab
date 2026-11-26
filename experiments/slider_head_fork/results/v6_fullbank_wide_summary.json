@@ -1,0 +1,79 @@
+{
+  "variant": "v6_fullbank_wide",
+  "spec": {
+    "24": [
+      128
+    ],
+    "26": [
+      128
+    ],
+    "28": [
+      128
+    ]
+  },
+  "memory": 0,
+  "wall_sec": 160.77,
+  "alphas_final": {
+    "24": -0.02265,
+    "26": 0.03911,
+    "28": -0.04836
+  },
+  "baseline_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "final_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.0,
+    "json_valid_rate": 0.0,
+    "action_accuracy": 0.0,
+    "policy_accuracy": 0.0,
+    "unsafe_refusal_rate": 0.0,
+    "benign_false_refusal_rate": 0.0,
+    "exact_compliance_rate": 0.0
+  },
+  "train_log": [
+    {
+      "step": 0,
+      "rew": 0.55,
+      "alphas": {
+        "24": -0.003,
+        "26": 0.003,
+        "28": -0.003
+      }
+    },
+    {
+      "step": 8,
+      "rew": 0.65,
+      "alphas": {
+        "24": -0.0146,
+        "26": 0.0107,
+        "28": -0.0223
+      }
+    },
+    {
+      "step": 16,
+      "rew": 0.0,
+      "alphas": {
+        "24": -0.0156,
+        "26": 0.0261,
+        "28": -0.0353
+      }
+    },
+    {
+      "step": 24,
+      "rew": 0.0,
+      "alphas": {
+        "24": -0.0204,
+        "26": 0.0357,
+        "28": -0.0449
+      }
+    }
+  ]
+}
