@@ -86,10 +86,14 @@ def fit_repair(X, Y, rank, ridge=1e-2, target_direction=None, orthogonalize=Fals
     sol = torch.linalg.solve(gram, xc.T @ yc)
     if orthogonalize and target_direction is not None:
         d = target_direction.float().cpu(); d = d / (d.norm() + 1e-8)
-        sol = sol - d[:, None] * (d[None, :] @ sol)
+        # Activations are row vectors (y = xW), so output-space orthogonalization
+        # removes the input vector Wd followed by the output direction d.
+        sol = sol - (sol @ d)[:, None] * d[None, :]
     u, s, vh = torch.linalg.svd(sol, full_matrices=False)
     r = min(rank, u.shape[1])
     low = u[:, :r] @ torch.diag(s[:r]) @ vh[:r]
+    if orthogonalize and target_direction is not None:
+        low = low - (low @ d)[:, None] * d[None, :]
     intercept = ym - xm @ low
     return {"matrix": low, "intercept": intercept, "singular_values": s[: min(8, len(s))].tolist(), "rank": r}
 
