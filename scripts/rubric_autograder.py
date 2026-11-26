@@ -134,7 +134,7 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
-        "primary behavior_scaled120 surface is entity-disjoint corpus v2; behavior_scaled_v1_120_bridge is only a comparability bridge, so do not mix absolute rates across surfaces"
+        "primary behavior_scaled120 surface is entity-disjoint corpus v2; behavior_scaled_v1_120_bridge is only a comparability bridge, so compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces"
     ],
     "exp153_olmoe_expert_stage_zero": [
         "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
@@ -143,7 +143,10 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; treat behavior transfer as v1-corpus evidence unless updated to the entity-disjoint v2 corpus"
     ],
     "exp155_olmoe_expert_surface_controls": [
-        "primary behavior_scaled120 surface is entity-disjoint corpus v2 with v1 retained only as a bridge; control comparisons remain internally valid and now also test stricter entity-level generalization"
+        "primary behavior_scaled120 surface is entity-disjoint corpus v2 with v1 retained only as a bridge; control comparisons remain internally valid, but compare behavior collateral against the same-file OLMoE baseline rather than canonical 135M metrics"
+    ],
+    "exp157_olmoe_expert_adapter_export_validation": [
+        "export validation is a no-training diagnostic using small v1 behavior/continuation canaries, not a full behavior intervention result; logits/greedy equality are the primary evidence"
     ],
     "exp156_qwen3_entity_disjoint_seed_replication": [
         "entity-disjoint v2 seed replication: interpret all seeds 42/7/123 together rather than the autograded best seed; behavior-only training batches mean continuation benchmarks measure collateral change, not replay-preservation success"

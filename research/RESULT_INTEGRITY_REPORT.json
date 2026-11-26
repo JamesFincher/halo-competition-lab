@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T19:54:20+00:00",
+  "generated_at_utc": "2026-11-26T19:59:10+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1543,6 +1543,7 @@
     "exp154_olmoe_benchmark_selective_expert_adapters",
     "exp155_olmoe_expert_surface_controls",
     "exp156_qwen3_entity_disjoint_seed_replication",
+    "exp157_olmoe_expert_adapter_export_validation",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
@@ -1673,7 +1674,7 @@
       "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
-      "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; treat results as v1-corpus evidence unless rerun or updated to the entity-disjoint v2 corpus"
+      "scale pivot now trains/evaluates on entity-disjoint behavior corpus v2 and retains v1 only as a bridge; compare arms against the same-file zero-shot baseline rather than the canonical 135M baseline"
     ],
     "exp153_olmoe_expert_stage_zero": [
       "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
@@ -1682,7 +1683,10 @@
       "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; treat behavior transfer as v1-corpus evidence unless updated to the entity-disjoint v2 corpus"
     ],
     "exp155_olmoe_expert_surface_controls": [
-      "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; control comparisons remain internally valid, but absolute heldout transfer is not entity-disjoint evidence"
+      "surface controls now evaluate behavior collateral on entity-disjoint corpus v2 with v1 retained only as a bridge; compare against the same-file OLMoE baseline rather than canonical 135M metrics"
+    ],
+    "exp157_olmoe_expert_adapter_export_validation": [
+      "export validation is a no-training diagnostic using small v1 behavior/continuation canaries, not a full behavior intervention result; logits/greedy equality are the primary evidence"
     ],
     "exp156_qwen3_entity_disjoint_seed_replication": [
       "entity-disjoint v2 seed replication: interpret all seeds 42/7/123 together rather than the autograded best seed; behavior-only training batches mean continuation benchmarks measure collateral change, not replay-preservation success"
