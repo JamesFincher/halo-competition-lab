@@ -20,10 +20,13 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 9.6 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | proposed |
 | 9.3 | H2 — Operator-discrepancy collateral repair adapter | closed-form subspace repair | proposed |
 | 8.9 | H3 — Functional-connectivity-guided head insertion | attention-head modification | proposed |
+| 8.8 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | proposed |
 | 8.7 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | proposed |
+| 8.6 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | proposed |
 | 8.5 | H5 — Output-matched steering-vector compression | activation steering + RL initialization | proposed |
 | 8.3 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | proposed |
 | 8.2 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT + attention heads | proposed |
+| 8.0 | H11 — Trajectory-aware budgeted decision-token steering | activation steering | proposed |
 | 7.9 | H8 — Displacement-probe edit auditor and reference chooser | cheap pre-GPU screening diagnostic | proposed |
 
 ---
@@ -317,6 +320,106 @@ Expected: displacement/Gram features separate destructive always-call edits and 
 
 - [arXiv:2611.33998 — *Refined Displacement Probes for Weight-Space Learning*](https://arxiv.org/abs/2611.33998): probing displacement rather than raw weights, second-order Gram responses, reference-as-design-choice/shared subtraction, state-of-the-art Model Jungle results with 3.61× fewer metanetwork parameters.
 - Local failures of DLA/unembedding proxies and repeated operator-validity lessons in Exps 17/39/41.
+
+
+---
+
+## H9 — Curvature-constrained acquisition deltas
+
+**Priority: 8.8/10**
+
+### Novel idea
+
+Train the policy improvement inside a **low-curvature delta space** estimated from preservation data, rather than in a hard behavioral nullspace or an unconstrained LoRA space. Approximate the local curvature of a preservation loss with Kronecker/factorwise spectral structure, truncate high-curvature directions, and optimize only the low-curvature remainder.
+
+### Why it should work mechanistically
+
+Halo's hard nullspaces failed because they encode a coarse linear notion of safety/benign preservation, not the true sensitivity of general computation. The directions that damage capability are precisely high-curvature directions of preservation loss; removing them should permit acquisition updates while reducing collateral even when behaviors are entangled. This is a softer, second-order version of the validated whitened-subspace idea.
+
+### Concrete experiment design
+
+1. Build preservation batches from real-benchmark/general text, benign correct-allow examples, and true unsafe-refusal examples. Build acquisition batches from exact-compliance failures.
+2. For layers 24–29, estimate factorwise curvature of preservation loss for attention `q/o` and MLP `up/down`; compare full Hessian-proxy, diagonal-only, random projection, and no curvature control.
+3. Sweep retained spectral-energy thresholds and dense versus low-rank delta parameterizations at matched trainable parameter counts. Train 8–24 steps starting from both unedited SFT and validated raw-rank1 post-edit checkpoints.
+4. Compare against Exp 23-style hard nullspace projection, Exp 57 LoRA, and the current surgical edit. Evaluate official policy metrics only after dev-gated selection.
+5. Measure acquisition/retention tradeoff: exact compliance and pass@4, unsafe refusal, benign false refusal, real-benchmark temperature, KL to base/post-edit anchor, curvature-energy distribution, and GPU/CPU overhead.
+
+### Expected outcome and falsification criterion
+
+Expected: low-curvature deltas achieve a better acquisition-retention frontier than LoRA/hard nullspaces—higher exact compliance at equal or better real-benchmark and unsafe-refusal retention. Falsified if curvature estimates are unstable across preservation batches, the method does not beat diagonal/random controls, or computational overhead outweighs any improvement.
+
+### Citation
+
+- [arXiv:2611.24654 — *CurvDelta: Low-Curvature Delta Modeling For Surgical Learning and Unlearning*](https://arxiv.org/abs/2611.24654): preservation-constrained adaptation using factorwise spectral truncation of local curvature, with favorable acquisition-retention tradeoffs on reasoning/code and selective unlearning.
+- Local Exp 23 hard-nullspace failure and Exp 16 whitened-subspace success.
+
+---
+
+## H10 — Merge-aware served-weight action-token fine-tuning
+
+**Priority: 8.6/10**
+
+### Novel idea
+
+Train through the exact **served/exported weight representation**—including BF16 rounding and checkpoint merging—using a straight-through gradient, while applying likelihood loss only to action/tool/policy-code decision tokens and anchoring the rest of the trajectory. The unit of optimization should be the artifact that will actually be evaluated, not a fp32 hook-time approximation.
+
+### Why it should work mechanistically
+
+The lab has repeatedly seen fp32 versus BF16 and hook versus export mismatches change or erase interventions. Tiny LoRA/vector deltas can fall below rounding resolution or land in the wrong served weights. Optimizing through the rounded merge makes small updates visible where they matter, while action-only loss prevents schema/style drift and preserves the model's existing “thinking” trajectory.
+
+### Concrete experiment design
+
+1. Start from the validated raw-rank1 post-edit checkpoint, exported exactly as the evaluator will load it.
+2. Implement served-weight forward passes for BF16/final-export dtype with frozen scales/rounding and straight-through gradients to fp32 shadow weights or adapters.
+3. Restrict loss to tokens immediately following `"action": "`, `"tool": "`, and `"policy_code": "`; use zero or heavily downweighted loss on schema punctuation and prompt tokens. Add a sequence-mean drift/KL penalty to the post-edit anchor.
+4. Compare standard fp32 LoRA, served-weight LoRA, vector-only served-weight training, action-only versus all-token loss, and a no-export hook control.
+5. Measure metrics **after export and reload**, not in the training process: exact compliance, pass@4, unsafe refusal, benign false refusal, real-benchmark temperature, rounding-visible delta magnitude, KL, and export/reload bit or tensor equality.
+
+### Expected outcome and falsification criterion
+
+Expected: served-weight training preserves more benchmark gain after export than standard LoRA and reduces the fp32/hook replication gap, with action-only loss producing less schema collateral. Falsified if export/reload gains vanish anyway, if served-weight training does not beat standard training under the final artifact, or if action-only masking reduces exact-compliance learning materially.
+
+### Citation
+
+- [arXiv:2611.32064 — *Fix How It Acts, Not How It Thinks: Surgical Fine-Tuning of Frontier LLMs*](https://arxiv.org/abs/2611.32064): merge-aware fine-tuning through served BF16/NVFP4 weights with straight-through gradients, action-token-only loss, and evidence that standard LoRA loses most benchmark gain once served.
+- Local fp32/BF16 operator-sensitivity and export/replication lessons from Exps 32/39/41.
+
+---
+
+## H11 — Trajectory-aware budgeted decision-token steering
+
+**Priority: 8.0/10**
+
+### Novel idea
+
+Treat steering as a **per-token allocation problem under a fixed intervention budget**. Use a contrastive feature projection to identify tokens least aligned with correct policy behavior, then use closed-loop trajectory feedback to spend steering only when the generation is falling behind, rather than adding a vector everywhere.
+
+### Why it should work mechanistically
+
+The strict JSON task has a few high-leverage decision positions and many schema positions that should remain deterministic. Always-on steering distorts both. Token-selective steering should obtain most behavioral benefit at lower distribution shift; trajectory-aware feedback further avoids wasting budget once the correct action/tool/policy-code trajectory is already established.
+
+### Concrete experiment design
+
+1. Use steering directions from H5 output matching or activation differences measured on train/dev correct-vs-failure pairs; do not tune on the official eval.
+2. Instrument cached rollouts and compare allocation policies at matched intervention budgets:
+   - always-on vector;
+   - prompt-position-only vector;
+   - fixed decision-token positions after `action`, `tool`, and `policy_code`;
+   - memoryless contrastive-feature gate;
+   - closed-loop adaptive Bernoulli steering using accumulated alignment;
+   - random-token control.
+3. Sweep budgets as fractions of generated tokens and steering strengths on dev rows. Then evaluate once on the 40-task set.
+4. Measure exact compliance, pass@4, unsafe refusal, benign false refusal, schema-malformation rate, token-level intervention rate, distribution-shift/KL proxy, real-benchmark temperature, and latency overhead.
+5. Test composition with the surgical edit and with H1/H3 inserts; steering itself remains training-free.
+
+### Expected outcome and falsification criterion
+
+Expected: trajectory-aware decision-token steering achieves most of always-on steering's exact-compliance benefit with lower schema corruption and less benchmark degradation. Falsified if the learned gates select no better than fixed/random positions, if budgeted steering cannot reach the always-on performance frontier at any strength, or if closed-loop feedback adds instability without measurable gains.
+
+### Citation
+
+- [arXiv:2611.18274 — *Right Token, Right Time: From Per-Token Gating to Trajectory-Aware Activation Steering*](https://arxiv.org/abs/2611.18274): fixed-budget per-token steering, Contrastive Feature Projection, and Closed-Loop Adaptive Bernoulli Steering with stability analysis.
+- Local Exp 42 always-on slider-side effects and Exp 56 boundary-token decision-position analysis.
 
 ---
 
