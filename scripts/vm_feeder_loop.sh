@@ -3,8 +3,13 @@
 # Runs FOREVER on the VM — zero downtime by construction.
 cd ~/halo-competition-lab
 while true; do
-  if ! git pull -q origin main 2>/dev/null; then
-    echo "$(date): git pull failed; leaving repo untouched and skipping cycle"
+  git fetch -q origin main 2>/dev/null
+  mkdir -p ~/results_rescue
+  git status --porcelain | grep '^??' | awk '{print $2}' | grep -E 'results|jsonl' | while read -r f; do
+    mkdir -p "$HOME/results_rescue/$(dirname "$f")"; cp -a "$f" "$HOME/results_rescue/$f" 2>/dev/null; rm -rf "$f"
+  done
+  if ! git reset -q --hard origin/main 2>/dev/null; then
+    echo "$(date): git reset failed; leaving repo untouched and skipping cycle"
     sleep 120
     continue
   fi
