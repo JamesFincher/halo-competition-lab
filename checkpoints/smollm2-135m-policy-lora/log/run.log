@@ -1,0 +1,649 @@
+11/25/2026 10:56:24 - INFO - halo.runtime.filesystem - Shared-filesystem scope: {'DIST_SHARED_FILESYSTEM': 'shared', 'DIST_INPUT_SHARED_FILESYSTEM': 'shared', 'DIST_OUTPUT_SHARED_FILESYSTEM': 'shared'} (set DIST_SHARED_FILESYSTEM=0 for per-node local storage).
+[INFO|configuration_utils.py:1018] 2026-11-25 10:56:24,605 >> loading configuration file config.json from cache at /home/ubuntu/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M-Instruct/snapshots/12fd25f77366fa6b3b4b768ec3050bf629380bac/config.json
+[INFO|configuration_utils.py:1090] 2026-11-25 10:56:24,609 >> Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 1,
+  "dtype": "bfloat16",
+  "eos_token_id": 2,
+  "head_dim": 64,
+  "hidden_act": "silu",
+  "hidden_size": 576,
+  "initializer_range": 0.041666666666666664,
+  "intermediate_size": 1536,
+  "is_llama_config": true,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 9,
+  "num_hidden_layers": 30,
+  "num_key_value_heads": 3,
+  "pad_token_id": 2,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_interleaved": false,
+  "rope_parameters": {
+    "rope_theta": 100000,
+    "rope_type": "default"
+  },
+  "tie_word_embeddings": true,
+  "transformers.js_config": {
+    "kv_cache_dtype": {
+      "fp16": "float16",
+      "q4f16": "float16"
+    }
+  },
+  "transformers_version": "5.20.2",
+  "use_cache": true,
+  "vocab_size": 49152
+}
+
+[INFO|configuration_utils.py:1018] 2026-11-25 10:56:24,698 >> loading configuration file config.json from cache at /home/ubuntu/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M-Instruct/snapshots/12fd25f77366fa6b3b4b768ec3050bf629380bac/config.json
+[INFO|configuration_utils.py:1090] 2026-11-25 10:56:24,699 >> Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 1,
+  "dtype": "bfloat16",
+  "eos_token_id": 2,
+  "head_dim": 64,
+  "hidden_act": "silu",
+  "hidden_size": 576,
+  "initializer_range": 0.041666666666666664,
+  "intermediate_size": 1536,
+  "is_llama_config": true,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 9,
+  "num_hidden_layers": 30,
+  "num_key_value_heads": 3,
+  "pad_token_id": 2,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_interleaved": false,
+  "rope_parameters": {
+    "rope_theta": 100000,
+    "rope_type": "default"
+  },
+  "tie_word_embeddings": true,
+  "transformers.js_config": {
+    "kv_cache_dtype": {
+      "fp16": "float16",
+      "q4f16": "float16"
+    }
+  },
+  "transformers_version": "5.20.2",
+  "use_cache": true,
+  "vocab_size": 49152
+}
+
+11/25/2026 10:56:24 - INFO - halo.distributed.parallelism_config - ============================================================
+PARALLELISM: DATA PARALLEL
+  World: 1 (1 nodes × 1 GPUs)
+  Data parallel: 1 distinct batches
+  Gradient sync: 1 ranks
+============================================================
+11/25/2026 10:56:24 - INFO - halo.data.pipeline.coordinated_map - [loading dataset /home/ubuntu/halo-competition-lab/data/policy_train.jsonl] Main (rank 0)...
+11/25/2026 10:56:24 - INFO - halo.data.sources.loading - Loading dataset from local file: /home/ubuntu/halo-competition-lab/data/policy_train.jsonl
+11/25/2026 10:56:24 - INFO - halo.data.pipeline.coordinated_map - [loading dataset /home/ubuntu/halo-competition-lab/data/policy_train.jsonl] Main (rank 0) completed
+11/25/2026 10:56:24 - INFO - halo.data.pipeline.coordinated_map - [filter operation (filtering empty messages (train))] Main (rank 0)...
+11/25/2026 10:56:24 - INFO - halo.data.pipeline.coordinated_map - [filter operation (filtering empty messages (train))] Main (rank 0) completed
+11/25/2026 10:56:24 - INFO - halo.data.pipeline.coordinated_map - [filter operation (filtering empty messages (test))] Main (rank 0)...
+11/25/2026 10:56:24 - INFO - halo.data.pipeline.coordinated_map - [filter operation (filtering empty messages (test))] Main (rank 0) completed
+11/25/2026 10:56:24 - INFO - halo.data.sources.corpus - Normalizing dataset schemas before concatenation...
+11/25/2026 10:56:24 - INFO - halo.data.sources.corpus - Concatenating 1 training datasets
+11/25/2026 10:56:24 - INFO - halo.data.sources.corpus - Concatenating 1 test datasets
+11/25/2026 10:56:24 - INFO - halo.data.sources.loading - Training data after schema normalization: 144
+11/25/2026 10:56:24 - INFO - halo.data.sources.loading - Columns in training dataset: ['messages']
+11/25/2026 10:56:24 - INFO - halo.data.sources.loading - Test data after schema normalization: 16
+11/25/2026 10:56:24 - INFO - halo.data.sources.loading - Columns in test dataset: ['messages']
+[INFO|configuration_utils.py:1018] 2026-11-25 10:56:25,040 >> loading configuration file config.json from cache at /home/ubuntu/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M-Instruct/snapshots/12fd25f77366fa6b3b4b768ec3050bf629380bac/config.json
+[INFO|configuration_utils.py:1090] 2026-11-25 10:56:25,042 >> Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 1,
+  "dtype": "bfloat16",
+  "eos_token_id": 2,
+  "head_dim": 64,
+  "hidden_act": "silu",
+  "hidden_size": 576,
+  "initializer_range": 0.041666666666666664,
+  "intermediate_size": 1536,
+  "is_llama_config": true,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 9,
+  "num_hidden_layers": 30,
+  "num_key_value_heads": 3,
+  "pad_token_id": 2,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_interleaved": false,
+  "rope_parameters": {
+    "rope_theta": 100000,
+    "rope_type": "default"
+  },
+  "tie_word_embeddings": true,
+  "transformers.js_config": {
+    "kv_cache_dtype": {
+      "fp16": "float16",
+      "q4f16": "float16"
+    }
+  },
+  "transformers_version": "5.20.2",
+  "use_cache": true,
+  "vocab_size": 49152
+}
+
+Fetching 15 files:   0%|          | 0/15 [00:00<?, ?it/s]Fetching 15 files: 100%|██████████| 15/15 [00:00<00:00, 2001.86it/s]
+[INFO|configuration_utils.py:1018] 2026-11-25 10:56:25,141 >> loading configuration file config.json from cache at /home/ubuntu/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M-Instruct/snapshots/12fd25f77366fa6b3b4b768ec3050bf629380bac/config.json
+[INFO|configuration_utils.py:1090] 2026-11-25 10:56:25,142 >> Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 1,
+  "dtype": "bfloat16",
+  "eos_token_id": 2,
+  "head_dim": 64,
+  "hidden_act": "silu",
+  "hidden_size": 576,
+  "initializer_range": 0.041666666666666664,
+  "intermediate_size": 1536,
+  "is_llama_config": true,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 9,
+  "num_hidden_layers": 30,
+  "num_key_value_heads": 3,
+  "pad_token_id": 2,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_interleaved": false,
+  "rope_parameters": {
+    "rope_theta": 100000,
+    "rope_type": "default"
+  },
+  "tie_word_embeddings": true,
+  "transformers.js_config": {
+    "kv_cache_dtype": {
+      "fp16": "float16",
+      "q4f16": "float16"
+    }
+  },
+  "transformers_version": "5.20.2",
+  "use_cache": true,
+  "vocab_size": 49152
+}
+
+[INFO|configuration_utils.py:1018] 2026-11-25 10:56:25,150 >> loading configuration file config.json from cache at /home/ubuntu/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M-Instruct/snapshots/12fd25f77366fa6b3b4b768ec3050bf629380bac/config.json
+[INFO|configuration_utils.py:1090] 2026-11-25 10:56:25,151 >> Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 1,
+  "dtype": "bfloat16",
+  "eos_token_id": 2,
+  "head_dim": 64,
+  "hidden_act": "silu",
+  "hidden_size": 576,
+  "initializer_range": 0.041666666666666664,
+  "intermediate_size": 1536,
+  "is_llama_config": true,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 9,
+  "num_hidden_layers": 30,
+  "num_key_value_heads": 3,
+  "pad_token_id": 2,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_interleaved": false,
+  "rope_parameters": {
+    "rope_theta": 100000,
+    "rope_type": "default"
+  },
+  "tie_word_embeddings": true,
+  "transformers.js_config": {
+    "kv_cache_dtype": {
+      "fp16": "float16",
+      "q4f16": "float16"
+    }
+  },
+  "transformers_version": "5.20.2",
+  "use_cache": true,
+  "vocab_size": 49152
+}
+
+[INFO|modeling_utils.py:764] 2026-11-25 10:56:25,410 >> loading weights file model.safetensors from cache at /home/ubuntu/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M-Instruct/snapshots/12fd25f77366fa6b3b4b768ec3050bf629380bac/model.safetensors
+[INFO|configuration_utils.py:1156] 2026-11-25 10:56:25,411 >> Generate config GenerationConfig {
+  "bos_token_id": 1,
+  "eos_token_id": 2,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "pad_token_id": 2,
+  "use_cache": true
+}
+
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2875.29it/s]
+[INFO|configuration_utils.py:1112] 2026-11-25 10:56:25,586 >> loading configuration file generation_config.json from cache at /home/ubuntu/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M-Instruct/snapshots/12fd25f77366fa6b3b4b768ec3050bf629380bac/generation_config.json
+[INFO|configuration_utils.py:1156] 2026-11-25 10:56:25,586 >> Generate config GenerationConfig {
+  "bos_token_id": 1,
+  "eos_token_id": 2,
+  "pad_token_id": 2
+}
+
+11/25/2026 10:56:25 - INFO - halo.model_loading.buffer_repair - Fixed 1 rotary embedding inv_freq buffer(s) to float32
+11/25/2026 10:56:25 - INFO - halo.model_loading.parallel.loader - Model loaded with standard DDP
+11/25/2026 10:56:25 - INFO - halo.model_loading.tokenizer_setup - Tokenizer pad token IS eos (id 2), so the recorded pad id binds nn.Embedding(padding_idx=2) on the next load and that row's input-embedding gradient is masked from then on (the output side still trains, and under tied embeddings so does the row). Give the tokenizer a pad token distinct from eos — --pad_token for one already in the vocabulary, --added_special_tokens to add one — to avoid it.
+11/25/2026 10:56:25 - INFO - halo.entrypoints.model_setup - Tokenizer: GPT2Tokenizer(name_or_path='HuggingFaceTB/SmolLM2-135M-Instruct', vocab_size=49152, model_max_length=384, padding_side='right', truncation_side='right', special_tokens={'bos_token': '<|im_start|>', 'eos_token': '<|im_end|>', 'unk_token': '<|endoftext|>', 'pad_token': '<|im_end|>'}, added_tokens_decoder={
+	0: AddedToken("<|endoftext|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	1: AddedToken("<|im_start|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	2: AddedToken("<|im_end|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	3: AddedToken("<repo_name>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	4: AddedToken("<reponame>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	5: AddedToken("<file_sep>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	6: AddedToken("<filename>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	7: AddedToken("<gh_stars>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	8: AddedToken("<issue_start>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	9: AddedToken("<issue_comment>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	10: AddedToken("<issue_closed>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	11: AddedToken("<jupyter_start>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	12: AddedToken("<jupyter_text>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	13: AddedToken("<jupyter_code>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	14: AddedToken("<jupyter_output>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	15: AddedToken("<jupyter_script>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+	16: AddedToken("<empty_output>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+})
+11/25/2026 10:56:25 - INFO - halo.entrypoints.model_setup - Model config: LlamaConfig {
+  "_halo_sinks_reset": true,
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 1,
+  "dtype": "float32",
+  "eos_token_id": 2,
+  "head_dim": 64,
+  "hidden_act": "silu",
+  "hidden_size": 576,
+  "initializer_range": 0.041666666666666664,
+  "intermediate_size": 1536,
+  "is_llama_config": true,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 9,
+  "num_hidden_layers": 30,
+  "num_key_value_heads": 3,
+  "pad_token_id": 2,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_interleaved": false,
+  "rope_parameters": {
+    "rope_theta": 100000,
+    "rope_type": "default"
+  },
+  "tie_word_embeddings": true,
+  "transformers.js_config": {
+    "kv_cache_dtype": {
+      "fp16": "float16",
+      "q4f16": "float16"
+    }
+  },
+  "transformers_version": "5.20.2",
+  "use_cache": true,
+  "vocab_size": 49152
+}
+
+11/25/2026 10:56:25 - WARNING - halo.data.pipeline.map_cache_key - Dataset-map cache fingerprint for build_chat_row_processor.<locals>.process_row skips a value of type dict it cannot fingerprint — changes to that value will NOT invalidate the cache. If it affects the map output, thread it through cache_key_extras.
+11/25/2026 10:56:25 - INFO - halo.data.pipeline.coordinated_map - [map operation (Processing dataset)] Main (rank 0)...
+11/25/2026 10:56:26 - INFO - halo.data.pipeline.coordinated_map - [map operation (Processing dataset)] Main (rank 0) completed
+11/25/2026 10:56:26 - INFO - halo.data.pipeline.coordinated_map - [filter operation (filtering rejected input_ids)] Main (rank 0)...
+11/25/2026 10:56:26 - INFO - halo.data.pipeline.coordinated_map - [filter operation (filtering rejected input_ids)] Main (rank 0) completed
+11/25/2026 10:56:26 - INFO - halo.data.pipeline.rejected_rows - Filtered out 0/160 examples (0.0%) rejected during processing (checked via input_ids)
+/home/ubuntu/halo/halo/data/collators/factory.py:115: UserWarning: The pad_token_id and eos_token_id values of this tokenizer are identical. The toolkit collators restore turn-ending EOS labels from input_ids at real-token positions (attention_mask == 1), so EOS is still trained and padding stays masked — no action needed with these collators; third-party LM collators may still mask every EOS-valued label.
+  collator = DataCollatorForCompletionOnlyLM(
+11/25/2026 10:56:26 - INFO - halo.data.collators.factory - 📝 Using DataCollatorForCompletionOnlyLM
+11/25/2026 10:56:26 - INFO - halo.entrypoints.data_setup - Example(s) from train dataset:
+11/25/2026 10:56:26 - INFO - halo.entrypoints.data_setup - {'input_ids': [1, 9690, 198, 2683, 359, 253, 2983, 29, 264, 48789, 1763, 18476, 30, 10887, 253, 2914, 3116, 284, 1770, 2549, 365, 1040, 79, 2153, 28, 2965, 79, 2153, 28, 1658, 79, 15314, 28, 1658, 79, 19738, 28, 5091, 79, 5031, 28, 3179, 79, 14657, 643, 3535, 44339, 351, 253, 2244, 20110, 1569, 13085, 451, 17808, 42, 198, 39428, 4667, 1799, 476, 4350, 79, 19324, 18, 108, 18, 4716, 1726, 1002, 476, 19324, 1799, 18056, 19324, 79, 1245, 355, 10034, 24165, 476, 16021, 79, 4635, 1799, 476, 3206, 23557, 18, 108, 18, 45620, 79, 9324, 15410, 18, 108, 18, 52, 8242, 66, 23648, 16929, 79, 7627, 18, 108, 18, 13535, 7015, 68, 79, 2113, 24749, 4171, 1002, 476, 23759, 1799, 18056, 15539, 2166, 22875, 109, 2, 198, 1, 4093, 198, 6340, 14484, 31, 33484, 30, 1306, 284, 20947, 260, 9696, 3416, 30, 2, 198, 1, 520, 9531, 198, 39428, 4667, 1799, 476, 4350, 79, 19324, 1002, 476, 19324, 1799, 476, 1040, 79, 2153, 1002, 476, 16021, 79, 4635, 1799, 476, 3206, 23557, 1002, 476, 23759, 1799, 476, 14414, 545, 3116, 3917, 3560, 1012, 79, 2153, 1270, 109, 2, 198], 'attention_mask': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+11/25/2026 10:56:26 - INFO - halo.entrypoints.data_setup - Example(s) from test dataset:
+11/25/2026 10:56:26 - INFO - halo.entrypoints.data_setup - {'input_ids': [1, 9690, 198, 2683, 359, 253, 2983, 29, 264, 48789, 1763, 18476, 30, 10887, 253, 2914, 3116, 284, 1770, 2549, 365, 1040, 79, 2153, 28, 2965, 79, 2153, 28, 1658, 79, 15314, 28, 1658, 79, 19738, 28, 5091, 79, 5031, 28, 3179, 79, 14657, 643, 3535, 44339, 351, 253, 2244, 20110, 1569, 13085, 451, 17808, 42, 198, 39428, 4667, 1799, 476, 4350, 79, 19324, 18, 108, 18, 4716, 1726, 1002, 476, 19324, 1799, 18056, 19324, 79, 1245, 355, 10034, 24165, 476, 16021, 79, 4635, 1799, 476, 3206, 23557, 18, 108, 18, 45620, 79, 9324, 15410, 18, 108, 18, 52, 8242, 66, 23648, 16929, 79, 7627, 18, 108, 18, 13535, 7015, 68, 79, 2113, 24749, 4171, 1002, 476, 23759, 1799, 18056, 15539, 2166, 22875, 109, 2, 198, 1, 4093, 198, 17143, 614, 260, 12077, 2421, 6583, 327, 27759, 499, 19636, 281, 653, 10822, 30, 2, 198, 1, 520, 9531, 198, 39428, 4667, 1799, 476, 4350, 79, 19324, 1002, 476, 19324, 1799, 476, 7916, 79, 14657, 1002, 476, 16021, 79, 4635, 1799, 476, 3206, 23557, 1002, 476, 23759, 1799, 476, 14414, 545, 3116, 3917, 3560, 3179, 79, 14657, 1270, 109, 2, 198], 'attention_mask': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+11/25/2026 10:56:26 - WARNING - halo.trainers.sft - Setting loss_type to 'nll': TRL's 'chunked_nll' replaces the model's forward with its own lm_head projection, which skips the family's head transform and the router aux loss.
+11/25/2026 10:56:26 - INFO - halo.trainers.construction.accelerator - Created Accelerator with distributed_type: DistributedType.NO
+11/25/2026 10:56:26 - INFO - halo.trainers.construction.accelerator - Disabled native_amp to prevent fp32 output conversion (avoids OOM for long sequences)
+11/25/2026 10:56:27 - INFO - halo.entrypoints.script - Starting SFT training (mode: gmm)...
+11/25/2026 10:56:27 - INFO - halo.entrypoints.script -   DP size: 1
+11/25/2026 10:56:27 - INFO - halo.entrypoints.script -   Attention: sdpa
+11/25/2026 10:56:27 - INFO - halo.entrypoints.script -   modality: text
+[INFO|trainer.py:1204] 2026-11-25 10:56:27,533 >> The following columns in the Training set don't have a corresponding argument in `PeftModelForCausalLM.forward` and have been ignored: attention_mask. If attention_mask are not expected by `PeftModelForCausalLM.forward`,  you can safely ignore this message.
+[INFO|trainer.py:1601] 2026-11-25 10:56:27,607 >> ***** Running training *****
+[INFO|trainer.py:1602] 2026-11-25 10:56:27,607 >>   Num examples = 144
+[INFO|trainer.py:1603] 2026-11-25 10:56:27,607 >>   Num Epochs = 2
+[INFO|trainer.py:1604] 2026-11-25 10:56:27,607 >>   Num update steps per epoch = 18
+[INFO|trainer.py:1605] 2026-11-25 10:56:27,607 >>   Instantaneous batch size per device = 4
+[INFO|trainer.py:1608] 2026-11-25 10:56:27,608 >>   Total train batch size (w. parallel, distributed & accumulation) = 8
+[INFO|trainer.py:1609] 2026-11-25 10:56:27,608 >>   Gradient Accumulation steps = 2
+[INFO|trainer.py:1610] 2026-11-25 10:56:27,608 >>   Total optimization steps = 36
+[INFO|trainer.py:1611] 2026-11-25 10:56:27,612 >>   Number of trainable parameters = 4,884,480
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - 
+===== Model view inside Trainer =====
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - PeftModelForCausalLM(
+  (base_model): LoraModel(
+    (model): LlamaForCausalLM(
+      (model): LlamaModel(
+        (embed_tokens): Embedding(49152, 576, padding_idx=2)
+        (layers): ModuleList(
+          (0-29): 30 x LlamaDecoderLayer(
+            (self_attn): LlamaAttention(
+              (q_proj): lora.Linear(
+                (base_layer): Linear(in_features=576, out_features=576, bias=False)
+                (lora_dropout): ModuleDict(
+                  (default): Dropout(p=0.05, inplace=False)
+                )
+                (lora_A): ModuleDict(
+                  (default): Linear(in_features=576, out_features=16, bias=False)
+                )
+                (lora_B): ModuleDict(
+                  (default): Linear(in_features=16, out_features=576, bias=False)
+                )
+                (lora_embedding_A): ParameterDict()
+                (lora_embedding_B): ParameterDict()
+                (lora_magnitude_vector): ModuleDict()
+              )
+              (k_proj): lora.Linear(
+                (base_layer): Linear(in_features=576, out_features=192, bias=False)
+                (lora_dropout): ModuleDict(
+                  (default): Dropout(p=0.05, inplace=False)
+                )
+                (lora_A): ModuleDict(
+                  (default): Linear(in_features=576, out_features=16, bias=False)
+                )
+                (lora_B): ModuleDict(
+                  (default): Linear(in_features=16, out_features=192, bias=False)
+                )
+                (lora_embedding_A): ParameterDict()
+                (lora_embedding_B): ParameterDict()
+                (lora_magnitude_vector): ModuleDict()
+              )
+              (v_proj): lora.Linear(
+                (base_layer): Linear(in_features=576, out_features=192, bias=False)
+                (lora_dropout): ModuleDict(
+                  (default): Dropout(p=0.05, inplace=False)
+                )
+                (lora_A): ModuleDict(
+                  (default): Linear(in_features=576, out_features=16, bias=False)
+                )
+                (lora_B): ModuleDict(
+                  (default): Linear(in_features=16, out_features=192, bias=False)
+                )
+                (lora_embedding_A): ParameterDict()
+                (lora_embedding_B): ParameterDict()
+                (lora_magnitude_vector): ModuleDict()
+              )
+              (o_proj): lora.Linear(
+                (base_layer): Linear(in_features=576, out_features=576, bias=False)
+                (lora_dropout): ModuleDict(
+                  (default): Dropout(p=0.05, inplace=False)
+                )
+                (lora_A): ModuleDict(
+                  (default): Linear(in_features=576, out_features=16, bias=False)
+                )
+                (lora_B): ModuleDict(
+                  (default): Linear(in_features=16, out_features=576, bias=False)
+                )
+                (lora_embedding_A): ParameterDict()
+                (lora_embedding_B): ParameterDict()
+                (lora_magnitude_vector): ModuleDict()
+              )
+            )
+            (mlp): LlamaMLP(
+              (gate_proj): lora.Linear(
+                (base_layer): Linear(in_features=576, out_features=1536, bias=False)
+                (lora_dropout): ModuleDict(
+                  (default): Dropout(p=0.05, inplace=False)
+                )
+                (lora_A): ModuleDict(
+                  (default): Linear(in_features=576, out_features=16, bias=False)
+                )
+                (lora_B): ModuleDict(
+                  (default): Linear(in_features=16, out_features=1536, bias=False)
+                )
+                (lora_embedding_A): ParameterDict()
+                (lora_embedding_B): ParameterDict()
+                (lora_magnitude_vector): ModuleDict()
+              )
+              (up_proj): lora.Linear(
+                (base_layer): Linear(in_features=576, out_features=1536, bias=False)
+                (lora_dropout): ModuleDict(
+                  (default): Dropout(p=0.05, inplace=False)
+                )
+                (lora_A): ModuleDict(
+                  (default): Linear(in_features=576, out_features=16, bias=False)
+                )
+                (lora_B): ModuleDict(
+                  (default): Linear(in_features=16, out_features=1536, bias=False)
+                )
+                (lora_embedding_A): ParameterDict()
+                (lora_embedding_B): ParameterDict()
+                (lora_magnitude_vector): ModuleDict()
+              )
+              (down_proj): lora.Linear(
+                (base_layer): Linear(in_features=1536, out_features=576, bias=False)
+                (lora_dropout): ModuleDict(
+                  (default): Dropout(p=0.05, inplace=False)
+                )
+                (lora_A): ModuleDict(
+                  (default): Linear(in_features=1536, out_features=16, bias=False)
+                )
+                (lora_B): ModuleDict(
+                  (default): Linear(in_features=16, out_features=576, bias=False)
+                )
+                (lora_embedding_A): ParameterDict()
+                (lora_embedding_B): ParameterDict()
+                (lora_magnitude_vector): ModuleDict()
+              )
+              (act_fn): SiLUActivation()
+            )
+            (input_layernorm): LlamaRMSNorm((576,), eps=1e-05)
+            (post_attention_layernorm): LlamaRMSNorm((576,), eps=1e-05)
+          )
+        )
+        (norm): LlamaRMSNorm((576,), eps=1e-05)
+        (rotary_emb): LlamaRotaryEmbedding()
+      )
+      (lm_head): Linear(in_features=576, out_features=49152, bias=False)
+    )
+  )
+)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - Total number of parameters (this rank): 139,399,488
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - Number of trainable parameters (this rank): 4,884,480
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - Percentage of trainable parameters: 3.50%
+
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - 
+===== Model parameter statistics (per rank) =====
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - List of module groups with normalized names:
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.q_proj.lora_A.default.weight - trainable: 276,480 / 276,480 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.q_proj.lora_B.default.weight - trainable: 276,480 / 276,480 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.k_proj.lora_A.default.weight - trainable: 276,480 / 276,480 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.k_proj.lora_B.default.weight - trainable: 92,160 / 92,160 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.v_proj.lora_A.default.weight - trainable: 276,480 / 276,480 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.v_proj.lora_B.default.weight - trainable: 92,160 / 92,160 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.o_proj.lora_A.default.weight - trainable: 276,480 / 276,480 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.o_proj.lora_B.default.weight - trainable: 276,480 / 276,480 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.mlp.gate_proj.lora_A.default.weight - trainable: 276,480 / 276,480 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.mlp.gate_proj.lora_B.default.weight - trainable: 737,280 / 737,280 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.mlp.up_proj.lora_A.default.weight - trainable: 276,480 / 276,480 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.mlp.up_proj.lora_B.default.weight - trainable: 737,280 / 737,280 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.mlp.down_proj.lora_A.default.weight - trainable: 737,280 / 737,280 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.mlp.down_proj.lora_B.default.weight - trainable: 276,480 / 276,480 (100.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.embed_tokens.weight - trainable: 0 / 28,311,552 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.q_proj.base_layer.weight - trainable: 0 / 9,953,280 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.k_proj.base_layer.weight - trainable: 0 / 3,317,760 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.v_proj.base_layer.weight - trainable: 0 / 3,317,760 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.self_attn.o_proj.base_layer.weight - trainable: 0 / 9,953,280 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.mlp.gate_proj.base_layer.weight - trainable: 0 / 26,542,080 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.mlp.up_proj.base_layer.weight - trainable: 0 / 26,542,080 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.mlp.down_proj.base_layer.weight - trainable: 0 / 26,542,080 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.input_layernorm.weight - trainable: 0 / 17,280 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.layers.X.post_attention_layernorm.weight - trainable: 0 / 17,280 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   base_model.model.model.norm.weight - trainable: 0 / 576 (0.00%)
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - 
+===== Model parameter dtypes =====
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - Parameter dtypes breakdown:
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats -   torch.float32   - total: 139,399,488 params, trainable: 4,884,480 (3.50%), memory: 531.77 MB
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - Total parameter memory: 531.77 MB
+11/25/2026 10:56:27 - INFO - halo.callbacks.parameter_stats - ========================================
+
+  0%|          | 0/36 [00:00<?, ?it/s]  3%|▎         | 1/36 [00:21<12:21, 21.18s/it]                                                3%|▎         | 1/36 [00:21<12:21, 21.18s/it]  6%|▌         | 2/36 [00:37<10:20, 18.25s/it]  8%|▊         | 3/36 [00:55<09:57, 18.09s/it] 11%|█         | 4/36 [01:13<09:35, 17.99s/it] 14%|█▍        | 5/36 [01:33<09:43, 18.82s/it]                                               14%|█▍        | 5/36 [01:33<09:43, 18.82s/it] 17%|█▋        | 6/36 [01:52<09:23, 18.78s/it] 19%|█▉        | 7/36 [02:12<09:19, 19.30s/it] 22%|██▏       | 8/36 [02:30<08:49, 18.89s/it] 25%|██▌       | 9/36 [02:49<08:28, 18.83s/it] 28%|██▊       | 10/36 [03:07<08:05, 18.68s/it]                                                28%|██▊       | 10/36 [03:07<08:05, 18.68s/it] 31%|███       | 11/36 [03:26<07:48, 18.72s/it] 33%|███▎      | 12/36 [03:49<07:59, 19.99s/it] 36%|███▌      | 13/36 [04:05<07:14, 18.89s/it] 39%|███▉      | 14/36 [04:21<06:37, 18.08s/it] 42%|████▏     | 15/36 [04:39<06:15, 17.88s/it]                                                42%|████▏     | 15/36 [04:39<06:15, 17.88s/it] 44%|████▍     | 16/36 [04:55<05:48, 17.41s/it] 47%|████▋     | 17/36 [05:13<05:33, 17.57s/it] 50%|█████     | 18/36 [05:29<05:09, 17.20s/it][INFO|trainer.py:1204] 2026-11-25 11:01:57,485 >> The following columns in the Evaluation set don't have a corresponding argument in `PeftModelForCausalLM.forward` and have been ignored: attention_mask. If attention_mask are not expected by `PeftModelForCausalLM.forward`,  you can safely ignore this message.
+[INFO|trainer.py:2914] 2026-11-25 11:01:57,512 >> 
+***** Running Evaluation *****
+[INFO|trainer.py:2916] 2026-11-25 11:01:57,512 >>   Num examples = 16
+[INFO|trainer.py:2919] 2026-11-25 11:01:57,512 >>   Batch size = 4
+{'loss': '1.51', 'grad_norm': '0.8502', 'learning_rate': '0', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 375, 'num_attended_tokens_seen': '1663', 'entropy': '1.095', 'mean_token_accuracy': '0.7787', 'epoch': '0.05556'}
+{'loss': '1.339', 'grad_norm': '1.056', 'learning_rate': '0.0004', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 1834, 'num_attended_tokens_seen': '8272', 'entropy': '1.157', 'mean_token_accuracy': '0.7855', 'epoch': '0.2778'}
+{'loss': '0.7901', 'grad_norm': '0.7591', 'learning_rate': '0.0004797', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 3678, 'num_attended_tokens_seen': '1.663e+04', 'entropy': '0.9159', 'mean_token_accuracy': '0.8487', 'epoch': '0.5556'}
+{'loss': '0.5469', 'grad_norm': '0.5043', 'learning_rate': '0.000403', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 5508, 'num_attended_tokens_seen': '2.491e+04', 'entropy': '0.5908', 'mean_token_accuracy': '0.8934', 'epoch': '0.8333'}
+
+  0%|          | 0/4 [00:00<?, ?it/s][A
+ 50%|█████     | 2/4 [00:03<00:03,  1.97s/it][A
+ 75%|███████▌  | 3/4 [00:07<00:02,  2.76s/it][A
+100%|██████████| 4/4 [00:11<00:00,  3.05s/it][A                                               
+                                             [A 50%|█████     | 18/36 [05:45<05:09, 17.20s/it]
+100%|██████████| 4/4 [00:11<00:00,  3.05s/it][A
+                                             [A[INFO|tokenization_utils_base.py:3380] 2026-11-25 11:02:13,004 >> chat template saved in /home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-18/chat_template.jinja
+[INFO|tokenization_utils_base.py:2127] 2026-11-25 11:02:13,005 >> tokenizer config file saved in /home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-18/tokenizer_config.json
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+{'eval_loss': '0.2965', 'eval_model_preparation_time': '0.02', 'eval_runtime': '15.4', 'eval_samples_per_second': '1.039', 'eval_steps_per_second': '0.26', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 6618, 'eval_num_attended_tokens_seen': '2.491e+04', 'eval_entropy': '0.4457', 'eval_mean_token_accuracy': '0.9368', 'epoch': '1'}
+11/25/2026 11:02:13 - WARNING - huggingface_hub.utils._http - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[INFO|configuration_utils.py:1018] 2026-11-25 11:02:13,347 >> loading configuration file config.json from cache at /home/ubuntu/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M-Instruct/snapshots/12fd25f77366fa6b3b4b768ec3050bf629380bac/config.json
+[INFO|configuration_utils.py:1090] 2026-11-25 11:02:13,349 >> Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 1,
+  "dtype": "bfloat16",
+  "eos_token_id": 2,
+  "head_dim": 64,
+  "hidden_act": "silu",
+  "hidden_size": 576,
+  "initializer_range": 0.041666666666666664,
+  "intermediate_size": 1536,
+  "is_llama_config": true,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 9,
+  "num_hidden_layers": 30,
+  "num_key_value_heads": 3,
+  "pad_token_id": 2,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_interleaved": false,
+  "rope_parameters": {
+    "rope_theta": 100000,
+    "rope_type": "default"
+  },
+  "tie_word_embeddings": true,
+  "transformers.js_config": {
+    "kv_cache_dtype": {
+      "fp16": "float16",
+      "q4f16": "float16"
+    }
+  },
+  "transformers_version": "5.20.2",
+  "use_cache": true,
+  "vocab_size": 49152
+}
+
+11/25/2026 11:02:13 - INFO - halo.checkpoint.parallel.adapters - Saved PEFT adapters to /home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-18
+11/25/2026 11:02:13 - INFO - halo.checkpoint.parallel.sidecars - ✓ Persisted LR scheduler to /home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-18
+ 53%|█████▎    | 19/36 [06:04<06:19, 22.31s/it] 56%|█████▌    | 20/36 [06:21<05:31, 20.75s/it]                                                56%|█████▌    | 20/36 [06:21<05:31, 20.75s/it] 58%|█████▊    | 21/36 [06:38<04:54, 19.63s/it] 61%|██████    | 22/36 [06:58<04:39, 19.97s/it] 64%|██████▍   | 23/36 [07:17<04:15, 19.65s/it] 67%|██████▋   | 24/36 [07:34<03:43, 18.66s/it] 69%|██████▉   | 25/36 [07:50<03:15, 17.81s/it]                                                69%|██████▉   | 25/36 [07:50<03:15, 17.81s/it] 72%|███████▏  | 26/36 [08:07<02:57, 17.73s/it] 75%|███████▌  | 27/36 [08:26<02:42, 18.06s/it] 78%|███████▊  | 28/36 [08:45<02:26, 18.28s/it] 81%|████████  | 29/36 [09:04<02:09, 18.44s/it] 83%|████████▎ | 30/36 [09:20<01:46, 17.83s/it]                                                83%|████████▎ | 30/36 [09:20<01:46, 17.83s/it] 86%|████████▌ | 31/36 [09:37<01:27, 17.60s/it] 89%|████████▉ | 32/36 [09:59<01:15, 18.89s/it] 92%|█████████▏| 33/36 [10:19<00:57, 19.28s/it] 94%|█████████▍| 34/36 [10:38<00:38, 19.09s/it] 97%|█████████▋| 35/36 [10:55<00:18, 18.68s/it]                                                97%|█████████▋| 35/36 [10:55<00:18, 18.68s/it]100%|██████████| 36/36 [11:12<00:00, 17.92s/it][INFO|trainer.py:1204] 2026-11-25 11:07:39,741 >> The following columns in the Evaluation set don't have a corresponding argument in `PeftModelForCausalLM.forward` and have been ignored: attention_mask. If attention_mask are not expected by `PeftModelForCausalLM.forward`,  you can safely ignore this message.
+[INFO|trainer.py:2914] 2026-11-25 11:07:39,748 >> 
+***** Running Evaluation *****
+[INFO|trainer.py:2916] 2026-11-25 11:07:39,748 >>   Num examples = 16
+[INFO|trainer.py:2919] 2026-11-25 11:07:39,748 >>   Batch size = 4
+{'loss': '0.3011', 'grad_norm': '0.3488', 'learning_rate': '0.0002879', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 7352, 'num_attended_tokens_seen': '3.299e+04', 'entropy': '0.5027', 'mean_token_accuracy': '0.9371', 'epoch': '1.111'}
+{'loss': '0.2429', 'grad_norm': '0.449', 'learning_rate': '0.0001632', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 9184, 'num_attended_tokens_seen': '4.109e+04', 'entropy': '0.3438', 'mean_token_accuracy': '0.9454', 'epoch': '1.389'}
+{'loss': '0.1938', 'grad_norm': '0.3441', 'learning_rate': '6.031e-05', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 11013, 'num_attended_tokens_seen': '4.952e+04', 'entropy': '0.2622', 'mean_token_accuracy': '0.9584', 'epoch': '1.667'}
+{'loss': '0.2274', 'grad_norm': '0.6086', 'learning_rate': '5.118e-06', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 12870, 'num_attended_tokens_seen': '5.784e+04', 'entropy': '0.2655', 'mean_token_accuracy': '0.9553', 'epoch': '1.944'}
+
+  0%|          | 0/4 [00:00<?, ?it/s][A
+ 50%|█████     | 2/4 [00:04<00:04,  2.24s/it][A
+ 75%|███████▌  | 3/4 [00:08<00:02,  2.85s/it][A
+100%|██████████| 4/4 [00:11<00:00,  3.14s/it][A                                               
+                                             [A100%|██████████| 36/36 [11:27<00:00, 17.92s/it]
+100%|██████████| 4/4 [00:11<00:00,  3.14s/it][A
+                                             [A[INFO|tokenization_utils_base.py:3380] 2026-11-25 11:07:55,423 >> chat template saved in /home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-36/chat_template.jinja
+[INFO|tokenization_utils_base.py:2127] 2026-11-25 11:07:55,423 >> tokenizer config file saved in /home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-36/tokenizer_config.json
+[INFO|configuration_utils.py:1018] 2026-11-25 11:07:55,760 >> loading configuration file config.json from cache at /home/ubuntu/.cache/huggingface/hub/models--HuggingFaceTB--SmolLM2-135M-Instruct/snapshots/12fd25f77366fa6b3b4b768ec3050bf629380bac/config.json
+[INFO|configuration_utils.py:1090] 2026-11-25 11:07:55,761 >> Model config LlamaConfig {
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 1,
+  "dtype": "bfloat16",
+  "eos_token_id": 2,
+  "head_dim": 64,
+  "hidden_act": "silu",
+  "hidden_size": 576,
+  "initializer_range": 0.041666666666666664,
+  "intermediate_size": 1536,
+  "is_llama_config": true,
+  "max_position_embeddings": 8192,
+  "mlp_bias": false,
+  "model_type": "llama",
+  "num_attention_heads": 9,
+  "num_hidden_layers": 30,
+  "num_key_value_heads": 3,
+  "pad_token_id": 2,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_interleaved": false,
+  "rope_parameters": {
+    "rope_theta": 100000,
+    "rope_type": "default"
+  },
+  "tie_word_embeddings": true,
+  "transformers.js_config": {
+    "kv_cache_dtype": {
+      "fp16": "float16",
+      "q4f16": "float16"
+    }
+  },
+  "transformers_version": "5.20.2",
+  "use_cache": true,
+  "vocab_size": 49152
+}
+
+{'eval_loss': '0.1831', 'eval_model_preparation_time': '0.02', 'eval_runtime': '15.56', 'eval_samples_per_second': '1.028', 'eval_steps_per_second': '0.257', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 13236, 'eval_num_attended_tokens_seen': '5.784e+04', 'eval_entropy': '0.2338', 'eval_mean_token_accuracy': '0.9566', 'epoch': '2'}
+11/25/2026 11:07:55 - INFO - halo.checkpoint.parallel.adapters - Saved PEFT adapters to /home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-36
+11/25/2026 11:07:55 - INFO - halo.checkpoint.parallel.sidecars - ✓ Persisted LR scheduler to /home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-36
+[INFO|trainer.py:1975] 2026-11-25 11:07:55,836 >> 
+
+Training completed. Do not forget to share your model on huggingface.co/models =)
+
+
+                                               100%|██████████| 36/36 [11:28<00:00, 17.92s/it]100%|██████████| 36/36 [11:28<00:00, 19.12s/it]
+{'train_runtime': '688.2', 'train_samples_per_second': '0.418', 'train_steps_per_second': '0.052', 'train_loss': '0.5153', 'parallelism/dp_size': 1, 'num_unmasked_output_tokens_seen': 13236, 'epoch': '2'}
+11/25/2026 11:07:55 - INFO - halo.entrypoints.script - SFT training completed successfully!
