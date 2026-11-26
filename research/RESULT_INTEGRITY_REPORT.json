@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T22:28:09+00:00",
+  "generated_at_utc": "2026-11-26T22:49:11+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1850,43 +1850,57 @@
       "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
     "exp163_qwen3_behavior_data_scaling_curve": [
+      "current script does not retain row-level behavior outcomes or write paired McNemar/bootstrap statistics, so exactness differences are rate/Wilson-level unless instrumentation is patched before launch",
       "fixed-compute diversity-versus-repetition curve uses exposed unique-row counts 400/800/1600/2400 at 6/3/1.5/1 epochs; nested stratified complete-pair subsets control tool/policy composition, but single-seed noise remains and fixed-epoch scaling is separate"
     ],
     "exp164_qwen3_capability_replay_dose_curve": [
+      "continuation/transfer surfaces use fixed random subsets shared across arms; compare absolute capability rates within this experiment, not against first-n dataset-order artifacts such as exp152",
       "replay dose varies both capability exposure and behavior-data share at fixed total updates, which is the intended tradeoff curve; continuation gains on MMLU/ARC-Easy/HellaSwag remain partly in-domain, so use the held-out transfer battery for broad-capability interpretation"
     ],
     "exp165_qwen3_capability_replay_source_controls": [
+      "continuation/transfer surfaces use fixed random subsets shared across arms; compare absolute capability rates within this experiment, not against first-n dataset-order artifacts",
       "staged conditional source-control diagnostic: behavior-only anchors and the shuffled wrong-answer arm are interpretive references rather than deployment candidates; behavior-only-225 matches behavior-step count but not total optimizer updates, and answer rotation preserves answer distribution while actively training incorrect context-answer pairings"
     ],
     "exp166_qwen3_mixed_batch_interleaving": [
+      "continuation/transfer surfaces use fixed random subsets shared across arms; compare absolute capability rates within this experiment, not against first-n dataset-order artifacts",
       "staged conditional interleaving diagnostic: at default 300 steps/batch8/replay-every4 the alternating and mixed arms consume exactly the same 1800 behavior plus 600 capability examples, so only temporal batch composition varies; non-default doses may not preserve exact matching"
     ],
     "exp167_qwen3_behavior_fixed_epoch_scaling": [
+      "continuation/transfer surfaces use fixed random subsets shared across arms; compare absolute capability rates within this experiment, not against first-n dataset-order artifacts",
       "fixed-epoch scaling deliberately increases optimizer steps/compute with row count, so cross-row comparisons measure data-plus-compute scaling rather than pure data diversity; warmup/cosine proportions are matched, and comparison with exp163 is needed to separate repetition from compute"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
+      "continuation results predate the fixed-random benchmark subsets and use first-n dataset ordering, so their absolute capability rates are not comparable with later randomized-subset experiments",
       "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"
     ],
     "exp153_olmoe_expert_stage_zero": [
       "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
     ],
     "exp154_olmoe_benchmark_selective_expert_adapters": [
-      "no selectivity advantage was observed under unmatched adapter initialization: random experts matched/beat selective experts on MMLU and ARC while showing the same HellaSwag decline, but init was not controlled across arms; behavior eval is still v1 leakage-limited and export validation fails exactly",
-      "capability movement is measured only on in-domain MMLU/ARC-Easy/HellaSwag continuation surfaces overlapping the training-source families; Exp154 does not establish held-out transfer, which is why Exp155/158 add ARC-Challenge/OpenBookQA/Winogrande/TruthfulQA probes"
+      "continuation results predate the fixed-random benchmark subsets and use first-n dataset ordering, so later Exp155/158/160 absolute rates must be compared within their own same-subset experiments rather than numerically against Exp154",
+      "capability movement is measured only on in-domain MMLU/ARC-Easy/HellaSwag continuation surfaces overlapping the training-source families; Exp154 does not establish held-out transfer, which is why Exp155/158 add ARC-Challenge/OpenBookQA/Winogrande/TruthfulQA probes",
+      "no selectivity advantage was observed under unmatched adapter initialization: random experts matched/beat selective experts on MMLU and ARC while showing the same HellaSwag decline, but init was not controlled across arms; behavior eval is still v1 leakage-limited and export validation fails exactly"
     ],
     "exp155_olmoe_expert_surface_controls": [
+      "behavior surfaces retain row-level outcomes, while continuation/transfer rows use fixed random benchmark subsets; use same-file baseline and paired comparisons rather than numerical comparison with Exp154 first-n results",
       "comparator control experiment: lowest-answer-token expert and dense-attention arms are interpretive controls, not deployment candidates; primary behavior_scaled120 is entity-disjoint corpus v2 with v1 only as a bridge"
+    ],
+    "exp158_olmoe_capability_data_mechanism": [
+      "behavior surfaces retain row-level outcomes, while continuation/transfer rows use fixed random benchmark subsets; use same-file baseline and paired comparisons rather than numerical comparison with Exp154 first-n results",
+      "capability-source mechanism ablation: source-specific and shuffled-answer arms are mechanism controls rather than deployment candidates; adapter initialization is fixed and source-specific row counts are balanced, so mixture is close to the intended causal variable"
     ],
     "exp157_olmoe_expert_adapter_export_validation": [
       "export validation is a no-training diagnostic using small v1 behavior/continuation canaries, not a full behavior intervention result; logits/greedy equality are the primary evidence"
     ],
     "exp160_olmoe_checkpoint_transfer_export_eval": [
+      "benchmark rows use fixed random subsets; interpret paired pre/post-export movement within Exp160 rather than absolute comparison with Exp154 first-n continuation measurements",
       "no-training benchmark-level export fidelity diagnostic: continuation/transfer score preservation is necessary but not sufficient for deployment validity because exact logits/greedy equality already failed in exp157 and behavior safety is not re-evaluated"
     ],
     "exp161_olmoe_capability_corpus_generalization": [
       "staged/inactive until exp158 establishes the source/format mechanism; fixed random-expert initialization makes corpus composition the intended causal variable, with held-out transfer primary and entity-disjoint behavior collateral secondary"
     ],
     "exp156_qwen3_entity_disjoint_seed_replication": [
+      "behavior rows support paired seed comparisons, while continuation/transfer rows use fixed random subsets; absolute capability rates are not comparable with Exp152 first-n dataset-order measurements",
       "entity-disjoint v2 seed replication: interpret all seeds 42/7/123 together rather than the autograded best seed; behavior-only training batches mean continuation benchmarks measure collateral change, not replay-preservation success"
     ],
     "exp52_pgs_credit_direction": [

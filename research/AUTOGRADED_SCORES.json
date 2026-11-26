@@ -948,6 +948,7 @@
     "validity_warnings": [
       "partial/nonstandard eval n=120 (canonical heldout n=40)",
       "P gain uses same-run/model exact baseline 66.7%, not the canonical 135M SFT baseline",
+      "continuation results predate the fixed-random benchmark subsets and use first-n dataset ordering, so their absolute capability rates are not comparable with later randomized-subset experiments",
       "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"
     ]
   },
@@ -978,8 +979,9 @@
       "same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected",
       "partial/nonstandard eval n=120 (canonical heldout n=40)",
       "P gain uses same-run/model exact baseline 15.8%, not the canonical 135M SFT baseline",
-      "no selectivity advantage was observed under unmatched adapter initialization: random experts matched/beat selective experts on MMLU and ARC while showing the same HellaSwag decline, but init was not controlled across arms; behavior eval is still v1 leakage-limited and export validation fails exactly",
-      "capability movement is measured only on in-domain MMLU/ARC-Easy/HellaSwag continuation surfaces overlapping the training-source families; Exp154 does not establish held-out transfer, which is why Exp155/158 add ARC-Challenge/OpenBookQA/Winogrande/TruthfulQA probes"
+      "continuation results predate the fixed-random benchmark subsets and use first-n dataset ordering, so later Exp155/158/160 absolute rates must be compared within their own same-subset experiments rather than numerically against Exp154",
+      "capability movement is measured only on in-domain MMLU/ARC-Easy/HellaSwag continuation surfaces overlapping the training-source families; Exp154 does not establish held-out transfer, which is why Exp155/158 add ARC-Challenge/OpenBookQA/Winogrande/TruthfulQA probes",
+      "no selectivity advantage was observed under unmatched adapter initialization: random experts matched/beat selective experts on MMLU and ARC while showing the same HellaSwag decline, but init was not controlled across arms; behavior eval is still v1 leakage-limited and export validation fails exactly"
     ]
   },
   "exp34_activation_vector_only_rl": {
