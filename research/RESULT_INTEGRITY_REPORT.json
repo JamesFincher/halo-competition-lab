@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T21:57:20+00:00",
+  "generated_at_utc": "2026-11-26T22:02:22+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1732,6 +1732,7 @@
     "exp160_olmoe_checkpoint_transfer_export_eval",
     "exp163_qwen3_behavior_data_scaling_curve",
     "exp164_qwen3_capability_replay_dose_curve",
+    "exp167_qwen3_behavior_fixed_epoch_scaling",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
@@ -1859,6 +1860,9 @@
     ],
     "exp166_qwen3_mixed_batch_interleaving": [
       "staged conditional interleaving diagnostic: at default 300 steps/batch8/replay-every4 the alternating and mixed arms consume exactly the same 1800 behavior plus 600 capability examples, so only temporal batch composition varies; non-default doses may not preserve exact matching"
+    ],
+    "exp167_qwen3_behavior_fixed_epoch_scaling": [
+      "fixed-epoch scaling deliberately increases optimizer steps/compute with row count, so cross-row comparisons measure data-plus-compute scaling rather than pure data diversity; warmup/cosine proportions are matched, and comparison with exp163 is needed to separate repetition from compute"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
       "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"

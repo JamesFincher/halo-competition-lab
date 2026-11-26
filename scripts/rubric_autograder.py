@@ -47,6 +47,7 @@ SCORE_OVERRIDES: dict[str, dict[str, float]] = {
     "exp164_qwen3_capability_replay_dose_curve": {"N": 8, "K": 9, "T": 8, "R": 6},
     "exp165_qwen3_capability_replay_source_controls": {"N": 8, "K": 8, "T": 7, "R": 6},
     "exp166_qwen3_mixed_batch_interleaving": {"N": 8, "K": 8, "T": 7, "R": 6},
+    "exp167_qwen3_behavior_fixed_epoch_scaling": {"N": 8, "K": 9, "T": 7, "R": 6},
     "exp154_olmoe_benchmark_selective_expert_adapters": {"N": 7, "K": 8, "T": 7, "R": 6},
 }
 
@@ -149,6 +150,9 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     ],
     "exp166_qwen3_mixed_batch_interleaving": [
         "staged conditional interleaving diagnostic: at default 300 steps/batch8/replay-every4 the alternating and mixed arms consume exactly the same 1800 behavior plus 600 capability examples, so only temporal batch composition varies; non-default doses may not preserve exact matching"
+    ],
+    "exp167_qwen3_behavior_fixed_epoch_scaling": [
+        "fixed-epoch scaling deliberately increases optimizer steps/compute with row count, so cross-row comparisons measure data-plus-compute scaling rather than pure data diversity; warmup/cosine proportions are matched, and comparison with exp163 is needed to separate repetition from compute"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
         "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"
