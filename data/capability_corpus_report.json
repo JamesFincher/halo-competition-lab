@@ -1,0 +1,229 @@
+{
+  "generator": "scripts/build_capability_corpus.py",
+  "seed": 42,
+  "target_total": 5280,
+  "format": "exp141 benchmark-direct: context + single space + answer",
+  "normalization": "lowercase, alphanumeric tokens, whitespace canonicalization",
+  "ngram_n": 13,
+  "contamination_method": "train contexts are exact/hash and 13-gram compared against evaluation question/passage contexts; answer choices are excluded because shared short answer strings are not item leakage",
+  "dedupe_method": "exact digest of normalized direct context+answer text",
+  "eval_reference": {
+    "mmlu": {
+      "rows": 14042,
+      "exact_hashes": 13857,
+      "ngram_hashes": 397968
+    },
+    "arc_easy": {
+      "rows": 2376,
+      "exact_hashes": 2371,
+      "ngram_hashes": 20083
+    },
+    "hellaswag": {
+      "rows": 10042,
+      "exact_hashes": 10018,
+      "ngram_hashes": 283054
+    }
+  },
+  "sources": {
+    "mmlu_validation": {
+      "loaded": 1531,
+      "kept": 1271,
+      "dropped_duplicate": 2,
+      "dropped_exact_context_match": 39,
+      "dropped_ngram_overlap": 241,
+      "matches_by_eval_benchmark": {
+        "mmlu": 258
+      },
+      "contamination_examples": [
+        {
+          "dataset_id": "mmlu_validation_8_abstract_algebra",
+          "exact_matches": [],
+          "ngram_matches": [
+            "mmlu"
+          ],
+          "context_prefix": "Find the maximum possible order for an element of S_n for n = 7."
+        },
+        {
+          "dataset_id": "mmlu_validation_52_clinical_knowledge",
+          "exact_matches": [
+            "mmlu"
+          ],
+          "ngram_matches": [],
+          "context_prefix": "Type I muscle fibres have the following characteristics:"
+        },
+        {
+          "dataset_id": "mmlu_validation_60_clinical_knowledge",
+          "exact_matches": [
+            "mmlu"
+          ],
+          "ngram_matches": [],
+          "context_prefix": "The coding sequences of genes are called:"
+        },
+        {
+          "dataset_id": "mmlu_validation_69_clinical_knowledge",
+          "exact_matches": [
+            "mmlu"
+          ],
+          "ngram_matches": [],
+          "context_prefix": "How can several different proteins be produced from the same gene?"
+        },
+        {
+          "dataset_id": "mmlu_validation_77_clinical_knowledge",
+          "exact_matches": [
+            "mmlu"
+          ],
+          "ngram_matches": [],
+          "context_prefix": "Who set the world record for the mile race in 1886?"
+        }
+      ]
+    },
+    "arc_easy_train": {
+      "loaded": 2251,
+      "kept": 2236,
+      "dropped_duplicate": 0,
+      "dropped_exact_context_match": 8,
+      "dropped_ngram_overlap": 10,
+      "matches_by_eval_benchmark": {
+        "arc_easy": 15
+      },
+      "contamination_examples": [
+        {
+          "dataset_id": "NYSEDREGENTS_2009_4_25",
+          "exact_matches": [
+            "arc_easy"
+          ],
+          "ngram_matches": [],
+          "context_prefix": "Green plants get the energy they need to make food from"
+        },
+        {
+          "dataset_id": "LEAP_2002_4_10246",
+          "exact_matches": [],
+          "ngram_matches": [
+            "arc_easy"
+          ],
+          "context_prefix": "Mrs. Henderson's class has five small, covered boxes. One contains perfume; another contains dried onions. There is also a box of pine needles, a box of lemon pieces, and a box wit"
+        },
+        {
+          "dataset_id": "NYSEDREGENTS_2009_8_9",
+          "exact_matches": [
+            "arc_easy"
+          ],
+          "ngram_matches": [],
+          "context_prefix": "Which energy source is considered nonrenewable?"
+        },
+        {
+          "dataset_id": "Mercury_409875",
+          "exact_matches": [
+            "arc_easy"
+          ],
+          "ngram_matches": [
+            "arc_easy"
+          ],
+          "context_prefix": "In the Adirondack forests of New York, some trees have died. The change in the forest is thought to be related to air pollution and rain. Which abiotic factor most likely has been "
+        },
+        {
+          "dataset_id": "LEAP__8_10367",
+          "exact_matches": [],
+          "ngram_matches": [
+            "arc_easy"
+          ],
+          "context_prefix": "This in turn causes the average temperature on Earth to rise. Which of the following observations supports that theory?"
+        }
+      ]
+    },
+    "hellaswag_train": {
+      "loaded": 39905,
+      "kept": 1773,
+      "dropped_duplicate": 2,
+      "dropped_exact_context_match": 2,
+      "dropped_ngram_overlap": 8,
+      "matches_by_eval_benchmark": {
+        "hellaswag": 8
+      },
+      "contamination_examples": [
+        {
+          "dataset_id": "activitynet~v_MzqovHjEKE4",
+          "exact_matches": [],
+          "ngram_matches": [
+            "hellaswag"
+          ],
+          "context_prefix": "A man is seen speaking to the camera and leads into him holding up a tool and pointing to several bushes. the man"
+        },
+        {
+          "dataset_id": "wikihow~14866",
+          "exact_matches": [],
+          "ngram_matches": [
+            "hellaswag"
+          ],
+          "context_prefix": "[header] How to create a viber account on pc or mac [title] Go to https: // account.viber.com/en/create-account in a web browser. [step] You can use any web browser, such as safari"
+        },
+        {
+          "dataset_id": "wikihow~67080",
+          "exact_matches": [],
+          "ngram_matches": [
+            "hellaswag"
+          ],
+          "context_prefix": "[header] How to remove a tick [title] Find the head of the tick. [step] If you look closely, you'll see its mouth attached to the skin, with the body resting behind it. [title] Gra"
+        },
+        {
+          "dataset_id": "wikihow~18951",
+          "exact_matches": [],
+          "ngram_matches": [
+            "hellaswag"
+          ],
+          "context_prefix": "[header] How to breed a deedge in my singing monsters [title] Verify you're at level nine or higher in my singing monsters. [step] The deedge can only be bred when you've reached l"
+        },
+        {
+          "dataset_id": "activitynet~v_kdRcWkrZRZo",
+          "exact_matches": [],
+          "ngram_matches": [
+            "hellaswag"
+          ],
+          "context_prefix": "A man and a woman talk to the camera in a newscast setting. Scenes of summer beach goers are shown in a news report context. a man"
+        }
+      ],
+      "target_after_mmlu_arc": 1773,
+      "label_balance": {
+        "0": 444,
+        "1": 443,
+        "2": 443,
+        "3": 443
+      },
+      "scanned_train_rows": 1783
+    }
+  },
+  "full_path": "data/capability_corpus_scaled.jsonl",
+  "train_path": "data/capability_train_scaled.jsonl",
+  "validation_path": "data/capability_validation_scaled.jsonl",
+  "full_sha256": "94e24e143fb65d7c59163b6bade5aefbea1537a4f414cde0eb12264f34ad748f",
+  "train_sha256": "f2f611d1adc672c3e3b549cfcbb7cff047c15087b0f5b1a92719c4402f108e91",
+  "validation_sha256": "bba1c1a3ffa53e19c33d480be83ba9bc1bd550b03bf696d7d99c31330b147df0",
+  "full_rows": 5280,
+  "train_rows": 4752,
+  "validation_rows": 528,
+  "source_counts": {
+    "mmlu_validation": 1271,
+    "arc_easy_train": 2236,
+    "hellaswag_train": 1773
+  },
+  "train_source_counts": {
+    "arc_easy_train": 2012,
+    "hellaswag_train": 1596,
+    "mmlu_validation": 1144
+  },
+  "validation_source_counts": {
+    "hellaswag_train": 177,
+    "arc_easy_train": 224,
+    "mmlu_validation": 127
+  },
+  "unique_normalized_texts": 5280,
+  "duplicate_normalized_texts": 0,
+  "hellaswag_label_balance": {
+    "0": 444,
+    "1": 443,
+    "2": 443,
+    "3": 443
+  },
+  "hellaswag_activity_count": 174,
+  "passed": true
+}
