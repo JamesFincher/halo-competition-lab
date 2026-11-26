@@ -28,6 +28,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=100)
     ap.add_argument("--out", default="results/real_benchmark_baseline.json")
+    ap.add_argument("--edit", action="store_true")
+    import sys
     args = ap.parse_args()
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -36,6 +38,50 @@ def main():
     tok = AutoTokenizer.from_pretrained("HuggingFaceTB/SmolLM2-135M-Instruct")
     if tok.pad_token is None: tok.pad_token = tok.eos_token
     model = AutoModelForCausalLM.from_pretrained("HuggingFaceTB/SmolLM2-135M-Instruct", dtype=torch.float32).to(device).eval()
+    if args.edit:
+        sys.path.insert(0, "experiments/common")
+        sys.path.insert(0, "experiments/edit_then_target_rl/scripts")
+        import importlib, glob
+        # apply validated residual-direction edit inline: behavioral contrastive dirs + gated strength
+        from peft import PeftModel
+        model = PeftModel.from_pretrained(model, "checkpoints/smollm2-135m-policy-lora/checkpoint-36").merge_and_unload().to(device).eval()
+        print("  applying validated surgical edit before scoring...", flush=True)
+        import run_micro_targeted_rl as base_rl
+        train_rows = base_rl.load_rows("data/policy_train.jsonl")
+        ben = [r for r in train_rows if r["target"]["action"] == "call_tool"][:8]
+        uns = [r for r in train_rows if r["target"]["action"] == "refuse"][:8]
+        store, hooks = {}, []
+        for li in (29, 28):
+            def mk(idx):
+                def hk(_m, inp, out):
+                    o = out[0] if isinstance(out, tuple) else out
+                    store[idx] = o[:, -1, :].detach().float()
+                return hk
+            hooks.append(model.model.layers[li].register_forward_hook(mk(li)))
+        acts = {li: {"ben": [], "uns": []} for li in (29, 28)}
+        with torch.no_grad():
+            for r in ben + uns:
+                ids = tok(base_rl.build_prompt(tok, r["messages"]), return_tensors="pt", truncation=True, max_length=256).to(device)
+                model(**ids)
+                key = "ben" if r in ben else "uns"
+                for li in (29, 28): acts[li][key].append(store[li].cpu().clone())
+        for h in hooks: h.remove()
+        sys.path.insert(0, "experiments/random_node_control_proof/scripts")
+        import run_random_control_proof as rnd_mod
+        scores, _ = rnd_mod.compute_dla_scores(model, tok, train_rows, device)
+        with torch.no_grad():
+            for li in (29, 28):
+                mb = torch.cat(acts[li]["ben"], 0).mean(0)
+                mu = torch.cat(acts[li]["uns"], 0).mean(0)
+                d = (mu - mb); u = (d / (d.norm() + 1e-8)).to(device, torch.float32)
+                idxs = torch.topk(scores[li], k=64).indices.tolist()
+                w = model.model.layers[li].mlp.down_proj.weight
+                wf = w.float()
+                idx = torch.tensor(idxs, dtype=torch.long, device=w.device)
+                proj = torch.matmul(u, wf[:, idx])
+                wf[:, idx] -= 0.7 * torch.outer(u, proj)
+                w.copy_(wf.to(w.dtype))
+        print("  edit applied", flush=True)
     res = {}
     # MMLU (real test items, stratified across subjects)
     try:
