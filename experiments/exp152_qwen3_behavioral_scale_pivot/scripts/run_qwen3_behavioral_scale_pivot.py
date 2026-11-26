@@ -398,6 +398,7 @@ def main() -> None:
             "edit_info": edit_info,
             "train_info": train_info,
             "evaluation": eval_out,
+            "behavior_scaled120": eval_out["behavior_scaled120"],
             "memory": memory_stats(device),
             "wall_sec": round(time.time() - arm_t0, 2),
         }

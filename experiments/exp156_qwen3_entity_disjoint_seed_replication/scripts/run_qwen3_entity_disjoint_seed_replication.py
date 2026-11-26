@@ -481,6 +481,7 @@ def main() -> None:
             "evaluation_surface": "behavior_scaled120 is corpus-v2 entity-disjoint heldout, not the original compositional scaled v1",
             "train_info": train_info,
             "evaluation": eval_out,
+            "behavior_scaled120": eval_out["behavior_scaled120"],
             "memory": memory_stats(device),
             "wall_sec": round(time.time() - arm_t0, 2),
         }
