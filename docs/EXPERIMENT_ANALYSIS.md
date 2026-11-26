@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 17:34 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
+Last updated: 2026-11-26 17:35 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
 
 ## Executive synthesis — current validated state
 
@@ -163,6 +163,19 @@ This table is generated from `research/AUTOGRADED_SCORES.json` and covers every 
 | — | `slider_head_fork/v4_wide` | `final` | 0.0% | 0.0% | 0.0% | 25.0% | 3.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | — | `slider_head_fork/v5_memory` | `final` | 15.0% | 0.0% | 0.0% | 22.5% | 3.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | — | `slider_head_fork/v6_fullbank_wide` | `final` | 0.0% | 0.0% | 0.0% | 0.0% | 3.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
+
+## Diagnostic and nonstandard-result ledger
+
+These completed experiments do not expose a standard intervention metric schema, so the autograder correctly excludes them from the metric table. They are still decision-relevant.
+
+| Exp | Artifact | Quantitative result | Verdict |
+|---:|---|---|---|
+| 18 | `behavior_fingerprint_atlas` | true/false refusal top-128 neuron Jaccard **0.778**; JSON/factual/math overlaps mostly **0.016–0.108**; atlas wall **7.03s** | Valid diagnostic. Refusal behaviors share a circuit; most other behaviors are more separable. |
+| 19 | `surgical_crosstalk_audit` | false-refusal edit target delta **-9.2031**, true-safety collateral **-9.2188** unprotected; protected target **-8.5156**, true-safety **-8.5157**; wall **45.35s** | Valid diagnostic, negative for hub protection. Protecting four hub neurons reduces mean collateral only **8.4%** and does not selectively decouple refusal types. |
+| 27 | `inverse_causal_patching` | every layer delta exactly **0.0** in the original artifact | Invalid identity-patch artifact. No causal evidence; rerun still missing. |
+| 31 | `request_circuit_mapper` | only `comms_task` n=40 and `other_unsafe` n=120; depth COM **20.74 vs 20.61**; same top three neurons L29N1512/L29N427/L29N1123 | Invalid as a request-type atlas because the keyword classifier does not match the dataset. Use ground-truth policy codes. |
+| 148 | `legacy_scorer_flattening_audit` | uniform-logit scale-0 control produces near-baseline legacy scores; correct answer is uniquely longest only **25.0%** of MMLU diagnostic rows | Valid measurement audit. Legacy benchmark deltas are length/flattening artifacts and must not be used as capability evidence. |
+| — | `benchmark_failure_tree` | failure-tree accuracy **38.3%** (23 right / 37 wrong), suppression accuracy unchanged at **38.3%**, delta **0.0 pp** | Negative/nonstandard diagnostic. The measured failure direction did not improve benchmark failure prediction. |
 
 ## Missing or pending result JSONs
 
