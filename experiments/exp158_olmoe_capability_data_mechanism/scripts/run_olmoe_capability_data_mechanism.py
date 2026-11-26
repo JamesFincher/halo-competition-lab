@@ -306,16 +306,28 @@ def main():
     for arm,selections,rank,source in arm_specs:
       if arm in done: continue
       arm_t0=time.time(); print(f"[Exp158] arm {arm}",flush=True)
+      # Hold adapter initialization fixed across data arms so the training mixture is
+      # the single intended causal variable; seed sensitivity needs a separate replication.
+      random.seed(args.seed); torch.manual_seed(args.seed)
       model=load_model(tok,device); model.eval()
       dtype=next(model.parameters()).dtype
       bank=ExpertAdapterBank(n_layers,n_exp,hidden,intermediate,rank,selections,args.adapter_alpha,device,dtype).to(device)
       install_adapters(model,bank)
+      source_names=("arc_easy_train","mmlu_validation","hellaswag_train")
+      source_counts={src:sum(1 for r in cap_train if r.get("source")==src) for src in source_names}
       if source == "shuffled_answer_control":
+        per_source=max(1,min(source_counts.values())//len(source_names))
+        grouped={src:[r for r in cap_train if r.get("source")==src][:per_source] for src in source_names}
+        balanced=[]
+        for i in range(per_source):
+          for src in source_names:
+            if i < len(grouped[src]): balanced.append(grouped[src][i])
         train_rows=[]
-        for i,r in enumerate(cap_train):
-          rr=dict(r); rr["answer_text"]=cap_train[(i+997)%len(cap_train)]["answer_text"]; train_rows.append(rr)
+        for i,r in enumerate(balanced):
+          rr=dict(r); rr["answer_text"]=balanced[(i+997)%len(balanced)]["answer_text"]; train_rows.append(rr)
       else:
         train_rows=[r for r in cap_train if r.get("source")==source]
+        train_rows=train_rows[:min(source_counts.values())]
       train_info=train_bank(model,bank,tok,train_rows,device,args.steps,args.batch_size,args.max_len,args.lr,ckpt_base / arm,args.checkpoint_interval)
       train_info["training_source"]=source; train_info["training_rows"]=len(train_rows)
       behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True)
@@ -326,7 +338,7 @@ def main():
       del model,bank
       if device.type=="cuda": torch.cuda.empty_cache()
     arms=[json.loads(x) for x in ARM_JSONL.read_text().splitlines() if x.strip()]
-    write_json(RESULTS_DIR/"olmoe_capability_data_mechanism_summary.json",{"experiment":"exp158_olmoe_capability_data_mechanism","model":MODEL_NAME,"question":"Does generic random-expert capability improvement come from source-specific supervision or answer-only continuation structure rather than expert selectivity?","baseline":baseline,"arms":arms,"wall_sec":round(time.time()-t0,2),"smoke_test":smoke()})
+    write_json(RESULTS_DIR/"olmoe_capability_data_mechanism_summary.json",{"experiment":"exp158_olmoe_capability_data_mechanism","model":MODEL_NAME,"question":"Does generic random-expert capability improvement come from source-specific supervision or answer-only continuation structure rather than expert selectivity, with adapter initialization held fixed across data arms?","baseline":baseline,"arms":arms,"wall_sec":round(time.time()-t0,2),"smoke_test":smoke()})
     if smoke(): shutil.rmtree(ckpt_base,ignore_errors=True)
     print(f"[DONE] exp158 arms={len(arms)} wall={round(time.time()-t0,2)}s",flush=True)
 
