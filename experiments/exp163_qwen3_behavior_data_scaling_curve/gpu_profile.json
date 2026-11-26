@@ -1,8 +1,10 @@
 {
   "estimated_model_gb": 8.0,
-  "estimated_peak_gb": 16.0,
+  "estimated_peak_gb": 28,
   "estimated_wall_hours": 0.75,
   "exclusive_gpu": true,
   "queue_priority": 87,
-  "notes": "Highest-priority behavioral scaling curve after exp152; four short LoRA arms plus baseline, using batched behavior/benchmark evaluation."
+  "notes": "Highest-priority behavioral scaling curve after exp152; four short LoRA arms plus baseline, using batched behavior/benchmark evaluation.",
+  "allow_parallel": true,
+  "parallel_notes": "Measured Qwen4B LoRA training peak in exp152 was up to 26.15 GiB reserved; safe pairwise packing with another measured Qwen job"
 }

@@ -56,11 +56,41 @@ def exclusive_priority(item):
     # follow-up controls queue behind the parent experiment they interpret.
     return int(gpu_profile(item).get("queue_priority", 0))
 
-# Large-model jobs declare exclusive_gpu. Queue one solo job rather than packing it
-# with seven 135M jobs that could collectively OOM the H100.
+# Large-model jobs declare exclusive_gpu. The default remains solo execution, but
+# measured low-memory jobs can opt into conservative pairwise packing. This honors
+# the zero-idle/parallel-variant mandate without risking unmeasured 7B/fp32 jobs.
+def allow_parallel(item):
+    return bool(gpu_profile(item).get("allow_parallel"))
+
+def estimated_peak_gb(item):
+    try:
+        return float(gpu_profile(item).get("estimated_peak_gb", 80.0))
+    except Exception:
+        return 80.0
+
+def pack_exclusive(items, memory_budget_gb=64.0, max_jobs=2):
+    if not items:
+        return []
+    chosen = [items[0]]  # never skip the highest-priority job
+    if not allow_parallel(items[0]):
+        return chosen
+    used = estimated_peak_gb(items[0])
+    for item in items[1:]:
+        if len(chosen) >= max_jobs:
+            break
+        if not allow_parallel(item):
+            # Preserve explicit priority order: never backfill behind a solo job.
+            break
+        est = estimated_peak_gb(item)
+        if used + est > memory_budget_gb:
+            break
+        chosen.append(item)
+        used += est
+    return chosen
+
 exclusive_unordered = [item for item in ordered if exclusive_gpu(item)]
 exclusive = sorted(exclusive_unordered, key=lambda item: (exclusive_priority(item), priority_key(item)), reverse=True)
-queue = exclusive[:1] if exclusive else ordered[:8]
+queue = pack_exclusive(exclusive) if exclusive else ordered[:8]
 json.dump({"experiments": queue}, open("scripts/auto_queue.json", "w"), indent=1)
 print(f"auto-queue: {len(queue)}")
 PY

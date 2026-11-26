@@ -1,1 +1,8 @@
-{"exclusive_gpu":true,"estimated_peak_gb":26,"queue_priority":70,"reason":"Qwen3-4B seed replication follows exp152/exp155 in the exclusive large-model queue"}
+{
+  "exclusive_gpu": true,
+  "estimated_peak_gb": 28,
+  "queue_priority": 70,
+  "reason": "Qwen3-4B seed replication follows exp152/exp155 in the exclusive large-model queue",
+  "allow_parallel": true,
+  "parallel_notes": "Measured Qwen4B LoRA training peak in exp152 was up to 26.15 GiB reserved; safe pairwise packing with another measured Qwen job"
+}
