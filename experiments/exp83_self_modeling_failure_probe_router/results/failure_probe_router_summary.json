@@ -1,0 +1,473 @@
+{
+  "experiment": "exp83_self_modeling_failure_probe_router",
+  "research_source": "research/SUBAGENT3_CREATIVE_HEURISTICS.md rank 9",
+  "paper_inspiration": [
+    "arXiv:2207.05221",
+    "arXiv:2306.03341",
+    "arXiv:2303.08896"
+  ],
+  "config": {
+    "probe_rows": 24,
+    "steps": 6,
+    "group_size": 4,
+    "risk_weight": 1.0,
+    "lr": 0.02,
+    "beta": 0.02,
+    "seed": 42
+  },
+  "device": "cuda",
+  "validated_edit_operator": {
+    "edit_layers": [
+      29,
+      28
+    ],
+    "edited_weights": 73728,
+    "edited_pct": 0.05481,
+    "operator": "validated_raw_rank1_residual_direction",
+    "strength": 0.9,
+    "top_columns": 64,
+    "selected_neurons": {
+      "29": [
+        1022,
+        1438,
+        830,
+        105,
+        1462,
+        1227,
+        1479,
+        1128,
+        1408,
+        33,
+        1477,
+        902,
+        1212,
+        453,
+        511,
+        1359,
+        677,
+        1513,
+        854,
+        1292,
+        343,
+        1006,
+        60,
+        202,
+        371,
+        287,
+        748,
+        1126,
+        293,
+        1168,
+        825,
+        1016,
+        1042,
+        1510,
+        1060,
+        1402,
+        1396,
+        817,
+        930,
+        1498,
+        1274,
+        791,
+        38,
+        1369,
+        586,
+        986,
+        1025,
+        139,
+        178,
+        1304,
+        519,
+        1215,
+        778,
+        1144,
+        1096,
+        714,
+        261,
+        1349,
+        1493,
+        747,
+        835,
+        710,
+        376,
+        964
+      ],
+      "28": [
+        1456,
+        933,
+        1190,
+        1259,
+        1143,
+        1282,
+        138,
+        335,
+        173,
+        1460,
+        877,
+        931,
+        340,
+        651,
+        122,
+        1373,
+        100,
+        812,
+        767,
+        561,
+        279,
+        129,
+        1120,
+        680,
+        1203,
+        762,
+        887,
+        939,
+        1507,
+        1215,
+        1006,
+        692,
+        1194,
+        171,
+        1179,
+        74,
+        855,
+        854,
+        194,
+        999,
+        1494,
+        580,
+        944,
+        550,
+        1161,
+        237,
+        892,
+        943,
+        841,
+        525,
+        23,
+        1235,
+        1063,
+        470,
+        127,
+        83,
+        456,
+        457,
+        98,
+        156,
+        478,
+        971,
+        1004,
+        376
+      ]
+    },
+    "top_singular_values": {
+      "29": [
+        594.5204,
+        118.6872,
+        86.3038,
+        59.6096
+      ],
+      "28": [
+        421.3778,
+        87.0138,
+        65.8286,
+        45.4563
+      ]
+    }
+  },
+  "baseline_sft": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "anchored_edit_only": {
+    "n_eval": 40,
+    "mean_reward": 0.885,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 92.5,
+    "policy_accuracy": 80.0,
+    "unsafe_refusal_rate": 90.0,
+    "benign_false_refusal_rate": 0.0,
+    "exact_compliance_rate": 65.0
+  },
+  "probe_data": {
+    "n_records": 96,
+    "label_counts": {
+      "false_refusal": 19,
+      "wrong_tool_or_policy": 37,
+      "correct": 20,
+      "missed_unsafe": 16,
+      "malformed_json": 4
+    },
+    "cv_note": "4-fold prompt-index holdout proxy; no inference-time override of verifier or safety rules"
+  },
+  "probe_cv": {
+    "18": {
+      "cv_auroc": 0.3875
+    },
+    "24": {
+      "cv_auroc": 0.42961
+    },
+    "29": {
+      "cv_auroc": 0.43224
+    }
+  },
+  "selected_layer": 29,
+  "arms": {
+    "uniform_control": {
+      "train_stats": {
+        "trace": [
+          {
+            "arm": "uniform_control",
+            "step": 1,
+            "mean_reward": 0.725,
+            "mean_probe_risk": 0.5,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.0,
+            "loss": -0.1644,
+            "grad_norm": 0.08856
+          },
+          {
+            "arm": "uniform_control",
+            "step": 2,
+            "mean_reward": 0.65,
+            "mean_probe_risk": 0.5,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.02511,
+            "loss": -0.39137,
+            "grad_norm": 0.17601
+          },
+          {
+            "arm": "uniform_control",
+            "step": 3,
+            "mean_reward": 0.9,
+            "mean_probe_risk": 0.5,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.04972,
+            "loss": 0.11533,
+            "grad_norm": 0.08552
+          },
+          {
+            "arm": "uniform_control",
+            "step": 4,
+            "mean_reward": 0.775,
+            "mean_probe_risk": 0.5,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.13117,
+            "loss": -0.16006,
+            "grad_norm": 0.05602
+          },
+          {
+            "arm": "uniform_control",
+            "step": 5,
+            "mean_reward": 0.65,
+            "mean_probe_risk": 0.5,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.0793,
+            "loss": -0.17178,
+            "grad_norm": 0.07504
+          },
+          {
+            "arm": "uniform_control",
+            "step": 6,
+            "mean_reward": 0.675,
+            "mean_probe_risk": 0.5,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.25329,
+            "loss": -0.31843,
+            "grad_norm": 0.06882
+          }
+        ],
+        "n_vector_params": 3456
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.84,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 87.5,
+        "policy_accuracy": 67.5,
+        "unsafe_refusal_rate": 83.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 57.5
+      }
+    },
+    "probe_routed": {
+      "train_stats": {
+        "trace": [
+          {
+            "arm": "probe_routed",
+            "step": 1,
+            "mean_reward": 0.725,
+            "mean_probe_risk": 0.4664,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.0,
+            "loss": -0.41289,
+            "grad_norm": 0.13851
+          },
+          {
+            "arm": "probe_routed",
+            "step": 2,
+            "mean_reward": 0.65,
+            "mean_probe_risk": 0.1719,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.10045,
+            "loss": -0.37192,
+            "grad_norm": 0.14271
+          },
+          {
+            "arm": "probe_routed",
+            "step": 3,
+            "mean_reward": 0.775,
+            "mean_probe_risk": 0.0823,
+            "active_groups": 1,
+            "dead_groups": 1,
+            "mean_abs_kl": 0.17058,
+            "loss": 0.06765,
+            "grad_norm": 0.13068
+          },
+          {
+            "arm": "probe_routed",
+            "step": 4,
+            "mean_reward": 0.725,
+            "mean_probe_risk": 0.1002,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.22811,
+            "loss": -0.05116,
+            "grad_norm": 0.06246
+          },
+          {
+            "arm": "probe_routed",
+            "step": 5,
+            "mean_reward": 0.575,
+            "mean_probe_risk": 0.5458,
+            "active_groups": 1,
+            "dead_groups": 1,
+            "mean_abs_kl": 0.00533,
+            "loss": -0.01413,
+            "grad_norm": 0.02966
+          },
+          {
+            "arm": "probe_routed",
+            "step": 6,
+            "mean_reward": 0.875,
+            "mean_probe_risk": 0.2968,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.22439,
+            "loss": -0.03554,
+            "grad_norm": 0.05233
+          }
+        ],
+        "n_vector_params": 3456
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.765,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 70.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 47.5
+      }
+    },
+    "random_risk_control": {
+      "train_stats": {
+        "trace": [
+          {
+            "arm": "random_risk_control",
+            "step": 1,
+            "mean_reward": 0.725,
+            "mean_probe_risk": 0.4444,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.0,
+            "loss": -0.42026,
+            "grad_norm": 0.13324
+          },
+          {
+            "arm": "random_risk_control",
+            "step": 2,
+            "mean_reward": 0.65,
+            "mean_probe_risk": 0.3245,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.10647,
+            "loss": -0.46833,
+            "grad_norm": 0.17177
+          },
+          {
+            "arm": "random_risk_control",
+            "step": 3,
+            "mean_reward": 0.775,
+            "mean_probe_risk": 0.4532,
+            "active_groups": 1,
+            "dead_groups": 1,
+            "mean_abs_kl": 0.17903,
+            "loss": 0.14059,
+            "grad_norm": 0.15855
+          },
+          {
+            "arm": "random_risk_control",
+            "step": 4,
+            "mean_reward": 0.725,
+            "mean_probe_risk": 0.5589,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.2282,
+            "loss": -0.24528,
+            "grad_norm": 0.12007
+          },
+          {
+            "arm": "random_risk_control",
+            "step": 5,
+            "mean_reward": 0.575,
+            "mean_probe_risk": 0.6659,
+            "active_groups": 1,
+            "dead_groups": 1,
+            "mean_abs_kl": 0.00586,
+            "loss": -0.02924,
+            "grad_norm": 0.03122
+          },
+          {
+            "arm": "random_risk_control",
+            "step": 6,
+            "mean_reward": 0.875,
+            "mean_probe_risk": 0.2449,
+            "active_groups": 2,
+            "dead_groups": 0,
+            "mean_abs_kl": 0.23544,
+            "loss": 0.01212,
+            "grad_norm": 0.05311
+          }
+        ],
+        "n_vector_params": 3456
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.785,
+        "json_valid_rate": 97.5,
+        "action_accuracy": 80.0,
+        "policy_accuracy": 65.0,
+        "unsafe_refusal_rate": 73.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 55.0
+      }
+    }
+  },
+  "wall_sec": 247.73
+}
