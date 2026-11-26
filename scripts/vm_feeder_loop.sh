@@ -70,10 +70,5 @@ PY
       echo "$(date): launched autowave"
     fi
   fi
-  # benchmark pass: if wave finished and no recent benchmark, run it
-  if [ "$RUNNING" -eq 0 ] && [ ! -f results/real_benchmark_latest.json -o $(find results/real_benchmark_latest.json -mmin +30 2>/dev/null | wc -l) -gt 0 ]; then
-    sudo docker rm -f benchloop >/dev/null 2>&1
-    sudo docker run -d --name benchloop --gpus all --ipc=host --shm-size=8g -v ~/halo-competition-lab:/lab -v /mnt/halo:/mnt/halo -e HF_HOME=/mnt/halo/hf -e TMPDIR=/mnt/halo/t -w /lab public.ecr.aws/whitecircle/halo:hopper python scripts/real_benchmark.py --n 100 --out results/real_benchmark_latest.json >/dev/null 2>&1
-  fi
   sleep 120
 done
