@@ -1,4 +1,4 @@
-# Experiment 35 — Surgically Anchored Bias/Steering-Vector RL
+# Experiment 50 — Surgically Anchored Bias/Steering-Vector RL
 
 **Research inspiration:** `research/SUBAGENT1_FRONTIER_RL_INTERNALS.md` rank **1** + **arXiv:2505.18706** (*Steering LLM Reasoning Through Bias-Only Adaptation*), **arXiv:2609.18587** (*Label-free steering: Compressing test-time reinforcement learning into bias-only subspaces*), and **arXiv:2509.06608** (*Small Vectors, Big Effects: A Mechanistic Study of RL-Induced Reasoning via Steering Vectors*).
 
@@ -21,7 +21,7 @@ The zero-gradient DLA edit already places the model near the correct refusal-vs-
 ## Run
 
 ```bash
-python3 experiments/exp35_surgically_anchored_vector_rl/scripts/run_surgically_anchored_vector_rl.py
+python3 experiments/exp50_surgically_anchored_vector_rl/scripts/run_surgically_anchored_vector_rl.py
 ```
 
 Use `--skip-lora-control` for the fastest vector-only sweep.

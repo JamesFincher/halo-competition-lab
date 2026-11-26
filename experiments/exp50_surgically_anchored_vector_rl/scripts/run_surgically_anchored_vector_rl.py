@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experiment 35: Surgically Anchored Bias/Steering-Vector RL.
+"""Experiment 50: Surgically Anchored Bias/Steering-Vector RL.
 
 Converts SUBAGENT1 rank-1 research idea into a runnable micro-benchmark:
 freeze the surgically edited model and train only additive residual-stream
@@ -210,9 +210,9 @@ def main() -> None:
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     dtype = torch.float32  # fp32 is mandatory for surgical-edit fidelity (wave-1 bf16 failure)
-    out_dir = ROOT / "experiments/exp35_surgically_anchored_vector_rl/results"
+    out_dir = ROOT / "experiments/exp50_surgically_anchored_vector_rl/results"
     out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[Exp 35] Surgically Anchored Vector RL on {device} ({dtype})", flush=True)
+    print(f"[Exp 50] Surgically Anchored Vector RL on {device} ({dtype})", flush=True)
 
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl")
     eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
@@ -248,7 +248,7 @@ def main() -> None:
     ]
 
     results = {
-        "experiment": "exp35_surgically_anchored_vector_rl",
+        "experiment": "exp50_surgically_anchored_vector_rl",
         "research_source": "research/SUBAGENT1_FRONTIER_RL_INTERNALS.md rank 1",
         "paper_inspiration": ["arXiv:2505.18706", "arXiv:2609.18587", "arXiv:2509.06608"],
         "config": vars(args),
@@ -327,7 +327,7 @@ def main() -> None:
     results["wall_sec"] = round(time.time() - t0, 2)
     summary_path = out_dir / "surgically_anchored_vector_rl_summary.json"
     summary_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
-    print(f"[Exp 35 DONE] wrote {summary_path} in {results['wall_sec']}s", flush=True)
+    print(f"[Exp 50 DONE] wrote {summary_path} in {results['wall_sec']}s", flush=True)
 
 
 if __name__ == "__main__":
