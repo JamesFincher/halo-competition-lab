@@ -34,7 +34,7 @@ class GqaSliderHead(nn.Module):
             for proj in (self.q, self.k, self.v, self.o):
                 proj.weight.normal_(0.0, init_std)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def attention_delta(self, x: torch.Tensor) -> torch.Tensor:
         bsz, seq_len, _ = x.shape
         q = self.q(x).view(bsz, seq_len, self.query_heads, self.head_dim).transpose(1, 2)
         k = self.k(x).view(bsz, seq_len, 1, self.head_dim).transpose(1, 2)
@@ -43,7 +43,10 @@ class GqaSliderHead(nn.Module):
         mask = torch.triu(torch.full((seq_len, seq_len), -1e9, device=x.device, dtype=scores.dtype), diagonal=1)
         att = torch.softmax(scores + mask, dim=-1)
         mixed = torch.matmul(att, v).transpose(1, 2).contiguous().view(bsz, seq_len, self.query_heads * self.head_dim)
-        return x + self.alpha * self.o(mixed)
+        return self.o(mixed)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return x + self.alpha * self.attention_delta(x)
 
 
 def warm_copy_from_gqa_group(head: GqaSliderHead, model: torch.nn.Module, source_layer: int, kv_group: int = 0) -> None:
