@@ -38,7 +38,7 @@ def action_pos(ids, prompt_len, action_ids):
 
 
 def collect_mlp_inputs(model, tokenizer, rows, device, layers, per_class=20):
-    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
+    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[0] for x in ("call", "ref"))
     out = {li: {"benign": [], "unsafe": []} for li in layers}
     for action, key in (("call_tool", "benign"), ("refuse", "unsafe")):
         selected = [r for r in rows if r["target"]["action"] == action][:per_class]

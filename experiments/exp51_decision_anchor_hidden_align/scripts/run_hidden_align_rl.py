@@ -110,7 +110,7 @@ def train_hidden_align_arm(
     vec_rl.freeze_weights(model)
     vectors = vec_rl.attach_vectors(model, vector_layers, device)
     optimizer = torch.optim.AdamW(list(vectors.values()), lr=lr, weight_decay=0.0)
-    action_token_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
+    action_token_ids = set(tokenizer.encode(x, add_special_tokens=False)[0] for x in ("call", "ref"))
 
     trace = []
     t0 = time.perf_counter()

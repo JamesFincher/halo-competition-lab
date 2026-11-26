@@ -50,7 +50,7 @@ def rank_heads(model, tokenizer, train_rows, device, n_rows: int, seed: int) -> 
         layer.self_attn.q_proj.weight.requires_grad_(True)
         layer.self_attn.o_proj.weight.requires_grad_(True)
         trainable.extend([layer.self_attn.q_proj.weight, layer.self_attn.o_proj.weight])
-    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
+    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[0] for x in ("call", "ref"))
     rows = train_rows[:n_rows]
     losses = []
     for row in rows:

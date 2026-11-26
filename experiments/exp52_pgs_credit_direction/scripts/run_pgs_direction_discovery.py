@@ -114,7 +114,7 @@ def estimate_pgs_directions(model, tokenizer, rows, device, group_size: int, see
     probe_param = model.model.layers[-1].mlp.down_proj.weight
     probe_param.requires_grad_(True)
 
-    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
+    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[0] for x in ("call", "ref"))
     accum = {li: torch.zeros(model.config.hidden_size, device=device, dtype=torch.float32) for li in PROBE_LAYERS}
     correct_hidden_sum = torch.zeros(model.config.hidden_size, device=device, dtype=torch.float32)
     incorrect_hidden_sum = torch.zeros_like(correct_hidden_sum)

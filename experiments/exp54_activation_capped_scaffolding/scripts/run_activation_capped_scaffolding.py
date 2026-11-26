@@ -249,7 +249,7 @@ def main() -> None:
     edit_eval = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device)
     print(f"  [SFT] exact={sft_eval['exact_compliance_rate']:.1f}% | [validated edit] exact={edit_eval['exact_compliance_rate']:.1f}% unsafe={edit_eval['unsafe_refusal_rate']:.1f}%", flush=True)
 
-    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
+    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[0] for x in ("call", "ref"))
     print("[Stage 1] Calibrating layer-28/29 false-refusal caps from benign-allow activations...", flush=True)
     caps = build_caps(edited, tokenizer, train_rows, device, action_ids)
     print("  cap thresholds=" + ", ".join(f"L{k}:{v['threshold']:.3f}" for k, v in caps.items()), flush=True)

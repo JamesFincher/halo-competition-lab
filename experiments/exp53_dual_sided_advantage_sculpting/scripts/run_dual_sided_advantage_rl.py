@@ -149,7 +149,7 @@ def train_sculpted_arm(arm_name, init_model, ref_model, tokenizer, prompt_stream
     vec_rl.freeze_weights(model)
     vectors = vec_rl.attach_vectors(model, vec_rl.DISJOINT_LAYERS, device)
     opt = torch.optim.AdamW(list(vectors.values()), lr=lr, weight_decay=0.0)
-    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
+    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[0] for x in ("call", "ref"))
     trace = []
     t0 = time.perf_counter()
 
@@ -263,7 +263,7 @@ def main() -> None:
     edit_eval = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device)
     print(f"  [SFT] exact={sft_eval['exact_compliance_rate']:.1f}% | [validated edit] exact={edit_eval['exact_compliance_rate']:.1f}% unsafe={edit_eval['unsafe_refusal_rate']:.1f}%", flush=True)
 
-    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
+    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[0] for x in ("call", "ref"))
     print("[Stage 1] Building compliance and orthogonalized over-refusal directions...", flush=True)
     dirs = build_directions(edited, tokenizer, train_rows, device, action_ids)
     print(f"  direction groups={dirs['group_counts']} cos(over,true)={dirs['cos_over_true']:.4f}", flush=True)
