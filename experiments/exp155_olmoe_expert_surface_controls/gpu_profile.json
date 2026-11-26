@@ -1,0 +1,1 @@
+{"exclusive_gpu":true,"estimated_peak_gb":34,"queue_priority":80,"reason":"OLMoE surface-control training depends on exp154 interpretation and must queue behind the parent expert-adapter comparison"}

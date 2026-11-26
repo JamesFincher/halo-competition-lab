@@ -35,15 +35,25 @@ def priority_key(item):
     m = re.search(r"exp(\d+)", item["name"])
     return (int(m.group(1)) if m else -1, item["name"])
 ordered = sorted(exps, key=priority_key, reverse=True)
-def exclusive_gpu(item):
+def gpu_profile(item):
     profile_path = os.path.join("experiments", item["name"], "gpu_profile.json")
     try:
-        return bool(json.load(open(profile_path)).get("exclusive_gpu"))
+        return json.load(open(profile_path))
     except Exception:
-        return False
-# Large-model jobs declare exclusive_gpu. Queue the newest such job solo rather than
-# packing it with seven 135M jobs that could collectively OOM the H100.
-exclusive = [item for item in ordered if exclusive_gpu(item)]
+        return {}
+
+def exclusive_gpu(item):
+    return bool(gpu_profile(item).get("exclusive_gpu"))
+
+def exclusive_priority(item):
+    # Higher priority first; experiment number is only the tie-breaker. This lets
+    # follow-up controls queue behind the parent experiment they interpret.
+    return int(gpu_profile(item).get("queue_priority", 0))
+
+# Large-model jobs declare exclusive_gpu. Queue one solo job rather than packing it
+# with seven 135M jobs that could collectively OOM the H100.
+exclusive_unordered = [item for item in ordered if exclusive_gpu(item)]
+exclusive = sorted(exclusive_unordered, key=lambda item: (exclusive_priority(item), priority_key(item)), reverse=True)
 queue = exclusive[:1] if exclusive else ordered[:8]
 json.dump({"experiments": queue}, open("scripts/auto_queue.json", "w"), indent=1)
 print(f"auto-queue: {len(queue)}")

@@ -1,1 +1,1 @@
-{"exclusive_gpu": true, "estimated_peak_gb": 26, "reason": "Qwen3-4B LoRA training must not share the H100 with eight 135M wave jobs"}
+{"exclusive_gpu":true,"estimated_peak_gb":26,"reason":"Qwen3-4B LoRA training must not share the H100 with eight 135M wave jobs","queue_priority":90}
