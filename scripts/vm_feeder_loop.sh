@@ -8,15 +8,19 @@ while true; do
   if [ "$RUNNING" -eq 0 ]; then
     # build queue of all experiments missing results
     python3 - <<'PY' 2>/dev/null
-import json, glob, os
+import json, glob, os, re
 exps = []
 for s in sorted(glob.glob("experiments/*/scripts/run_*.py")):
     exp = s.split("/")[1]
     if not glob.glob(f"experiments/{exp}/results/*.json"):
         exps.append({"name": exp, "script": s})
-# prioritize newest (higher exp numbers in name or path)
-json.dump({"experiments": exps[-8:]}, open("scripts/auto_queue.json", "w"), indent=1)
-print(f"auto-queue: {len(exps[-8:])}")
+# prioritize explicit expNN experiments numerically, newest first; unnumbered names keep lexical fallback
+def priority_key(item):
+    m = re.search(r"exp(\d+)", item["name"])
+    return (int(m.group(1)) if m else -1, item["name"])
+queue = sorted(exps, key=priority_key, reverse=True)[:8]
+json.dump({"experiments": queue}, open("scripts/auto_queue.json", "w"), indent=1)
+print(f"auto-queue: {len(queue)}")
 PY
     if [ -s scripts/auto_queue.json ] && [ "$(python3 -c 'import json; print(len(json.load(open("scripts/auto_queue.json"))["experiments"]))' 2>/dev/null || echo 0)" -gt 0 ]; then
       sudo docker rm -f autowave >/dev/null 2>&1
