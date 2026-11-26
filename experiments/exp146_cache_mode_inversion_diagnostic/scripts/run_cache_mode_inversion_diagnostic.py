@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Experiment 146: cache-mode inversion logit-degeneracy diagnostic.
 
-This experiment isolates insertion depth only: same width-64 head, prompt stream,
-seed, optimizer, training budget, initialization family, and evaluation across layers.
+This experiment jointly diagnoses cache-mode artifacts and insertion depth. The
+primary pair compares legacy cached generation against corrected full-sequence
+generation at layer 20; the layer-27 corrected arm is a matched safe-layer control.
 """
 from __future__ import annotations
 
