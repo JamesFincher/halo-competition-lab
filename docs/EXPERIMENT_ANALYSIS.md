@@ -63,6 +63,9 @@ Last updated: 2026-11-26 10:40 UTC. This document is updated continuously as H10
 | 90 | `exp90_single_slider_width_ablation` | queued/running | Does width alone explain v1-dim64 survival versus v4-dim128 collapse? |
 | 91 | `exp91_single_slider_depth_ablation` | queued/running | Is v1 survival specific to insertion layer 27? |
 | 92 | `exp92_shared_alpha_head_count_ablation` | queued/running | Does parallel head count alone cause collapse under one shared alpha? |
+| 93 | `exp93_v1_seed_replication` | queued/running | Is the v1 single-slider positive result seed-robust or a lucky stochastic replicate? |
+| 94–99 | — | unassigned numbering gaps | Reserved/missing, not active collisions. |
+| 100 | `exp100_halo_native_transfer_path_showdown` | queued/running | Which post-edit restricted-RL transfer path best preserves the validated surgical edit? |
 
 ## Measurement baseline and interpretation rules
 
