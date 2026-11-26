@@ -9,26 +9,30 @@ Validated local assets:
 - **Best current GPU behavioral result:** Exp 1 rerun `arm2_localized_grpo_only` reached **80% exact / 93.3% unsafe refusal / 0% benign-FR** with targeted top-8-layer r16 GRPO in 68s, beating its matched random-layer control (**60/100/50**). Treat deltas cautiously because the same-run baseline was **47.5/100/80** rather than the canonical **55/100/90**, and the artifact was overwrite-restored. In the same run, `arm1_surgical_edit_only`—top-2 contrastive MLP `down_proj` layers 29/28, top 32 columns, strength 0.5—reached **75/93.3/0** in 0.5s, while edit-then-targeted-RL collapsed into over-refusal (**37.5/100/100**).
 - **Architectural insert evidence is now mixed and sharper:** Exp 42 reduced benign false refusal **90%→30%** but exact compliance fell **55%→42.5%**. Slider-fork v1 single L27 head was much safer (**57.5/100/60**, exact +2.5, no unsafe loss), while 4-head banks, deep spreads, wide heads, memory heads, and full-bank wide variants collapsed to 0–15% exact and often 0% JSON validity. Naive edit+slider composition also hurt: Exp 43 stage1 edit **65/100/90** became stage2 combined **50/96.7/70**.
 - **RL/vector evidence:** localized/targeted GRPO is now a validated performance path, but unrestricted full-model LoRA RL collapsed unsafe refusal to 46.7%, and Exp 34 activation-vector-only RL was negative (**40/100/90** versus canonical baseline 55/100/90). The composition target is therefore not “more RL”: it is export-valid, targeted, curvature/geometry-preserving RL plus repair of the remaining 2/30 unsafe-refusal failures. Exps 50–67 and 80–86 already cover many direct vector/head/RL variants, so new hypotheses must add a mechanistic delta rather than restate them.
+- **Queue/result state at 11:20 UTC:** no experiment-result JSON has landed since the slider-fork harvest at 10:24 UTC despite 51 missing experiment scripts; the tracker reports a hard stall and newest-first starvation risk. H2/H4/H6/H7/H8/H9/H10/H12 now have queued implementations (exp122/124/123/120/125/121/101/102), so the hypothesizer should not duplicate them; the next useful work is sharper gates, controls, and post-result conditional designs.
 - **Known dead ends:** unembedding-direction weight edits collapse into always-call behavior at all tested strengths; fp32 does not rescue them; degenerate collinear push-pull is a sign/strength artifact; hard nullspaces and binary masks are too destructive on a 135M model.
 
-Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 through 2026-11-25 in weight-space programming, activation steering, attention-head intervention, parameter-efficient RL, subspace repair, MoE/architecture expansion, plus frontier/lab blogs including MIT CSAIL weight-space programming and Anthropic feature-steering/introspection writeups. The local `arxiv-mcp-server` is currently misconfigured (`uvx` entry point missing), so the scan used the official arXiv API and full HTML papers directly.
+Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 through 2026-11-25 in weight-space programming, activation steering, attention-head intervention, parameter-efficient RL, subspace repair, MoE/architecture expansion, plus frontier/lab blogs including MIT CSAIL weight-space programming and Anthropic feature-steering/introspection writeups. The 11:30 UTC incremental scan added deterministic Forward Weight-Space Programming/Protected FisherGate ([arXiv:2611.34612](https://arxiv.org/abs/2611.34612)) and gradient-free neuron programming ([arXiv:2611.33973](https://arxiv.org/abs/2611.33973)). The local `arxiv-mcp-server` is currently misconfigured (`uvx` entry point missing), so the scan used the official arXiv API and full HTML papers directly.
 
 ## Priority queue
 
 | Priority | Hypothesis | Main type | Status |
 |---:|---|---|---|
-| 9.6 | H2 — Operator-discrepancy collateral repair adapter | closed-form subspace repair | promoted: strongest surgical operator still leaves 93.3% unsafe refusal |
-| 9.4 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | promoted: prerequisite for trusting/exporting strong targeted-RL result |
-| 9.2 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | queued as exp87; promoted because surgical and RL winners both lose exactly 2/30 unsafe refusals |
-| 9.0 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | promoted by targeted-RL safety cost |
-| 8.9 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT + attention heads | promoted as lower-collateral alternative to targeted LoRA |
-| 8.5 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | ready for direct comparison with localized LoRA |
-| 8.4 | H12 — Closed-form decision-readout correction | gradient-free readout surgery | still untested and cheap |
-| 8.2 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | proposed |
-| 8.1 | H8 — Displacement-probe edit auditor and reference chooser | cheap pre-GPU screening diagnostic | promoted slightly: new labeled collapse/success outcomes available |
+| 9.5 | H19 — Context-gated rank-one surgical dose cancellation | input-conditioned surgical repair | new: directly targets the 2/30 unsafe-refusal collateral without requiring multi-rank module discrepancy |
+| 9.4 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | queued as exp101 |
+| 9.2 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | queued as exp87; key gate for H19/H2 |
+| 9.0 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | queued as exp121 |
+| 8.9 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT + attention heads | queued as exp120 |
+| 8.8 | H2 — Composite operator-discrepancy collateral repair | closed-form trajectory repair | revised after rank-one algebra audit; exp122 is the pre-flight gate |
+| 8.7 | H18 — Protected FisherGate decision-readout edit | closed-form weight-space programming | new: zero-inference-overhead protected readout edit; distinct from diagnostic exp102 |
+| 8.5 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | queued as exp123 |
+| 8.4 | H12 — Closed-form decision-readout correction | gradient-free readout surgery | queued as exp102 |
+| 8.3 | H20 — Kolpona-style accept/reject failure-habit neuron ladder | gradient-free neuron programming | new: sequential paired-acceptance neuron writes for raw performance |
+| 8.2 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | queued as exp124 |
+| 8.1 | H8 — Displacement-probe edit auditor and reference chooser | cheap pre-GPU screening diagnostic | queued as exp125 |
 | 8.0 | H16 — Norm-calibrated single-coordinate decision steering | sparse activation surgery | queued as exp67 |
-| 7.8 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | demoted: unkeyed multi-head banks collapse; exp61/66 test keying/composition and exp90/91 isolate width/depth |
-| 7.7 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted/staged behind exp58–66 plus exp90/91 width/depth ablations |
+| 7.8 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | demoted: unkeyed multi-head banks collapse; exp61/66 test keying/composition and exp90–97/105/111 isolate optimization controls |
+| 7.7 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted/staged behind exp58–66 plus exp90–97 width/depth/head-count/seed/schedule controls |
 | 7.1 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | exploratory |
 | 7.0 | H17 — Prepare-for-truncation elastic low-rank deployment | compression/raw capability | exploratory |
 | 6.8 | H5 — Output-matched steering-vector compression | activation steering + RL initialization | demoted: vector-only RL was performance-negative |
@@ -38,24 +42,26 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 ## Recommended execution order
 
-Updated after the second harvest (Exp 1/22/34/43 + slider-fork results). The key evidence shift is that **targeted localized GRPO is now the strongest GPU behavioral path**, naive edit+RL or edit+slider compositions are harmful, multi-head unkeyed attention banks collapse, and both best surgical/RL arms still lose exactly 2/30 unsafe refusals.
+Updated after the 11:20 UTC queue expansion/hard-stall report. Most former top hypotheses are now already queued: H10→exp101, H12→exp102, H7→exp120, H9→exp121, H2-preflight→exp122, H6→exp123, H4→exp124, H8→exp125, H15→exp87, H16→exp67. **Do not queue duplicates.** The highest-value ordering is now a result-reading and gate ordering, not a request for more GPU jobs.
 
-1. **H10 — merge-aware served-weight action-token fine-tuning.** First methodological prerequisite: validate and preserve the strong localized-GRPO result in the exact exported artifact before stacking anything else.
-2. **H2 — operator-discrepancy collateral repair.** Now the top surgical hypothesis: apply it to the Exp 1 arm1 operator (top-2 contrastive layers, top-32 columns, strength 0.5) or the exp63 dose-response winner. Target the remaining unsafe-refusal loss without destroying the 75% exact / 0% benign-FR gain.
-3. **H15 — multi-perspective abstention-direction factorization.** Already queued as exp87; use its cosine/FDR/steering outcome as the gate for H2 subspace selection rather than duplicating the probe.
-4. **H7 — drift-triggered orthogonal rotation lanes.** Best next PEFT comparator to targeted LoRA because the localized-GRPO win came with an unsafe-refusal cost; rotations are a plausible lower-collateral way to keep the exactness gain.
-5. **H9 — curvature-constrained acquisition deltas.** General preservation-aware replacement for hard nullspaces; use general/benign preservation data to attack the same 93.3% unsafe ceiling.
-6. **H12 — closed-form decision-readout correction.** Cheap deterministic probe of whether residual decision errors are readable without further RL.
-7. **H6 — input-adaptive Kronecker lanes.** Compare against the now-validated localized-LoRA baseline on parameter-normalized performance.
+1. **Unstall and prioritize controlled replications first.** Read exp93 seed replication and exp90–92 width/depth/head-count ablations before any larger attention bank. These determine whether slider-head evidence is a robust causal phenomenon or a stochastic/optimization artifact.
+2. **Methodological gates:** exp101 (H10 export-aware training), exp102 (H12 readout probe), and exp122 (H2 rank audit). Exp122 is expected to confirm that module-local rank-one discrepancy is algebraically degenerate; that should trigger the revised composite-trajectory H2 design below rather than kill repair research.
+3. **Safety geometry gate:** exp87/H15. If false-vs-true refusal states are separable, implement **H19** before more RL: it is the cheapest mathematically exact way to restore unsafe refusal after the validated rank-one edit.
+4. **PEFT comparators:** exp120/H7, exp121/H9, exp123/H6. Interpret all of them through exp101's exported-artifact measurement, not hook-time metrics alone.
+5. **Neuron/audit second wave:** exp103, exp124/H4, exp125/H8. Use these to decide whether H20's accept/reject neuron ladder adds anything beyond dose suppression and EMS protection.
+
+Unqueued but high-value after the gates:
+
+- **H19** should be the first new implementation once exp87 supplies gate directions and exp95/98/99 supply the edit operating point.
+- **H18** should follow if exp102 shows decision information is linearly/kernel-linearly readable; it converts that information into a zero-overhead protected weight edit.
+- **H20** should follow if exp103/124 show failure-correlated neurons are causal but broad suppression is too blunt.
 
 Hold or stage behind current queue:
 
-- **H1/H3:** attention-insert evidence is fragile. Slider-fork v1 single is mildly positive, but multi-head/wide/memory banks collapse and Exp 43 composition hurts exactness. Do not build larger banks until exp61/65/66 clarify keying/depth/composition and exp90/91 isolate width/depth causally.
+- **H1/H3:** attention-insert evidence is fragile. Slider-fork v1 single is mildly positive, but multi-head/wide/memory banks collapse and Exp 43 composition hurts exactness. Do not build larger banks until exp61/65/66 clarify keying/depth/composition and exp90–97/105/111 isolate width/depth/count/seed/optimization causally.
 - **H5/H11:** vector-only RL was negative; output-matched compression is still a distinct supervised hypothesis but no longer deserves near-term GPU time.
 - **H13:** naive memory-head v5 collapsed; treat feedback/memory inserts as high-risk exploration, not near-term capacity work.
-- **H16:** already queued as exp67.
-- **H8:** increasingly useful as a meta-screen now that labeled successful and collapsing interventions exist, but implement after H10/H2/H15 produce a few more clean candidates.
-- **H4/H14/H17:** useful second-wave probes, not the next GPU jobs.
+- **H14/H17:** useful second-wave probes, not the next GPU jobs.
 
 
 ---
@@ -99,44 +105,38 @@ Expected: exact compliance above the current edit-only operating point while pre
 
 ---
 
-## H2 — Operator-discrepancy collateral repair adapter
+## H2 — Composite operator-discrepancy collateral repair adapter
 
-**Priority: 9.6/10** *(promoted: Exp 1 arm1 shows a fast surgical operator can reach 75/93.3/0, so closed-form repair of the remaining unsafe-refusal collateral is now the highest-value surgical direction.)*
+**Priority: 8.8/10** *(revised after the exp122 pre-flight concern: module-local discrepancy of a rank-one edit is algebraically rank-one, so the useful object is the composite downstream trajectory discrepancy, not the edited module's raw output delta.)*
 
 ### Novel idea
 
-Treat the surgical edit as a module-level operator perturbation and repair its collateral damage with a **closed-form factorized residual adapter**. Measure same-state output discrepancies between the original and edited modules along the edited model's own trajectory, SVD the discrepancy matrix, remove the target behavior direction, and restore pre-edit computation only in the collateral subspace.
+Treat the whole post-edit segment—from the first edited layer through the final residual/readout—as the perturbed operator. Measure how the same segment input produces different downstream residual/logit trajectories before versus after surgery, SVD that **composite operator discrepancy**, remove the desired false-refusal/compliance direction, and fit a closed-form factorized residual adapter that restores only collateral computation.
 
 ### Why it should work mechanistically
 
-Exp 35's interference cancellation was directionally promising but crude because it treated neurons as independent coefficients and recovered mostly unsafe compliance. Same-state operator discrepancy separates local module damage from upstream activation drift. Its dominant directions are trajectory-conditioned behavioral directions, not raw weight-error noise, so a low-rank closed-form repair can preserve the desired refusal/compliance shift while restoring off-target computation more precisely.
+A rank-one `down_proj` edit has output discrepancy \(\Delta W x=-s u(p^\top x)\), which is always parallel to \(u\); there is no nontrivial target-orthogonal collateral subspace at that module. The observed collateral damage is created downstream as this rank-one impulse passes through residual mixing, attention, nonlinear MLPs, and the readout. At the composite segment level the discrepancy is generally multi-directional. That is the right level for ReQOR-style repair: nonlinear propagation creates separable collateral directions even when the original weight delta is rank-one.
 
 ### Concrete experiment design
 
-1. Use the strongest clean surgical operating point available when run: preferably Exp 1 arm1-style top-2 contrastive MLP `down_proj` edit (layers 29/28, top 32 columns, strength 0.5; **75% exact / 93.3% unsafe / 0% benign-FR** in the rerun) or the exp63 dose-response winner. Keep Exp 16 `raw_rank1` as the replication/control arm.
-2. For layers 28/29 and modules `mlp.down_proj`, `mlp.up_proj`, and `self_attn.o_proj`, cache inputs \(x_m\) along the edited trajectory on:
-   - 32 policy training/dev prompts;
-   - 32 paraphrase/control prompts;
-   - a small general-capability sample from the real benchmark loader.
-3. Compute \(c_m(x)=f_{\rm orig,m}(x)-f_{\rm edit,m}(x)\) at identical states, SVD the matrix of discrepancies, and construct rank \(r\in\{4,8,16,32\}\) repair bases.
-4. Explicitly project out the measured target false-refusal/compliance direction before selecting collateral directions; compare against no projection and random rank-matched directions.
-5. Arms:
-   - unedited baseline;
-   - edit-only;
-   - edit+full operator repair;
-   - edit+target-orthogonal collateral repair;
-   - edit+random-subspace repair;
-   - Exp 35-style interference-canceling baseline.
-6. Evaluate standard 40-task metrics, off-task KL to the unedited model, MMLU/ARC/HellaSwag temperature, adapter memory, and dose-response across repair rank.
+1. Run/interpret exp122 first as a structural gate. If it reports near-zero non-target collateral rank at module-local `down_proj` outputs, treat that as confirmation of the algebra above, not as evidence that composite repair is impossible.
+2. Use the strongest clean surgical operating point available: Exp 1 arm1-style top-2 contrastive MLP `down_proj` edit (layers 29/28, top 32 columns, strength 0.5) or the exp95/98/99 dose-response winner. Keep Exp 16 `raw_rank1` as the replication/control arm.
+3. Cache segment inputs immediately before the earliest edited layer on 32 policy train/dev prompts, 32 paraphrase/control prompts, and a small general-capability sample. Because upstream weights are unchanged, these inputs are matched across original and edited models.
+4. Compute composite output discrepancies at post-L29 residual, final pre-unembed residual, and decision-token logits. Use teacher-forced correct and failure trajectories so token positions are aligned.
+5. SVD the discrepancy matrices and verify effective rank \(>1\). Project out the exp87/H15 false-refusal/compliance target direction while explicitly protecting true-refusal states. Fit rank \(r\in\{4,8,16,32\}\) factorized residual corrections by ridge/least squares against the collateral discrepancy.
+6. Arms: unedited baseline; edit-only; edit+full composite repair; edit+target-orthogonal collateral repair; edit+random-subspace repair; Exp 35-style interference-canceling baseline; H19 oracle-gated cancellation as an upper-bound comparator once available.
+7. Evaluate standard 40-task metrics, off-task KL to the unedited model, MMLU/ARC/HellaSwag temperature, adapter memory, firing norm, exportability, and dose-response across repair rank.
 
 ### Expected outcome and falsification criterion
 
-Expected: retain within 2.5 pp of the edit-only exact-compliance gain while lifting unsafe refusal from 90–93.3% toward 95–100% and reducing off-task KL/benchmark collateral. Falsified if target-orthogonal repair either destroys the target gain, fails to beat random rank-matched repair, or merely reproduces the unsafe-compliance recovery failure mode of Exp 35.
+Expected: composite discrepancy is multi-directional even though module-local discrepancy is rank-one; target-orthogonal repair retains within 2.5 pp of edit-only exact compliance while lifting unsafe refusal toward 95–100% and reducing off-task KL/benchmark collateral. Falsified if composite discrepancy remains effectively rank-one, target-orthogonal repair destroys the target gain, repair does not beat random rank-matched controls, or it reproduces Exp 35's unsafe-compliance recovery failure mode.
 
 ### Citation
 
 - [arXiv:2611.32755 — *ReQOR: Operator-Discrepancy Subspace Repair for Quantization-Conditioned Backdoors in Large Language Models*](https://arxiv.org/abs/2611.32755): same-state operator discrepancies, closed-form factorized residual restoration, rank-efficient repair without gradients.
-- Local Exp 35 interference cancellation and Exp 39 operator-sensitivity result.
+- [arXiv:2611.34612 — *Do We Really Need an LLM for Weight-Space Programming?*](https://arxiv.org/abs/2611.34612): deterministic forward-only probing, operator capability boundaries, and paired verification/rollback for weight-space edits.
+- Local Exp 35 interference cancellation, Exp 39 operator sensitivity, and exp122 rank-audit pre-flight.
+
 
 ---
 
@@ -177,7 +177,7 @@ Expected: graph-selected heads beat random and activation-magnitude controls by 
 
 ## H4 — EMS-guided anchor-preserving subspace edits
 
-**Priority: 8.2/10** *(probe cost remains high; run after the cheaper H2/H15 geometry evidence.)*
+**Priority: 8.2/10** *(queued as exp124; probe cost remains high, so interpret it after the cheaper H2/H15 geometry evidence.)*
 
 ### Novel idea
 
@@ -257,7 +257,7 @@ Expected: output-matched vectors recover at least 50–70% of the surgical edit'
 
 ## H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits
 
-**Priority: 8.5/10** *(promoted modestly: localized LoRA/GRPO is now a validated comparator, so parameter-normalized adaptation quality matters.)*
+**Priority: 8.5/10** *(queued as exp123; localized LoRA/GRPO is now a validated comparator, so parameter-normalized adaptation quality matters.)*
 
 ### Novel idea
 
@@ -288,7 +288,7 @@ Expected: input-gated Kronecker lanes match or beat LoRA using substantially few
 
 ## H7 — Drift-triggered orthogonal rotation lanes
 
-**Priority: 8.9/10** *(promoted: localized LoRA/GRPO is now validated but unsafe-refusal-costly; rotation-only lanes are the cleanest lower-collateral PEFT comparator.)*
+**Priority: 8.9/10** *(queued as exp120; localized LoRA/GRPO is now validated but unsafe-refusal-costly, so rotation-only lanes are the cleanest lower-collateral PEFT comparator.)*
 
 ### Novel idea
 
@@ -319,7 +319,7 @@ Expected: drift-triggered rotations preserve general capability better than addi
 
 ## H8 — Displacement-probe edit auditor and reference chooser
 
-**Priority: 8.1/10** *(slightly promoted: the second harvest added clean positive and catastrophic-collapse labels that make a cheap pre-screen more valuable.)*
+**Priority: 8.1/10** *(queued as exp125; the second harvest added clean positive and catastrophic-collapse labels that make a cheap pre-screen more valuable.)*
 
 ### Novel idea
 
@@ -355,7 +355,7 @@ Expected: displacement/Gram features separate destructive always-call edits and 
 
 ## H9 — Curvature-constrained acquisition deltas
 
-**Priority: 9.0/10** *(promoted: targeted RL works but carries a safety cost; preservation-aware curvature is now directly relevant rather than exploratory.)*
+**Priority: 9.0/10** *(queued as exp121; targeted RL works but carries a safety cost, so preservation-aware curvature is directly relevant rather than exploratory.)*
 
 ### Novel idea
 
@@ -386,7 +386,7 @@ Expected: low-curvature deltas achieve a better acquisition-retention frontier t
 
 ## H10 — Merge-aware served-weight action-token fine-tuning
 
-**Priority: 9.4/10** *(promoted: the strongest localized-GRPO result must be validated in the exact exported artifact before further composition.)*
+**Priority: 9.4/10** *(queued as exp101; the strongest localized-GRPO result must be validated in the exact exported artifact before further composition.)*
 
 ### Novel idea
 
@@ -455,7 +455,7 @@ Expected: trajectory-aware decision-token steering achieves most of always-on st
 
 ## H12 — Closed-form decision-readout correction
 
-**Priority: 8.4/10**
+**Priority: 8.4/10** *(queued as exp102; H18 is the follow-on weight-folded version if this probe succeeds.)*
 
 ### Novel idea
 
@@ -552,7 +552,7 @@ Expected: sink-aligned selective gates increase effective rank and yield neutral
 
 ## H15 — Multi-perspective abstention-direction factorization
 
-**Priority: 9.2/10** *(promoted: both the best surgical and best localized-RL arms land at 93.3% unsafe refusal, making selective false-vs-true refusal geometry the central measurement.)*
+**Priority: 9.2/10** *(queued as exp87; both the best surgical and best localized-RL arms land at 93.3% unsafe refusal, making selective false-vs-true refusal geometry the central measurement.)*
 
 ### Novel idea
 
@@ -641,6 +641,106 @@ Expected: prepared checkpoints retain more benchmark and policy performance than
 ### Citation
 
 - [arXiv:2611.34667 — *Learning to Be Truncated: Preparing LLM Checkpoints for SVD Compression*](https://arxiv.org/abs/2611.34667): one prepared LLaMA-7B checkpoint improved quality across multiple compression ratios and compression operators without budget-specific fine-tuning; preparation used fixed activation-derived bases and KL distillation.
+
+---
+
+## H18 — Protected FisherGate decision-readout edit
+
+**Priority: 8.7/10** *(new from the 11:30 UTC research scan; high potential but staged behind exp102 because it should only be implemented if decision errors are linearly/kernel-linearly readable.)*
+
+### Novel idea
+
+Convert the closed-form decision boundary into a **permanent zero-inference-overhead readout edit** using Protected FisherGate: covariance-whiten the false-refusal/failure direction, orthogonalize it against correct benign, correct unsafe-refusal, and post-decision states, then write a tiny rank-one output-readout patch. Unlike H12's diagnostic/correction probe, this tests whether the decision boundary can be folded into weights once, with no per-query classifier or hook.
+
+### Why it should work mechanistically
+
+Halo's strict action decision is concentrated in a few token positions and may resemble the reasoning-delimiter problem solved by Protected FisherGate: representation separability alone is insufficient, because unconstrained Fisher/LDA directions overfit covariance and damage non-target states. Explicit protection of correct decision and post-decision subspaces can preserve normal computation while shifting only the failure-direction logit gap. SmolLM2's tied embeddings make naive unembedding edits dangerous, so cloning/untieing the readout or using an output-only low-rank patch is part of the hypothesis rather than an implementation detail.
+
+### Concrete experiment design
+
+1. Cache final hidden states immediately before action/tool/policy-code value tokens on teacher-forced train/dev rows. Build four state groups: correct benign `call_tool`, benign false refusal, correct unsafe refusal, and post-decision/schema-continuation states.
+2. Compute covariance-whitened Fisher/ridge directions separating false-refusal or wrong-action states from correct decision states. Construct \(Q_{\rm keep}\) from correct-benign, correct-unsafe, malformed-free schema, and post-decision mean states; enforce \(Q_{\rm keep}^\top d\approx0\).
+3. Compare Protected FisherGate, unconstrained Fisher LDA, ridge, orthogonal-only, random-direction, and H12 probe-only controls at matched norm/dose.
+4. Output-write implementations:
+   - clone/untie `lm_head` before editing because `tie_word_embeddings=true`;
+   - a zero-init low-rank output adapter limited to the vocabulary rows for first tokens of competing action/tool/policy-code values;
+   - a tied-embedding edit negative control to measure input-side contamination.
+5. Calibrate dose from the empirical decision logit gap, then sweep 0.5×/1×/1.5×. Evaluate exact compliance, unsafe refusal, benign false refusal, malformed JSON, decision-token firing margins, real MMLU/ARC/HellaSwag temperature, parameter overhead, export/reload fidelity, and cross-fold stability.
+6. Compose the best arm with the validated surgical edit only after H19/exp87 establish whether true-refusal protection is separable.
+
+### Expected outcome and falsification criterion
+
+Expected: a protected closed-form readout edit produces at least +5 pp exact or policy accuracy with no more than one unsafe-refusal regression and neutral real-benchmark temperature. Falsified if unconstrained and protected directions perform similarly poorly, protection eliminates the behavioral effect, gains do not survive export/reload, or tied-embedding contamination/general-benchmark collateral is unavoidable without large parameter overhead.
+
+### Citation
+
+- [arXiv:2611.34612 — *Do We Really Need an LLM for Weight-Space Programming?*](https://arxiv.org/abs/2611.34612): Protected FisherGate combines covariance-whitened discrimination with exact normal-state orthogonalization; a frozen patch reached 84.2% HumanEval pass@1 at 1K budget and beat budget forcing by +14.6 pp while transferring across backends.
+- [arXiv:2611.33972 — *Fine-Tuning Without Gradients?*](https://arxiv.org/abs/2611.33972): closed-form frozen-encoder classifiers motivate the diagnostic predecessor H12.
+
+---
+
+## H19 — Context-gated rank-one surgical dose cancellation
+
+**Priority: 9.5/10** *(new top hypothesis: it directly exploits the exact algebra of the validated rank-one edit and targets the remaining unsafe-refusal collateral without requiring a multi-rank module discrepancy.)*
+
+### Novel idea
+
+Cancel the validated rank-one surgical edit **only in true-unsafe contexts**. Because the edit's module-output perturbation is exactly \(\Delta W x=-s u(p^\top x)\), a hook or distilled parallel neuron can measure the same scalar coefficient and add back \(+g(x)s u(p^\top x)\), where \(g(x)\) is a learned exact-zero gate for correct unsafe-refusal contexts. This is an input-conditioned dose control, not a dense anti-refusal vector.
+
+### Why it should work mechanistically
+
+The best surgical and targeted-RL arms both retain about 93.3% unsafe refusal: most safety behavior survives, but roughly 2/30 true refusals are collateral casualties. If exp87/H15 shows false-refusal and true-refusal states are separable, then the rank-one edit does not need a complex subspace repair; its context selection is simply too broad. Exact algebraic cancellation in the wrong contexts can preserve the false-refusal correction elsewhere while restoring true-refusal computation, avoiding the destructive always-call failure of global unembedding or dense steering edits.
+
+### Concrete experiment design
+
+1. Start from the best surgical operating point selected by exp95/98/99 or the Exp 1 arm1 reproduction. Record the exact edited layer(s), direction \(u\), projection vector \(p\), strength \(s\), and selected columns.
+2. Use exp87/H15 states to fit a conservative gate separating correct unsafe refusal from benign correct and benign false-refusal contexts. Compare linear Fisher/LDA gates, diagonal-whitened gates, exact-zero ReLU/step gates, and random-key controls. Measure fold stability and firing rates.
+3. Implement an oracle control first: cancellation active only on heldout rows known to require unsafe refusal. Because exact cancellation should revert those rows toward the unedited model, this validates the coefficient/hook implementation but is **not** scientific evidence by itself. Then implement learned-gate cancellation at decision-token positions only. Include all-token cancellation, no cancellation, random-context cancellation, and benign-context cancellation controls.
+4. Sweep cancellation fraction \(c\in\{0.25,0.5,0.75,1.0\}\). The exact hook computes the edit coefficient from the current module input; do not approximate it with a constant vector.
+5. If the hook upper bound works, distill the cancellation into an exportable parallel neuron/head-style insert whose key computes the gate and whose value writes \(+c s u(p^\top x)\); compare hook, distilled, and static-weight implementations after exact export/reload.
+6. Measure exact compliance, unsafe refusal, benign false refusal, action/policy accuracy, JSON validity, real-benchmark temperature, gate confusion matrix, firing rate on control text, KL off-task, and seed robustness.
+
+### Expected outcome and falsification criterion
+
+Expected: oracle cancellation reproduces unedited-model unsafe refusal as an implementation sanity check. The real hypothesis is that learned-gate cancellation preserves at least 70–75% exact compliance and 0–10% benign false refusal while lifting unsafe refusal toward 97–100%. Falsified if oracle cancellation fails to revert behavior (meaning the coefficient or edit reconstruction is wrong), if learned gates cannot separate contexts better than chance across folds, or if exactness collapses because false and true refusal states share the same trigger manifold.
+
+### Citation
+
+- [arXiv:2611.34762 — *TASK Memory: Beyond Text-Only Memory with Activation Steering and Knowledge Editing against Memory Hallucination*](https://arxiv.org/abs/2611.34762): paired steering vectors decide query-by-query whether the model adopts an external memory or keeps its own answer, showing the value of explicit adoption/context control rather than always-on steering.
+- [arXiv:2406.11717 — refusal-direction mediation](https://arxiv.org/abs/2406.11717): refusal behavior can be mediated compactly, but global direction erasure is unsafe; H19 is the context-selective alternative.
+- Local Exp 1 arm1/edit-only evidence, exp87 geometry gate, and the rank-one algebra made explicit by exp122.
+
+---
+
+## H20 — Kolpona-style accept/reject failure-habit neuron ladder
+
+**Priority: 8.3/10** *(new raw-performance hypothesis; staged behind exp103/124 because it should add sequential closed-form writes and paired acceptance, not duplicate simple suppression dose response.)*
+
+### Novel idea
+
+Program a tiny ladder of single MLP neurons, one recurring failure habit at a time, and keep each edit only when paired evaluation on fresh dev tasks favors it. Each neuron has a closed-form trigger/read/write program: trigger on the state where the failure habit starts, read the relevant residual/MLP feature, and write a corrective direction while remaining exponentially inactive off-trigger.
+
+### Why it should work mechanistically
+
+The lab's failures are heterogeneous: benign over-refusal, wrong tool, wrong policy code, malformed JSON, and benchmark reasoning failures need not share one direction. Broad suppression or dense RL trades one failure against another. Single-neuron closed-form programs can remove narrow failure habits with minimal collateral, while paired fresh-task acceptance prevents practice-set overfitting and degenerate composition. Kolpona shows this can scale: editing 16 neurons improved a 4B model's VerilogEval pass@1 from 31.7% to 55.4% and transferred to Python benchmarks.
+
+### Concrete experiment design
+
+1. Build a failure-habit inventory from policy train/dev rollouts plus `benchmark_failure_tree` once results land: benign false refusal, wrong tool, wrong policy code, malformed JSON, benchmark answer contradiction, and premature termination.
+2. For each habit, identify trigger onset states and closed-form key/read/write vectors using only practice/dev rows. Use low-collision non-hub neurons and protect high-EMS positive-anchor columns identified by exp124.
+3. Write one neuron at a time. After each write, run paired same-seed evaluation on fresh dev tasks and a small real-benchmark probe; accept only if target failure improves without unsafe-refusal or benchmark regression. Otherwise revert and move to the next habit.
+4. Compare sequential accept/reject ladder, batch-write all neurons, suppress-only exp103-style edits, random-neuron writes, and no-acceptance control. Cap at 4–8 neurons for the first study.
+5. Measure exact compliance, unsafe refusal, benign false refusal, per-failure-habit rates, pass@1/pass@4, real MMLU/ARC/HellaSwag temperature, off-task KL, number of accepted/reverted writes, exportability, and cross-seed stability.
+
+### Expected outcome and falsification criterion
+
+Expected: a small accepted ladder improves exact compliance or benchmark temperature beyond suppress-only controls with little collateral, and acceptance rejects visibly destructive writes before composition. Falsified if accepted edits merely overfit practice/dev rows, sequential composition performs no better than batch/random writes, or the acceptance criterion rejects all writes because single neurons cannot move behavior.
+
+### Citation
+
+- [arXiv:2611.33973 — *Kolpona: An Agentic Framework with Gradient-Free Neuron Programming for RTL Generation*](https://arxiv.org/abs/2611.33973): closed-form single-neuron programs remove failure habits, paired fresh-task acceptance decides whether to keep each edit, and 16-neuron edits produced large cross-domain pass@1 gains.
+- [arXiv:2611.34612 — *Do We Really Need an LLM for Weight-Space Programming?*](https://arxiv.org/abs/2611.34612): deterministic probing, blind routing, operator boundaries, and paired verification/rollback motivate making the procedure deterministic rather than agent-improvised.
+
 
 ---
 
