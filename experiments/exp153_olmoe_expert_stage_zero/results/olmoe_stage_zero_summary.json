@@ -1,0 +1,1505 @@
+{
+  "experiment": "exp153_olmoe_expert_stage_zero",
+  "model": "allenai/OLMoE-1B-7B-0125-Instruct",
+  "model_facts": {
+    "total_parameters": 6919161856,
+    "layers": 16,
+    "experts_per_layer": 64,
+    "top_k_per_token": 8
+  },
+  "behavior_eval": {
+    "original40": {
+      "n_eval": 40,
+      "mean_reward": 0.69,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 72.5,
+      "policy_accuracy": 27.5,
+      "unsafe_refusal_rate": 96.7,
+      "benign_false_refusal_rate": 100.0,
+      "exact_compliance_rate": 25.0
+    },
+    "scaled120": {
+      "n_eval": 120,
+      "mean_reward": 0.595,
+      "json_valid_rate": 99.2,
+      "action_accuracy": 57.5,
+      "policy_accuracy": 24.2,
+      "unsafe_refusal_rate": 83.3,
+      "benign_false_refusal_rate": 55.0,
+      "exact_compliance_rate": 15.8
+    }
+  },
+  "continuation_benchmark": {
+    "mmlu": {
+      "sum_acc": 17.0,
+      "token_norm_acc": 22.0,
+      "byte_norm_acc": 20.0,
+      "n": 100
+    },
+    "arc_easy": {
+      "sum_acc": 63.0,
+      "token_norm_acc": 62.0,
+      "byte_norm_acc": 68.0,
+      "n": 100
+    },
+    "hellaswag": {
+      "sum_acc": 56.0,
+      "token_norm_acc": 69.0,
+      "byte_norm_acc": 71.0,
+      "n": 100
+    }
+  },
+  "router_profiles": {
+    "capability_correct_continuation": {
+      "rows_profiled": 64,
+      "tokens_profiled": 2835,
+      "answer_tokens_profiled": 900,
+      "top_experts_by_answer_token_count": [
+        [
+          {
+            "expert": 6,
+            "answer_token_share": 0.08611
+          },
+          {
+            "expert": 41,
+            "answer_token_share": 0.05139
+          },
+          {
+            "expert": 9,
+            "answer_token_share": 0.02708
+          },
+          {
+            "expert": 58,
+            "answer_token_share": 0.02361
+          },
+          {
+            "expert": 60,
+            "answer_token_share": 0.02361
+          },
+          {
+            "expert": 38,
+            "answer_token_share": 0.02014
+          },
+          {
+            "expert": 20,
+            "answer_token_share": 0.01944
+          },
+          {
+            "expert": 22,
+            "answer_token_share": 0.01889
+          },
+          {
+            "expert": 5,
+            "answer_token_share": 0.01861
+          },
+          {
+            "expert": 33,
+            "answer_token_share": 0.01847
+          }
+        ],
+        [
+          {
+            "expert": 35,
+            "answer_token_share": 0.02792
+          },
+          {
+            "expert": 40,
+            "answer_token_share": 0.02681
+          },
+          {
+            "expert": 5,
+            "answer_token_share": 0.02569
+          },
+          {
+            "expert": 21,
+            "answer_token_share": 0.02306
+          },
+          {
+            "expert": 50,
+            "answer_token_share": 0.02264
+          },
+          {
+            "expert": 59,
+            "answer_token_share": 0.02236
+          },
+          {
+            "expert": 14,
+            "answer_token_share": 0.02236
+          },
+          {
+            "expert": 20,
+            "answer_token_share": 0.02181
+          },
+          {
+            "expert": 37,
+            "answer_token_share": 0.02181
+          },
+          {
+            "expert": 62,
+            "answer_token_share": 0.02153
+          }
+        ],
+        [
+          {
+            "expert": 36,
+            "answer_token_share": 0.02972
+          },
+          {
+            "expert": 54,
+            "answer_token_share": 0.02694
+          },
+          {
+            "expert": 4,
+            "answer_token_share": 0.02681
+          },
+          {
+            "expert": 1,
+            "answer_token_share": 0.02639
+          },
+          {
+            "expert": 53,
+            "answer_token_share": 0.02403
+          },
+          {
+            "expert": 41,
+            "answer_token_share": 0.02333
+          },
+          {
+            "expert": 6,
+            "answer_token_share": 0.02319
+          },
+          {
+            "expert": 20,
+            "answer_token_share": 0.02278
+          },
+          {
+            "expert": 15,
+            "answer_token_share": 0.02194
+          },
+          {
+            "expert": 38,
+            "answer_token_share": 0.02153
+          }
+        ],
+        [
+          {
+            "expert": 23,
+            "answer_token_share": 0.04222
+          },
+          {
+            "expert": 59,
+            "answer_token_share": 0.02972
+          },
+          {
+            "expert": 1,
+            "answer_token_share": 0.02861
+          },
+          {
+            "expert": 31,
+            "answer_token_share": 0.02861
+          },
+          {
+            "expert": 0,
+            "answer_token_share": 0.0275
+          },
+          {
+            "expert": 57,
+            "answer_token_share": 0.02736
+          },
+          {
+            "expert": 28,
+            "answer_token_share": 0.02722
+          },
+          {
+            "expert": 18,
+            "answer_token_share": 0.02611
+          },
+          {
+            "expert": 49,
+            "answer_token_share": 0.02611
+          },
+          {
+            "expert": 10,
+            "answer_token_share": 0.02583
+          }
+        ],
+        [
+          {
+            "expert": 47,
+            "answer_token_share": 0.05597
+          },
+          {
+            "expert": 62,
+            "answer_token_share": 0.03806
+          },
+          {
+            "expert": 43,
+            "answer_token_share": 0.02861
+          },
+          {
+            "expert": 46,
+            "answer_token_share": 0.02736
+          },
+          {
+            "expert": 36,
+            "answer_token_share": 0.02444
+          },
+          {
+            "expert": 29,
+            "answer_token_share": 0.02403
+          },
+          {
+            "expert": 0,
+            "answer_token_share": 0.02403
+          },
+          {
+            "expert": 60,
+            "answer_token_share": 0.02375
+          },
+          {
+            "expert": 9,
+            "answer_token_share": 0.02319
+          },
+          {
+            "expert": 48,
+            "answer_token_share": 0.02306
+          }
+        ],
+        [
+          {
+            "expert": 36,
+            "answer_token_share": 0.03306
+          },
+          {
+            "expert": 13,
+            "answer_token_share": 0.03181
+          },
+          {
+            "expert": 56,
+            "answer_token_share": 0.03125
+          },
+          {
+            "expert": 14,
+            "answer_token_share": 0.02917
+          },
+          {
+            "expert": 59,
+            "answer_token_share": 0.02764
+          },
+          {
+            "expert": 33,
+            "answer_token_share": 0.02653
+          },
+          {
+            "expert": 24,
+            "answer_token_share": 0.02653
+          },
+          {
+            "expert": 47,
+            "answer_token_share": 0.02639
+          },
+          {
+            "expert": 54,
+            "answer_token_share": 0.02556
+          },
+          {
+            "expert": 45,
+            "answer_token_share": 0.02486
+          }
+        ],
+        [
+          {
+            "expert": 18,
+            "answer_token_share": 0.05333
+          },
+          {
+            "expert": 12,
+            "answer_token_share": 0.03125
+          },
+          {
+            "expert": 33,
+            "answer_token_share": 0.03028
+          },
+          {
+            "expert": 48,
+            "answer_token_share": 0.02833
+          },
+          {
+            "expert": 60,
+            "answer_token_share": 0.02736
+          },
+          {
+            "expert": 3,
+            "answer_token_share": 0.02569
+          },
+          {
+            "expert": 56,
+            "answer_token_share": 0.02569
+          },
+          {
+            "expert": 16,
+            "answer_token_share": 0.02556
+          },
+          {
+            "expert": 21,
+            "answer_token_share": 0.02514
+          },
+          {
+            "expert": 51,
+            "answer_token_share": 0.02514
+          }
+        ],
+        [
+          {
+            "expert": 1,
+            "answer_token_share": 0.03833
+          },
+          {
+            "expert": 5,
+            "answer_token_share": 0.03486
+          },
+          {
+            "expert": 46,
+            "answer_token_share": 0.03375
+          },
+          {
+            "expert": 53,
+            "answer_token_share": 0.03347
+          },
+          {
+            "expert": 63,
+            "answer_token_share": 0.03
+          },
+          {
+            "expert": 59,
+            "answer_token_share": 0.02917
+          },
+          {
+            "expert": 6,
+            "answer_token_share": 0.02806
+          },
+          {
+            "expert": 55,
+            "answer_token_share": 0.02722
+          },
+          {
+            "expert": 26,
+            "answer_token_share": 0.02625
+          },
+          {
+            "expert": 15,
+            "answer_token_share": 0.02542
+          }
+        ],
+        [
+          {
+            "expert": 42,
+            "answer_token_share": 0.03444
+          },
+          {
+            "expert": 57,
+            "answer_token_share": 0.03347
+          },
+          {
+            "expert": 18,
+            "answer_token_share": 0.0325
+          },
+          {
+            "expert": 63,
+            "answer_token_share": 0.03236
+          },
+          {
+            "expert": 34,
+            "answer_token_share": 0.02986
+          },
+          {
+            "expert": 47,
+            "answer_token_share": 0.02972
+          },
+          {
+            "expert": 55,
+            "answer_token_share": 0.02847
+          },
+          {
+            "expert": 20,
+            "answer_token_share": 0.02694
+          },
+          {
+            "expert": 56,
+            "answer_token_share": 0.02486
+          },
+          {
+            "expert": 51,
+            "answer_token_share": 0.02444
+          }
+        ],
+        [
+          {
+            "expert": 37,
+            "answer_token_share": 0.03417
+          },
+          {
+            "expert": 0,
+            "answer_token_share": 0.03194
+          },
+          {
+            "expert": 28,
+            "answer_token_share": 0.03
+          },
+          {
+            "expert": 55,
+            "answer_token_share": 0.0275
+          },
+          {
+            "expert": 19,
+            "answer_token_share": 0.02708
+          },
+          {
+            "expert": 32,
+            "answer_token_share": 0.02639
+          },
+          {
+            "expert": 58,
+            "answer_token_share": 0.02597
+          },
+          {
+            "expert": 10,
+            "answer_token_share": 0.02403
+          },
+          {
+            "expert": 53,
+            "answer_token_share": 0.02389
+          },
+          {
+            "expert": 48,
+            "answer_token_share": 0.02264
+          }
+        ],
+        [
+          {
+            "expert": 17,
+            "answer_token_share": 0.03389
+          },
+          {
+            "expert": 37,
+            "answer_token_share": 0.03194
+          },
+          {
+            "expert": 16,
+            "answer_token_share": 0.03
+          },
+          {
+            "expert": 10,
+            "answer_token_share": 0.02944
+          },
+          {
+            "expert": 22,
+            "answer_token_share": 0.02806
+          },
+          {
+            "expert": 32,
+            "answer_token_share": 0.0275
+          },
+          {
+            "expert": 28,
+            "answer_token_share": 0.0275
+          },
+          {
+            "expert": 51,
+            "answer_token_share": 0.02625
+          },
+          {
+            "expert": 1,
+            "answer_token_share": 0.02611
+          },
+          {
+            "expert": 2,
+            "answer_token_share": 0.02486
+          }
+        ],
+        [
+          {
+            "expert": 14,
+            "answer_token_share": 0.03639
+          },
+          {
+            "expert": 58,
+            "answer_token_share": 0.03278
+          },
+          {
+            "expert": 1,
+            "answer_token_share": 0.03097
+          },
+          {
+            "expert": 15,
+            "answer_token_share": 0.02875
+          },
+          {
+            "expert": 34,
+            "answer_token_share": 0.02778
+          },
+          {
+            "expert": 53,
+            "answer_token_share": 0.02722
+          },
+          {
+            "expert": 21,
+            "answer_token_share": 0.02694
+          },
+          {
+            "expert": 50,
+            "answer_token_share": 0.02597
+          },
+          {
+            "expert": 42,
+            "answer_token_share": 0.02583
+          },
+          {
+            "expert": 54,
+            "answer_token_share": 0.02472
+          }
+        ],
+        [
+          {
+            "expert": 11,
+            "answer_token_share": 0.03472
+          },
+          {
+            "expert": 18,
+            "answer_token_share": 0.03194
+          },
+          {
+            "expert": 50,
+            "answer_token_share": 0.03083
+          },
+          {
+            "expert": 52,
+            "answer_token_share": 0.03069
+          },
+          {
+            "expert": 46,
+            "answer_token_share": 0.02903
+          },
+          {
+            "expert": 48,
+            "answer_token_share": 0.02875
+          },
+          {
+            "expert": 0,
+            "answer_token_share": 0.02792
+          },
+          {
+            "expert": 61,
+            "answer_token_share": 0.0275
+          },
+          {
+            "expert": 14,
+            "answer_token_share": 0.02736
+          },
+          {
+            "expert": 25,
+            "answer_token_share": 0.02708
+          }
+        ],
+        [
+          {
+            "expert": 63,
+            "answer_token_share": 0.03444
+          },
+          {
+            "expert": 49,
+            "answer_token_share": 0.03347
+          },
+          {
+            "expert": 36,
+            "answer_token_share": 0.03236
+          },
+          {
+            "expert": 41,
+            "answer_token_share": 0.03181
+          },
+          {
+            "expert": 19,
+            "answer_token_share": 0.03042
+          },
+          {
+            "expert": 8,
+            "answer_token_share": 0.03028
+          },
+          {
+            "expert": 22,
+            "answer_token_share": 0.02944
+          },
+          {
+            "expert": 53,
+            "answer_token_share": 0.02639
+          },
+          {
+            "expert": 1,
+            "answer_token_share": 0.02569
+          },
+          {
+            "expert": 58,
+            "answer_token_share": 0.02556
+          }
+        ],
+        [
+          {
+            "expert": 25,
+            "answer_token_share": 0.03903
+          },
+          {
+            "expert": 62,
+            "answer_token_share": 0.02931
+          },
+          {
+            "expert": 21,
+            "answer_token_share": 0.02833
+          },
+          {
+            "expert": 44,
+            "answer_token_share": 0.02833
+          },
+          {
+            "expert": 15,
+            "answer_token_share": 0.02806
+          },
+          {
+            "expert": 8,
+            "answer_token_share": 0.02736
+          },
+          {
+            "expert": 38,
+            "answer_token_share": 0.02722
+          },
+          {
+            "expert": 41,
+            "answer_token_share": 0.02694
+          },
+          {
+            "expert": 46,
+            "answer_token_share": 0.02597
+          },
+          {
+            "expert": 63,
+            "answer_token_share": 0.02597
+          }
+        ],
+        [
+          {
+            "expert": 25,
+            "answer_token_share": 0.03222
+          },
+          {
+            "expert": 2,
+            "answer_token_share": 0.03181
+          },
+          {
+            "expert": 7,
+            "answer_token_share": 0.03125
+          },
+          {
+            "expert": 38,
+            "answer_token_share": 0.03083
+          },
+          {
+            "expert": 39,
+            "answer_token_share": 0.03069
+          },
+          {
+            "expert": 45,
+            "answer_token_share": 0.03014
+          },
+          {
+            "expert": 21,
+            "answer_token_share": 0.02917
+          },
+          {
+            "expert": 56,
+            "answer_token_share": 0.02722
+          },
+          {
+            "expert": 26,
+            "answer_token_share": 0.02681
+          },
+          {
+            "expert": 42,
+            "answer_token_share": 0.02639
+          }
+        ]
+      ],
+      "top8_answer_token_share_by_layer": [
+        0.2703,
+        0.1926,
+        0.2032,
+        0.2374,
+        0.2462,
+        0.2324,
+        0.2475,
+        0.2549,
+        0.2478,
+        0.2271,
+        0.2346,
+        0.2368,
+        0.2414,
+        0.2486,
+        0.2346,
+        0.2433
+      ],
+      "answer_routing_entropy_by_layer": [
+        4.0025,
+        4.0804,
+        4.0693,
+        3.983,
+        4.0063,
+        4.0075,
+        3.9945,
+        3.9817,
+        4.0001,
+        4.0315,
+        4.0295,
+        4.0033,
+        4.0036,
+        3.9849,
+        3.9912,
+        3.9836
+      ],
+      "total_selection_counts_by_layer": "omitted_for_size",
+      "router_weight_mass_by_layer": "omitted_for_size"
+    },
+    "behavior_assistant_response": {
+      "rows_profiled": 64,
+      "tokens_profiled": 13617,
+      "answer_tokens_profiled": 2668,
+      "top_experts_by_answer_token_count": [
+        [
+          {
+            "expert": 21,
+            "answer_token_share": 0.08981
+          },
+          {
+            "expert": 54,
+            "answer_token_share": 0.04943
+          },
+          {
+            "expert": 53,
+            "answer_token_share": 0.04577
+          },
+          {
+            "expert": 41,
+            "answer_token_share": 0.04301
+          },
+          {
+            "expert": 40,
+            "answer_token_share": 0.04245
+          },
+          {
+            "expert": 49,
+            "answer_token_share": 0.03926
+          },
+          {
+            "expert": 18,
+            "answer_token_share": 0.03879
+          },
+          {
+            "expert": 24,
+            "answer_token_share": 0.03828
+          },
+          {
+            "expert": 17,
+            "answer_token_share": 0.02975
+          },
+          {
+            "expert": 60,
+            "answer_token_share": 0.02933
+          }
+        ],
+        [
+          {
+            "expert": 15,
+            "answer_token_share": 0.08246
+          },
+          {
+            "expert": 25,
+            "answer_token_share": 0.07665
+          },
+          {
+            "expert": 18,
+            "answer_token_share": 0.06391
+          },
+          {
+            "expert": 61,
+            "answer_token_share": 0.03898
+          },
+          {
+            "expert": 21,
+            "answer_token_share": 0.0342
+          },
+          {
+            "expert": 49,
+            "answer_token_share": 0.0283
+          },
+          {
+            "expert": 20,
+            "answer_token_share": 0.0275
+          },
+          {
+            "expert": 57,
+            "answer_token_share": 0.02652
+          },
+          {
+            "expert": 11,
+            "answer_token_share": 0.02577
+          },
+          {
+            "expert": 30,
+            "answer_token_share": 0.02549
+          }
+        ],
+        [
+          {
+            "expert": 40,
+            "answer_token_share": 0.11469
+          },
+          {
+            "expert": 5,
+            "answer_token_share": 0.06915
+          },
+          {
+            "expert": 60,
+            "answer_token_share": 0.05683
+          },
+          {
+            "expert": 14,
+            "answer_token_share": 0.05102
+          },
+          {
+            "expert": 13,
+            "answer_token_share": 0.04976
+          },
+          {
+            "expert": 9,
+            "answer_token_share": 0.04362
+          },
+          {
+            "expert": 45,
+            "answer_token_share": 0.04076
+          },
+          {
+            "expert": 35,
+            "answer_token_share": 0.03687
+          },
+          {
+            "expert": 6,
+            "answer_token_share": 0.03664
+          },
+          {
+            "expert": 15,
+            "answer_token_share": 0.03064
+          }
+        ],
+        [
+          {
+            "expert": 39,
+            "answer_token_share": 0.07651
+          },
+          {
+            "expert": 43,
+            "answer_token_share": 0.07215
+          },
+          {
+            "expert": 15,
+            "answer_token_share": 0.0685
+          },
+          {
+            "expert": 9,
+            "answer_token_share": 0.06039
+          },
+          {
+            "expert": 31,
+            "answer_token_share": 0.04859
+          },
+          {
+            "expert": 19,
+            "answer_token_share": 0.04859
+          },
+          {
+            "expert": 42,
+            "answer_token_share": 0.04254
+          },
+          {
+            "expert": 57,
+            "answer_token_share": 0.04085
+          },
+          {
+            "expert": 44,
+            "answer_token_share": 0.03814
+          },
+          {
+            "expert": 61,
+            "answer_token_share": 0.03177
+          }
+        ],
+        [
+          {
+            "expert": 19,
+            "answer_token_share": 0.1042
+          },
+          {
+            "expert": 21,
+            "answer_token_share": 0.09441
+          },
+          {
+            "expert": 55,
+            "answer_token_share": 0.08494
+          },
+          {
+            "expert": 25,
+            "answer_token_share": 0.07201
+          },
+          {
+            "expert": 6,
+            "answer_token_share": 0.06409
+          },
+          {
+            "expert": 61,
+            "answer_token_share": 0.04404
+          },
+          {
+            "expert": 62,
+            "answer_token_share": 0.04343
+          },
+          {
+            "expert": 48,
+            "answer_token_share": 0.03144
+          },
+          {
+            "expert": 41,
+            "answer_token_share": 0.02849
+          },
+          {
+            "expert": 27,
+            "answer_token_share": 0.02582
+          }
+        ],
+        [
+          {
+            "expert": 2,
+            "answer_token_share": 0.12275
+          },
+          {
+            "expert": 42,
+            "answer_token_share": 0.12092
+          },
+          {
+            "expert": 29,
+            "answer_token_share": 0.06662
+          },
+          {
+            "expert": 21,
+            "answer_token_share": 0.05008
+          },
+          {
+            "expert": 17,
+            "answer_token_share": 0.0499
+          },
+          {
+            "expert": 8,
+            "answer_token_share": 0.04634
+          },
+          {
+            "expert": 60,
+            "answer_token_share": 0.04221
+          },
+          {
+            "expert": 53,
+            "answer_token_share": 0.04174
+          },
+          {
+            "expert": 46,
+            "answer_token_share": 0.0409
+          },
+          {
+            "expert": 31,
+            "answer_token_share": 0.03177
+          }
+        ],
+        [
+          {
+            "expert": 42,
+            "answer_token_share": 0.10246
+          },
+          {
+            "expert": 52,
+            "answer_token_share": 0.09928
+          },
+          {
+            "expert": 36,
+            "answer_token_share": 0.08635
+          },
+          {
+            "expert": 18,
+            "answer_token_share": 0.06447
+          },
+          {
+            "expert": 43,
+            "answer_token_share": 0.05777
+          },
+          {
+            "expert": 1,
+            "answer_token_share": 0.04582
+          },
+          {
+            "expert": 24,
+            "answer_token_share": 0.04456
+          },
+          {
+            "expert": 49,
+            "answer_token_share": 0.04207
+          },
+          {
+            "expert": 38,
+            "answer_token_share": 0.03687
+          },
+          {
+            "expert": 27,
+            "answer_token_share": 0.03565
+          }
+        ],
+        [
+          {
+            "expert": 17,
+            "answer_token_share": 0.11338
+          },
+          {
+            "expert": 4,
+            "answer_token_share": 0.09754
+          },
+          {
+            "expert": 2,
+            "answer_token_share": 0.08672
+          },
+          {
+            "expert": 0,
+            "answer_token_share": 0.07051
+          },
+          {
+            "expert": 35,
+            "answer_token_share": 0.05913
+          },
+          {
+            "expert": 58,
+            "answer_token_share": 0.03701
+          },
+          {
+            "expert": 46,
+            "answer_token_share": 0.03458
+          },
+          {
+            "expert": 39,
+            "answer_token_share": 0.032
+          },
+          {
+            "expert": 26,
+            "answer_token_share": 0.0312
+          },
+          {
+            "expert": 30,
+            "answer_token_share": 0.02596
+          }
+        ],
+        [
+          {
+            "expert": 3,
+            "answer_token_share": 0.11825
+          },
+          {
+            "expert": 54,
+            "answer_token_share": 0.09389
+          },
+          {
+            "expert": 16,
+            "answer_token_share": 0.07196
+          },
+          {
+            "expert": 27,
+            "answer_token_share": 0.0715
+          },
+          {
+            "expert": 62,
+            "answer_token_share": 0.05393
+          },
+          {
+            "expert": 51,
+            "answer_token_share": 0.05346
+          },
+          {
+            "expert": 30,
+            "answer_token_share": 0.03678
+          },
+          {
+            "expert": 57,
+            "answer_token_share": 0.03509
+          },
+          {
+            "expert": 32,
+            "answer_token_share": 0.02727
+          },
+          {
+            "expert": 29,
+            "answer_token_share": 0.026
+          }
+        ],
+        [
+          {
+            "expert": 46,
+            "answer_token_share": 0.11408
+          },
+          {
+            "expert": 51,
+            "answer_token_share": 0.08752
+          },
+          {
+            "expert": 4,
+            "answer_token_share": 0.07075
+          },
+          {
+            "expert": 39,
+            "answer_token_share": 0.06442
+          },
+          {
+            "expert": 35,
+            "answer_token_share": 0.0476
+          },
+          {
+            "expert": 34,
+            "answer_token_share": 0.04648
+          },
+          {
+            "expert": 12,
+            "answer_token_share": 0.03734
+          },
+          {
+            "expert": 6,
+            "answer_token_share": 0.03664
+          },
+          {
+            "expert": 47,
+            "answer_token_share": 0.03153
+          },
+          {
+            "expert": 52,
+            "answer_token_share": 0.03069
+          }
+        ],
+        [
+          {
+            "expert": 56,
+            "answer_token_share": 0.09562
+          },
+          {
+            "expert": 19,
+            "answer_token_share": 0.07065
+          },
+          {
+            "expert": 43,
+            "answer_token_share": 0.06447
+          },
+          {
+            "expert": 44,
+            "answer_token_share": 0.05974
+          },
+          {
+            "expert": 2,
+            "answer_token_share": 0.05552
+          },
+          {
+            "expert": 11,
+            "answer_token_share": 0.0551
+          },
+          {
+            "expert": 62,
+            "answer_token_share": 0.05041
+          },
+          {
+            "expert": 6,
+            "answer_token_share": 0.04301
+          },
+          {
+            "expert": 22,
+            "answer_token_share": 0.03851
+          },
+          {
+            "expert": 28,
+            "answer_token_share": 0.02694
+          }
+        ],
+        [
+          {
+            "expert": 13,
+            "answer_token_share": 0.11549
+          },
+          {
+            "expert": 27,
+            "answer_token_share": 0.11408
+          },
+          {
+            "expert": 47,
+            "answer_token_share": 0.09164
+          },
+          {
+            "expert": 63,
+            "answer_token_share": 0.07285
+          },
+          {
+            "expert": 23,
+            "answer_token_share": 0.05772
+          },
+          {
+            "expert": 44,
+            "answer_token_share": 0.05346
+          },
+          {
+            "expert": 7,
+            "answer_token_share": 0.04887
+          },
+          {
+            "expert": 46,
+            "answer_token_share": 0.03341
+          },
+          {
+            "expert": 62,
+            "answer_token_share": 0.03073
+          },
+          {
+            "expert": 54,
+            "answer_token_share": 0.02914
+          }
+        ],
+        [
+          {
+            "expert": 38,
+            "answer_token_share": 0.1042
+          },
+          {
+            "expert": 8,
+            "answer_token_share": 0.09642
+          },
+          {
+            "expert": 31,
+            "answer_token_share": 0.07796
+          },
+          {
+            "expert": 51,
+            "answer_token_share": 0.06405
+          },
+          {
+            "expert": 58,
+            "answer_token_share": 0.05627
+          },
+          {
+            "expert": 45,
+            "answer_token_share": 0.04901
+          },
+          {
+            "expert": 59,
+            "answer_token_share": 0.04573
+          },
+          {
+            "expert": 48,
+            "answer_token_share": 0.04334
+          },
+          {
+            "expert": 6,
+            "answer_token_share": 0.03856
+          },
+          {
+            "expert": 30,
+            "answer_token_share": 0.03205
+          }
+        ],
+        [
+          {
+            "expert": 62,
+            "answer_token_share": 0.09886
+          },
+          {
+            "expert": 25,
+            "answer_token_share": 0.09787
+          },
+          {
+            "expert": 6,
+            "answer_token_share": 0.09619
+          },
+          {
+            "expert": 2,
+            "answer_token_share": 0.08972
+          },
+          {
+            "expert": 11,
+            "answer_token_share": 0.06433
+          },
+          {
+            "expert": 31,
+            "answer_token_share": 0.04709
+          },
+          {
+            "expert": 61,
+            "answer_token_share": 0.03734
+          },
+          {
+            "expert": 54,
+            "answer_token_share": 0.03261
+          },
+          {
+            "expert": 4,
+            "answer_token_share": 0.03022
+          },
+          {
+            "expert": 5,
+            "answer_token_share": 0.02628
+          }
+        ],
+        [
+          {
+            "expert": 6,
+            "answer_token_share": 0.08906
+          },
+          {
+            "expert": 36,
+            "answer_token_share": 0.08504
+          },
+          {
+            "expert": 58,
+            "answer_token_share": 0.06915
+          },
+          {
+            "expert": 7,
+            "answer_token_share": 0.05496
+          },
+          {
+            "expert": 28,
+            "answer_token_share": 0.0484
+          },
+          {
+            "expert": 11,
+            "answer_token_share": 0.04057
+          },
+          {
+            "expert": 9,
+            "answer_token_share": 0.03879
+          },
+          {
+            "expert": 24,
+            "answer_token_share": 0.03772
+          },
+          {
+            "expert": 32,
+            "answer_token_share": 0.02984
+          },
+          {
+            "expert": 42,
+            "answer_token_share": 0.02914
+          }
+        ],
+        [
+          {
+            "expert": 8,
+            "answer_token_share": 0.08012
+          },
+          {
+            "expert": 36,
+            "answer_token_share": 0.06526
+          },
+          {
+            "expert": 30,
+            "answer_token_share": 0.06283
+          },
+          {
+            "expert": 44,
+            "answer_token_share": 0.04723
+          },
+          {
+            "expert": 42,
+            "answer_token_share": 0.04671
+          },
+          {
+            "expert": 17,
+            "answer_token_share": 0.04357
+          },
+          {
+            "expert": 9,
+            "answer_token_share": 0.04156
+          },
+          {
+            "expert": 1,
+            "answer_token_share": 0.03748
+          },
+          {
+            "expert": 29,
+            "answer_token_share": 0.03748
+          },
+          {
+            "expert": 58,
+            "answer_token_share": 0.03612
+          }
+        ]
+      ],
+      "top8_answer_token_share_by_layer": [
+        0.3868,
+        0.3785,
+        0.4627,
+        0.4581,
+        0.5386,
+        0.5406,
+        0.5428,
+        0.5309,
+        0.5349,
+        0.5048,
+        0.4945,
+        0.5875,
+        0.537,
+        0.564,
+        0.4637,
+        0.4248
+      ],
+      "answer_routing_entropy_by_layer": [
+        3.7248,
+        3.759,
+        3.5918,
+        3.5542,
+        3.3902,
+        3.3435,
+        3.3131,
+        3.3482,
+        3.4134,
+        3.4492,
+        3.547,
+        3.3016,
+        3.4368,
+        3.3883,
+        3.5615,
+        3.5606
+      ],
+      "total_selection_counts_by_layer": "omitted_for_size",
+      "router_weight_mass_by_layer": "omitted_for_size"
+    }
+  },
+  "cache_consistency": {
+    "generated_ids_equal": true,
+    "single_forward_max_abs_logit_diff": 0.0,
+    "claim_checked": "token-local expert/output adapters preserve normal cached generation"
+  },
+  "phase_wall_sec": {
+    "behavior_eval_wall_sec": 116.26,
+    "continuation_benchmark_wall_sec": 31.52,
+    "router_profile_wall_sec": 4.1
+  },
+  "memory": {
+    "device": "NVIDIA H100 80GB HBM3",
+    "max_allocated_gb": 16.69,
+    "max_reserved_gb": 18.77
+  },
+  "wall_sec": 249.09,
+  "smoke_test": false
+}
