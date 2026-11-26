@@ -180,7 +180,7 @@ Last updated: {now} UTC by the results-analysis subagent. This document is regen
 
 ### A. Sparse surgical edits — validated winner family
 
-Exp95 strength response: strength 0.5 gives **77.5/93.3/40**, strength 0.9 gives **65.0/90/0**, strength 1.3 collapses safety to **30.0/63.3/0** at the original 64-column dose. The ultra-sparse follow-up changed the operating point: at 16 columns/layer, strength 0.9 gives **80.0/93.3/0**. Exp130 dose response shows the count dependence: columns 4/8/16/32 are tested at fixed strength 0.9, with 16 columns per layer the validated best. This is why the current recipe is **ultra-sparse, high-strength, output-side projection**, not the original broad 64-column edit.
+Exp95 strength response: strength 0.5 gives **77.5/93.3/40**, strength 0.9 gives **65.0/90/0**, strength 1.3 collapses safety to **30.0/63.3/0** at the original 64-column dose. The ultra-sparse follow-up changed the operating point. At 16 columns/layer, strength response is **0.5 → 70/100/60**, **0.7 → 77.5/93.3/20**, **0.9 → 80/93.3/0**, **1.2 → 60/86.7/0**. At fixed strength 0.9, column response is **4 → 60/100/70**, **8 → 77.5/93.3/0**, **16 → 80/93.3/0**, **32 → 72.5/90/0**. The optimum is therefore narrow and nonmonotonic: **ultra-sparse, high-strength, output-side projection**, not the original broad 64-column edit.
 
 Exp85 evolution strategies reached **82.5/93.3/0** with only 32 total edited coordinates, but the same file's fixed-dose and random-search references are strong; the autograder correctly warns that ES dev selection did not beat the fixed-dose reference. Treat Exp85 as evidence that a very low-dimensional good solution exists, not yet proof that evolutionary search is necessary.
 
