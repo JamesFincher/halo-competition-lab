@@ -296,6 +296,7 @@ def run_grpo_arm(
     beta: float,
     step_log_fh,
     seed: int,
+    max_new_tokens: int = 64,
 ) -> tuple[torch.nn.Module, dict]:
     torch.manual_seed(seed)
     random.seed(seed)
@@ -342,7 +343,7 @@ def run_grpo_arm(
                 for _g in range(group_size):
                     out = model.generate(
                         **enc,
-                        max_new_tokens=64,
+                        max_new_tokens=max_new_tokens,
                         do_sample=True,
                         temperature=0.85,
                         top_p=0.95,

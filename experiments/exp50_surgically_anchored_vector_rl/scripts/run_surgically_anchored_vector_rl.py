@@ -120,7 +120,7 @@ def train_vector_arm(
             with torch.no_grad():
                 generated = model.generate(
                     **enc,
-                    max_new_tokens=64,
+                    max_new_tokens=max_new_tokens,
                     do_sample=True,
                     temperature=0.85,
                     top_p=0.95,
