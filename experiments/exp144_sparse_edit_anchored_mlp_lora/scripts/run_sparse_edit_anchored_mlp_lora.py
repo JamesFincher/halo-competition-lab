@@ -14,7 +14,7 @@ from validated_edit import apply_validated_rank1_edit
 from real_benchmark import run_benchmark
 
 SEEDS=[7,42,123]; CONTROL_SEED=42
-COMPLEMENT=[24,25,26,27]; RANDOM=[16,17,18,19]; INCLUSIVE=[24,25,26,27,28,29]
+COMPLEMENT=[24,25,26,27]; RANDOM=[0,3,20,23]; INCLUSIVE=[24,25,26,27,28,29]  # RANDOM=random.Random(42).sample(range(24),4), sorted
 
 def delta(a,b): return {k:round(a[k]-b[k],2) for k in a if k in b and isinstance(a[k],(int,float))}
 def endpoint(model,tok,eval_rows,device,bench_n,max_tokens):
@@ -23,7 +23,9 @@ def endpoint(model,tok,eval_rows,device,bench_n,max_tokens):
  return {'behavior_eval':ev,'benchmark':bench}
 def train_lora(name,base,ref,tok,prompts,device,target,args,seed):
  m,stats=base_rl.run_grpo_arm(name,base,ref,tok,prompts,device,target,16,args.steps,args.group_size,args.lr,args.beta,args.step_log,seed,max_new_tokens=args.max_new_tokens)
- pre=endpoint(m,tok,eval_rows_global,device,args.bench_n,args.max_new_tokens)
+ # Adapter-side behavior is needed for export-gap diagnosis; benchmark capacity is
+ # measured on the exported artifact, which is the deployable object of interest.
+ pre={'behavior_eval':base_rl.evaluate_heldout(m,tok,eval_rows_global,device,max_new_tokens=args.max_new_tokens)}
  exported=m.merge_and_unload()
  post=endpoint(exported,tok,eval_rows_global,device,args.bench_n,args.max_new_tokens)
  return {'train_stats':stats,'adapter_eval':pre,'exported_eval':post,'target_regex':target}

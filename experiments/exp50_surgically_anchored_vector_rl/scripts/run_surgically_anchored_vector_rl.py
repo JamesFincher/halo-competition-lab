@@ -97,6 +97,7 @@ def train_vector_arm(
     lr: float,
     beta: float,
     seed: int,
+    max_new_tokens: int = 64,
 ) -> tuple[torch.nn.Module, dict]:
     torch.manual_seed(seed)
     random.seed(seed)
