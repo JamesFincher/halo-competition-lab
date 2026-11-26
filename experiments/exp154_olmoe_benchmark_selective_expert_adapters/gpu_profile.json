@@ -1,0 +1,1 @@
+{"exclusive_gpu": true, "estimated_peak_gb": 32, "reason": "OLMoE expert-adapter training loads the full 6.9B bf16 model and needs measured solo execution"}
