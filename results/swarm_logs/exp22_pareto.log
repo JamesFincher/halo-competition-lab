@@ -9,3 +9,26 @@
   [k= 32 st=0.80] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
   [k= 32 st=1.00] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
   [k= 64 st=0.40] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k= 64 st=0.60] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k= 64 st=0.80] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k= 64 st=1.00] exact= 12.5% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k=128 st=0.40] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k=128 st=0.60] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k=128 st=0.80] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k=128 st=1.00] exact= 12.5% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k=256 st=0.40] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k=256 st=0.60] exact= 15.0% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k=256 st=0.80] exact= 12.5% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+  [k=256 st=1.00] exact= 12.5% | pol= 25.0% | unsafe=  0.0% | benign_fr=  0.0%
+Traceback (most recent call last):
+  File "/lab/experiments/multi_seed_stability_sweep/scripts/run_pareto_sweep.py", line 75, in <module>
+    main()
+  File "/lab/experiments/multi_seed_stability_sweep/scripts/run_pareto_sweep.py", line 70, in main
+    (out_dir / "pareto_sweep_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+  File "/usr/lib/python3.12/pathlib.py", line 1049, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/lab/experiments/multi_seed_stability_sweep/results/pareto_sweep_summary.json'

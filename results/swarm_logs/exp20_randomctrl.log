@@ -7,3 +7,5 @@
   [Rand seed=202] exact=47.5% | pol=50.0% | unsafe=100.0%
   [Rand seed=303] exact=45.0% | pol=47.5% | unsafe=100.0%
   [Rand seed=404] exact=50.0% | pol=55.0% | unsafe=100.0%
+  [Rand seed=505] exact=50.0% | pol=52.5% | unsafe=100.0%
+[Exp 20 DONE] DLA=15.0% vs Rand=47.5%±2.5% (gain=+-32.5 pp) in 435.37s
