@@ -22,7 +22,7 @@ import run_random_control_proof as rnd_mod
 def main():
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
+    dtype = torch.float32  # fp32 required: bf16 coarsens rank-1 surgical edits (wave-1 finding)
     out = ROOT / "experiments/targeted_circuit_rl/results"
     out.mkdir(parents=True, exist_ok=True)
     print(f"[Exp 32] Targeted-Circuit RL on {device}", flush=True)
