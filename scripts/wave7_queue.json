@@ -1,0 +1,12 @@
+{
+ "experiments": [
+  {
+   "name": "exp43_combined_winner",
+   "script": "experiments/combined_slider_subspace/scripts/run_combined.py"
+  },
+  {
+   "name": "benchmark_baseline",
+   "script": "scripts/industry_benchmark.py"
+  }
+ ]
+}
