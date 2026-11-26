@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T12:49:06+00:00",
+  "generated_at_utc": "2026-11-26T12:53:15+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1283,6 +1283,8 @@
     "exp134_routed_width_mixture_head",
     "exp135_capability_behavior_head_blend",
     "exp136_sparse_context_gated_dose_cancellation",
+    "exp137_cross_layer_cascade_blend",
+    "exp138_subtractive_frozen_head_gate",
     "exp82_rank1_rl_trajectory_extrapolation",
     "exp84_momentum_carryover_half_edit",
     "exp87_multiperspective_abstention_factorization",
