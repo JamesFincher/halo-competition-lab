@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T12:24:40+00:00",
+  "generated_at_utc": "2026-11-26T12:49:06+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -10,6 +10,12 @@
     {
       "file": "experiments/behavior_fingerprint_atlas/results/behavior_atlas_summary.json",
       "bytes": 10936,
+      "warnings": [],
+      "metric_paths": 0
+    },
+    {
+      "file": "experiments/benchmark_failure_tree/results/failure_tree_summary.json",
+      "bytes": 222,
       "warnings": [],
       "metric_paths": 0
     },
@@ -161,6 +167,18 @@
       "metric_paths": 3
     },
     {
+      "file": "experiments/exp100_halo_native_transfer_path_showdown/results/transfer_path_showdown_summary.json",
+      "bytes": 90843,
+      "warnings": [],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp101_merge_aware_served_weight_finetune/results/merge_aware_finetune_summary.json",
+      "bytes": 14739,
+      "warnings": [],
+      "metric_paths": 10
+    },
+    {
       "file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
       "bytes": 60707,
       "warnings": [
@@ -174,6 +192,155 @@
         }
       ],
       "metric_paths": 4
+    },
+    {
+      "file": "experiments/exp50_surgically_anchored_vector_rl/results/surgically_anchored_vector_rl_summary.json",
+      "bytes": 560001,
+      "warnings": [],
+      "metric_paths": 6
+    },
+    {
+      "file": "experiments/exp51_decision_anchor_hidden_align/results/hidden_align_rl_summary.json",
+      "bytes": 22537,
+      "warnings": [],
+      "metric_paths": 6
+    },
+    {
+      "file": "experiments/exp52_pgs_credit_direction/results/pgs_direction_summary.json",
+      "bytes": 8820,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/causal_edit_arms/random_control/eval"
+        }
+      ],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp53_dual_sided_advantage_sculpting/results/dual_sided_advantage_summary.json",
+      "bytes": 20549,
+      "warnings": [],
+      "metric_paths": 6
+    },
+    {
+      "file": "experiments/exp54_activation_capped_scaffolding/results/activation_capped_scaffolding_summary.json",
+      "bytes": 15142,
+      "warnings": [],
+      "metric_paths": 9
+    },
+    {
+      "file": "experiments/exp55_policy_hint_internalization/results/policy_hint_internalization_summary.json",
+      "bytes": 12125,
+      "warnings": [
+        {
+          "type": "zero_json_valid",
+          "path": "/hint_vector_only_unhinted"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/hint_vector_only_unhinted"
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/ash_joint_hint_init_mixed/eval_unhinted"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/ash_joint_hint_init_mixed/eval_unhinted"
+        }
+      ],
+      "metric_paths": 6
+    },
+    {
+      "file": "experiments/exp56_boundary_temperature_controller/results/boundary_temperature_controller_summary.json",
+      "bytes": 14885,
+      "warnings": [],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/exp57_halo_native_targeted_lora/results/halo_native_targeted_lora_summary.json",
+      "bytes": 7058,
+      "warnings": [],
+      "metric_paths": 6
+    },
+    {
+      "file": "experiments/exp58_attention_head_sparse_rl/results/attention_head_sparse_rl_summary.json",
+      "bytes": 25025,
+      "warnings": [],
+      "metric_paths": 6
+    },
+    {
+      "file": "experiments/exp59_warm_gqa_slider_heads/results/warm_gqa_slider_summary.json",
+      "bytes": 6408,
+      "warnings": [],
+      "metric_paths": 3
+    },
+    {
+      "file": "experiments/exp60_benign_keyed_refusal_inverter/results/benign_keyed_inverter_summary.json",
+      "bytes": 8296,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/grid/L29_a0.1/eval"
+        }
+      ],
+      "metric_paths": 15
+    },
+    {
+      "file": "experiments/exp61_keyed_zero_gqa_slider/results/keyed_zero_gqa_slider_summary.json",
+      "bytes": 6555,
+      "warnings": [],
+      "metric_paths": 3
+    },
+    {
+      "file": "experiments/exp62_policy_preserving_gqa_slider/results/policy_preserving_slider_summary.json",
+      "bytes": 7200,
+      "warnings": [],
+      "metric_paths": 4
+    },
+    {
+      "file": "experiments/exp63_validated_edit_dose_response/results/validated_edit_dose_response_summary.json",
+      "bytes": 4807,
+      "warnings": [],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp64_validated_edit_layer_ablation/results/validated_edit_layer_ablation_summary.json",
+      "bytes": 4115,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/l28_only/eval"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/safety_constrained_recommendation/eval"
+        }
+      ],
+      "metric_paths": 6
+    },
+    {
+      "file": "experiments/exp65_slider_insertion_layer_sweep/results/slider_insertion_layer_sweep_summary.json",
+      "bytes": 7741,
+      "warnings": [],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/exp66_edit_plus_warm_slider_composition/results/edit_plus_warm_slider_summary.json",
+      "bytes": 5910,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/composite/eval"
+        }
+      ],
+      "metric_paths": 3
+    },
+    {
+      "file": "experiments/exp67_single_coordinate_decision_steering/results/single_coordinate_steering_summary.json",
+      "bytes": 4886,
+      "warnings": [],
+      "metric_paths": 6
     },
     {
       "file": "experiments/exp80_edit_strength_scaffold_annealing/results/edit_strength_scaffold_summary.json",
@@ -531,6 +698,65 @@
         }
       ],
       "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp99_validated_edit_layer_allocation/results/validated_edit_layer_allocation_summary.json",
+      "bytes": 10045,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/l29_only_64/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/l29_only_64/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/l28_only_64/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/l28_only_64/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/l28_only_64/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/l28_only_64/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/l27_only_64/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/l27_only_64/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/l27_only_64/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/l27_only_64/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/l29_l28_split_32_each/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/l29_l28_split_32_each/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 9
     },
     {
       "file": "experiments/fp32_master_edit_pipeline/results/fp32_pipeline_summary.json",
@@ -1036,9 +1262,6 @@
   ],
   "missing_result_experiments": [
     "adaptive_k_proportional_edit",
-    "benchmark_failure_tree",
-    "exp100_halo_native_transfer_path_showdown",
-    "exp101_merge_aware_served_weight_finetune",
     "exp102_closed_form_decision_readout",
     "exp103_failure_neuron_suppression_dose",
     "exp105_slider_lr_response_bank",
@@ -1057,30 +1280,14 @@
     "exp131_context_gated_dose_cancellation",
     "exp132_capability_objective_slider_ablation",
     "exp133_alpha_init_continuation_confirmation",
-    "exp50_surgically_anchored_vector_rl",
-    "exp51_decision_anchor_hidden_align",
-    "exp52_pgs_credit_direction",
-    "exp53_dual_sided_advantage_sculpting",
-    "exp54_activation_capped_scaffolding",
-    "exp55_policy_hint_internalization",
-    "exp56_boundary_temperature_controller",
-    "exp57_halo_native_targeted_lora",
-    "exp58_attention_head_sparse_rl",
-    "exp59_warm_gqa_slider_heads",
-    "exp60_benign_keyed_refusal_inverter",
-    "exp61_keyed_zero_gqa_slider",
-    "exp62_policy_preserving_gqa_slider",
-    "exp63_validated_edit_dose_response",
-    "exp64_validated_edit_layer_ablation",
-    "exp65_slider_insertion_layer_sweep",
-    "exp66_edit_plus_warm_slider_composition",
-    "exp67_single_coordinate_decision_steering",
+    "exp134_routed_width_mixture_head",
+    "exp135_capability_behavior_head_blend",
+    "exp136_sparse_context_gated_dose_cancellation",
     "exp82_rank1_rl_trajectory_extrapolation",
     "exp84_momentum_carryover_half_edit",
     "exp87_multiperspective_abstention_factorization",
     "exp91_single_slider_depth_ablation",
     "exp97_independent_alpha_init_scale",
-    "exp99_validated_edit_layer_allocation",
     "inverse_causal_patching"
   ],
   "duplicate_experiment_numbers": {},
@@ -1179,6 +1386,39 @@
     ],
     "exp94_alpha_clamp_multilayer_bank": [
       "all clamped multi-layer bank arms collapse; this supports an architectural/destructive-interference boundary rather than a simple alpha-magnitude artifact"
+    ],
+    "exp52_pgs_credit_direction": [
+      "DLA/unembed reference is excluded from technique scoring because it is not the PGS mechanism under test; PGS directions are nearly anti-aligned with DLA and perform near baseline or over-refusal"
+    ],
+    "exp55_policy_hint_internalization": [
+      "the zero-vector/plain RL comparator is excluded from technique scoring; the hint-internalization arm enters complete always-call collapse"
+    ],
+    "exp57_halo_native_targeted_lora": [
+      "strong positive transfer result: post-edit-anchored complementary MLP-only LoRA improves exactness while preserving zero benign false refusal"
+    ],
+    "exp58_attention_head_sparse_rl": [
+      "bottom-ranked heads beat top-ranked heads, inconsistent with the proposed head-ranking mechanism; treat as weak/nonselective evidence"
+    ],
+    "exp59_warm_gqa_slider_heads": [
+      "warm GQA slider is behaviorally destructive relative to random lane control; warm initialization is not benign"
+    ],
+    "exp61_keyed_zero_gqa_slider": [
+      "keying does not rescue the warm GQA slider; exactness falls to 10% and the result remains a destructive boundary measurement"
+    ],
+    "exp62_policy_preserving_gqa_slider": [
+      "bc_lambda_2 is safety-preserving but weak and retains 80% benign false refusal; lower BC weights either collapse or over-refuse"
+    ],
+    "exp64_validated_edit_layer_ablation": [
+      "L29 alone matches the canonical L29+L28 edit; L28 alone is a no-op, while adding L27 gives a small additional exactness gain"
+    ],
+    "exp66_edit_plus_warm_slider_composition": [
+      "the validated-edit reference is excluded from technique scoring; the actual warm-slider composite collapses to 17.5% exact with complete unsafe-refusal loss"
+    ],
+    "exp100_halo_native_transfer_path_showdown": [
+      "targeted complementary LoRA outperforms partial full fine-tuning and vector-only transfer from the same post-edit anchor"
+    ],
+    "exp101_merge_aware_served_weight_finetune": [
+      "standard unrounded comparators are excluded; merge-aware served-weight action-only training preserves unsafe refusal but is exactness-negative relative to the post-edit anchor"
     ]
   }
 }

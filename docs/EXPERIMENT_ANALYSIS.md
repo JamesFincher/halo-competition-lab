@@ -600,7 +600,7 @@ Commit `dfbec20` overwrote the prior tracked summary in place. The old values re
 
 1. **Operator provenance is now the main integrity requirement.** “DLA” must mean Exp 17 probe1 node selection, not merely any refusal-direction edit. Exp 41 shows how easily a replication label can drift.
 2. **Measured residual-direction edits are real; unembedding-direction edits are destructive.** The positive GPU evidence is Exp 16 `raw_rank1` (65/90/0) and Exp 12/41 false-node residual editing (67.5/100/80). The negative wave-1/3 unembed rows remain operator-failure measurements.
-3. **No GPU-validated technique has yet beaten the CPU-era DLA/IG ceiling.** The best safe GPU exactness is 67.5%, and the best raw exactness with near-zero benign-FR is 65.0%. The 80–82.5% CPU-era results remain un replicated rather than refuted.
+3. **GPU evidence is now close to the CPU-era ceiling but does not close exact replication.** Canonical-baseline targeted RL reaches 80–82.5% exact in exp80/85, and targeted complementary LoRA reaches 75%; the exact original Exp17 probe-selection pipeline remains unreplicated on GPU rather than refuted.
 4. **Attention-head inserts are behaviorally potent but need controllers.** Exp 42 moves benign-FR by 60 pp with only alpha≈0.031, while Exp 28 head-only editing showed a smaller 20–30 pp benign-FR movement under a confounded baseline. This mechanism class is worth pursuing for raw performance, but current reward/control logic trades away policy correctness.
 5. **Safety and exactness are coupled but not identically.** Exp 41 preserves unsafe refusal perfectly while improving exactness only modestly; Exp 16 removes benign false refusal but costs unsafe refusal; Exp 42 reduces benign false refusal much more while harming exactness. These are three different operating points, not interchangeable “wins.”
 6. **Result-integrity process must be part of the pipeline.** Exact baseline copies usually mean gate rejection or cancellation, all-zero patching means identity artifacts, and in-place overwritten summaries must be backed up explicitly before reruns.
@@ -661,3 +661,93 @@ Commit `cfc91d7` was both a harvest and an experiment-generation commit. It intr
 **Slider architecture answer:** exp96 freeze-then-merge reaches **70 / 90 / 0** while joint training collapses to zero, so schedule/interference is a real causal variable. Yet exp94 shows independent multi-layer banks collapse even with alpha clamps, and exp93 shows the single-slider positive result is **not seed-robust** (only seed 42 reproduces; seeds 7/123 are negative). Exp92 shared-alpha count ablation does not fully collapse at 2–4 heads but also does not improve over count 1. Practical conclusion: freeze-then-merge is promising, independent simultaneous banks are not, and any single-slider result needs multi-seed gating.
 
 **Negative mechanism results:** exp81 low-dimensional guardrailed RL collapses; exp83 probe routing is worse than uniform/random controls; exp90 width effects are mixed rather than a simple monotonic width law. Benchmarks in the slider/edit ablations are mostly unchanged around MMLU 26 / ARC 38 / HellaSwag 32, so behavioral gains do not show large benchmark collateral, but the benchmark scorer is coarse and small differences should not be overread. Integrity note: the upstream 11:57–11:58 exp129 numbering collision was corrected by tracker rename of the context-gated experiment to exp131; no duplicate experiment numbers remain.
+
+
+### 12:34 VM-staged harvest — transfer path, direction-credit, and layer-allocation map
+
+**Validity scope.** This harvest committed complete n=40 behavioral summaries for exp50–67, exp99–101, plus a diagnostic-only `benchmark_failure_tree` result. No NaNs, invalid JSON, in-place overwrite violations, or duplicate experiment numbers were found. Exp67's `step_metrics.jsonl` is empty, so its optimizer trace is unavailable even though final evals are complete. Comparator/reference arms are excluded from leaderboard technique scoring where they are not the mechanism under test.
+
+#### 1. Direction-credit result: DLA is positive, PGS is anti-aligned
+
+Exp52 is the most important mechanistic measurement in this harvest. On identical validated top-neuron masks, the excluded DLA/unembed reference reaches **72.5 / 93.3 / 0**, while PGS directions are near or below baseline: L20 **50 / 96.7 / 100**, L28 **55 / 100 / 100**, L29 **57.5 / 100 / 90**, residual **52.5 / 100 / 100**. PGS-L29 is almost exactly anti-aligned with DLA (**cos=-0.9948**); PGS-L28 is also strongly negative (**cos=-0.8686**).
+
+**Interpretation:** the current PGS estimator does not discover the useful causal direction; it points nearly opposite to it. This may reflect sign conventions, advantage weighting at refusal-dominated decision tokens, or that return-weighted gradients encode the boundary normal rather than the compliance-improving direction. It also provides adjacent positive evidence for the DLA/unembed direction on the validated edit mask, but it is still not the exact Exp17 probe-selection replication.
+
+#### 2. Transfer path: targeted complementary MLP-only LoRA is the leading reproducible mechanism
+
+Exp57 and exp100 independently converge on the same transfer answer:
+
+| Arm family | Best result | Interpretation |
+|---|---:|---|
+| exp57 complementary layers 24–27, MLP-only LoRA r16 | **75.0 / 90.0 / 0** | Best transfer result this wave. |
+| exp57 complementary layers 24–27, all-proj LoRA r16 | 70.0 / 90.0 / 0 | Positive but worse than MLP-only. |
+| exp100 targeted LoRA complement all-proj | 70.0 / 86.7 / 0 | Replicates targeted-LoRA benefit with some safety cost. |
+| exp100 targeted LoRA complement MLP-only | 67.5 / 90.0 / 0 | Safer transfer path, consistent with exp57. |
+| exp100 partial full-FT MLP-only | 62.5 / 80.0 / 0 | Less exact and much less safe. |
+| exp100 partial full-FT all-proj | 40.0 / 60.0 / 0 | Destructive. |
+| exp100 vector-only lower bound | 47.5 / 66.7 / 0 | Vector-only transfer is insufficient. |
+
+**Interpretation:** freeze the validated edit, anchor KL to the post-edit model, and train complementary MLP-only LoRA. Do not train the edited layers themselves, do not use broad full fine-tuning, and do not expect input-invariant vectors to carry the effect. Exp57's negative inclusion control (**62.5 / 86.7 / 0**) and full-LoRA control (**57.5 / 93.3 / 0**) both underperform the targeted MLP-only arm.
+
+#### 3. Reward shaping can buy exactness only by spending safety
+
+Exp53's compliance-heavy advantage arm reaches **72.5 / 83.3 / 0**, but balanced and safety-heavy variants sit at **57.5 / 86.7 / 0**. The verifier-only control is **60.0 / 86.7 / 0**. This is a real dose-response demonstration that reward weighting controls the exactness/safety frontier, but it is not a free win: +12.5 pp exactness over the control costs another 3.4–16.7 pp unsafe refusal depending on comparator. Do not treat compliance-heavy advantage sculpting as a safe default.
+
+#### 4. Post-edit auxiliary mechanisms mostly fail to beat the anchor
+
+The validated edit anchor is typically **65 / 90 / 0**. Several theoretically attractive mechanisms do not exceed it:
+
+- Exp50 disjoint-layer vectors reach only **60 / 86.7 / 0**; all-layer vectors degrade to **25 / 83.3 / 20**.
+- Exp51 hidden-alignment variants all plateau at **60 / 86.7 / 0**, indistinguishable from vector-only control.
+- Exp54 activation-capped RL variants all plateau at **60 / 86.7 / 0**, whether cap-on or cap-off; the cap neither helps nor explains additional exactness.
+- Exp55 hint internalization collapses completely (**0 / 0 / 0**). The hinted prompt upper bound is itself only **2.5 / 20 / 0**, so the prompt-hint formulation is not a useful target in this implementation.
+- Exp56 temperature/controller variants are negative: fixed control **10 / 100 / 60**, schema-frozen **32.5 / 96.7 / 100**, hidden controller **25 / 63.3 / 0**.
+
+**Pattern:** the validated surgical edit is strong, but naive auxiliary training often subtracts exactness rather than adding control. Additional mechanisms need explicit damage constraints and must be compared against the post-edit anchor, not only the canonical baseline.
+
+#### 5. Layer and width allocation: L29 dominates; narrow distributed edits work best
+
+Exp63/64/99 form a coherent allocation map:
+
+| Measurement | Result | Interpretation |
+|---|---:|---|
+| exp63 strength 0.9, 32 columns | **72.5 / 90 / 0** | Best canonical-strength configuration. |
+| exp63 strength 0.5, 64 columns | 77.5 / 93.3 / 40 | Higher exactness but much worse precision/benign-FR. |
+| exp63 strength 0.9, 128 columns | 57.5 / 86.7 / 0 | Wider is worse. |
+| exp64 L29-only, 64 columns | 65.0 / 90 / 0 | L29 alone reproduces the canonical edit. |
+| exp64 L28-only | 55 / 100 / 90 | Exact baseline copy: L28 is not independently causal. |
+| exp64 L29+L28+L27 | **67.5 / 90 / 0** | L27 adds a small positive interaction but no independent effect. |
+| exp99 L29+L28 split 32 each | **72.5 / 90 / 0** | Narrow distributed allocation reproduces the best edit point. |
+| exp99 L27-only or L28-only | 55 / 100 / 90 | Exact baseline copies/no-ops. |
+
+**Interpretation:** L29 is the dominant causal layer; L28 and L27 are not independently sufficient but can contribute in narrow distributed allocations. Width is not free capacity: spreading the same direction across too many columns dilutes or damages the operating point.
+
+#### 6. Slider/GQA attention mechanisms remain fragile
+
+- Exp65 insertion after L27 reaches **65 / 93.3 / 0**, better than insertion after L29 (**57.5 / 93.3 / 0**); insertion after L24 is destructive (**32.5 / 53.3 / 0**). This supports a shallow/late-mid insertion preference but does not overcome exp93's seed-nonrobustness warning.
+- Exp66 shows the actual edit+warm-slider composite collapses to **17.5 / 0 / 0** despite the validated-edit reference being **65 / 90 / 0**. Warm-slider composition is currently destructive and must not be credited with the edit-only reference.
+- Exp59 warm GQA lane reaches only **27.5 / 60 / 0** versus a random-lane exact-baseline no-op. Warm initialization is harmful, not neutral.
+- Exp61 keyed-zero warm GQA is even worse (**10 / 90 / 20**), so keying does not rescue the warm lane.
+- Exp62 high BC weight (`bc_lambda_2`) preserves unsafe refusal (**60 / 100 / 80**) but sacrifices most behavioral movement; low BC collapses (**10 / 3.3 / 0**). The stable region is currently safe-but-weak, not performant.
+
+**Pattern:** attention inserts have a narrow useful dose/depth region. Warm starts, multi-head banks, and uncontrolled composition are destructive; high policy-preservation pressure can prevent collapse but also prevents useful adaptation.
+
+#### 7. Refusal inversion and served-weight merging are negative or neutral
+
+Exp60's inverter+complementary-LoRA reaches **65 / 90 / 0**, exactly the standard validated-edit operating point; it does not exceed it. The accepted inverter alone is **60 / 86.7 / 0**. Thus inversion may be harmless after repair but adds no demonstrated exactness advantage.
+
+Exp101 is a clean negative served-merge result. Hook and export evals are identical within arms, so the serialization/export path is internally consistent, but merge-aware served-weight training is worse: action-only served-weight is **42.5 / 100 / 0** versus standard-unrounded action-only **50 / 96.7 / 0**, and both are far below the post-edit anchor **65 / 90 / 0**. All-token variants are much worse (**17.5–27.5 exact**). Merge-aware serving should not become the default until this gap is explained.
+
+#### 8. Single-coordinate steering and benchmark failure tree are negative diagnostics
+
+Exp67 single-coordinate steering gives no positive operating point: aligned decision dose **50 / 90 / 70**, opposite dose **55 / 100 / 100**, random coordinate **42.5 / 100 / 90**, and high dose collapses to **2.5 / 3.3 / 0**. A single raw coordinate is not a usable decision actuator at the tested doses.
+
+`benchmark_failure_tree` is valid as a diagnostic but negative mechanistically: failure-tree accuracy is only **38.3%**, and suppressing the inferred failure direction produces **0.0 pp** accuracy change. The simple linear failure direction is either wrong, non-causal, or too coarse to repair benchmark errors.
+
+#### Updated mechanism-class synthesis
+
+1. **Reproducible positive stack:** validated narrow residual-direction edit at L29/L28 → freeze edit → post-edit KL anchor → complementary MLP-only targeted LoRA. Exp57's **75 / 90 / 0** is now the most actionable non-pure-RL transfer result.
+2. **Targeted RL remains the strongest behavioral driver:** exp80's canonical-baseline **80 / 93.3 / 10** independently supports the Exp1-class result, while exp85's **82.5 / 93.3 / 0** remains a replication-priority outlier because of selection noise.
+3. **Direction matters more than generic sparse optimization.** DLA/unembed direction is positive on the validated mask; PGS-estimated directions are nearly opposite and ineffective. Random controls remain baseline/no-op.
+4. **Geometry/dose constraints are real:** 32 columns beat 64/128; L29 dominates; freeze-then-merge and polarity cycling help, while simultaneous independent banks collapse.
+5. **Auxiliary mechanisms need dominance tests against the post-edit anchor.** Vector-only, hidden-alignment, cap scheduling, hint internalization, temperature control, refusal inversion, and merge-aware serving currently fail to beat **65 / 90 / 0** or actively collapse.
