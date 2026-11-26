@@ -51,7 +51,7 @@ def main():
     arms["comp6_gated"] = {"layers": sorted(layer_rank[2:8]), "top_nodes": 64}
     results = []
     for name, cfg in arms.items():
-        fn_by_layer = {li: [n["idx"] for n in prof["false_nodes_by_layer"][li]] for li in cfg["layers"] if li in prof["false_nodes_by_layer"]}
+        fn_by_layer = {li: list(prof["false_nodes_by_layer"][li]) for li in cfg["layers"] if li in prof["false_nodes_by_layer"]}
         if not fn_by_layer:
             print(f"  [{name}] no false nodes found in layers {cfg['layers']} — skipping", flush=True)
             continue

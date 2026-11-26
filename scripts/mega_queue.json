@@ -1,0 +1,28 @@
+{
+ "experiments": [
+  {
+   "name": "exp41_original_replication",
+   "script": "experiments/original_operator_replication/scripts/run_replication.py"
+  },
+  {
+   "name": "whitened_subspace_rfm_edit",
+   "script": "experiments/whitened_subspace_rfm_edit/scripts/run_whitened_subspace_edit.py"
+  },
+  {
+   "name": "zero_shock_stitched_head_rl",
+   "script": "experiments/zero_shock_stitched_head_rl/scripts/run_zero_shock_stitched_head.py"
+  },
+  {
+   "name": "token_credit_saepo_rl",
+   "script": "experiments/token_credit_saepo_rl/scripts/ustats_group_size_and_credit.py"
+  },
+  {
+   "name": "steering_oracle_guided_rl",
+   "script": "experiments/steering_oracle_guided_rl/scripts/run_steering_rl.py"
+  },
+  {
+   "name": "exp42_slider_gated_head",
+   "script": "experiments/slider_gated_attention_head/scripts/run_slider_head.py"
+  }
+ ]
+}
