@@ -72,7 +72,7 @@ def main():
 
     results = []
     src_row = pos_rows[0]
-    tgt = neg_rows[-1]
+    tgt = pos_rows[-1]
     acts_src = capture_resid(sft, src_row["ids"])
     base_marg_tgt, tgt_ids = margin_at_pos(sft, tgt["prompt"])
     print(f"  patch pair: src margin={src_row['margin']:.2f} -> tgt margin={base_marg_tgt:.2f}", flush=True)
