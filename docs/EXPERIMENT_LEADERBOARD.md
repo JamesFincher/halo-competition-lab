@@ -1,60 +1,79 @@
-# Experiment Leaderboard — Rubric-Graded (see research/RUBRIC.md)
+# Experiment Leaderboard — Quality-Controlled Rubric Grades
 
-Composite = 0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R (each /10).
-Baseline: SFT micro-model = 55.0% exact / 40 unseen tasks, 100% unsafe refusal, 90% benign false refusal (raw base model: 0% exact, 0% unsafe refusal).
+Last updated: **2026-11-26 09:58 UTC** by the tracker/post-processor.
 
-| Rank | Exp | Technique | Key Result | P | S | C | E | N | K | T | R | **Score** | Grade |
-|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **17 (DLA arm)** | Direct Logit Lens top-64 edit, zero grad | **80.0% exact** (+25pp), 90% unsafe-refusal held, 0% benign FR, 2.24s | 10 | 8 | 10 | 10 | 8 | 10 | 9 | 7 | **9.25** | **S** |
-| 2 | **17 (IG-5 arm)** | 5-step Integrated Gradients edit | **82.5% exact** (+27.5pp, record), 90% unsafe held, 0% benign FR, 4.72s | 10 | 8 | 10 | 9 | 8 | 9 | 9 | 7 | **9.05** | **S** |
-| 3 | **11 (Fork V3)** | Re-anchored disjoint RL (edited layers frozen) | **77.5% exact** (+22.5pp) with safety preserved after RL | 9 | 8 | 8 | 5 | 8 | 10 | 8 | 6 | **8.05** | **A** |
-| 4 | **18** | 7-behavior DLA fingerprint atlas (diagnostic) | Found refusal circuit collision (77.8% Jaccard) + hub neurons; enables 19/24/29 | — | — | — | 10 | 9 | 10 | 9 | 8 | **8.0** (diag) | **A** |
-| 5 | **15** | 1-pass RelP causal attribution sniff | 62.5% exact zero-RL, 100% safety, found new #1 causal neuron L27#110 in 7s | 5 | 10 | 9 | 10 | 8 | 9 | 8 | 6 | **7.95** | **A** |
-| 6 | **19** | 7-behavior cross-talk + hub-protection audit (diagnostic) | False-refusal edit moved true safety almost identically (-8.516 vs -8.516 protected); hub protection cut mean collateral only 8.4% — refusal circuits entangled | — | — | — | 8 | 8 | 9 | 8 | 4 | **7.6** (diag, provisional) | **A** |
-| 7 | **16** | Safety-whitened rank-k subspace edit | raw_rank1: 65% exact / 0% benign FR; hard nullspace strips too much on narrow model | 6 | 8 | 10 | 8 | 9 | 7 | 6 | 6 | **7.35** | **B** |
-| 8 | **12** | Head+MLP false-node double-check sniff | Found top false heads (L29H1); edit gains modest | 4 | 8 | 8 | 8 | 7 | 8 | 7 | 5 | **6.65** | **B** |
-| 9 | **14** | Zero-shock stitched GQA head + RL | Zero-shock math proven (KL≈1.6e-6) but 45% exact in 6 steps — needs long training | 0 | 10 | 9 | 4 | 9 | 6 | 8 | 6 | **5.85** | **C** |
-| 10 | **17 (5 anti-probes)** | Variance flicker, activation spike, random consensus | ≤ 67.5% — rejected as primary cameras | 3 | 7 | 5 | 8 | 6 | 5 | 6 | 7 | **5.5** | **C** |
-| 11 | **13** | 1-bit sign-flip / zero-mask false-node edit | Both arms rejected: benign false refusal 90% — binary ablation destroys circuit | 0 | 10 | 2 | 9 | 7 | 4 | 5 | 7 | **4.9** | **D** |
+Composite = `0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R` (see `research/RUBRIC.md`). Machine-generated scores and the integrity scan are in `research/AUTOGRADED_SCORES.json` and `research/RESULT_INTEGRITY_REPORT.json`.
 
-## Key conclusions from back-evaluation
-1. **Zero-grad logit-space localization (DLA/IG-5) dominates everything** — the two S-tier techniques are both zero-RL. Combining them with re-anchored disjoint RL (Exp 21) is the flagship composition.
-2. **Binary/hard structural edits fail** (Exp 13 D-grade, Exp 16 hard nullspace): continuous directional projection >> masking on narrow models.
-3. **Diagnostic atlases pay off, but hub protection alone does not decouple refusal types** — Exp 19 found true/false refusal margin movement coupled at ratio ≈1.00 even with hub neurons masked.
-4. **RL alone is cost-inefficient** (Exp 11 E=5) — but it is the only path past the ~82.5% edit ceiling, so its composability (K=10) keeps it A-tier.
-5. **Safety-preserving compliance repair is now the central bottleneck** — future S-tier entries need >80% exact without the current 100%→90% unsafe-refusal drop.
+**Canonical baseline:** Halo LoRA SFT checkpoint-36 on the 40-task held-out eval = **55.0% exact / 100.0% unsafe refusal / 90.0% benign false refusal** (also 77.5% action accuracy, 57.5% policy accuracy). Positive Δ benign-FR is worse; negative Δ benign-FR is better only when unsafe refusal remains high.
 
-## Wave-1 direct-bf16 autograder output — confounded, not ranked
+## Interpretable technique ranking
 
-These rows use the same rubric table format, but they are **not canonical technique grades**. They measure the replication-broken unembedding-direction operator documented in `docs/EXPERIMENT_ANALYSIS.md`: edits often collapse into always-call behavior (0% unsafe refusal). Do not interpret these as dead ends until the original-operator replication lands. Scores cap surgical precision at C=1 when unsafe refusal falls below 50%, because zero benign false refusal in an always-call model is not precision.
+This table separates historically interpretable results from the wave-1/2/3 operator-failure measurements. **The top two CPU-era rows are not yet GPU-replicated.** The best GPU-validated surgical operator currently is Exp 16 `raw_rank1`; the best fully safety-preserving GPU-validated edit is the Exp 12/41 false-node residual operator.
 
-| Rank | Exp | Technique | Key Result | P | S | C | E | N | K | T | R | **Score** | Grade |
-|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| — | **28** | Head+MLP synergy, direct bf16 | best arm `head_only`: 45.0% exact, 100% unsafe, 60% benign FR; all MLP arms collapse | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
-| — | **23** | Push-pull, direct bf16 + degenerate directions | best arm `pushpull_1.0`: 42.5% exact, 100% unsafe, 100% benign FR; implementation is net-sign control, not true push-pull | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
-| — | **29** | Momentum-annealed surgery+RL, direct bf16 | best arm `annealed_edit`: 30.0% exact, 100% unsafe, 90% benign FR; reward collapses when edit reaches zero | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
-| — | **25** | Gradient-free evolution, direct bf16 | heldout-test half split: 50.0% exact but only 42.9% unsafe; fitness does not hard-constrain safety | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
-| — | **26** | Entropy-weighted GRPO, direct bf16 | best composite tie shown as `uniform_adv`: 7.5% exact, 0% unsafe; post-edit start already collapsed | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
-| — | **21** | DLA edit → disjoint RL, direct bf16 | post-edit checkpoint starts collapsed; RL remains at 15.0% exact / 0% unsafe | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
-| — | **20** | DLA vs random control, direct bf16 | DLA exact 15.0% / unsafe 0%; random mean 47.5±2.5% / unsafe 100% — operator inversion, not localization refutation | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
-| — | **30** | Steering-oracle RL, direct bf16 | plain RL and steered rollouts both end at 15.0% exact / 0% unsafe after collapsed initialization | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
+| Rank | Experiment / best arm | Regime & validity | Exact 55→after (Δ) | Unsafe 100→after (Δ) | Benign-FR 90→after (Δ) | Score | Grade | Interpretation |
+|---:|---|---|---:|---:|---:|---:|:---:|---|
+| 1 | **17 / `probe1_dla_logit_lens`** | legacy CPU-era; **GPU replication still outstanding** | 55.0→80.0 (**+25.0**) | 100→90.0 (**-10.0**) | 90→0.0 (**-90.0**) | **9.05** | **S** | Historical best zero-grad probe; do not treat as reproduced yet. |
+| 2 | **11 / `v3_closed_loop_sniff_edit_rl`** | legacy CPU-era | 55.0→77.5 (**+22.5**) | 100→90.0 (**-10.0**) | 90→0.0 (**-90.0**) | **7.85** | **A** | Strongest closed-loop composition historically; needs modern GPU replication. |
+| 3 | **1 / `arm3b_edit_then_target_fixed`** | micro-RL legacy result | 55.0→72.5 (**+17.5**) | 100→93.3 (**-6.7**) | 90→0.0 (**-90.0**) | **7.35** | **B** | Edit→targeted-RL composition works, but safety cost remains. |
+| 4 | **16 / `raw_rank1`** | **GPU-validated positive operator** | 55.0→65.0 (**+10.0**) | 100→90.0 (**-10.0**) | 90→0.0 (**-90.0**) | **6.50** | **B** | Best validated raw-performance surgical edit on GPU; not safety-preserving. |
+| 5 | **12 / `armB_mlp_false_node_only`** | legacy CPU-era; reproduced by Exp 41 | 55.0→67.5 (**+12.5**) | 100→100.0 (**+0.0**) | 90→80.0 (**-10.0**) | **5.90** | **C** | Safe but modest false-node residual-direction edit. |
+| 6 | **13 / `arm3_projection`** | legacy CPU-era | 55.0→67.5 (**+12.5**) | 100→100.0 (**+0.0**) | 90→80.0 (**-10.0**) | **5.90** | **C** | Same behavioral class as false-node continuous projection. |
+| 7 | **42 / slider head after RL** | **GPU-valid, performance-negative** | 55.0→42.5 (**-12.5**) | 100→90.0 (**-10.0**) | 90→30.0 (**-60.0**) | **5.65** | **C** | Architecture insert sharply reduces over-refusal but trades away exactness and some unsafe refusal. |
+| 8 | **41 / `top2_gated`** | **GPU-valid for false-node operator; mislabeled as original-DLA replication** | 55.0→67.5 (**+12.5**) | 100→100.0 (**+0.0**) | 90→80.0 (**-10.0**) | **5.60** | **C** | Validates the Exp 12 false-node branch, **not** Exp 17 DLA/IG. |
+| 9 | **15 / RelP edit** | diagnostic-probe lineage | 55.0→62.5 (**+7.5**) | 100→100.0 (**+0.0**) | 90→80.0 (**-10.0**) | **5.40** | **D** | Useful causal probe, weak stand-alone intervention. |
+| 10 | **14 / stitched head + short RL** | **GPU-valid negative** | 55.0→45.0 (**-10.0**) | 100→100.0 (**+0.0**) | 90→100.0 (**+10.0**) | **4.70** | **D** | Zero-shock construction is clean, but short RL worsens over-refusal and exactness. |
+| — | **28 / `head_only`** | inconclusive bf16-era signal | 55.0→45.0 (**-10.0**) | 100→100.0 (**+0.0**) | 90→60.0 (**-30.0**) | **4.65** | **D** | Attention-only signal is interesting for head-modification research but confounded by shifted CUDA baseline. |
 
-## Wave-2/3 operator-invalid autograder output — diagnostic only, not ranked
+## Critical replication correction
 
-These results are more controlled than wave 1 because the fp32 baseline is healthy, but they mostly evaluate the wrong edit operator. The key positive control is still missing: the original 80% exact surgical edit has not yet been replicated.
+**Exp 41 did not test the original Exp 17 DLA/IG operator.** Its script imports `sniff_heads_and_false_nodes` and `apply_false_node_mlp_edit` from the Exp 12 false-node pipeline; it never uses Exp 17's `probe_dla_and_variance` node selection or IG-5 node selection. The resulting 67.5/100/80 triple exactly matches Exp 17 probe2 false-node. Therefore:
 
-| Rank | Exp | Technique | Key Result | P | S | C | E | N | K | T | R | **Score** | Grade |
-|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| — | **38** | Non-collinear push-pull | `pushpull_0.7` returns exactly to baseline 55.0% exact / 100% unsafe because directions cancel; recorded cosine still -1.0 | 0 | 10 | 1 | 6 | 7 | 8 | 7 | 5 | **4.85** | **D** |
-| — | **39** | Operator sensitivity showdown | unembed fixed edit collapses to 12.5% exact / 0% unsafe; resid fixed edit is safe but inactive at 52.5% exact; gates reject edits | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
-| — | **35** | Interference-canceling solve | best raw arm still collapses; lambda3 reaches 27.5% exact but only 20% unsafe — no safe optimum | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
-| — | **37** | Collision-priced allocation | overlap reduced 64→25 neurons, yet all arms remain 12.5% exact / 0% unsafe | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
-| — | **33** | Dtype sensitivity | fp32 12.5% exact vs bf16 15.0%, both 0% unsafe; dtype not root cause | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
-| — | **40** | fp32-master pipeline | fp32 edit + fp32 eval still collapses to 12.5% exact / 0% unsafe | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
-| — | **32** | Targeted circuit RL | downstream of invalid atlas; circuit columns remain 12.5% exact / 0% unsafe | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
-| — | **36** | Safety vaccination | vaccine strengths 0.5/1.0 do not change collapse: 12.5% exact / 0% unsafe | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
+1. Exp 41 is a valid GPU replication of the **false-node residual-direction** branch.
+2. The historical **80.0% DLA** and **82.5% IG-5** results remain untested on GPU.
+3. Any queue item claiming to validate “the original operator” must report node-selection provenance and selected-neuron overlap with Exp 17 probe1/probe4.
 
-Exp 31 is not autograded because it is a diagnostic atlas with no intervention eval. It is currently invalid as a request-type atlas: the text classifier produced only two pseudo-types (`comms_task` n=40 and `other_unsafe` n=120) instead of the dataset's real policy-code categories.
+## Full before/after delta table — all metric-bearing experiment summaries
 
-## Pending grading (running on H100 swarm)
-Exps 22, 24, 27, 34/35/41 replication-wave entries, and wave-5 techniques are pending or awaiting valid reruns. Exp 22 completed its bf16 sweep in the log but failed before writing `pareto_sweep_summary.json`; Exp 24 crashed on a device mismatch; Exp 27's first JSON was invalid (identity patch) and has been fixed for rerun. Exp 19 is provisionally graded as diagnostic pending original-operator confirmation.
+Rows below are sorted by raw composite score, **not by scientific trustworthiness**. `operator-invalid` rows mostly measure the broken unembedding-direction/always-call collapse regime and must not be read as mechanism rankings. `n=20` marks a noncanonical half-split eval.
+
+| Rank | Experiment / best arm | Validity | Exact Δ (pp) | Unsafe Δ (pp) | Benign-FR Δ (pp) | Score | Grade |
+|---:|---|---|---:|---:|---:|---:|:---:|
+| 1 | 17 / `probe1_dla_logit_lens` | legacy CPU | **+25.0** | -10.0 | -90.0 | **9.05** | S |
+| 2 | 11 / `v3_closed_loop_sniff_edit_rl` | legacy CPU | **+22.5** | -10.0 | -90.0 | **7.85** | A |
+| 3 | 1 / `arm3b_edit_then_target_fixed` | legacy micro-RL | **+17.5** | -6.7 | -90.0 | **7.35** | B |
+| 4 | 16 / `raw_rank1` | GPU-valid | **+10.0** | -10.0 | -90.0 | **6.50** | B |
+| 5 | 13 / `arm3_projection` | legacy CPU | **+12.5** | +0.0 | -10.0 | **5.90** | C |
+| 6 | 12 / `armB_mlp_false_node_only` | legacy CPU | **+12.5** | +0.0 | -10.0 | **5.90** | C |
+| 7 | 42 / `after` | GPU-valid negative exactness | **-12.5** | -10.0 | -60.0 | **5.65** | C |
+| 8 | 41 / `top2_gated` | GPU-valid false-node; wrong replication target | **+12.5** | +0.0 | -10.0 | **5.60** | C |
+| 9 | 15 / `eval` | diagnostic-probe lineage | **+7.5** | +0.0 | -10.0 | **5.40** | D |
+| 10 | 38 / `pushpull_0.7` | degenerate cancellation/no-op | **+0.0** | +0.0 | +0.0 | **4.85** | D |
+| 11 | 14 / stitched-head `eval` | GPU-valid negative | **-10.0** | +0.0 | +10.0 | **4.70** | D |
+| 12 | 28 / `head_only` | bf16-confounded inconclusive | **-10.0** | +0.0 | -30.0 | **4.65** | D |
+| 13 | 23 / `pushpull_1.0` | mathematically degenerate net-sign control | **-12.5** | +0.0 | +10.0 | **4.65** | D |
+| 14 | 29 / `annealed_edit` | operator-confounded | **-25.0** | +0.0 | +0.0 | **4.65** | D |
+| 15 | 39 / `resid_dir_fixed0.7` | valid control, inactive edit | **-2.5** | +0.0 | +0.0 | **4.65** | D |
+| 16 | 37 / `pure_dla` | operator-invalid collapse | **-42.5** | -100.0 | -90.0 | **3.25** | D |
+| 17 | 33 / `fp32` | control; operator-invalid collapse | **-42.5** | -100.0 | -90.0 | **3.25** | D |
+| 18 | 40 / `a_fp32_edit_fp32_eval` | control; operator-invalid collapse | **-42.5** | -100.0 | -90.0 | **3.25** | D |
+| 19 | 35 / `cancel_lambda1.0` | operator-invalid collapse | **-42.5** | -100.0 | -90.0 | **3.25** | D |
+| 20 | 32 / `circuit_columns` | invalid downstream stack | **-42.5** | -100.0 | -90.0 | **3.25** | D |
+| 21 | 26 / `uniform_adv` | collapsed initialization | **-47.5** | -100.0 | -90.0 | **3.05** | D |
+| 22 | 25 / `heldout_test` | n=20, objective-invalid | **-5.0** | -57.1 | -90.0 | **3.05** | D |
+| 23 | 21 / `st0.65` | collapsed initialization | **-40.0** | -100.0 | -90.0 | **3.05** | D |
+| 24 | 20 / `dla_top64` | operator-invalid collapse | **-40.0** | -100.0 | -90.0 | **3.05** | D |
+| 25 | 36 / `no_vaccine_edit0.7` | operator-invalid collapse | **-42.5** | -100.0 | -90.0 | **3.05** | D |
+| 26 | 30 / `plain_rl` | collapsed initialization; overwritten rerun artifact | **-40.0** | -100.0 | -90.0 | **3.05** | D |
+
+## Current integrity and queue status
+
+- **No duplicate experiment numbers** are present in active `experiments/*/README.md` files.
+- **Numbering gaps:** 34 and 44–49. Exp 34 was deleted when the activation-vector experiment was reworked into the exp50 lineage; treat 34 as retired/superseded unless the orchestrator explicitly restores it. Gaps 44–49 appear reserved/unassigned, not collisions.
+- **Missing result artifacts:** `adaptive_k_proportional_edit` (exp24), `multi_seed_stability_sweep` (exp22), `combined_slider_subspace` (exp43), and exp50–56. Exp 43 has a reported VM-side result but no committed JSON yet at this timestamp.
+- **Degenerate/invalid artifacts:** Exp 27 still has all-zero layer deltas because source and target remain the same prompt; Exp 25 uses only 20-row dev/test splits; several gated edits are exact baseline copies because the gate rejected deployment or selected strength 0.0.
+- **In-place overwrite warnings:** commit `dfbec20` modified `steering_rl_summary.json` and `stitched_head_summary.json` in place. Git history preserves the old values, but there is no side-by-side backup artifact; future reruns should write versioned filenames or a backup directory before overwriting.
+- **NaN/crash scan:** no NaN/Inf values or invalid JSON objects were found in the 37 currently committed result JSON files. Missing-output crashes remain for exp22/exp24 as documented above.
+
+## Pending or not-yet-gradeable
+
+Exp 22 needs a successful summary write/rerun; exp24 needs a device-mismatch fix/rerun; exp27 needs a source/target patching fix; exp31 needs ground-truth policy-code categories; exp43 and exp50–56 are queued/running or awaiting committed results. The autograder intentionally does not grade pure atlases or missing artifacts.

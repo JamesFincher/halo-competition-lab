@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 08:50 UTC. This document is updated continuously as H100 swarm results land.
+Last updated: 2026-11-26 10:00 UTC. This document is updated continuously as H100 swarm results land.
 
 ## Current ingestion status
 
@@ -28,7 +28,17 @@ Last updated: 2026-11-26 08:50 UTC. This document is updated continuously as H10
 | 38 | `noncollinear_pushpull` | result landed; still degenerate | Reported direction cosine remains -1.0. |
 | 39 | `operator_sensitivity_showdown` | result landed; pivotal control | Unembed-direction edit is destructive; original operator not yet replicated. |
 | 40 | `fp32_master_edit_pipeline` | result landed; hypothesis refuted | fp32-master does not rescue the wrong operator. |
-| 41 | `original_operator_replication` | queued/running; decisive validation pending | Does the exact original contrastive-sniff + gated operator reproduce 80%+ exact on GPU? |
+| 41 | `original_operator_replication` | result landed; valid but mislabeled replication target | Reproduces the false-node residual operator (67.5/100/80), not Exp 17 DLA/IG. |
+| 42 | `slider_gated_attention_head` | result landed; valid, exactness-negative | Slider head cuts benign false refusal 90→30 but exact falls 55→42.5 and unsafe refusal 100→90. |
+| 43 | `combined_slider_subspace` | VM-side result reported; committed JSON pending | Does surgical edit + slider head compose better than either parent? |
+| 44–49 | — | unassigned numbering gaps | Reserved/missing, not active collisions. |
+| 50 | `exp50_surgically_anchored_vector_rl` | queued/running | Can steering-vector RL harden the validated surgical edit while weights stay frozen? |
+| 51 | `exp51_decision_anchor_hidden_align` | queued/running | Can hidden-state decision anchors improve RL credit without weight destruction? |
+| 52 | `exp52_pgs_credit_direction` | queued/running | Can PGS credit discover better surgical directions? |
+| 53 | `exp53_dual_sided_advantage_sculpting` | queued/running | Can dual-sided advantage shaping improve raw-performance RL? |
+| 54 | `exp54_activation_capped_scaffolding` | queued/running | Can activation scaffolding bootstrap RL without permanent damage? |
+| 55 | `exp55_policy_hint_internalization` | queued/running | Can policy hints be internalized into behavior? |
+| 56 | `exp56_boundary_temperature_controller` | queued/running | Can a boundary-temperature controller modulate refusal/compliance behavior? |
 
 ## Measurement baseline and interpretation rules
 
@@ -469,4 +479,71 @@ All four arms collapse: fp32 edit + fp32 eval **12.5% exact / 0% unsafe**; fp32 
 3. **The original 80% result is not yet replicated.** Exp 39's gate accepted no edit; Exp 41 must establish reproducibility before interpreting downstream combinations.
 4. **No wave-3 protection/allocation technique overcame the broken base edit.** Interference cancellation partially restores exactness but sacrifices safety; vaccination and collision pricing have no behavioral benefit; noncollinear push-pull remains degenerate.
 5. **Atlas quality is now a blocking dependency.** Exp 31 must use ground-truth policy codes before circuit-specific RL or vaccination can be interpreted.
-6. **The next valid leaderboard entries should be gated on Exp 41.** Until then, all wave-1/2/3 intervention comparisons are operator-failure measurements, not mechanism rankings.
+6. **The next valid leaderboard entries should be gated on operator provenance.** Exp 41 has now landed, but it tested the false-node branch rather than the original DLA/IG branch; see the correction below.
+
+### Experiment 41 — Original-Operator GPU Replication — valid result, wrong replication target
+
+**Input:** `experiments/original_operator_replication/results/replication_summary.json`, CUDA fp32, wall **229.39s**.
+
+Canonical baseline in the same run: **55.0% exact / 100% unsafe / 90% benign-FR**. `top2_gated` accepted strength **0.45** and reached **67.5% exact / 100% unsafe / 80% benign-FR**, with action accuracy **80.0%** and policy accuracy **70.0%**. `comp6_gated` rejected every strength and is an exact baseline copy (**55.0 / 100 / 90**), so it is a gate-rejected no-op rather than a deployed intervention.
+
+**Validity verdict:** the JSON is complete and internally valid (40/40 eval rows, no NaNs). However, the experiment is **mislabeled as a replication of the original DLA/IG operator**. The implementation imports `sniff_heads_and_false_nodes` and `apply_false_node_mlp_edit` from the Exp 12 pipeline and never calls Exp 17's `probe_dla_and_variance` or IG-5 node selection. Its behavioral triple exactly matches Exp 17 probe2 false-node (**67.5 / 100 / 80**). Therefore this is a GPU replication of the **false-node residual-direction branch**, not of the **80.0% DLA** or **82.5% IG-5** branches.
+
+**Delta vs baseline:** exact **+12.5 pp**, unsafe refusal **+0.0 pp**, benign false refusal **-10.0 pp**, action **+2.5 pp**, policy **+12.5 pp**, mean reward **0.775→0.815**.
+
+**Rubric grade:** **5.60 / C** (`P=5, S=10, C=1, E=4, N=2, K=9, T=8, R=6`). Low novelty reflects that this is a replication/control; low precision reflects persistent 80% benign over-refusal.
+
+**Consequence:** the original Exp 17 DLA/IG GPU replication is still outstanding. A correct rerun must use probe1-DLA and probe4-IG node sets, report selected-neuron overlap with the CPU-era sets, and keep the same residual edit + double-check gate fixed.
+
+### Experiment 16 — Whitened/RFM Subspace Edit — raw rank-1 remains the best GPU-validated surgical operator
+
+**Input:** `experiments/whitened_subspace_rfm_edit/results/whitened_subspace_summary.json`, wall **759.16s**.
+
+`raw_rank1` reaches **65.0% exact / 90% unsafe / 0% benign-FR**, with action **92.5%**, policy **80.0%**, and mean reward **0.885**. Versus baseline this is exact **+10.0 pp**, unsafe **-10.0 pp**, benign-FR **-90.0 pp**, action **+15.0 pp**, policy **+22.5 pp**. `safety_null_rank1` is worse than baseline (**47.5 / 100 / 90**); `safety_null_rank2/3/4` have `accepted_strength=0.0` and are exact baseline copies/no-op gate outcomes.
+
+**Hypothesis verdict:** raw measured-contrast rank-1 editing is beneficial on GPU; the tested safety-nullspace construction removes too much behavior or is rejected by the gate. The nullspace negative is real, but the zero-strength rows must not be interpreted as active interventions.
+
+**Rubric grade:** **6.50 / B** (`P=4, S=8, C=10, E=2, N=9, K=7, T=6, R=6`). This is now the strongest GPU-validated compositional parent for raw-performance work, with the caveat that unsafe refusal drops by exactly 3/30 tasks.
+
+### Experiment 42 — Zero-Init Slider-Gated Attention Head — large over-refusal effect, negative exactness trade
+
+**Input:** `experiments/slider_gated_attention_head/results/slider_head_summary.json`, CUDA, wall **135.93s**.
+
+The zero-init identity assertion passes, and only the inserted head/slider train while core weights remain frozen. After 24 compressed RL-style steps, final alpha is **0.0309**. Held-out behavior changes from **55.0% exact / 100% unsafe / 90% benign-FR** to **42.5% exact / 90% unsafe / 30% benign-FR**. Action accuracy rises **77.5→85.0**, but policy accuracy falls **57.5→42.5**; mean reward is unchanged at **0.775**.
+
+**Hypothesis verdict:** architecturally valid and mechanistically important, but not a raw-performance win. The inserted head strongly reduces benign over-refusal, proving that a zero-init gated attention insert can move behavior without destroying the base model. It also moves the decision boundary indiscriminately enough to reduce exact compliance and unsafe refusal.
+
+**Delta vs baseline:** exact **-12.5 pp**, unsafe **-10.0 pp**, benign-FR **-60.0 pp**, action **+7.5 pp**, policy **-15.0 pp**.
+
+**Rubric grade:** **5.65 / C** (`P=0, S=8, C=5, E=6, N=10, K=10, T=9, R=5`). High novelty/composability/transfer reflect the user's architecture-matched insert idea; performance and precision keep it out of B-tier for now.
+
+**Follow-up:** do not discard the mechanism. Use a smaller alpha cap, policy-aware reward, or composition after a validated surgical edit; the head is a boundary actuator and needs a controller that distinguishes benign compliance from unsafe compliance.
+
+### Experiment 14 — Zero-Shock Stitched GQA Head + Freeze-Base RL — clean construction, negative GPU outcome
+
+**Input:** `experiments/zero_shock_stitched_head_rl/results/stitched_head_summary.json`, CUDA wall **295.17s**.
+
+The architecture insert remains nearly zero-shock (`max_logit_diff=7.63e-5`, step-0 KL `1.98e-6`) and base weights do not drift (`base_weight_max_drift=0.0`). Nevertheless final eval is **45.0% exact / 100% unsafe / 100% benign-FR**, versus baseline **55.0 / 100 / 90**. Policy accuracy drops to **45.0%**.
+
+**Hypothesis verdict:** negative for the short-RL instantiation. Zero-shock stitching avoids initial damage, but six sparse RL steps do not convert the added capacity into useful behavior and instead worsen over-refusal.
+
+**Delta vs baseline:** exact **-10.0 pp**, unsafe **+0.0 pp**, benign-FR **+10.0 pp**, action **-2.5 pp**, policy **-12.5 pp**.
+
+**Rubric grade:** **4.70 / D** (`P=0, S=10, C=1, E=4, N=9, K=6, T=8, R=5`). The mechanism remains architecturally interesting, but this training recipe is a dead end on the current model.
+
+### Experiment 30 — Steering-Oracle RL rerun — overwritten artifact, still operator-invalid
+
+**Input:** current `experiments/steering_oracle_guided_rl/results/steering_rl_summary.json`, CUDA wall **240.77s**.
+
+Commit `dfbec20` overwrote the prior tracked summary in place. The old values remain in git history but there is no side-by-side backup artifact, so this is a result-integrity warning. In the new file the post-edit initialization remains collapsed (**15.0% exact / 0% unsafe / 0% benign-FR**). Plain RL ends at **15.0% exact / 0% unsafe**; steered rollouts now end even lower at **5.0% exact / 0% unsafe**.
+
+**Hypothesis verdict:** still no verdict on oracle-guided exploration. The model begins in always-call collapse, so the comparison does not test the intended mechanism.
+
+### Mega-wave cross-result synthesis
+
+1. **Operator provenance is now the main integrity requirement.** “DLA” must mean Exp 17 probe1 node selection, not merely any refusal-direction edit. Exp 41 shows how easily a replication label can drift.
+2. **Measured residual-direction edits are real; unembedding-direction edits are destructive.** The positive GPU evidence is Exp 16 `raw_rank1` (65/90/0) and Exp 12/41 false-node residual editing (67.5/100/80). The negative wave-1/3 unembed rows remain operator-failure measurements.
+3. **No GPU-validated technique has yet beaten the CPU-era DLA/IG ceiling.** The best safe GPU exactness is 67.5%, and the best raw exactness with near-zero benign-FR is 65.0%. The 80–82.5% CPU-era results remain un replicated rather than refuted.
+4. **Attention-head inserts are behaviorally potent but need controllers.** Exp 42 moves benign-FR by 60 pp with only alpha≈0.031, while Exp 28 head-only editing showed a smaller 20–30 pp benign-FR movement under a confounded baseline. This mechanism class is worth pursuing for raw performance, but current reward/control logic trades away policy correctness.
+5. **Safety and exactness are coupled but not identically.** Exp 41 preserves unsafe refusal perfectly while improving exactness only modestly; Exp 16 removes benign false refusal but costs unsafe refusal; Exp 42 reduces benign false refusal much more while harming exactness. These are three different operating points, not interchangeable “wins.”
+6. **Result-integrity process must be part of the pipeline.** Exact baseline copies usually mean gate rejection or cancellation, all-zero patching means identity artifacts, and in-place overwritten summaries must be backed up explicitly before reruns.

@@ -1,0 +1,527 @@
+{
+  "generated_at_utc": "2026-11-26T09:55:28+00:00",
+  "baseline": {
+    "exact_compliance_rate": 55.0,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "n_eval": 40
+  },
+  "file_scans": [
+    {
+      "file": "experiments/behavior_fingerprint_atlas/results/behavior_atlas_summary.json",
+      "bytes": 10936,
+      "warnings": [],
+      "metric_paths": 0
+    },
+    {
+      "file": "experiments/bitflip_false_node_and_defense/results/bitflip_summary.json",
+      "bytes": 3144,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/arm1_zero_mask/eval"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/arm2_sign_flip/eval"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/arm4_best_plus_early_disjoint_rl/eval"
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/safety_bfa_audit[3]"
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/safety_bfa_audit[4]"
+        }
+      ],
+      "metric_paths": 9
+    },
+    {
+      "file": "experiments/christmas_tree_node_probes/results/probe_benchmark_summary.json",
+      "bytes": 5607,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/scoreboard/probe5_variance_flicker/eval"
+        }
+      ],
+      "metric_paths": 6
+    },
+    {
+      "file": "experiments/collision_priced_allocation/results/collision_priced_summary.json",
+      "bytes": 1771,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[1]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[2]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[3]"
+        }
+      ],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/crosslayer_head_mlp_synergy/results/synergy_summary.json",
+      "bytes": 1758,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[2]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[3]"
+        }
+      ],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/dtype_edit_sensitivity/results/dtype_summary.json",
+      "bytes": 1500,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/results/fp32/edited"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/results/bf16/edited"
+        }
+      ],
+      "metric_paths": 4
+    },
+    {
+      "file": "experiments/dual_polarity_circuit_surgery/results/pushpull_summary.json",
+      "bytes": 1679,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[1]"
+        }
+      ],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/edit_then_target_rl/results/micro_rl/micro_rl_summary.json",
+      "bytes": 6590,
+      "warnings": [],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/entropy_weighted_fork_rl/results/entropy_grpo_summary.json",
+      "bytes": 2177,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/baseline_after_edit"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]/eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[1]/eval"
+        }
+      ],
+      "metric_paths": 3
+    },
+    {
+      "file": "experiments/fp32_master_edit_pipeline/results/fp32_pipeline_summary.json",
+      "bytes": 1320,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/results/a_fp32_edit_fp32_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/results/b_fp32edit_bf16cast"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/results/c_fp32edit_stochastic_bf16"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/results/d_direct_bf16_edit"
+        }
+      ],
+      "metric_paths": 4
+    },
+    {
+      "file": "experiments/gradfree_evolution_subspace/results/evolution_summary.json",
+      "bytes": 1914,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/dev",
+          "n_eval": 20
+        },
+        {
+          "type": "partial_eval",
+          "path": "/test",
+          "n_eval": 20
+        }
+      ],
+      "metric_paths": 2
+    },
+    {
+      "file": "experiments/head_and_node_sniff_rl/results/head_node_summary.json",
+      "bytes": 5617,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/armA_head_double_check_only/eval"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/armD_head_node_double_check_rl/eval"
+        }
+      ],
+      "metric_paths": 4
+    },
+    {
+      "file": "experiments/ig5_dla_closed_loop_rl/results/dla_disjoint_rl_summary.json",
+      "bytes": 7629,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/runs[0]/after_edit"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/runs[0]/after_disjoint_rl"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/runs[1]/after_edit"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/runs[1]/after_disjoint_rl"
+        }
+      ],
+      "metric_paths": 4
+    },
+    {
+      "file": "experiments/interference_canceling_edit/results/interference_summary.json",
+      "bytes": 1431,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[1]"
+        }
+      ],
+      "metric_paths": 4
+    },
+    {
+      "file": "experiments/inverse_causal_patching/results/causal_patching_summary.json",
+      "bytes": 2667,
+      "warnings": [
+        {
+          "type": "all_zero_layer_deltas",
+          "count": 30,
+          "detail": "identity/no-effect patch artifact"
+        }
+      ],
+      "metric_paths": 0
+    },
+    {
+      "file": "experiments/momentum_annealed_rl/results/annealed_rl_summary.json",
+      "bytes": 2510,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]/eval"
+        }
+      ],
+      "metric_paths": 2
+    },
+    {
+      "file": "experiments/noncollinear_pushpull/results/noncollinear_pushpull_summary.json",
+      "bytes": 1537,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[1]"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms[2]"
+        }
+      ],
+      "metric_paths": 4
+    },
+    {
+      "file": "experiments/operator_sensitivity_showdown/results/operator_showdown_summary.json",
+      "bytes": 1707,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms[2]"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms[3]"
+        }
+      ],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/original_operator_replication/results/replication_summary.json",
+      "bytes": 1364,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms[1]"
+        }
+      ],
+      "metric_paths": 3
+    },
+    {
+      "file": "experiments/random_node_control_proof/results/dla_predictions.json",
+      "bytes": 9581,
+      "warnings": [],
+      "metric_paths": 0
+    },
+    {
+      "file": "experiments/random_node_control_proof/results/random_control_summary.json",
+      "bytes": 14452,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/dla_top64/metrics"
+        }
+      ],
+      "metric_paths": 8
+    },
+    {
+      "file": "experiments/relp_causal_sniff_rl/results/relp_summary.json",
+      "bytes": 2804,
+      "warnings": [],
+      "metric_paths": 1
+    },
+    {
+      "file": "experiments/request_circuit_mapper/results/request_circuit_atlas.json",
+      "bytes": 4004,
+      "warnings": [],
+      "metric_paths": 0
+    },
+    {
+      "file": "experiments/safety_vaccination_edit/results/vaccination_summary.json",
+      "bytes": 1819,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[1]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[2]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[3]"
+        }
+      ],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/seek_sniff_edit_rl/results/multi_domain/summary_json_extraction.json",
+      "bytes": 1381,
+      "warnings": [],
+      "metric_paths": 0
+    },
+    {
+      "file": "experiments/seek_sniff_edit_rl/results/multi_domain/summary_math_verifiable.json",
+      "bytes": 1487,
+      "warnings": [],
+      "metric_paths": 0
+    },
+    {
+      "file": "experiments/seek_sniff_edit_rl/results/multi_domain/summary_policy_router.json",
+      "bytes": 1646,
+      "warnings": [],
+      "metric_paths": 0
+    },
+    {
+      "file": "experiments/seek_sniff_edit_rl/results/summary_v1.json",
+      "bytes": 1836,
+      "warnings": [],
+      "metric_paths": 1
+    },
+    {
+      "file": "experiments/seek_sniff_edit_rl/results/summary_v2.json",
+      "bytes": 1908,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/forks/v2_single_pass_sniff_edit_rl/eval"
+        }
+      ],
+      "metric_paths": 1
+    },
+    {
+      "file": "experiments/seek_sniff_edit_rl/results/summary_v3.json",
+      "bytes": 2689,
+      "warnings": [],
+      "metric_paths": 1
+    },
+    {
+      "file": "experiments/seek_sniff_edit_rl/results/summary_v4.json",
+      "bytes": 2007,
+      "warnings": [],
+      "metric_paths": 1
+    },
+    {
+      "file": "experiments/slider_gated_attention_head/results/slider_head_summary.json",
+      "bytes": 1312,
+      "warnings": [],
+      "metric_paths": 2
+    },
+    {
+      "file": "experiments/steering_oracle_guided_rl/results/steering_rl_summary.json",
+      "bytes": 2256,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/baseline_after_edit"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]/eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[1]/eval"
+        }
+      ],
+      "metric_paths": 3
+    },
+    {
+      "file": "experiments/surgical_crosstalk_audit/results/crosstalk_summary.json",
+      "bytes": 3634,
+      "warnings": [],
+      "metric_paths": 0
+    },
+    {
+      "file": "experiments/targeted_circuit_rl/results/circuit_rl_summary.json",
+      "bytes": 2261,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/baseline_after_edit"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[0]/eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[1]/eval"
+        }
+      ],
+      "metric_paths": 3
+    },
+    {
+      "file": "experiments/whitened_subspace_rfm_edit/results/whitened_subspace_summary.json",
+      "bytes": 3285,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/modes/safety_null_rank2/eval"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/modes/safety_null_rank3/eval"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/modes/safety_null_rank4/eval"
+        }
+      ],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/zero_shock_stitched_head_rl/results/stitched_head_summary.json",
+      "bytes": 1528,
+      "warnings": [],
+      "metric_paths": 1
+    }
+  ],
+  "missing_result_experiments": [
+    "adaptive_k_proportional_edit",
+    "combined_slider_subspace",
+    "exp50_surgically_anchored_vector_rl",
+    "exp51_decision_anchor_hidden_align",
+    "exp52_pgs_credit_direction",
+    "exp53_dual_sided_advantage_sculpting",
+    "exp54_activation_capped_scaffolding",
+    "exp55_policy_hint_internalization",
+    "exp56_boundary_temperature_controller",
+    "multi_seed_stability_sweep"
+  ],
+  "duplicate_experiment_numbers": {},
+  "missing_experiment_numbers": [
+    34,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49
+  ],
+  "inplace_result_overwrite_warnings": [
+    {
+      "file": "experiments/steering_oracle_guided_rl/results/steering_rl_summary.json",
+      "commit": "dfbec20fba4b3875f8e54be4c026635cbae19ad3 2026-11-26T09:29:44Z Harvest mega-wave results: exp41 replication, exp42 slider head, whitened subspace, stitched head"
+    },
+    {
+      "file": "experiments/zero_shock_stitched_head_rl/results/stitched_head_summary.json",
+      "commit": "dfbec20fba4b3875f8e54be4c026635cbae19ad3 2026-11-26T09:29:44Z Harvest mega-wave results: exp41 replication, exp42 slider head, whitened subspace, stitched head"
+    },
+    {
+      "file": "experiments/inverse_causal_patching/results/causal_patching_summary.json",
+      "commit": "01f32cf51838fb9c44c494ed2eacf9a402e642dc 2026-11-26T09:05:15Z Add Exp 39: operator sensitivity showdown (replication-integrity control)"
+    }
+  ]
+}
