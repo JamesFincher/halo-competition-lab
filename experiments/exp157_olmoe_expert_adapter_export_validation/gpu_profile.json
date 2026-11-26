@@ -1,0 +1,1 @@
+{"exclusive_gpu":true,"estimated_peak_gb":20,"queue_priority":95,"reason":"No-training export validation should immediately follow exp154 while its checkpoints are hot, before longer training jobs"}
