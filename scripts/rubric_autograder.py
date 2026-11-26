@@ -578,6 +578,69 @@ def has_completed_result(expdir: Path) -> bool:
     return False
 
 
+def dataset_quality_checks() -> dict[str, Any]:
+    checks: dict[str, Any] = {}
+    behavior_report = ROOT / "data/behavior_corpus_report.json"
+    train_path = ROOT / "data/policy_train_scaled.jsonl"
+    eval_path = ROOT / "data/policy_eval_scaled.jsonl"
+    if behavior_report.exists() and train_path.exists() and eval_path.exists():
+        report = json.loads(behavior_report.read_text())
+        train_rows = [json.loads(line) for line in train_path.read_text().splitlines() if line.strip()]
+        eval_rows = [json.loads(line) for line in eval_path.read_text().splitlines() if line.strip()]
+        warnings = []
+        schema_errors = []
+        pair_actions: dict[str, set[str]] = {}
+        for rows, split in ((train_rows, "train"), (eval_rows, "heldout")):
+            for i, row in enumerate(rows):
+                try:
+                    assistant = json.loads(row["messages"][2]["content"])
+                    expected = row.get("expected", assistant)
+                    if any(assistant.get(k) != expected.get(k) for k in ("action", "tool", "policy_code")):
+                        schema_errors.append(f"{split}[{i}] assistant/expected mismatch")
+                    if split == "train":
+                        pair_actions.setdefault(row.get("meta", {}).get("pair_id", f"row{i}"), set()).add(str(assistant.get("action")))
+                except Exception as exc:
+                    schema_errors.append(f"{split}[{i}] {type(exc).__name__}")
+        bad_pairs = {pid: sorted(actions) for pid, actions in pair_actions.items() if actions != {"call_tool", "refuse"}}
+        if schema_errors:
+            warnings.append(f"scaled behavior schema errors: {len(schema_errors)}")
+        if bad_pairs:
+            warnings.append(f"scaled behavior counterfactual pair violations: {len(bad_pairs)}")
+        shared_ngrams = int((report.get("user_prompt_8gram_overlap") or {}).get("shared_ngram_count", 0))
+        if shared_ngrams:
+            warnings.append(
+                f"{shared_ngrams} shared user-prompt 8-grams across train/heldout; split is template-disjoint/compositional, not entity-level or fully lexically disjoint"
+            )
+        warnings.append("scaled heldout n=120 is a different distribution/size from canonical legacy n=40; do not compare absolute rates across versions without rebaselining")
+        checks["scaled_behavior_corpus"] = {
+            "train_rows": len(train_rows),
+            "heldout_rows": len(eval_rows),
+            "pair_count": len(pair_actions),
+            "counterfactual_pair_violations": len(bad_pairs),
+            "schema_errors": len(schema_errors),
+            "template_disjoint": not bool((report.get("template_disjointness") or {}).get("shared_families")),
+            "shared_user_prompt_8grams": shared_ngrams,
+            "warnings": warnings,
+        }
+    capability_report = ROOT / "data/capability_corpus_report.json"
+    cap_path = ROOT / "data/capability_corpus_scaled.jsonl"
+    if capability_report.exists() and cap_path.exists():
+        report = json.loads(capability_report.read_text())
+        row_count = sum(1 for line in cap_path.read_text().splitlines() if line.strip())
+        warnings = []
+        if row_count != int(report.get("target_total", row_count)):
+            warnings.append(f"row count {row_count} differs from target {report.get('target_total')}")
+        warnings.append("capability train/validation are decontaminated against eval contexts by exact hash and 13-gram overlap, but absolute metrics still require same-model/same-format baselines")
+        checks["scaled_capability_corpus"] = {
+            "rows": row_count,
+            "target_total": report.get("target_total"),
+            "format": report.get("format"),
+            "sources": {name: {"loaded": src.get("loaded"), "kept": src.get("kept")} for name, src in (report.get("sources") or {}).items()},
+            "warnings": warnings,
+        }
+    return checks
+
+
 def missing_result_experiments() -> list[str]:
     missing = []
     for script in sorted(ROOT.glob("experiments/*/scripts/run_*.py")):
@@ -692,6 +755,7 @@ def grade_results() -> tuple[dict[str, Any], dict[str, Any]]:
             "n_eval": 40,
         },
         "file_scans": integrity_files,
+        "dataset_quality_checks": dataset_quality_checks(),
         "missing_result_experiments": missing_result_experiments(),
         "duplicate_experiment_numbers": duplicates,
         "missing_experiment_numbers": gaps,

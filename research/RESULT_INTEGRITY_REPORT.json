@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T15:25:21+00:00",
+  "generated_at_utc": "2026-11-26T15:47:47+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1358,6 +1358,43 @@
       "metric_paths": 1
     }
   ],
+  "dataset_quality_checks": {
+    "scaled_behavior_corpus": {
+      "train_rows": 1600,
+      "heldout_rows": 120,
+      "pair_count": 800,
+      "counterfactual_pair_violations": 0,
+      "schema_errors": 0,
+      "template_disjoint": true,
+      "shared_user_prompt_8grams": 218,
+      "warnings": [
+        "218 shared user-prompt 8-grams across train/heldout; split is template-disjoint/compositional, not entity-level or fully lexically disjoint",
+        "scaled heldout n=120 is a different distribution/size from canonical legacy n=40; do not compare absolute rates across versions without rebaselining"
+      ]
+    },
+    "scaled_capability_corpus": {
+      "rows": 5280,
+      "target_total": 5280,
+      "format": "exp141 benchmark-direct: context + single space + answer",
+      "sources": {
+        "mmlu_validation": {
+          "loaded": 1531,
+          "kept": 1271
+        },
+        "arc_easy_train": {
+          "loaded": 2251,
+          "kept": 2236
+        },
+        "hellaswag_train": {
+          "loaded": 39905,
+          "kept": 1773
+        }
+      },
+      "warnings": [
+        "capability train/validation are decontaminated against eval contexts by exact hash and 13-gram overlap, but absolute metrics still require same-model/same-format baselines"
+      ]
+    }
+  },
   "missing_result_experiments": [
     "adaptive_k_proportional_edit",
     "exp111_alpha_norm_penalty_bank",

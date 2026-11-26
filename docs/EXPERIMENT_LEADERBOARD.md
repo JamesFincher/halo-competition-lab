@@ -1,6 +1,6 @@
 # Experiment Leaderboard — Quality-Controlled Rubric Grades
 
-Last updated: **2026-11-26 15:27 UTC** by the tracker/post-processor.
+Last updated: **2026-11-26 15:49 UTC** by the tracker/post-processor.
 
 Composite = `0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R` (see `research/RUBRIC.md`). Machine-generated scores and the integrity scan are in `research/AUTOGRADED_SCORES.json` and `research/RESULT_INTEGRITY_REPORT.json`.
 
@@ -219,4 +219,5 @@ Rows below are sorted by raw composite score, **not by scientific trustworthines
 - **No NaN/Inf values and no invalid JSON objects** were detected in committed result scans.
 - **Exp67 telemetry gap:** `exp67_single_coordinate_decision_steering/results/step_metrics.jsonl` is empty even though the final summary is complete; treat optimizer-trace conclusions as unavailable for that experiment.
 - **Diagnostic-only result:** `benchmark_failure_tree` is complete as a benchmark diagnostic (38.3% accuracy, suppression delta 0.0 pp) but has no behavioral intervention metrics and is not leaderboard-graded.
+- **Scaled-corpus QC:** `policy_train_scaled`/`policy_eval_scaled` schema and counterfactual pairing audit clean (1600 train/120 heldout, 800 complete train pairs, 0 schema errors). However, 218 shared user-prompt 8-grams mean the split is compositional/template-disjoint rather than entity-level; scaled n=120 metrics require fresh baselines and must not be compared absolutely with legacy n=40. Capability scaled corpus has target-complete 5280 rows and exact+13-gram context decontamination.
 - Known missing/queued experiments remain tracked in `research/RESULT_INTEGRITY_REPORT.json`; exp111/120–128/131/133/149/150 are queues; exp151 is intentionally staged outside autoqueue, not completed negative results.
