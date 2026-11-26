@@ -104,6 +104,12 @@ def main():
   diagnosis='precision_amplification' if fp < max(0.01,bf*0.1) else 'algebra_or_implementation_mismatch'
   rec={'arm':arm,'variants':variants,'diagnosis':diagnosis,'checkpoint_step':int(state.get('step',0)),'smoke_test':smoke(),'wall_sec':round(time.time()-t0,2)}
   append(rec);print(f'  {arm}: bf16={bf} fp32={fp} diagnosis={diagnosis}',flush=True)
+ if missing:
+  # A dependency-missing run is a failed diagnostic, not a completed null result:
+  # valid JSON here would permanently satisfy the autoqueue completion scan.
+  crash_dir=RESULTS_DIR/'crashes';crash_dir.mkdir(parents=True,exist_ok=True)
+  (crash_dir/'dependency_missing.log').write_text('missing exp154 final_adapter.pt dependency arms: '+','.join(missing)+'\n')
+  raise RuntimeError('missing exp154 dependency checkpoints: '+','.join(missing))
  arms=[json.loads(x) for x in ARM_JSONL.read_text().splitlines() if x.strip()] if ARM_JSONL.exists() else []
  write_json(RESULTS_DIR/'olmoe_export_precision_summary.json',{'experiment':'exp159_olmoe_export_precision_diagnosis','question':'Is exp157 export mismatch algebraic or bf16 numerical amplification?','missing_dependency_arms':missing,'arms':arms,'wall_sec':round(time.time()-t0,2),'smoke_test':smoke()})
  if smoke():shutil.rmtree(ckpt_base,ignore_errors=True)
