@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
 sys.path.insert(0, str(ROOT / "scripts"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from methodical_slider import SharedAlphaSliderBank, head_parameter_count, ordered_fork_rows, probe_layer27_geometry, train_plain_slider  # noqa: E402
@@ -119,7 +120,7 @@ def main() -> None:
 
     results["wall_sec"] = round(time.time() - t0, 2)
     path = out_dir / "shared_alpha_head_count_ablation_summary.json"
-    path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    write_json(path, results)
     print(f"[Exp 92 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

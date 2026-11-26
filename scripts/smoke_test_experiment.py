@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 """Fast pre-push smoke test for experiment scripts.
 
-Catches the class of runtime bug that compile-check misses: tokenizer encoding slices
-being inserted into sets, plus import/argparse/model-path/runtime failures in a tiny
-CPU execution. HALO_SMOKE_TEST=1 makes the shared heldout evaluator use 2 rows and
-8 generated tokens; this harness additionally clamps common loop/batch arguments.
+Catches runtime bugs that compile-check misses: tokenizer encoding slices inserted
+into sets, post-compute `.item()` misuse on Python floats, import/argparse/model-path
+failures, and invalid/missing result serialization. It executes the complete script
+control flow end-to-end on CPU with tiny loop counts/dimensions, then validates every
+result artifact before restoring the pre-smoke results tree.
 """
 from __future__ import annotations
 
 import argparse
+import ast
+import hashlib
+import json
 import os
 import py_compile
 import re
@@ -32,6 +36,62 @@ TINY_VALUES = {
     "--n-pairs": "2",
     "--alphas": ["0.1"],
 }
+
+
+def float_item_hazards(path: Path) -> list[str]:
+    """AST-exact detection of `.item()` called on the result of float(...)."""
+    text = path.read_text(encoding="utf-8")
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return []
+    problems = []
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Attribute)
+            and node.attr == "item"
+            and isinstance(node.value, ast.Call)
+            and isinstance(node.value.func, ast.Name)
+            and node.value.func.id == "float"
+        ):
+            problems.append(f"line {node.lineno}: .item() called on float(...) result")
+    return problems
+
+
+def artifact_fingerprints(results_dir: Path) -> dict[str, tuple[int, int, str]]:
+    if not results_dir.exists():
+        return {}
+    out = {}
+    for path in sorted(list(results_dir.rglob("*.json")) + list(results_dir.rglob("*.jsonl"))):
+        data = path.read_bytes()
+        stat = path.stat()
+        out[str(path.relative_to(results_dir))] = (stat.st_mtime_ns, len(data), hashlib.sha256(data).hexdigest())
+    return out
+
+
+def validate_result_artifacts(results_dir: Path, before: dict[str, tuple[int, int, str]]) -> list[str]:
+    """Parse every result artifact produced during the end-to-end smoke run."""
+    problems = []
+    json_files = sorted(results_dir.rglob("*.json")) if results_dir.exists() else []
+    jsonl_files = sorted(results_dir.rglob("*.jsonl")) if results_dir.exists() else []
+    after = artifact_fingerprints(results_dir)
+    produced_json = [name for name in after if name.endswith(".json") and (name not in before or after[name] != before[name])]
+    if not produced_json:
+        problems.append("no new/updated JSON summary artifact written; end-to-end serialization path was not proven")
+    for path in json_files:
+        try:
+            json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            problems.append(f"{path.name}: invalid JSON after write: {type(exc).__name__}: {exc}")
+    for path in jsonl_files:
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+            for line_no, line in enumerate(lines, 1):
+                if line.strip():
+                    json.loads(line)
+        except Exception as exc:
+            problems.append(f"{path.name}: invalid JSONL: {type(exc).__name__}: {exc}")
+    return problems
 
 
 def scan_source(path: Path) -> list[str]:
@@ -82,7 +142,7 @@ def main() -> None:
         raise SystemExit(f"missing script: {script}")
 
     print(f"[smoke] scanning {script}", flush=True)
-    problems = scan_source(script)
+    problems = scan_source(script) + float_item_hazards(script)
     if problems:
         raise SystemExit("static runtime hazards:\n" + "\n".join(problems))
     py_compile.compile(str(script), doraise=True)
@@ -104,6 +164,7 @@ def main() -> None:
     had_results = results_dir.exists()
     if had_results:
         shutil.copytree(results_dir, backup_dir / "results", dirs_exist_ok=True)
+    before_artifacts = artifact_fingerprints(results_dir)
     t0 = time.time()
     try:
         proc = subprocess.run(
@@ -114,6 +175,7 @@ def main() -> None:
             timeout=args.timeout,
             env=env,
         )
+        artifact_problems = validate_result_artifacts(results_dir, before_artifacts)
     finally:
         # Smoke runs use truncated generations and must never create queue-satisfying
         # experiment results. Restore the exact pre-run results tree.
@@ -124,6 +186,9 @@ def main() -> None:
         shutil.rmtree(backup_dir, ignore_errors=True)
     elapsed = time.time() - t0
     tail = proc.stdout[-6000:]
+    if artifact_problems:
+        print(tail, flush=True)
+        raise SystemExit("smoke artifact validation failed:\n" + "\n".join(artifact_problems))
     if proc.returncode != 0:
         print(tail, flush=True)
         raise SystemExit(f"smoke execution failed with exit {proc.returncode}")

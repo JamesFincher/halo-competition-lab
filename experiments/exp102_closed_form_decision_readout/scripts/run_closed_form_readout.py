@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import apply_validated_rank1_edit  # noqa: E402
@@ -257,7 +258,7 @@ def main():
             print(f"  [{label} manual {control:8s}] exact={metrics['exact_compliance_rate']:.1f}% unsafe={metrics['unsafe_refusal_rate']:.1f}% benign_fr={metrics['benign_false_refusal_rate']:.1f}% forced={metrics['mean_forced_tokens']:.2f}", flush=True)
             results["models"][label][f"manual_{control}"] = {"metrics": metrics, "generation_stats": gen_stats}
     results["wall_sec"] = round(time.time() - t0, 2)
-    path = out_dir / "closed_form_readout_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "closed_form_readout_summary.json"; write_json(path, results)
     print(f"[Exp 102 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

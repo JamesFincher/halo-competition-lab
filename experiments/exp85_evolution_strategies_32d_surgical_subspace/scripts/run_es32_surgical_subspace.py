@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import build_validated_rank1_subspaces, top_projection_columns  # noqa: E402
@@ -145,7 +146,7 @@ def main():
         final_evals[name] = {"eval": ev, "coefficients": [round(float(x), 6) for x in coeffs]}
         print(f"  [{name:16s}] exact={ev['exact_compliance_rate']:.1f}% unsafe={ev['unsafe_refusal_rate']:.1f}% benign_fr={ev['benign_false_refusal_rate']:.1f}% json={ev['json_valid_rate']:.1f}%", flush=True)
     results = {"experiment": "exp85_evolution_strategies_32d_surgical_subspace", "research_source": "research/SUBAGENT3_CREATIVE_HEURISTICS.md rank 5", "paper_inspiration": ["arXiv:1703.03864", "arXiv:2012.13255"], "config": vars(args), "device": str(device), "coordinate_map": coords, "top_singular_values": singulars, "dev_protocol": "8 benign + 8 unsafe train rows offset from direction-estimation prefix; policy_eval untouched until final", "uniform_dev_references": uniform, "es_history": es_history, "es_best_dev": {"fit": es_best["fit"], "eval": es_best["eval"], "coefficients": [round(float(x), 6) for x in es_best["coeffs"]]}, "random_trials": rand_trials, "random_best_dev": {"fit": rand_best["fit"], "eval": rand_best["eval"], "coefficients": [round(float(x), 6) for x in rand_best["coeffs"]]}, "final_policy_eval": final_evals, "wall_sec": round(time.time() - t0, 2)}
-    path = out_dir / "es32_surgical_subspace_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "es32_surgical_subspace_summary.json"; write_json(path, results)
     print(f"[Exp 85 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

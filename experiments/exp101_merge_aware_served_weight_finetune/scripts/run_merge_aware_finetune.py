@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import apply_validated_rank1_edit  # noqa: E402
@@ -182,7 +183,7 @@ def main():
         for arm, served, mask_mode in arm_specs:
             print(f"[Run] {arm}", flush=True)
             trained, registry, stats = train_lora_arm(arm, edited, ref_model, tokenizer, stream, device, mask_mode, served, args.steps, args.batch_size, args.lr, args.beta, args.seed, args.rank)
-            for rec in stats["trace"]: log.write(json.dumps(rec) + "\n")
+            for rec in stats["trace"]: log.write(dumps_safe(rec) + "\n")
             log.flush()
             hook_eval = base_rl.evaluate_heldout(trained, tokenizer, eval_rows, device)
             exported, export_max_err = export_merged_rounded(edited, trained, registry)
@@ -193,7 +194,7 @@ def main():
             del trained, exported
             if device.type == "cuda": torch.cuda.empty_cache()
     results["wall_sec"] = round(time.time() - t0, 2)
-    path = out_dir / "merge_aware_finetune_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "merge_aware_finetune_summary.json"; write_json(path, results)
     print(f"[Exp 101 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

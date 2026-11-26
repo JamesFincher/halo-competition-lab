@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import build_validated_rank1_subspaces, top_projection_columns  # noqa: E402
@@ -139,13 +140,13 @@ def main():
         for arm in ["oscillating_decay", "constant_positive_control", "constant_negative_control"]:
             print(f"[Run] {arm}", flush=True)
             trained, stats = train_polarity_arm(arm, sft, ref_model, tokenizer, prompt_stream, device, base_weights, subspaces, selected, eval_rows, args.steps, args.group_size, args.lr, args.beta, args.seed)
-            for rec in stats["trace"]: log.write(json.dumps(rec) + "\n")
+            for rec in stats["trace"]: log.write(dumps_safe(rec) + "\n")
             log.flush()
             results["arms"][arm] = {"train_stats": stats}
             del trained
             if device.type == "cuda": torch.cuda.empty_cache()
     results["wall_sec"] = round(time.time() - t0, 2)
-    path = out_dir / "oscillating_polarity_cycling_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "oscillating_polarity_cycling_summary.json"; write_json(path, results)
     print(f"[Exp 86 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp57_halo_native_targeted_lora/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 import run_halo_native_targeted_lora as halo_lora  # noqa: E402
@@ -134,7 +135,7 @@ def train_rotation_arm(arm_name, edited, ref_model, tokenizer, prompt_stream, de
                 restored_now += int(did); max_skew_norm = max(max_skew_norm, norm)
         total_restorations += restored_now
         rec_out = {"arm": arm_name, "step": step, "mean_reward": round(sum(all_rewards) / max(len(all_rewards), 1), 4), "active_groups": len(groups), "dead_groups": 2 - len(groups), "mean_abs_kl": round(sum(kls) / max(len(kls), 1), 5) if kls else 0.0, "loss": round(loss_val, 5), "grad_norm": round(grad_norm, 5), "restorations": restored_now, "max_postupdate_skew_spectral_norm": round(max_skew_norm, 5)}
-        trace.append(rec_out); log.write(json.dumps(rec_out) + "\n"); log.flush()
+        trace.append(rec_out); log.write(dumps_safe(rec_out) + "\n"); log.flush()
         print(f"  [{arm_name}] step {step:02d}/{steps} | reward={rec_out['mean_reward']:.3f} | active={len(groups)}/2 dead={rec_out['dead_groups']} | restore={restored_now} | kl={rec_out['mean_abs_kl']:.4f}", flush=True)
     with torch.no_grad():
         sv_drifts = []
@@ -191,7 +192,7 @@ def main():
         del model
         if device.type == "cuda": torch.cuda.empty_cache()
     results["wall_sec"] = round(time.time() - t0, 2)
-    path = out_dir / "drift_triggered_rotations_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "drift_triggered_rotations_summary.json"; write_json(path, results)
     print(f"[Exp 103 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

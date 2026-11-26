@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import apply_validated_rank1_edit  # noqa: E402
@@ -110,7 +111,7 @@ def main():
     conclusion = "STRUCTURALLY_DEGENERATE_FOR_RANK1_EDITS: same-state discrepancy spectra are target-direction-dominated; H2 needs a multi-direction operator or output-trajectory collateral measurement before adaptive repair can be meaningful." if max_collateral_rank == 0 or max_collateral_energy < 0.01 else "MULTI_DIRECTIONAL_COLLATERAL_PRESENT: H2 repair audit is meaningful."
     print(f"  [conclusion] {conclusion}", flush=True)
     results.update({"exp1_operator": {"layers": exp1_layers, "edit_info": exp1_info, "eval": exp1_eval, "audit": audits1}, "validated_operator": {"edit_info": val_info, "eval": val_eval, "audit": auditv}, "max_non_target_collateral_rank": max_collateral_rank, "max_non_target_collateral_energy_top8": max_collateral_energy, "structural_conclusion": conclusion, "wall_sec": round(time.time() - t0, 2)})
-    path = out_dir / "operator_discrepancy_rank_audit.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "operator_discrepancy_rank_audit.json"; write_json(path, results)
     print(f"[Exp 122 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

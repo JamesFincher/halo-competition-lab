@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/s
 sys.path.insert(0, str(ROOT / "experiments/whitened_subspace_rfm_edit/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
 sys.path.insert(0, str(ROOT / "scripts"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from run_whitened_subspace_edit import apply_rank_k_subspace_edit  # noqa: E402
@@ -125,7 +126,7 @@ def main() -> None:
 
     results["wall_sec"] = round(time.time() - t0, 2)
     path = out_dir / "validated_edit_layer_allocation_summary.json"
-    path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    write_json(path, results)
     print(f"[Exp 99 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

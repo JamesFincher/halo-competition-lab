@@ -15,8 +15,10 @@ from pathlib import Path
 import torch
 
 ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / "experiments/common"))
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 
@@ -151,7 +153,7 @@ def orthogonalize(v, basis): return unit(v - torch.dot(v, unit(basis)) * unit(ba
 
 def eval_steering(model, tokenizer, eval_rows, device, vectors_by_layer):
     handles = []
-    for li, vec in vectors_by_layer.items(): handles.append(vec_rl.attach_vector_hook(model, li, vec))
+    for li, vec in vectors_by_layer.items(): handles.append(model.model.layers[li].register_forward_hook(vec_rl.steering_hook(vec)))
     try: return base_rl.evaluate_heldout(model, tokenizer, eval_rows, device)
     finally:
         for h in handles: h.remove()
@@ -230,7 +232,7 @@ def main():
         ev = steering_evals[name]
         print(f"  [{name:34s}] exact={ev['exact_compliance_rate']:.1f}% unsafe={ev['unsafe_refusal_rate']:.1f}% benign_fr={ev['benign_false_refusal_rate']:.1f}% json={ev['json_valid_rate']:.1f}%", flush=True)
     results = {"experiment": "exp87_multiperspective_abstention_factorization", "research_source": "research/HYPOTHESES.md H15", "paper_inspiration": ["arXiv:2306.11681", "arXiv:2410.12405"], "config": vars(args), "device": str(device), "construct_validity_note": "Counterfactual harmless controls are lexical/semantic approximations constrained by the existing 3-policy schema; ambiguity prompts are measurement-only because the schema has no unknown-tool refusal code.", "n_counterfactual_pairs": len(pairs), "n_behavior_margin_pairs": margin_n, "counterfactual_policy_codes": [code for _u, _h, code in pairs], "layer_metrics": layer_metrics, "steering_layer": li_use, "steering_evals": steering_evals, "wall_sec": round(time.time() - t0, 2)}
-    path = out_dir / "abstention_factorization_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "abstention_factorization_summary.json"; write_json(path, results)
     print(f"[Exp 87 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

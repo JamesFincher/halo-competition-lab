@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp57_halo_native_targeted_lora/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 import run_halo_native_targeted_lora as halo_lora  # noqa: E402
@@ -144,7 +145,7 @@ def train_kira_arm(arm_name, edited, ref_model, tokenizer, prompt_stream, device
             grad_norm = float(torch.nn.utils.clip_grad_norm_(params, 1.0).item()); opt.step(); loss_val = float(loss.detach().item())
         gs = gate_snapshot(registry)
         rec = {"arm": arm_name, "step": step, "mean_reward": round(sum(all_rewards) / max(len(all_rewards), 1), 4), "active_groups": len(groups), "dead_groups": 2 - len(groups), "mean_abs_kl": round(sum(kls) / max(len(kls), 1), 5) if kls else 0.0, "loss": round(loss_val, 5), "grad_norm": round(grad_norm, 5), **gs}
-        trace.append(rec); log.write(json.dumps(rec) + "\n"); log.flush()
+        trace.append(rec); log.write(dumps_safe(rec) + "\n"); log.flush()
         print(f"  [{arm_name}] step {step:02d}/{steps} | reward={rec['mean_reward']:.3f} | active={len(groups)}/2 dead={rec['dead_groups']} | gate={rec['mean_gate']:.2f} | kl={rec['mean_abs_kl']:.4f}", flush=True)
     stats = {"scope": scope, "mode": mode, "kira_rank": rank, "lattice_levels": levels, "n_lanes": len(registry), "trainable_params": sum(p.numel() for p in params), "adapter_params": sum(p.numel() for p in adapter_params), "shared_gate_params": sum(p.numel() for p in gate_params), "final_gate_stats": gate_snapshot(registry), "train_wall_sec": round(time.perf_counter() - t0, 2), "trace": trace}
     model.eval(); return model, stats
@@ -215,7 +216,7 @@ def main():
         del model
         if device.type == "cuda": torch.cuda.empty_cache()
     results["wall_sec"] = round(time.time() - t0, 2)
-    path = out_dir / "input_gated_kronecker_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "input_gated_kronecker_summary.json"; write_json(path, results)
     print(f"[Exp 123 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

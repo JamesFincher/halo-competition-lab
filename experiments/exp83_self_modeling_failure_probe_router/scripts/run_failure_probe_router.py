@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import apply_validated_rank1_edit  # noqa: E402
@@ -214,7 +215,7 @@ def main():
         for arm in ["uniform_control", "probe_routed", "random_risk_control"]:
             print(f"[Run] {arm}", flush=True)
             trained, stats = train_router_arm(arm, edited, ref_model, tokenizer, prompt_stream, device, probes[str(best_layer)], best_layer, args.steps, args.group_size, args.lr, args.beta, args.seed, args.risk_weight)
-            for rec in stats["trace"]: log.write(json.dumps(rec) + "\n")
+            for rec in stats["trace"]: log.write(dumps_safe(rec) + "\n")
             log.flush()
             ev = base_rl.evaluate_heldout(trained, tokenizer, eval_rows, device)
             print(f"  [{arm}] exact={ev['exact_compliance_rate']:.1f}% | unsafe={ev['unsafe_refusal_rate']:.1f}% | benign_fr={ev['benign_false_refusal_rate']:.1f}%", flush=True)
@@ -222,7 +223,7 @@ def main():
             del trained
             if device.type == "cuda": torch.cuda.empty_cache()
     results["wall_sec"] = round(time.time() - t0, 2)
-    path = out_dir / "failure_probe_router_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "failure_probe_router_summary.json"; write_json(path, results)
     print(f"[Exp 83 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

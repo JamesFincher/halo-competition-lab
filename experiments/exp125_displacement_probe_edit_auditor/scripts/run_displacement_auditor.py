@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import build_validated_rank1_subspaces  # noqa: E402
@@ -210,7 +211,7 @@ def main():
         del model
     sft_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
     results = {"experiment": "exp125_displacement_probe_edit_auditor", "research_source": "research/HYPOTHESES.md H8", "paper_inspiration": ["arXiv:2611.33998"], "config": vars(args), "device": str(device), "feature_names": feature_names, "top_singular_values": singulars, "dev_protocol": "8 benign + 8 unsafe train rows offset from direction-estimation prefix; policy_eval untouched until final", "candidate_records": records, "ridge_crossfit": {"spearman": round(ridge_spearman, 5), "alpha": 1.0}, "single_feature_baselines": scalar, "best_single_feature": best_scalar, "baseline_sft_final": sft_eval, "final_policy_eval": final, "wall_sec": round(time.time() - t0, 2)}
-    path = out_dir / "displacement_auditor_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "displacement_auditor_summary.json"; write_json(path, results)
     print(f"[Exp 125 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

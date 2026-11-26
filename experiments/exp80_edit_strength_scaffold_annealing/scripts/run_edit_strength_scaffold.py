@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import build_validated_rank1_subspaces, top_projection_columns  # noqa: E402
@@ -145,7 +146,7 @@ def main():
         for arm in ["annealed_scaffold", "fixed_strength", "immediate_removal", "rl_only"]:
             print(f"[Run] {arm}", flush=True)
             trained, stats, eval_zero, eval_current = train_arm(arm, sft, ref_model, tokenizer, prompt_stream, device, base_weights, subspaces, selected, args.steps, args.group_size, args.lr, args.beta, args.seed, eval_rows)
-            for rec in stats["trace"]: log.write(json.dumps(rec) + "\n")
+            for rec in stats["trace"]: log.write(dumps_safe(rec) + "\n")
             log.flush()
             print(f"  [{arm} final lambda0] exact={eval_zero['exact_compliance_rate']:.1f}% unsafe={eval_zero['unsafe_refusal_rate']:.1f}% benign_fr={eval_zero['benign_false_refusal_rate']:.1f}%", flush=True)
             print(f"  [{arm} final current ] exact={eval_current['exact_compliance_rate']:.1f}% unsafe={eval_current['unsafe_refusal_rate']:.1f}% benign_fr={eval_current['benign_false_refusal_rate']:.1f}%", flush=True)
@@ -153,7 +154,7 @@ def main():
             del trained
             if device.type == "cuda": torch.cuda.empty_cache()
     results["wall_sec"] = round(time.time() - t0, 2)
-    path = out_dir / "edit_strength_scaffold_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "edit_strength_scaffold_summary.json"; write_json(path, results)
     print(f"[Exp 80 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 

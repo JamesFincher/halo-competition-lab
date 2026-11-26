@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import apply_validated_rank1_edit  # noqa: E402
@@ -132,7 +133,7 @@ def main():
     validation_fit_key = f"rank1_extrapolation_t{validation_index}"
     for li in history:
         a = variants[actual_key][li].float(); b = variants[validation_fit_key][li].float()
-        cos_validation[str(li)] = round(float(torch.dot(a, b) / ((a.norm() * b.norm()) + 1e-12)).item(), 5)
+        cos_validation[str(li)] = round(float((torch.dot(a, b) / ((a.norm() * b.norm()) + 1e-12)).item()), 5)
     print("[Stage 2] Evaluating actual, persistence, and rank-1 extrapolated endpoints...", flush=True)
     evals = {}
     original = vector_values_at(history, validation_index)
@@ -145,8 +146,8 @@ def main():
     set_vectors(vectors, original)
     results = {"experiment": "exp82_rank1_rl_trajectory_extrapolation", "research_source": "research/SUBAGENT1_FRONTIER_RL_INTERNALS.md rank 10", "paper_inspiration": ["arXiv:2605.21468", "arXiv:2611.10866"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "baseline_sft": sft_eval, "anchored_edit_only": edit_eval, "training_trace": trace, "rank1_fit": fit_meta, "step8_validation_cosine_by_layer": cos_validation, "endpoint_evals": evals, "wall_sec": round(time.time() - t0, 2)}
     with (out_dir / "step_metrics.jsonl").open("w", encoding="utf-8") as log:
-        for rec in trace: log.write(json.dumps(rec) + "\n")
-    path = out_dir / "rank1_trajectory_extrapolation_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+        for rec in trace: log.write(dumps_safe(rec) + "\n")
+    path = out_dir / "rank1_trajectory_extrapolation_summary.json"; write_json(path, results)
     print(f"[Exp 82 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 
