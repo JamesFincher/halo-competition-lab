@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experiment 104: Drift-Triggered Orthogonal Rotation Lanes.
+"""Experiment 120: Drift-Triggered Orthogonal Rotation Lanes.
 
 Implements HYPOTHESES H7. Output-side block-skew lanes rotate complementary
 projection matrices as W_eff = R0(I+S)W. S is skew-symmetric and trainable; when
@@ -156,8 +156,8 @@ def main():
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args(); args.steps = min(args.steps, 10)
     t0 = time.time(); device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    out_dir = ROOT / "experiments/exp104_drift_triggered_orthogonal_lanes/results"; out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[Exp 104] Drift-Triggered Orthogonal Rotation Lanes on {device}", flush=True)
+    out_dir = ROOT / "experiments/exp120_drift_triggered_orthogonal_lanes/results"; out_dir.mkdir(parents=True, exist_ok=True)
+    print(f"[Exp 120] Drift-Triggered Orthogonal Rotation Lanes on {device}", flush=True)
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl"); eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
     prompt_stream = vec_rl.make_prompt_stream(train_rows)
     sft, tokenizer = vec_rl.load_sft(device, torch.float32)
@@ -166,7 +166,7 @@ def main():
     ref_model = copy.deepcopy(edited).to(device).eval(); vec_rl.freeze_weights(ref_model)
     sft_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device); edit_eval = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device)
     print(f"  [SFT] exact={sft_eval['exact_compliance_rate']:.1f}% | [post-edit] exact={edit_eval['exact_compliance_rate']:.1f}% unsafe={edit_eval['unsafe_refusal_rate']:.1f}% benign_fr={edit_eval['benign_false_refusal_rate']:.1f}%", flush=True)
-    results = {"experiment": "exp104_drift_triggered_orthogonal_lanes", "research_source": "research/HYPOTHESES.md H7", "paper_inspiration": ["arXiv:2611.33589"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "complement_layers": COMPLEMENT_LAYERS, "baseline_sft": sft_eval, "post_edit_anchor": edit_eval, "arms": {}}
+    results = {"experiment": "exp120_drift_triggered_orthogonal_lanes", "research_source": "research/HYPOTHESES.md H7", "paper_inspiration": ["arXiv:2611.33589"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "complement_layers": COMPLEMENT_LAYERS, "baseline_sft": sft_eval, "post_edit_anchor": edit_eval, "arms": {}}
     arms = [
         ("rotation_all_trigger_tau0.10", "all", 0.10, 0.0),
         ("rotation_all_no_restore", "all", 999.0, 0.0),
