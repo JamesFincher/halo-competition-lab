@@ -8,7 +8,17 @@ reports raw summed-logprob accuracy plus token- and byte-normalized accuracy.
 from __future__ import annotations
 
 import os
+import random
 import torch
+
+
+def deterministic_subset(rows, n: int, seed: int = 20261126):
+    """Fixed random subset shared by every arm, avoiding dataset-order/subject bias."""
+    if n >= len(rows):
+        return rows
+    indices = list(range(len(rows)))
+    random.Random(seed).shuffle(indices)
+    return rows.select(indices[:n])
 
 
 @torch.no_grad()
@@ -118,6 +128,7 @@ def score_mc_continuation(model, tok, device, items) -> dict:
         "token_norm_acc_wilson95": wilson95(correct_token, len(items)),
         "byte_norm_acc_wilson95": wilson95(correct_byte, len(items)),
         "n": len(items),
+        "subset_method": "deterministic_random_subset_seed_20261126",
         "rows": rows,
         "details": details,
     }
@@ -131,7 +142,7 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
 
     res = {}
     try:
-        rows = load_dataset("cais/mmlu", "all", split=f"test[:{n}]")
+        rows = deterministic_subset(load_dataset("cais/mmlu", "all", split="test"), n)
         items = [{"context": r["question"], "choices": list(r["choices"]), "answer": r["choices"][r["answer"]]} for r in rows]
         out = score_mc_continuation(model, tok, device, items)
         if not include_details:
@@ -144,7 +155,7 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
         res["mmlu"] = {"error": f"{type(exc).__name__}: {exc}"}
         print(f"  continuation MMLU failed: {str(exc)[:80]}", flush=True)
     try:
-        rows = load_dataset("allenai/ai2_arc", "ARC-Easy", split=f"test[:{n}]")
+        rows = deterministic_subset(load_dataset("allenai/ai2_arc", "ARC-Easy", split="test"), n)
         items = []
         for r in rows:
             choices = list(r["choices"]["text"])
@@ -161,7 +172,7 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
         res["arc_easy"] = {"error": f"{type(exc).__name__}: {exc}"}
         print(f"  continuation ARC failed: {str(exc)[:80]}", flush=True)
     try:
-        rows = load_dataset("Rowan/hellaswag", split=f"validation[:{n}]")
+        rows = deterministic_subset(load_dataset("Rowan/hellaswag", split="validation"), n)
         items = [{"context": r["ctx"], "choices": list(r["endings"]), "answer": r["endings"][int(r["label"])]} for r in rows]
         out = score_mc_continuation(model, tok, device, items)
         if not include_details:
@@ -198,7 +209,7 @@ def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: boo
         print(f"  transfer {name} sum/token/byte: {out['sum_acc']}/{out['token_norm_acc']}/{out['byte_norm_acc']}%", flush=True)
 
     try:
-        rows = load_dataset("allenai/ai2_arc", "ARC-Challenge", split=f"test[:{n}]")
+        rows = deterministic_subset(load_dataset("allenai/ai2_arc", "ARC-Challenge", split="test"), n)
         items = []
         for r in rows:
             choices = list(r["choices"]["text"])
@@ -209,7 +220,7 @@ def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: boo
         res["arc_challenge"] = {"error": f"{type(exc).__name__}: {exc}"}
         print(f"  transfer ARC-Challenge failed: {str(exc)[:80]}", flush=True)
     try:
-        rows = load_dataset("allenai/openbookqa", "main", split=f"test[:{n}]")
+        rows = deterministic_subset(load_dataset("allenai/openbookqa", "main", split="test"), n)
         items = []
         for r in rows:
             choices = list(r["choices"]["text"])
@@ -220,7 +231,7 @@ def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: boo
         res["openbookqa"] = {"error": f"{type(exc).__name__}: {exc}"}
         print(f"  transfer OpenBookQA failed: {str(exc)[:80]}", flush=True)
     try:
-        rows = load_dataset("allenai/winogrande", "winogrande_xl", split=f"validation[:{n}]")
+        rows = deterministic_subset(load_dataset("allenai/winogrande", "winogrande_xl", split="validation"), n)
         items = [
             {"context": r["sentence"], "choices": [r["option1"], r["option2"]], "answer": r["option1"] if str(r["answer"]) == "1" else r["option2"]}
             for r in rows
@@ -230,7 +241,7 @@ def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: boo
         res["winogrande"] = {"error": f"{type(exc).__name__}: {exc}"}
         print(f"  transfer Winogrande failed: {str(exc)[:80]}", flush=True)
     try:
-        rows = load_dataset("truthfulqa/truthful_qa", "multiple_choice", split=f"validation[:{n}]")
+        rows = deterministic_subset(load_dataset("truthfulqa/truthful_qa", "multiple_choice", split="validation"), n)
         items = []
         for r in rows:
             choices = list(r["mc1_targets"]["choices"])
