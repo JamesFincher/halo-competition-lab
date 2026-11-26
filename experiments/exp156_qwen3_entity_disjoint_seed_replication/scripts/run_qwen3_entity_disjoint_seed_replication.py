@@ -450,7 +450,7 @@ def main() -> None:
     parser.add_argument("--lora-dropout", type=float, default=0.05)
     parser.add_argument("--warmup", type=int, default=20)
     parser.add_argument("--checkpoint-interval", type=int, default=100)
-    parser.add_argument("--continuation-n", type=int, default=50)
+    parser.add_argument("--continuation-n", type=int, default=100)
     parser.add_argument("--max-new-tokens", type=int, default=72)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
