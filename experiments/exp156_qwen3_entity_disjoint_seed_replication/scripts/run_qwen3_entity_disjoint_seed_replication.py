@@ -49,7 +49,7 @@ sys.path.insert(0, str(ROOT))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
 from experiments.common.validated_edit import apply_validated_rank1_edit  # noqa: E402
-from scripts.continuation_benchmark import run_continuation_benchmark  # noqa: E402
+from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
 MODEL_NAME = "Qwen/Qwen3-4B-Instruct-2507"
 EXP_DIR = ROOT / "experiments/exp156_qwen3_entity_disjoint_seed_replication"
@@ -258,7 +258,7 @@ def train_lora(
 
 
 @torch.no_grad()
-def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: torch.device, max_new_tokens: int) -> dict:
+def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: torch.device, max_new_tokens: int, batch_size: int = 4) -> dict:
     """Aggregate behavior metrics plus hierarchical error and per-tool decomposition."""
     if smoke():
         eval_rows = eval_rows[:2]
@@ -272,17 +272,29 @@ def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: 
     per_tool = {}
     action_confusion = {}
 
-    for row in eval_rows:
-        prompt = base_rl.build_prompt(tokenizer, row["messages"])
-        enc = tokenizer(prompt, return_tensors="pt").to(device)
-        out_ids = model.generate(
-            **enc,
-            max_new_tokens=max_new_tokens,
-            do_sample=False,
-            pad_token_id=tokenizer.eos_token_id,
-            use_cache=True,
-        )
-        gen = tokenizer.decode(out_ids[0][enc["input_ids"].shape[1] :], skip_special_tokens=True)
+    prompts=[base_rl.build_prompt(tokenizer, row["messages"]) for row in eval_rows]
+    generations=[]
+    old_padding_side=tokenizer.padding_side
+    tokenizer.padding_side="left"
+    pad_id=tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id
+    try:
+        for start in range(0,len(prompts),batch_size):
+            chunk=prompts[start:start+batch_size]
+            enc=tokenizer(chunk,return_tensors="pt",padding=True).to(device)
+            out_ids=model.generate(
+                **enc,
+                max_new_tokens=max_new_tokens,
+                do_sample=False,
+                pad_token_id=pad_id,
+                use_cache=True,
+            )
+            prompt_width=int(enc["input_ids"].shape[1])
+            for ids in out_ids:
+                generations.append(tokenizer.decode(ids[prompt_width:],skip_special_tokens=True))
+    finally:
+        tokenizer.padding_side=old_padding_side
+
+    for row,gen in zip(eval_rows,generations):
         reward, info = base_rl.score_completion(gen, row["target"])
         obj = base_rl.parse_json_object(gen)
         target = row["target"]
@@ -360,6 +372,7 @@ def endpoint(model, tokenizer, original_eval: list[dict], v2_eval: list[dict], d
         "behavior_original40_bridge": base_rl.evaluate_heldout(model, tokenizer, original_eval, device, max_new_tokens=max_new_tokens, use_cache=True,batch_size=4),
         "behavior_scaled120": evaluate_behavior_detailed(model, tokenizer, v2_eval, device, max_new_tokens=max_new_tokens),
         "continuation_benchmark": run_continuation_benchmark(model, tokenizer, device, continuation_n),
+        "transfer_benchmark": run_transfer_benchmark(model, tokenizer, device, max(2, continuation_n // 2)),
     }
 
 

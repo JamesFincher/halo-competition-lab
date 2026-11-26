@@ -1,0 +1,7 @@
+{
+  "exclusive_gpu": true,
+  "queue_priority": 78,
+  "model_size": "4B",
+  "estimated_peak_gb": 24,
+  "notes": "Staged conditional replay-source controls; activate only after exp164. Checkpoint-resumable."
+}
