@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 17:42 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
+Last updated: 2026-11-26 18:27 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
 
 ## Executive synthesis — current validated state
 
@@ -11,7 +11,7 @@ Last updated: 2026-11-26 17:42 UTC by the results-analysis subagent. This docume
 3. **Exp102 shows the true bottleneck is readout/decoding, not representation.** Hidden-state probes achieve 100% crossfit accuracy for action and tool, and forcing the probe-selected `policy_code` yields **95.0% exact / 100% unsafe / 0% benign-FR**. This is not a deployable weight-level intervention, but it proves the correct decision is internally represented while greedy generation fails to read it out.
 4. **The 80–82.5% ceiling is method-independent so far.** Sparse edits, GRPO/RL variants, vector RL, and H22 all cluster near the same ceiling. This points to data/model/eval saturation rather than a single-method failure.
 5. **Capability transfer at 135M is falsified for inserted-head objectives tested so far.** Cache-corrected full-text, answer-focused, answer-only, benchmark-format, contrastive-choice, and budget-scaled variants improve validation loss but produce no continuation-benchmark transfer; more capability training actively damages behavior (exact falls from **37.5% at 32 steps** to **20.0% at 512 steps** in Exp142).
-6. **The field has pivoted to data/model scale.** The next decisive experiments are Exp152 Qwen3-4B behavioral scale pivot, Exp153 OLMoE stage-zero profiling, and Exp154 OLMoE expert adapters. No result JSONs for these are present yet.
+6. **The field has pivoted to data/model scale.** The next decisive experiments are Exp152 Qwen3-4B behavioral scale pivot, Exp153 OLMoE stage-zero profiling, and Exp154 OLMoE expert adapters. Current frontier artifacts: Exp150 L20 seed replication: no result JSONs yet; Exp151 depth re-ablation: no result JSONs yet; Exp152 Qwen3-4B pivot: no result JSONs yet; Exp153 OLMoE stage-zero: no result JSONs yet; Exp154 OLMoE expert adapters: no result JSONs yet.
 
 ### Critical validity corrections
 
@@ -47,7 +47,7 @@ Exp80's RL-only arm reaches **80.0/93.3/10**, close to the sparse edit but with 
 
 ### D. Attention insertion — alive only after cache correction
 
-The original Exp42 scalar slider head was exactness-negative (**42.5/90/30**, alpha 0.0309). Exp96 showed sequential freeze-then-merge training beating joint multi-head training (**70/90/0** versus collapse). The cache artifact then invalidated pre-fix mechanistic interpretations. Cache-corrected Exp145/146 show L20 width64 at **72.5/90/0**, while L27 remains poor (**45/100/100**). Seed replication Exp150 and depth re-ablation Exp151 are pending; until they land, attention insertion is promising but not validated.
+The original Exp42 scalar slider head was exactness-negative (**42.5/90/30**, alpha 0.0309). Exp96 showed sequential freeze-then-merge training beating joint multi-head training (**70/90/0** versus collapse). The cache artifact then invalidated pre-fix mechanistic interpretations. Cache-corrected Exp145/146 show L20 width64 at **72.5/90/0**, while L27 remains poor (**45/100/100**). Replication status: Exp150 L20 seed replication: no result JSONs yet; Exp151 depth re-ablation: no result JSONs yet. Until they land, attention insertion is promising but not validated.
 
 ### E. Capability transfer — falsified at 135M
 
@@ -61,9 +61,9 @@ Routed width mixture (**25/96.7/100**), capability×behavior blend (**40/100/90*
 
 Exp102 compared ordinary greedy decoding with probe-forced policy decoding. Ordinary SFT is **55/100/90**. Its local “validated edit” arm is **65/90/0**, but this is not the canonical 16-columns/layer champion: the file edits **64 selected neurons per layer** at layers 29/28 (**73,728 weights**, 0.05481%) versus the canonical **16 per layer** (**18,432 weights**). Probe-forced policy decoding is **95/100/0** for both models. Majority and random forced-policy controls are catastrophic, so the result is not an artifact of forcing tokens per se. The implication is that the model often internally represents correct action/tool/policy decisions but fails to emit them through greedy readout. This reframes the next research question: weight-level methods may be hitting a decoder/readout ceiling rather than a representation ceiling, and Exp102 should not be read as a replication failure of the canonical sparse edit.
 
-### H. Large-model pivot — pending
+### H. Large-model pivot
 
-`research/LARGE_MODEL_FEASIBILITY.md` estimates Qwen3-4B LoRA experiments at roughly 15–30 minutes per arm and OLMoE stage-zero at 10–20 minutes after download on one H100. Exp152–154 are staged but have no result JSONs yet. These experiments test whether the 135M ceiling and capability-transfer falsification are small-model/data artifacts rather than universal constraints.
+`research/LARGE_MODEL_FEASIBILITY.md` estimates Qwen3-4B LoRA experiments at roughly 15–30 minutes per arm and OLMoE stage-zero at 10–20 minutes after download on one H100. Current large-model artifacts: Exp152 Qwen3-4B pivot: no result JSONs yet; Exp153 OLMoE stage-zero: no result JSONs yet; Exp154 OLMoE expert adapters: no result JSONs yet. These experiments test whether the 135M ceiling and capability-transfer falsification are small-model/data artifacts rather than universal constraints.
 
 The data-scale motivation is concrete: the legacy behavior corpus has only **160 train rows / 144 unique rows**, and `send_http` appears in only **2 rows**, while exact errors are dominated by tool/readout mistakes. The new scaled corpus has **1,600 train rows**, **800 counterfactual pairs**, **120 heldout rows**, zero schema errors, and zero counterfactual-pair violations; however it still shares **218 user-prompt 8-grams** across train/heldout, so it is compositional/template-disjoint rather than fully lexically disjoint. The scaled capability corpus has **5,280 rows** (MMLU 1,271, ARC-Easy 2,236, HellaSwag 1,773) in the Exp141 benchmark-direct format.
 
