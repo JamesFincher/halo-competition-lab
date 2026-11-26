@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T21:41:35+00:00",
+  "generated_at_utc": "2026-11-26T21:52:33+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1853,6 +1853,9 @@
     ],
     "exp164_qwen3_capability_replay_dose_curve": [
       "replay dose varies both capability exposure and behavior-data share at fixed total updates, which is the intended tradeoff curve; continuation gains on MMLU/ARC-Easy/HellaSwag remain partly in-domain, so use the held-out transfer battery for broad-capability interpretation"
+    ],
+    "exp165_qwen3_capability_replay_source_controls": [
+      "staged conditional source-control diagnostic: behavior-only anchors and the shuffled wrong-answer arm are interpretive references rather than deployment candidates; behavior-only-225 matches behavior-step count but not total optimizer updates, and answer rotation preserves answer distribution while actively training incorrect context-answer pairings"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
       "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"

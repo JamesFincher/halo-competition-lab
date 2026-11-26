@@ -45,6 +45,7 @@ SCORE_OVERRIDES: dict[str, dict[str, float]] = {
     "exp150_l20_cache_corrected_seed_replication": {"N": 3, "K": 8, "T": 6, "R": 1},
     "exp163_qwen3_behavior_data_scaling_curve": {"N": 7, "K": 9, "T": 7, "R": 6},
     "exp164_qwen3_capability_replay_dose_curve": {"N": 8, "K": 9, "T": 8, "R": 6},
+    "exp165_qwen3_capability_replay_source_controls": {"N": 8, "K": 8, "T": 7, "R": 6},
     "exp154_olmoe_benchmark_selective_expert_adapters": {"N": 7, "K": 8, "T": 7, "R": 6},
 }
 
@@ -141,6 +142,9 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     ],
     "exp164_qwen3_capability_replay_dose_curve": [
         "replay dose varies both capability exposure and behavior-data share at fixed total updates, which is the intended tradeoff curve; continuation gains on MMLU/ARC-Easy/HellaSwag remain partly in-domain, so use the held-out transfer battery for broad-capability interpretation"
+    ],
+    "exp165_qwen3_capability_replay_source_controls": [
+        "staged conditional source-control diagnostic: behavior-only anchors and the shuffled wrong-answer arm are interpretive references rather than deployment candidates; behavior-only-225 matches behavior-step count but not total optimizer updates, and answer rotation preserves answer distribution while actively training incorrect context-answer pairings"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
         "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"
@@ -295,6 +299,7 @@ EXPERIMENT_REFERENCE_LABELS: dict[str, set[str]] = {
     "exp141_benchmark_format_capability": {"lettered_answer_only_reference"},
     "exp144_sparse_edit_anchored_mlp_lora": {"vector_only_post_edit_lower_bound"},
     "exp102_closed_form_decision_readout": {"sft_manual_none", "validated_edit_manual_none", "sft_manual_majority", "validated_edit_manual_majority", "sft_manual_random", "validated_edit_manual_random"},
+    "exp165_qwen3_capability_replay_source_controls": {"behavior_only_300_steps", "behavior_only_225_steps", "shuffled_benchmark_replay_every4"},
 }
 
 
