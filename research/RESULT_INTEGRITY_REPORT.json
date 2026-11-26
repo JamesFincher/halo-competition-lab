@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T19:44:33+00:00",
+  "generated_at_utc": "2026-11-26T19:48:59+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1485,9 +1485,23 @@
       "counterfactual_pair_violations": 0,
       "schema_errors": 0,
       "template_disjoint": true,
+      "entity_disjoint": null,
       "shared_user_prompt_8grams": 218,
       "warnings": [
         "218 shared user-prompt 8-grams across train/heldout; split is template-disjoint/compositional, not entity-level or fully lexically disjoint",
+        "scaled heldout n=120 is a different distribution/size from canonical legacy n=40; do not compare absolute rates across versions without rebaselining"
+      ]
+    },
+    "scaled_behavior_corpus_v2": {
+      "train_rows": 1600,
+      "heldout_rows": 120,
+      "pair_count": 800,
+      "counterfactual_pair_violations": 0,
+      "schema_errors": 0,
+      "template_disjoint": true,
+      "entity_disjoint": true,
+      "shared_user_prompt_8grams": 0,
+      "warnings": [
         "scaled heldout n=120 is a different distribution/size from canonical legacy n=40; do not compare absolute rates across versions without rebaselining"
       ]
     },
@@ -1656,6 +1670,18 @@
     ],
     "exp150_l20_cache_corrected_seed_replication": [
       "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
+    ],
+    "exp152_qwen3_behavioral_scale_pivot": [
+      "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; treat results as v1-corpus evidence unless rerun or updated to the entity-disjoint v2 corpus"
+    ],
+    "exp153_olmoe_expert_stage_zero": [
+      "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
+    ],
+    "exp154_olmoe_benchmark_selective_expert_adapters": [
+      "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; treat behavior transfer as v1-corpus evidence unless updated to the entity-disjoint v2 corpus"
+    ],
+    "exp155_olmoe_expert_surface_controls": [
+      "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; control comparisons remain internally valid, but absolute heldout transfer is not entity-disjoint evidence"
     ],
     "exp52_pgs_credit_direction": [
       "DLA/unembed reference is excluded from technique scoring because it is not the PGS mechanism under test; PGS directions are nearly anti-aligned with DLA and perform near baseline or over-refusal"

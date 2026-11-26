@@ -133,6 +133,18 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "exp150_l20_cache_corrected_seed_replication": [
         "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
+    "exp152_qwen3_behavioral_scale_pivot": [
+        "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; treat results as v1-corpus evidence unless rerun or updated to the entity-disjoint v2 corpus"
+    ],
+    "exp153_olmoe_expert_stage_zero": [
+        "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
+    ],
+    "exp154_olmoe_benchmark_selective_expert_adapters": [
+        "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; treat behavior transfer as v1-corpus evidence unless updated to the entity-disjoint v2 corpus"
+    ],
+    "exp155_olmoe_expert_surface_controls": [
+        "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; control comparisons remain internally valid, but absolute heldout transfer is not entity-disjoint evidence"
+    ],
     "exp93_v1_seed_replication": [
         "seed replication is not robust: only seed 42 reproduces the positive v1 operating point; seeds 7 and 123 are exactness-negative"
     ],
@@ -618,11 +630,11 @@ def has_completed_result(expdir: Path) -> bool:
 
 def dataset_quality_checks() -> dict[str, Any]:
     checks: dict[str, Any] = {}
-    behavior_report = ROOT / "data/behavior_corpus_report.json"
-    train_path = ROOT / "data/policy_train_scaled.jsonl"
-    eval_path = ROOT / "data/policy_eval_scaled.jsonl"
-    if behavior_report.exists() and train_path.exists() and eval_path.exists():
-        report = json.loads(behavior_report.read_text())
+
+    def scan_behavior_corpus(report_path: Path, train_path: Path, eval_path: Path) -> dict[str, Any] | None:
+        if not (report_path.exists() and train_path.exists() and eval_path.exists()):
+            return None
+        report = json.loads(report_path.read_text())
         train_rows = [json.loads(line) for line in train_path.read_text().splitlines() if line.strip()]
         eval_rows = [json.loads(line) for line in eval_path.read_text().splitlines() if line.strip()]
         warnings = []
@@ -650,16 +662,27 @@ def dataset_quality_checks() -> dict[str, Any]:
                 f"{shared_ngrams} shared user-prompt 8-grams across train/heldout; split is template-disjoint/compositional, not entity-level or fully lexically disjoint"
             )
         warnings.append("scaled heldout n=120 is a different distribution/size from canonical legacy n=40; do not compare absolute rates across versions without rebaselining")
-        checks["scaled_behavior_corpus"] = {
+        entity = report.get("entity_disjointness") or {}
+        return {
             "train_rows": len(train_rows),
             "heldout_rows": len(eval_rows),
             "pair_count": len(pair_actions),
             "counterfactual_pair_violations": len(bad_pairs),
             "schema_errors": len(schema_errors),
             "template_disjoint": not bool((report.get("template_disjointness") or {}).get("shared_families")),
+            "entity_disjoint": (not bool(entity.get("shared_context_ids"))) if entity else None,
             "shared_user_prompt_8grams": shared_ngrams,
             "warnings": warnings,
         }
+
+    for key, report_name, train_name, eval_name in [
+        ("scaled_behavior_corpus", "behavior_corpus_report.json", "policy_train_scaled.jsonl", "policy_eval_scaled.jsonl"),
+        ("scaled_behavior_corpus_v2", "behavior_corpus_report_v2.json", "policy_train_scaled_v2.jsonl", "policy_eval_scaled_v2.jsonl"),
+    ]:
+        scan = scan_behavior_corpus(ROOT / "data" / report_name, ROOT / "data" / train_name, ROOT / "data" / eval_name)
+        if scan is not None:
+            checks[key] = scan
+
     capability_report = ROOT / "data/capability_corpus_report.json"
     cap_path = ROOT / "data/capability_corpus_scaled.jsonl"
     if capability_report.exists() and cap_path.exists():
