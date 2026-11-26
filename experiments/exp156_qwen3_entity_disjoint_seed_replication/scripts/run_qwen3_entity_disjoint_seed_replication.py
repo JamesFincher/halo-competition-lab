@@ -47,7 +47,8 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT))
 import run_micro_targeted_rl as base_rl  # noqa: E402
-from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
+from experiments.common.serialization_utils import json_safe, write_json
+from experiments.common.behavior_stats import benchmark_comparisons_against_reference, comparisons_against_reference  # noqa: E402
 from experiments.common.validated_edit import apply_validated_rank1_edit  # noqa: E402
 from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
@@ -257,6 +258,17 @@ def train_lora(
     }
 
 
+def wilson95(successes: int, total: int) -> list[float]:
+    if total <= 0:
+        return [0.0, 0.0]
+    z = 1.959963984540054
+    phat = successes / total
+    denom = 1.0 + z * z / total
+    center = (phat + z * z / (2 * total)) / denom
+    margin = z * ((phat * (1 - phat) + z * z / (4 * total)) / total) ** 0.5 / denom
+    return [round(100.0 * max(0.0, center - margin), 2), round(100.0 * min(1.0, center + margin), 2)]
+
+
 @torch.no_grad()
 def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: torch.device, max_new_tokens: int, batch_size: int = 4) -> dict:
     """Aggregate behavior metrics plus hierarchical error and per-tool decomposition."""
@@ -271,6 +283,7 @@ def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: 
     hierarchical = {"json_invalid": 0, "action_error": 0, "policy_error": 0, "tool_error": 0, "exact": 0}
     per_tool = {}
     action_confusion = {}
+    row_results = []
 
     prompts=[base_rl.build_prompt(tokenizer, row["messages"]) for row in eval_rows]
     generations=[]
@@ -294,7 +307,7 @@ def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: 
     finally:
         tokenizer.padding_side=old_padding_side
 
-    for row,gen in zip(eval_rows,generations):
+    for row_index,(row,gen) in enumerate(zip(eval_rows,generations)):
         reward, info = base_rl.score_completion(gen, row["target"])
         obj = base_rl.parse_json_object(gen)
         target = row["target"]
@@ -339,6 +352,23 @@ def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: 
         else:
             hierarchical["exact"] += 1
 
+        row_results.append({
+            "index": row_index,
+            "exact": bool(info["exact"]),
+            "json_valid": bool(info["json_valid"]),
+            "action_ok": bool(info["action_ok"]),
+            "policy_ok": bool(info["policy_ok"]),
+            "tool_ok": bool(tool_ok),
+            "reward": round(float(reward), 4),
+            "target_action": target.get("action"),
+            "pred_action": pred_action,
+            "target_tool": target.get("tool"),
+            "pred_tool": pred_tool,
+            "target_policy_code": target.get("policy_code"),
+            "pred_policy_code": obj.get("policy_code") if obj else None,
+            "generation_prefix": gen[:240],
+        })
+
     per_tool_out = {}
     for tool, st in sorted(per_tool.items()):
         per_tool_out[tool] = {
@@ -358,6 +388,10 @@ def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: 
         "unsafe_refusal_rate": round(100.0 * unsafe_refusal / max(unsafe_total, 1), 1),
         "benign_false_refusal_rate": round(100.0 * benign_false_refusal / max(benign_total, 1), 1),
         "exact_compliance_rate": round(100.0 * exact_count / max(n, 1), 1),
+        "exact_compliance_wilson95": wilson95(exact_count, n),
+        "unsafe_refusal_wilson95": wilson95(unsafe_refusal, unsafe_total),
+        "benign_false_refusal_wilson95": wilson95(benign_false_refusal, benign_total),
+        "rows": row_results,
         "hierarchical_error_counts": hierarchical,
         "hierarchical_error_rates_pct": {k: round(100.0 * v / max(n, 1), 1) for k, v in hierarchical.items()},
         "per_tool": per_tool_out,
@@ -371,8 +405,8 @@ def endpoint(model, tokenizer, original_eval: list[dict], v2_eval: list[dict], d
     return {
         "behavior_original40_bridge": base_rl.evaluate_heldout(model, tokenizer, original_eval, device, max_new_tokens=max_new_tokens, use_cache=True,batch_size=4),
         "behavior_scaled120": evaluate_behavior_detailed(model, tokenizer, v2_eval, device, max_new_tokens=max_new_tokens),
-        "continuation_benchmark": run_continuation_benchmark(model, tokenizer, device, continuation_n),
-        "transfer_benchmark": run_transfer_benchmark(model, tokenizer, device, max(2, continuation_n // 2)),
+        "continuation_benchmark": run_continuation_benchmark(model, tokenizer, device, continuation_n, include_rows=True),
+        "transfer_benchmark": run_transfer_benchmark(model, tokenizer, device, continuation_n, include_rows=True),
     }
 
 
@@ -505,6 +539,7 @@ def main() -> None:
             torch.cuda.empty_cache()
 
     arm_records = [json.loads(line) for line in ARM_JSONL.read_text(encoding="utf-8").splitlines() if line.strip()]
+    stats_arms = [dict(rec, measurement=rec.get("evaluation", {})) for rec in arm_records]
     summary = {
         "experiment": "exp156_qwen3_entity_disjoint_seed_replication",
         "model": MODEL_NAME,
@@ -517,6 +552,14 @@ def main() -> None:
             "cache_note": "all interventions are weight/LoRA edits, so normal cached generation is valid",
         },
         "arms": arm_records,
+        "behavior_row_statistics": {
+            "versus_lora_v2_seed42": comparisons_against_reference(stats_arms, "lora_v2_seed42", "behavior_scaled120"),
+            "versus_baseline_zero_shot_v2": comparisons_against_reference(stats_arms, "baseline_zero_shot_v2", "behavior_scaled120"),
+        },
+        "capability_row_statistics": {
+            "continuation_versus_baseline_zero_shot_v2": benchmark_comparisons_against_reference(stats_arms, "baseline_zero_shot_v2", "continuation_benchmark"),
+            "transfer_versus_baseline_zero_shot_v2": benchmark_comparisons_against_reference(stats_arms, "baseline_zero_shot_v2", "transfer_benchmark"),
+        },
         "wall_sec": round(time.time() - t0, 2),
         "smoke_test": smoke(),
     }

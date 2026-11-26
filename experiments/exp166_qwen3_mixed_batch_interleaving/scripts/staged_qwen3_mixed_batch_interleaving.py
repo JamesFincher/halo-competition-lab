@@ -19,6 +19,7 @@ sys.path.insert(0,str(ROOT/'experiments/edit_then_target_rl/scripts'))
 sys.path.insert(0,str(ROOT))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
+from experiments.common.behavior_stats import benchmark_comparisons_against_reference, comparisons_against_reference  # noqa: E402
 from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
 
@@ -121,8 +122,8 @@ def train_mixed_lora(model,tokenizer,behavior_rows,capability_rows,device,checkp
 def measure(model,tok,eval_rows,device,max_new_tokens,continuation_n):
     return {
         'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4,include_rows=True),
-        'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n),
-        'transfer_benchmark':run_transfer_benchmark(model,tok,device,max(continuation_n//2,1)),
+        'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n,include_rows=True),
+        'transfer_benchmark':run_transfer_benchmark(model,tok,device,continuation_n,include_rows=True),
     }
 
 
@@ -187,7 +188,7 @@ def main():
         del model
         if device.type=='cuda':torch.cuda.empty_cache()
     arms=[json.loads(x) for x in ARM_JSONL.read_text().splitlines() if x.strip()] if ARM_JSONL.exists() else []
-    write_json(RESULTS_DIR/'qwen3_mixed_batch_interleaving_summary.json',{'experiment':'exp166_qwen3_mixed_batch_interleaving','model':exp152.MODEL_NAME,'question':'At matched 25% capability-example dose, does mixed-batch multitasking preserve behavior better than alternating homogeneous capability/behavior batches while retaining transfer capability?','arms':arms,'wall_sec':round(time.time()-t0,2),'smoke_test':smoke()})
+    write_json(RESULTS_DIR/'qwen3_mixed_batch_interleaving_summary.json',{'experiment':'exp166_qwen3_mixed_batch_interleaving','model':exp152.MODEL_NAME,'question':'At matched 25% capability-example dose, does mixed-batch multitasking preserve behavior better than alternating homogeneous capability/behavior batches while retaining transfer capability?','arms':arms,'behavior_row_statistics':{'versus_baseline_zero_shot':comparisons_against_reference(arms,'baseline_zero_shot'),'versus_alternating_reference':comparisons_against_reference(arms,'alternating_reference_every4')},'capability_row_statistics':{'continuation_versus_alternating_reference':benchmark_comparisons_against_reference(arms,'alternating_reference_every4','continuation_benchmark'),'transfer_versus_alternating_reference':benchmark_comparisons_against_reference(arms,'alternating_reference_every4','transfer_benchmark')},'wall_sec':round(time.time()-t0,2),'smoke_test':smoke()})
     if smoke():shutil.rmtree(ckpt_base,ignore_errors=True)
     print(f'[DONE] exp166 arms={len(arms)} wall={round(time.time()-t0,2)}s',flush=True)
 
