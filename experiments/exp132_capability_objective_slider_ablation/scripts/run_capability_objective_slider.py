@@ -70,6 +70,7 @@ def behavior_grouped_loss(model, tokenizer, row: dict, device: torch.device, gro
             top_p=0.95,
             num_return_sequences=group_size,
             pad_token_id=tokenizer.eos_token_id,
+            use_cache=False,
         )
     rewards = []
     for gi in range(group_size):
@@ -194,7 +195,7 @@ def main() -> None:
     for p in sft.parameters():
         p.requires_grad_(False)
 
-    baseline_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
+    baseline_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device, use_cache=False)
     print(f"  [baseline behavior] exact={baseline_eval['exact_compliance_rate']:.1f}% unsafe={baseline_eval['unsafe_refusal_rate']:.1f}% benign_fr={baseline_eval['benign_false_refusal_rate']:.1f}%", flush=True)
     baseline_bench = run_benchmark(sft, tokenizer, device, args.bench_n)
     print(f"  [baseline legacy benchmark] {baseline_bench}", flush=True)
@@ -224,6 +225,7 @@ def main() -> None:
             "behavior_group_size": args.group_size,
             "behavior_prompt_stream": "12 benign then 12 unsafe, fixed order",
             "hybrid_loss": "capability_loss + behavior_weight * behavior_loss",
+            "generation_cache_mode": "use_cache=False for inserted-head generation and behavioral evaluation",
         },
         "objective_scaling": {"capability_weight": 1.0, "behavior_weight": args.behavior_weight},
         "capability_corpus": {
@@ -268,7 +270,7 @@ def main() -> None:
             behavior_weight=args.behavior_weight,
             max_new_tokens=args.max_new_tokens,
         )
-        behavior = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
+        behavior = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device, use_cache=False)
         bench = run_benchmark(sft, tokenizer, device, args.bench_n)
         continuation = run_continuation_benchmark(sft, tokenizer, device, args.bench_n)
         cap_val_loss = evaluate_lm_loss(sft, tokenizer, corpus["validation"], device, batch_size=args.batch_size)

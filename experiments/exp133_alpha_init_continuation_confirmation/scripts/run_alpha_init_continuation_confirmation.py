@@ -59,6 +59,7 @@ def main() -> None:
     parser.add_argument("--lr", type=float, default=3e-3)
     parser.add_argument("--bench-n", type=int, default=50)
     parser.add_argument("--continuation-n", type=int, default=150)
+    parser.add_argument("--max-new-tokens", type=int, default=48)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
 
@@ -76,7 +77,7 @@ def main() -> None:
     for p in sft.parameters():
         p.requires_grad_(False)
 
-    baseline_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
+    baseline_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device, use_cache=False)
     print(f"  [baseline behavior] exact={baseline_eval['exact_compliance_rate']:.1f}% unsafe={baseline_eval['unsafe_refusal_rate']:.1f}% benign_fr={baseline_eval['benign_false_refusal_rate']:.1f}%", flush=True)
     baseline_bench = run_benchmark(sft, tokenizer, device, args.bench_n)
     print(f"  [baseline legacy benchmark] {baseline_bench}", flush=True)
@@ -102,6 +103,7 @@ def main() -> None:
             "training": "slider_head_fork-style joint grouped REINFORCE, no KL/BC",
             "prompt_stream": "12 benign then 12 unsafe, fixed order",
             "exp97_replication_note": "same architecture/init signs/steps/optimizer as exp97; measurement resolution is the only intentional addition",
+            "generation_cache_mode": "use_cache=False for inserted-head generation and behavioral evaluation",
         },
         "config": vars(args),
         "baseline_eval": baseline_eval,
@@ -122,14 +124,15 @@ def main() -> None:
                 head.alpha.fill_(val)
                 init_alphas[li] = val
         pre_handles = install_independent_layer_bank(sft, bank)
-        pre_behavior = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
+        pre_behavior = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device, use_cache=False)
         for pre_handle in pre_handles:
             pre_handle.remove()
         handles, trace = train_independent_layer_bank(
             sft, tokenizer, rows, device, bank,
             steps=args.steps, group_size=args.group_size, lr=args.lr,
+            max_new_tokens=args.max_new_tokens,
         )
-        behavior = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
+        behavior = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device, use_cache=False)
         bench = run_benchmark(sft, tokenizer, device, args.bench_n)
         continuation = run_continuation_benchmark(sft, tokenizer, device, args.continuation_n)
         for handle in handles:

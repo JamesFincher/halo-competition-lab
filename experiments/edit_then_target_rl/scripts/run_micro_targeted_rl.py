@@ -87,6 +87,7 @@ def evaluate_heldout(
     eval_rows: list[dict],
     device: torch.device,
     max_new_tokens: int = 80,
+    use_cache: bool = True,
 ) -> dict:
     if os.environ.get("HALO_SMOKE_TEST") == "1":
         eval_rows = eval_rows[:2]
@@ -106,6 +107,7 @@ def evaluate_heldout(
             max_new_tokens=max_new_tokens,
             do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
+            use_cache=use_cache,
         )
         gen = tokenizer.decode(out_ids[0][enc["input_ids"].shape[1] :], skip_special_tokens=True)
         rew, info = score_completion(gen, row["target"])

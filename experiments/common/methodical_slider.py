@@ -104,6 +104,7 @@ def train_plain_slider(
                 top_p=0.95,
                 num_return_sequences=group_size,
                 pad_token_id=tokenizer.eos_token_id,
+                use_cache=False,
             )
         rewards = []
         for gi in range(group_size):
@@ -294,6 +295,7 @@ def train_independent_layer_bank(
                 top_p=0.95,
                 num_return_sequences=group_size,
                 pad_token_id=tokenizer.eos_token_id,
+                use_cache=False,
             )
         rewards = []
         for gi in range(group_size):
