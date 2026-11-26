@@ -1,0 +1,1169 @@
+{
+  "experiment": "exp152_qwen3_behavioral_scale_pivot",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "question": "Does scaling model class and unique counterfactual behavior data break the 135M 80-82.5% ceiling at fixed update budget?",
+  "design": {
+    "fixed_update_budget_steps": 300,
+    "data_comparison": "original 160 rows repeated versus entity-disjoint v2 scaled 1600 unique counterfactual rows at identical optimizer steps/tokens; v1 eval retained as a bridge",
+    "critical_reference": "lora_scaled_fixed_updates",
+    "composition": "architecture-mapped final-two-layer sparse edit plus complementary MLP-only LoRA on preceding four layers",
+    "cache_note": "all interventions are weight/LoRA edits, so normal cached generation is valid",
+    "evaluation_surface": "behavior_scaled120 is entity-disjoint corpus v2; behavior_scaled_v1_120_bridge is the earlier compositional v1 surface"
+  },
+  "arms": [
+    {
+      "arm": "baseline_zero_shot",
+      "behavior_scaled120": {
+        "action_accuracy": 90.8,
+        "benign_false_refusal_rate": 18.3,
+        "exact_compliance_rate": 66.7,
+        "json_valid_rate": 100.0,
+        "mean_reward": 0.8783,
+        "n_eval": 120,
+        "policy_accuracy": 66.7,
+        "unsafe_refusal_rate": 100.0
+      },
+      "edit_info": null,
+      "evaluation": {
+        "behavior_original40": {
+          "action_accuracy": 97.5,
+          "benign_false_refusal_rate": 10.0,
+          "exact_compliance_rate": 75.0,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.935,
+          "n_eval": 40,
+          "policy_accuracy": 75.0,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled120": {
+          "action_accuracy": 90.8,
+          "benign_false_refusal_rate": 18.3,
+          "exact_compliance_rate": 66.7,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.8783,
+          "n_eval": 120,
+          "policy_accuracy": 66.7,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled_v1_120_bridge": {
+          "action_accuracy": 90.8,
+          "benign_false_refusal_rate": 18.3,
+          "exact_compliance_rate": 65.8,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.8767,
+          "n_eval": 120,
+          "policy_accuracy": 65.8,
+          "unsafe_refusal_rate": 100.0
+        },
+        "continuation_benchmark": {
+          "arc_easy": {
+            "byte_norm_acc": 70.0,
+            "n": 50,
+            "sum_acc": 64.0,
+            "token_norm_acc": 66.0
+          },
+          "hellaswag": {
+            "byte_norm_acc": 54.0,
+            "n": 50,
+            "sum_acc": 40.0,
+            "token_norm_acc": 52.0
+          },
+          "mmlu": {
+            "byte_norm_acc": 20.0,
+            "n": 50,
+            "sum_acc": 14.0,
+            "token_norm_acc": 26.0
+          }
+        }
+      },
+      "fixed_update_budget": 300,
+      "h22_architecture_mapping": null,
+      "lora": {
+        "alpha": 32,
+        "dropout": 0.05,
+        "layers_to_transform": "all",
+        "rank": 16,
+        "targets": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ]
+      },
+      "memory": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "max_allocated_gb": 8.19,
+        "max_reserved_gb": 8.41
+      },
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "smoke_test": false,
+      "train_info": null,
+      "wall_sec": 327.27
+    },
+    {
+      "arm": "lora_original_fixed_updates",
+      "behavior_scaled120": {
+        "action_accuracy": 94.2,
+        "benign_false_refusal_rate": 11.7,
+        "exact_compliance_rate": 91.7,
+        "json_valid_rate": 100.0,
+        "mean_reward": 0.9483,
+        "n_eval": 120,
+        "policy_accuracy": 91.7,
+        "unsafe_refusal_rate": 100.0
+      },
+      "edit_info": null,
+      "evaluation": {
+        "behavior_original40": {
+          "action_accuracy": 100.0,
+          "benign_false_refusal_rate": 0.0,
+          "exact_compliance_rate": 100.0,
+          "json_valid_rate": 100.0,
+          "mean_reward": 1.0,
+          "n_eval": 40,
+          "policy_accuracy": 100.0,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled120": {
+          "action_accuracy": 94.2,
+          "benign_false_refusal_rate": 11.7,
+          "exact_compliance_rate": 91.7,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.9483,
+          "n_eval": 120,
+          "policy_accuracy": 91.7,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled_v1_120_bridge": {
+          "action_accuracy": 93.3,
+          "benign_false_refusal_rate": 13.3,
+          "exact_compliance_rate": 91.7,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.9433,
+          "n_eval": 120,
+          "policy_accuracy": 91.7,
+          "unsafe_refusal_rate": 100.0
+        },
+        "continuation_benchmark": {
+          "arc_easy": {
+            "byte_norm_acc": 66.0,
+            "n": 50,
+            "sum_acc": 66.0,
+            "token_norm_acc": 66.0
+          },
+          "hellaswag": {
+            "byte_norm_acc": 58.0,
+            "n": 50,
+            "sum_acc": 42.0,
+            "token_norm_acc": 54.0
+          },
+          "mmlu": {
+            "byte_norm_acc": 20.0,
+            "n": 50,
+            "sum_acc": 20.0,
+            "token_norm_acc": 26.0
+          }
+        }
+      },
+      "fixed_update_budget": 300,
+      "h22_architecture_mapping": null,
+      "lora": {
+        "alpha": 32,
+        "dropout": 0.05,
+        "layers_to_transform": "all",
+        "rank": 16,
+        "targets": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ]
+      },
+      "memory": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "max_allocated_gb": 11.87,
+        "max_reserved_gb": 24.42
+      },
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "smoke_test": false,
+      "train_info": {
+        "optimizer_steps_completed": 300,
+        "replay_mixture": "behavior only",
+        "requested_steps": 300,
+        "resumed_from_step": 0,
+        "train_log_tail": [
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0003,
+            "loss": 1e-05,
+            "lr": 4.2490003733258645e-05,
+            "step": 231
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0007,
+            "loss": 4e-05,
+            "lr": 3.663849838443012e-05,
+            "step": 241
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0003,
+            "loss": 1e-05,
+            "lr": 3.159075699918296e-05,
+            "step": 251
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0007,
+            "loss": 4e-05,
+            "lr": 2.7402083688441698e-05,
+            "step": 261
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0003,
+            "loss": 1e-05,
+            "lr": 2.411837043353509e-05,
+            "step": 271
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0007,
+            "loss": 4e-05,
+            "lr": 2.1775594284045044e-05,
+            "step": 281
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0003,
+            "loss": 1e-05,
+            "lr": 2.03994231857228e-05,
+            "step": 291
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0005,
+            "loss": 2e-05,
+            "lr": 2e-05,
+            "step": 300
+          }
+        ],
+        "train_wall_sec": 114.96,
+        "trainable_params": 33030144
+      },
+      "wall_sec": 655.87
+    },
+    {
+      "arm": "lora_scaled_fixed_updates",
+      "behavior_scaled120": {
+        "action_accuracy": 100.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 99.2,
+        "json_valid_rate": 100.0,
+        "mean_reward": 0.9983,
+        "n_eval": 120,
+        "policy_accuracy": 99.2,
+        "unsafe_refusal_rate": 100.0
+      },
+      "edit_info": null,
+      "evaluation": {
+        "behavior_original40": {
+          "action_accuracy": 100.0,
+          "benign_false_refusal_rate": 0.0,
+          "exact_compliance_rate": 97.5,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.995,
+          "n_eval": 40,
+          "policy_accuracy": 97.5,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled120": {
+          "action_accuracy": 100.0,
+          "benign_false_refusal_rate": 0.0,
+          "exact_compliance_rate": 99.2,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.9983,
+          "n_eval": 120,
+          "policy_accuracy": 99.2,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled_v1_120_bridge": {
+          "action_accuracy": 100.0,
+          "benign_false_refusal_rate": 0.0,
+          "exact_compliance_rate": 99.2,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.9983,
+          "n_eval": 120,
+          "policy_accuracy": 99.2,
+          "unsafe_refusal_rate": 100.0
+        },
+        "continuation_benchmark": {
+          "arc_easy": {
+            "byte_norm_acc": 68.0,
+            "n": 50,
+            "sum_acc": 72.0,
+            "token_norm_acc": 68.0
+          },
+          "hellaswag": {
+            "byte_norm_acc": 56.0,
+            "n": 50,
+            "sum_acc": 42.0,
+            "token_norm_acc": 50.0
+          },
+          "mmlu": {
+            "byte_norm_acc": 20.0,
+            "n": 50,
+            "sum_acc": 16.0,
+            "token_norm_acc": 26.0
+          }
+        }
+      },
+      "fixed_update_budget": 300,
+      "h22_architecture_mapping": null,
+      "lora": {
+        "alpha": 32,
+        "dropout": 0.05,
+        "layers_to_transform": "all",
+        "rank": 16,
+        "targets": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ]
+      },
+      "memory": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "max_allocated_gb": 11.75,
+        "max_reserved_gb": 18.22
+      },
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "smoke_test": false,
+      "train_info": {
+        "optimizer_steps_completed": 300,
+        "replay_mixture": "behavior only",
+        "requested_steps": 300,
+        "resumed_from_step": 0,
+        "train_log_tail": [
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0002,
+            "loss": 1e-05,
+            "lr": 4.2490003733258645e-05,
+            "step": 231
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0005,
+            "loss": 1e-05,
+            "lr": 3.663849838443012e-05,
+            "step": 241
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0002,
+            "loss": 1e-05,
+            "lr": 3.159075699918296e-05,
+            "step": 251
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0001,
+            "loss": 1e-05,
+            "lr": 2.7402083688441698e-05,
+            "step": 261
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0002,
+            "loss": 1e-05,
+            "lr": 2.411837043353509e-05,
+            "step": 271
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0002,
+            "loss": 1e-05,
+            "lr": 2.1775594284045044e-05,
+            "step": 281
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0009,
+            "loss": 2e-05,
+            "lr": 2.03994231857228e-05,
+            "step": 291
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0001,
+            "loss": 1e-05,
+            "lr": 2e-05,
+            "step": 300
+          }
+        ],
+        "train_wall_sec": 113.67,
+        "trainable_params": 33030144
+      },
+      "wall_sec": 680.29
+    },
+    {
+      "arm": "lora_scaled_plus_capability_replay",
+      "behavior_scaled120": {
+        "action_accuracy": 100.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 95.8,
+        "json_valid_rate": 100.0,
+        "mean_reward": 0.9917,
+        "n_eval": 120,
+        "policy_accuracy": 95.8,
+        "unsafe_refusal_rate": 100.0
+      },
+      "edit_info": null,
+      "evaluation": {
+        "behavior_original40": {
+          "action_accuracy": 100.0,
+          "benign_false_refusal_rate": 0.0,
+          "exact_compliance_rate": 95.0,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.99,
+          "n_eval": 40,
+          "policy_accuracy": 95.0,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled120": {
+          "action_accuracy": 100.0,
+          "benign_false_refusal_rate": 0.0,
+          "exact_compliance_rate": 95.8,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.9917,
+          "n_eval": 120,
+          "policy_accuracy": 95.8,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled_v1_120_bridge": {
+          "action_accuracy": 100.0,
+          "benign_false_refusal_rate": 0.0,
+          "exact_compliance_rate": 97.5,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.995,
+          "n_eval": 120,
+          "policy_accuracy": 97.5,
+          "unsafe_refusal_rate": 100.0
+        },
+        "continuation_benchmark": {
+          "arc_easy": {
+            "byte_norm_acc": 80.0,
+            "n": 50,
+            "sum_acc": 78.0,
+            "token_norm_acc": 78.0
+          },
+          "hellaswag": {
+            "byte_norm_acc": 66.0,
+            "n": 50,
+            "sum_acc": 48.0,
+            "token_norm_acc": 54.0
+          },
+          "mmlu": {
+            "byte_norm_acc": 40.0,
+            "n": 50,
+            "sum_acc": 36.0,
+            "token_norm_acc": 44.0
+          }
+        }
+      },
+      "fixed_update_budget": 300,
+      "h22_architecture_mapping": null,
+      "lora": {
+        "alpha": 32,
+        "dropout": 0.05,
+        "layers_to_transform": "all",
+        "rank": 16,
+        "targets": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ]
+      },
+      "memory": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "max_allocated_gb": 13.07,
+        "max_reserved_gb": 26.15
+      },
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "smoke_test": false,
+      "train_info": {
+        "optimizer_steps_completed": 300,
+        "replay_mixture": "75% behavior / 25% direct-continuation capability by step",
+        "requested_steps": 300,
+        "resumed_from_step": 0,
+        "train_log_tail": [
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0004,
+            "loss": 2e-05,
+            "lr": 4.2490003733258645e-05,
+            "step": 231
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0008,
+            "loss": 3e-05,
+            "lr": 3.663849838443012e-05,
+            "step": 241
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0007,
+            "loss": 3e-05,
+            "lr": 3.159075699918296e-05,
+            "step": 251
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0002,
+            "loss": 1e-05,
+            "lr": 2.7402083688441698e-05,
+            "step": 261
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0006,
+            "loss": 2e-05,
+            "lr": 2.411837043353509e-05,
+            "step": 271
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0006,
+            "loss": 3e-05,
+            "lr": 2.1775594284045044e-05,
+            "step": 281
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0016,
+            "loss": 5e-05,
+            "lr": 2.03994231857228e-05,
+            "step": 291
+          },
+          {
+            "batch_type": "capability_replay",
+            "grad_norm": 2.135,
+            "loss": 1.53085,
+            "lr": 2e-05,
+            "step": 300
+          }
+        ],
+        "train_wall_sec": 118.97,
+        "trainable_params": 33030144
+      },
+      "wall_sec": 676.63
+    },
+    {
+      "arm": "h22_sparse_edit_only_scaled",
+      "behavior_scaled120": {
+        "action_accuracy": 90.8,
+        "benign_false_refusal_rate": 18.3,
+        "exact_compliance_rate": 66.7,
+        "json_valid_rate": 100.0,
+        "mean_reward": 0.8783,
+        "n_eval": 120,
+        "policy_accuracy": 66.7,
+        "unsafe_refusal_rate": 100.0
+      },
+      "edit_info": {
+        "edit_layers": [
+          35,
+          34
+        ],
+        "edited_pct": 0.00815,
+        "edited_weights": 327680,
+        "operator": "validated_raw_rank1_residual_direction",
+        "selected_neurons": {
+          "34": [
+            60,
+            36,
+            712,
+            34,
+            356,
+            37,
+            377,
+            18,
+            4634,
+            365,
+            5736,
+            8748,
+            301,
+            1667,
+            165,
+            600,
+            136,
+            147,
+            1622,
+            2666,
+            8979,
+            56,
+            96,
+            3779,
+            106,
+            6097,
+            631,
+            7080,
+            127,
+            290,
+            7877,
+            6408,
+            574,
+            4784,
+            4059,
+            2695,
+            149,
+            4271,
+            4675,
+            5894,
+            4671,
+            2752,
+            44,
+            8040,
+            907,
+            1394,
+            7317,
+            9719,
+            4612,
+            210,
+            634,
+            4288,
+            2768,
+            943,
+            273,
+            3712,
+            333,
+            9134,
+            2300,
+            684,
+            527,
+            606,
+            1781,
+            3810
+          ],
+          "35": [
+            698,
+            4681,
+            716,
+            3040,
+            4252,
+            860,
+            1854,
+            342,
+            731,
+            328,
+            2720,
+            312,
+            8945,
+            1329,
+            643,
+            8474,
+            3509,
+            3510,
+            132,
+            2509,
+            6715,
+            1036,
+            229,
+            20,
+            3465,
+            399,
+            68,
+            288,
+            9072,
+            1634,
+            4244,
+            3380,
+            728,
+            5701,
+            8807,
+            1553,
+            3710,
+            113,
+            201,
+            8191,
+            1105,
+            1212,
+            191,
+            5817,
+            3091,
+            1664,
+            363,
+            101,
+            17,
+            353,
+            913,
+            3213,
+            4407,
+            81,
+            3546,
+            7174,
+            488,
+            920,
+            211,
+            5309,
+            302,
+            3019,
+            2290,
+            1485
+          ]
+        },
+        "strength": 0.9,
+        "top_columns": 64,
+        "top_singular_values": {
+          "34": [
+            320.2457,
+            95.4233,
+            66.5589,
+            55.9689
+          ],
+          "35": [
+            351.151,
+            85.8459,
+            80.1989,
+            63.5327
+          ]
+        }
+      },
+      "evaluation": {
+        "behavior_original40": {
+          "action_accuracy": 97.5,
+          "benign_false_refusal_rate": 10.0,
+          "exact_compliance_rate": 75.0,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.935,
+          "n_eval": 40,
+          "policy_accuracy": 75.0,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled120": {
+          "action_accuracy": 90.8,
+          "benign_false_refusal_rate": 18.3,
+          "exact_compliance_rate": 66.7,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.8783,
+          "n_eval": 120,
+          "policy_accuracy": 66.7,
+          "unsafe_refusal_rate": 100.0
+        },
+        "behavior_scaled_v1_120_bridge": {
+          "action_accuracy": 90.8,
+          "benign_false_refusal_rate": 18.3,
+          "exact_compliance_rate": 65.8,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.8767,
+          "n_eval": 120,
+          "policy_accuracy": 65.8,
+          "unsafe_refusal_rate": 100.0
+        },
+        "continuation_benchmark": {
+          "arc_easy": {
+            "byte_norm_acc": 70.0,
+            "n": 50,
+            "sum_acc": 66.0,
+            "token_norm_acc": 66.0
+          },
+          "hellaswag": {
+            "byte_norm_acc": 54.0,
+            "n": 50,
+            "sum_acc": 40.0,
+            "token_norm_acc": 52.0
+          },
+          "mmlu": {
+            "byte_norm_acc": 22.0,
+            "n": 50,
+            "sum_acc": 14.0,
+            "token_norm_acc": 26.0
+          }
+        }
+      },
+      "fixed_update_budget": 300,
+      "h22_architecture_mapping": {
+        "complement_layers": [
+          30,
+          31,
+          32,
+          33
+        ],
+        "edit_layers": [
+          35,
+          34
+        ]
+      },
+      "lora": {
+        "alpha": 32,
+        "dropout": 0.05,
+        "layers_to_transform": [
+          30,
+          31,
+          32,
+          33
+        ],
+        "rank": 16,
+        "targets": [
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ]
+      },
+      "memory": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "max_allocated_gb": 8.37,
+        "max_reserved_gb": 8.7
+      },
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "smoke_test": false,
+      "train_info": null,
+      "wall_sec": 328.67
+    },
+    {
+      "arm": "h22_sparse_edit_plus_complementary_mlp_lora",
+      "behavior_scaled120": {
+        "action_accuracy": 94.2,
+        "benign_false_refusal_rate": 8.3,
+        "exact_compliance_rate": 84.2,
+        "json_valid_rate": 100.0,
+        "mean_reward": 0.9333,
+        "n_eval": 120,
+        "policy_accuracy": 84.2,
+        "unsafe_refusal_rate": 96.7
+      },
+      "edit_info": {
+        "edit_layers": [
+          35,
+          34
+        ],
+        "edited_pct": 0.00815,
+        "edited_weights": 327680,
+        "operator": "validated_raw_rank1_residual_direction",
+        "selected_neurons": {
+          "34": [
+            60,
+            36,
+            712,
+            34,
+            356,
+            37,
+            377,
+            18,
+            4634,
+            365,
+            5736,
+            8748,
+            301,
+            1667,
+            165,
+            600,
+            136,
+            147,
+            1622,
+            2666,
+            8979,
+            56,
+            96,
+            3779,
+            106,
+            6097,
+            631,
+            7080,
+            127,
+            290,
+            7877,
+            6408,
+            574,
+            4784,
+            4059,
+            2695,
+            149,
+            4271,
+            4675,
+            5894,
+            4671,
+            2752,
+            44,
+            8040,
+            907,
+            1394,
+            7317,
+            9719,
+            4612,
+            210,
+            634,
+            4288,
+            2768,
+            943,
+            273,
+            3712,
+            333,
+            9134,
+            2300,
+            684,
+            527,
+            606,
+            1781,
+            3810
+          ],
+          "35": [
+            698,
+            4681,
+            716,
+            3040,
+            4252,
+            860,
+            1854,
+            342,
+            731,
+            328,
+            2720,
+            312,
+            8945,
+            1329,
+            643,
+            8474,
+            3509,
+            3510,
+            132,
+            2509,
+            6715,
+            1036,
+            229,
+            20,
+            3465,
+            399,
+            68,
+            288,
+            9072,
+            1634,
+            4244,
+            3380,
+            728,
+            5701,
+            8807,
+            1553,
+            3710,
+            113,
+            201,
+            8191,
+            1105,
+            1212,
+            191,
+            5817,
+            3091,
+            1664,
+            363,
+            101,
+            17,
+            353,
+            913,
+            3213,
+            4407,
+            81,
+            3546,
+            7174,
+            488,
+            920,
+            211,
+            5309,
+            302,
+            3019,
+            2290,
+            1485
+          ]
+        },
+        "strength": 0.9,
+        "top_columns": 64,
+        "top_singular_values": {
+          "34": [
+            320.2457,
+            95.4233,
+            66.5589,
+            55.9689
+          ],
+          "35": [
+            351.151,
+            85.8459,
+            80.1989,
+            63.5327
+          ]
+        }
+      },
+      "evaluation": {
+        "behavior_original40": {
+          "action_accuracy": 92.5,
+          "benign_false_refusal_rate": 0.0,
+          "exact_compliance_rate": 82.5,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.92,
+          "n_eval": 40,
+          "policy_accuracy": 82.5,
+          "unsafe_refusal_rate": 90.0
+        },
+        "behavior_scaled120": {
+          "action_accuracy": 94.2,
+          "benign_false_refusal_rate": 8.3,
+          "exact_compliance_rate": 84.2,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.9333,
+          "n_eval": 120,
+          "policy_accuracy": 84.2,
+          "unsafe_refusal_rate": 96.7
+        },
+        "behavior_scaled_v1_120_bridge": {
+          "action_accuracy": 97.5,
+          "benign_false_refusal_rate": 5.0,
+          "exact_compliance_rate": 87.5,
+          "json_valid_rate": 100.0,
+          "mean_reward": 0.96,
+          "n_eval": 120,
+          "policy_accuracy": 87.5,
+          "unsafe_refusal_rate": 100.0
+        },
+        "continuation_benchmark": {
+          "arc_easy": {
+            "byte_norm_acc": 72.0,
+            "n": 50,
+            "sum_acc": 66.0,
+            "token_norm_acc": 70.0
+          },
+          "hellaswag": {
+            "byte_norm_acc": 54.0,
+            "n": 50,
+            "sum_acc": 40.0,
+            "token_norm_acc": 50.0
+          },
+          "mmlu": {
+            "byte_norm_acc": 26.0,
+            "n": 50,
+            "sum_acc": 18.0,
+            "token_norm_acc": 24.0
+          }
+        }
+      },
+      "fixed_update_budget": 300,
+      "h22_architecture_mapping": {
+        "complement_layers": [
+          30,
+          31,
+          32,
+          33
+        ],
+        "edit_layers": [
+          35,
+          34
+        ]
+      },
+      "lora": {
+        "alpha": 32,
+        "dropout": 0.05,
+        "layers_to_transform": [
+          30,
+          31,
+          32,
+          33
+        ],
+        "rank": 16,
+        "targets": [
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ]
+      },
+      "memory": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "max_allocated_gb": 12.7,
+        "max_reserved_gb": 25.59
+      },
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "smoke_test": false,
+      "train_info": {
+        "optimizer_steps_completed": 300,
+        "replay_mixture": "75% behavior / 25% direct-continuation capability by step",
+        "requested_steps": 300,
+        "resumed_from_step": 0,
+        "train_log_tail": [
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.1014,
+            "loss": 0.00306,
+            "lr": 4.2490003733258645e-05,
+            "step": 231
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0864,
+            "loss": 0.00492,
+            "lr": 3.663849838443012e-05,
+            "step": 241
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0286,
+            "loss": 0.00103,
+            "lr": 3.159075699918296e-05,
+            "step": 251
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.0088,
+            "loss": 0.00043,
+            "lr": 2.7402083688441698e-05,
+            "step": 261
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.1955,
+            "loss": 0.00446,
+            "lr": 2.411837043353509e-05,
+            "step": 271
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.1238,
+            "loss": 0.00567,
+            "lr": 2.1775594284045044e-05,
+            "step": 281
+          },
+          {
+            "batch_type": "behavior",
+            "grad_norm": 0.1234,
+            "loss": 0.00576,
+            "lr": 2.03994231857228e-05,
+            "step": 291
+          },
+          {
+            "batch_type": "capability_replay",
+            "grad_norm": 1.7429,
+            "loss": 2.1151,
+            "lr": 2e-05,
+            "step": 300
+          }
+        ],
+        "train_wall_sec": 59.02,
+        "trainable_params": 2359296
+      },
+      "wall_sec": 356.91
+    }
+  ],
+  "wall_sec": 3026.94,
+  "smoke_test": false
+}
