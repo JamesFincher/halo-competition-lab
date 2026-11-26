@@ -24,6 +24,10 @@ def has_completed_result(exp):
 
 for s in sorted(glob.glob("experiments/*/scripts/run_*.py")):
     exp = s.split("/")[1]
+    # Persistent upstream blocklist: BLOCKED.md means a human/agent deliberately
+    # de-queued the experiment, independent of result artifacts or stale waves.
+    if os.path.exists(os.path.join("experiments", exp, "BLOCKED.md")):
+        continue
     if not has_completed_result(exp):
         exps.append({"name": exp, "script": s})
 # prioritize explicit expNN experiments numerically, newest first; unnumbered names keep lexical fallback

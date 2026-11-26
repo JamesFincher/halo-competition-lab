@@ -1,0 +1,1 @@
+Deliberately de-queued on 2026-11-26: CUDA-specific fast crashes with zero scientific value. The executable was renamed away from run_*.py so autoqueue cannot select it. Do not reactivate without the VM crash log, a root-cause fix, compile-check, and full end-to-end smoke.
