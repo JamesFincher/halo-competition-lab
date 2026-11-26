@@ -6,10 +6,11 @@ Last updated: 2026-11-26 by the hypothesizer agent.
 
 Validated local assets:
 
-- **Best current GPU behavioral result:** Exp 1 rerun `arm2_localized_grpo_only` reached **80% exact / 93.3% unsafe refusal / 0% benign-FR** with targeted top-8-layer r16 GRPO in 68s, beating its matched random-layer control (**60/100/50**). Treat deltas cautiously because the same-run baseline was **47.5/100/80** rather than the canonical **55/100/90**, and the artifact was overwrite-restored. In the same run, `arm1_surgical_edit_only`—top-2 contrastive MLP `down_proj` layers 29/28, top 32 columns, strength 0.5—reached **75/93.3/0** in 0.5s, while edit-then-targeted-RL collapsed into over-refusal (**37.5/100/100**).
-- **Architectural insert evidence is now mixed and sharper:** Exp 42 reduced benign false refusal **90%→30%** but exact compliance fell **55%→42.5%**. Slider-fork v1 single L27 head was much safer (**57.5/100/60**, exact +2.5, no unsafe loss), while 4-head banks, deep spreads, wide heads, memory heads, and full-bank wide variants collapsed to 0–15% exact and often 0% JSON validity. Naive edit+slider composition also hurt: Exp 43 stage1 edit **65/100/90** became stage2 combined **50/96.7/70**.
-- **RL/vector evidence:** localized/targeted GRPO is now a validated performance path, but unrestricted full-model LoRA RL collapsed unsafe refusal to 46.7%, and Exp 34 activation-vector-only RL was negative (**40/100/90** versus canonical baseline 55/100/90). The composition target is therefore not “more RL”: it is export-valid, targeted, curvature/geometry-preserving RL plus repair of the remaining 2/30 unsafe-refusal failures. Exps 50–67 and 80–86 already cover many direct vector/head/RL variants, so new hypotheses must add a mechanistic delta rather than restate them.
-- **Queue/result state at 11:20 UTC:** no experiment-result JSON has landed since the slider-fork harvest at 10:24 UTC despite 51 missing experiment scripts; the tracker reports a hard stall and newest-first starvation risk. H2/H4/H6/H7/H8/H9/H10/H11/H12/H14 now have queued implementations (exp122/124/123/120/125/121/101/127/102/126), so the hypothesizer should not duplicate them; the next useful work is sharper gates, controls, and post-result conditional designs.
+- **Strongest post-hotfix behavioral paths:** exp85 `es_final_center`/`random_best` reached **82.5% exact / 93.3% unsafe refusal / 0% benign-FR** in a 32-D sparse surgical-coefficient subspace, but ES did not cleanly beat random or fixed-dose references, so this is a high-priority replication candidate rather than an established ES mechanism. exp80 `rl_only` reached **80/93.3/10** using only complementary-layer steering vectors from the canonical baseline; exp86 oscillating-decay vector RL reached **72.5–75/93.3/0** while constant-polarity controls collapsed to 42.5–45 exact with 100% benign-FR. Exp 1 targeted LoRA remains important at 80/93.3/0 but still carries the earlier baseline-shift/overwrite caveat.
+- **Best validated surgical dose frontier:** exp98 shows narrower is better at strength 0.9: 32 columns/layer reached **72.5/90/0**, versus 65/90/0 at 64 columns and 57.5/86.7/0 at 128. exp95 shows strength 0.5 reaches **77.5/93.3/40**, canonical 0.9 reaches **65/90/0**, and 1.3 degrades exactness and unsafe refusal. exp85 suggests the still-sparser 16-columns/layer/nonuniform-dose region may reach 80–82.5 exact; exp129/130 are queued to isolate that region.
+- **Attention-insert evidence is now causal but fragile:** exp96 freeze-then-merge reached **70/90/0** while the identical jointly trained multi-layer bank collapsed to zero, so simultaneous destructive interference is real. However exp94 shows alpha clamping does not rescue joint banks, exp93 shows the single-slider positive result is not seed-robust, exp90 width effects are mixed rather than a simple width law, and exp92 count 2–4 does not improve over one head. Sequential training plus multi-seed acceptance is now mandatory for any implant-bank hypothesis.
+- **Vector/RL evidence is inverted relative to the first harvest:** Exp 34 late-layer vector-only RL was negative (**40/100/90**), but exp80 complementary-layer vector-only RL was strongly positive (**80/93.3/10**) and exp86 shows polarity cycling can stabilize vector learning. Vector-space adaptation is therefore credible, but it is hook-bound and mostly lacks raw-benchmark evidence; exportable consolidation is now a central missing link.
+- **Queue/result state at 12:05 UTC:** post-hotfix recovery is confirmed; results landed for exp80/81/83/85/86/90/92/93/94/95/96/98. H2 and H19 are now queued as exp128/exp131, H11/H14 as exp127/126, and H4/H6/H7/H8/H9/H10/H12/H15 remain queued as exp124/123/120/125/121/101/102/87. Do not duplicate those implementations.
 - **Known dead ends:** unembedding-direction weight edits collapse into always-call behavior at all tested strengths; fp32 does not rescue them; degenerate collinear push-pull is a sign/strength artifact; hard nullspaces and binary masks are too destructive on a 135M model.
 
 Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 through 2026-11-25 in weight-space programming, activation steering, attention-head intervention, parameter-efficient RL, subspace repair, MoE/architecture expansion, plus frontier/lab blogs including MIT CSAIL weight-space programming and Anthropic feature-steering/introspection writeups. The 11:30 UTC incremental scan added deterministic Forward Weight-Space Programming/Protected FisherGate ([arXiv:2611.34612](https://arxiv.org/abs/2611.34612)) and gradient-free neuron programming ([arXiv:2611.33973](https://arxiv.org/abs/2611.33973)). The local `arxiv-mcp-server` is currently misconfigured (`uvx` entry point missing), so the scan used the official arXiv API and full HTML papers directly.
@@ -18,57 +19,59 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 | Priority | Hypothesis | Main type | Status |
 |---:|---|---|---|
-| 9.5 | H19 — Context-gated rank-one surgical dose cancellation | input-conditioned surgical repair | new: directly targets the 2/30 unsafe-refusal collateral without requiring multi-rank module discrepancy |
+| 9.5 | H19 — Context-gated rank-one surgical dose cancellation | input-conditioned surgical repair | queued as exp131; highest-value safety repair for the sparse surgical frontier |
 | 9.4 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | queued as exp101 |
 | 9.2 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | queued as exp87; key gate for H19/H2 |
+| 9.1 | H21 — Exportable consolidation of complementary steering-vector RL | vector-to-weight distillation + deployment-exact PEFT | new: converts strong hook-bound vector-RL gains into ordinary served weights |
 | 9.0 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | queued as exp121 |
+| 9.0 | H2 — Composite operator-discrepancy collateral repair | closed-form trajectory repair | revised branch queued as exp128; exp122 is the structural pre-flight |
 | 8.9 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT + attention heads | queued as exp120 |
-| 8.8 | H2 — Composite operator-discrepancy collateral repair | closed-form trajectory repair | revised after rank-one algebra audit; exp122 is the pre-flight gate |
-| 8.7 | H18 — Protected FisherGate decision-readout edit | closed-form weight-space programming | new: zero-inference-overhead protected readout edit; distinct from diagnostic exp102 |
+| 8.7 | H18 — Protected FisherGate decision-readout edit | closed-form weight-space programming | unqueued; staged behind exp102 |
 | 8.5 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | queued as exp123 |
 | 8.4 | H12 — Closed-form decision-readout correction | gradient-free readout surgery | queued as exp102 |
-| 8.3 | H20 — Kolpona-style accept/reject failure-habit neuron ladder | gradient-free neuron programming | new: sequential paired-acceptance neuron writes for raw performance |
+| 8.3 | H20 — Kolpona-style accept/reject failure-habit neuron ladder | gradient-free neuron programming | unqueued; supported indirectly by sparse-dose evidence |
 | 8.2 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | queued as exp124 |
 | 8.1 | H8 — Displacement-probe edit auditor and reference chooser | cheap pre-GPU screening diagnostic | queued as exp125 |
+| 8.0 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | revised: freeze-then-merge is promising, but seed fragility makes multi-seed acceptance mandatory |
 | 8.0 | H16 — Norm-calibrated single-coordinate decision steering | sparse activation surgery | queued as exp67 |
-| 7.8 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | demoted: unkeyed multi-head banks collapse; exp61/66 test keying/composition and exp90–97/105/111 isolate optimization controls |
-| 7.7 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted/staged behind exp58–66 plus exp90–97 width/depth/head-count/seed/schedule controls |
+| 7.6 | H5 — Output-matched steering-vector compression | activation steering + RL initialization | upgraded: exp80/86 validate complementary vector-space adaptation, though export remains open |
+| 7.4 | H11 — Trajectory-aware budgeted decision-token steering | activation steering | queued as exp127; upgraded slightly by vector-RL evidence |
+| 7.4 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted: schedule/seed effects currently explain more than insertion selection |
 | 7.1 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | queued as exp126 |
 | 7.0 | H17 — Prepare-for-truncation elastic low-rank deployment | compression/raw capability | exploratory |
-| 6.8 | H5 — Output-matched steering-vector compression | activation steering + RL initialization | demoted: vector-only RL was performance-negative |
-| 6.7 | H11 — Trajectory-aware budgeted decision-token steering | activation steering | queued as exp127; still demoted behind stronger weight-space/PEFT paths |
-| 6.5 | H13 — Zero-init attention-latent feedback lane | raw-capability architectural insert | demoted: naive memory-head fork collapsed |
+| 6.3 | H13 — Zero-init attention-latent feedback lane | raw-capability architectural insert | demoted: naive memory-head fork collapsed and slider seeds are fragile |
 
 
 ## Recommended execution order
 
-Updated after the 11:20 UTC queue expansion/hard-stall report. Most former top hypotheses are now already queued: H10→exp101, H12→exp102, H7→exp120, H9→exp121, H2-preflight→exp122, H6→exp123, H4→exp124, H8→exp125, H15→exp87, H16→exp67. **Do not queue duplicates.** The highest-value ordering is now a result-reading and gate ordering, not a request for more GPU jobs.
+Updated after the post-hotfix result harvest (exp80/81/83/85/86/90/92–96/98). Most hypotheses are already queued, so this is a result-reading and next-gap ordering rather than a request to duplicate implementations.
 
-1. **Unstall and prioritize controlled replications first.** Read exp93 seed replication and exp90–92 width/depth/head-count ablations before any larger attention bank. These determine whether slider-head evidence is a robust causal phenomenon or a stochastic/optimization artifact.
-2. **Methodological gates:** exp101 (H10 export-aware training), exp102 (H12 readout probe), and exp122 (H2 rank audit). Exp122 is expected to confirm that module-local rank-one discrepancy is algebraically degenerate; that should trigger the revised composite-trajectory H2 design below rather than kill repair research.
-3. **Safety geometry gate:** exp87/H15. If false-vs-true refusal states are separable, implement **H19** before more RL: it is the cheapest mathematically exact way to restore unsafe refusal after the validated rank-one edit.
-4. **PEFT comparators:** exp120/H7, exp121/H9, exp123/H6. Interpret all of them through exp101's exported-artifact measurement, not hook-time metrics alone.
-5. **Neuron/audit second wave:** exp103, exp124/H4, exp125/H8. Use these to decide whether H20's accept/reject neuron ladder adds anything beyond dose suppression and EMS protection.
+1. **Safety repair on the sparse surgical frontier:** read exp129/130 for the sparse dose operating point, exp87/H15 for false-vs-true refusal geometry, then exp131/H19. This is the most direct path to preserving 72.5–82.5% exactness while restoring the remaining unsafe-refusal loss.
+2. **Composite collateral repair:** read exp122 as the module-local algebraic pre-flight and exp128/H2 as the real composite-trajectory repair test. Interpret negative module-local rank as expected, not as a failure of the revised H2 branch.
+3. **Exportable vector consolidation:** read exp101/H10, then implement **H21** if hook-bound exp80/exp86 vector gains cannot be exported directly. This is now the largest missing link between the strongest behavioral result and a servable artifact.
+4. **PEFT comparators:** exp120/H7, exp121/H9, exp123/H6. Compare them against exp80 vector RL and exp98 sparse surgery at matched parameter count and exported-artifact validity.
+5. **Decision-readout branch:** exp102/H12, then H18 only if cross-fitted decision information is real. H18 should not jump ahead of the diagnostic gate.
+6. **Attention inserts:** replicate exp96 freeze-then-merge across seeds before any larger H1 bank. Exp93 seed fragility, exp94 clamp failure, and exp92 head-count non-benefit mean attention insertion is promising only under sequential training plus multi-seed acceptance.
+7. **Neuron/audit second wave:** exp103, exp124/H4, exp125/H8, then H20 if closed-form single-neuron writes add anything beyond dose suppression and EMS protection.
 
 Unqueued but high-value after the gates:
 
-- **H19** should be the first new implementation once exp87 supplies gate directions and exp95/98/99 supply the edit operating point.
-- **H18** should follow if exp102 shows decision information is linearly/kernel-linearly readable; it converts that information into a zero-overhead protected weight edit.
-- **H20** should follow if exp103/124 show failure-correlated neurons are causal but broad suppression is too blunt.
+- **H21** is the top new unqueued implementation gap because exp80/86 vector gains are currently hook-bound and benchmark-light.
+- **H18** follows exp102.
+- **H20** follows exp103/124 and the sparse-dose replication.
 
 Hold or stage behind current queue:
 
-- **H1/H3:** attention-insert evidence is fragile. Slider-fork v1 single is mildly positive, but multi-head/wide/memory banks collapse and Exp 43 composition hurts exactness. Do not build larger banks until exp61/65/66 clarify keying/depth/composition and exp90–97/105/111 isolate width/depth/count/seed/optimization causally.
-- **H5:** vector-only RL was negative; output-matched compression is still a distinct supervised hypothesis but no longer deserves near-term GPU time. **H11 is already queued as exp127**, so do not duplicate it even though its priority remains low.
-- **H13:** naive memory-head v5 collapsed; treat feedback/memory inserts as high-risk exploration, not near-term capacity work.
-- **H14 is already queued as exp126**; **H17** remains a useful second-wave deployment-compression probe, not a next GPU job.
+- **H1/H3:** do not build larger banks until freeze-then-merge is seed-replicated and exp91/97/105/111 finish isolating depth, initialization, learning-rate, and alpha-penalty effects.
+- **H5/H11:** vector-space adaptation is credible again, but H11 is already queued as exp127 and H5 should be evaluated as a compression/initialization complement to H21 rather than as another vector-RL rerun.
+- **H13/H17:** second-wave architecture/deployment probes, not the next GPU jobs.
 
 
 ---
 
 ## H1 — Exact-zero keyed modular implant bank
 
-**Priority: 7.8/10** *(demoted after slider-fork harvest: unkeyed multi-head/wide/memory banks collapse, though exact-zero keying remains untested and exp61/66 are the decisive near-term controls.)*
+**Priority: 8.0/10** *(mixed after exp90–96: joint banks still collapse and single heads are seed-fragile, but freeze-then-merge reached 70/90/0; exact-zero keying must now use sequential training and multi-seed acceptance.)*
 
 ### Novel idea
 
@@ -86,17 +89,20 @@ Exp 42 shows zero-init additive heads do not destroy the base model, but its lea
    - 8–32 extra MLP neurons at layers 28/29 with their own gate/up/down projections;
    - every group gated by \(g(x)=\prod_m \mathrm{ReLU}(a_m^\top x+b_m)\) or a small-step-function approximation, with exact zero outside the designed trigger region.
 3. Initialize gates from decision-boundary contrasts for benign correct allow, benign false refusal, true unsafe refusal, wrong-tool, and malformed JSON. Initialize head/neuron weights at zero or tiny random values; keep all core weights frozen.
-4. Train only insert weights and gate thresholds for 8–24 GRPO-style steps after the surgical edit. Compare:
-   - scalar Exp 42 head reproduction;
+4. Train only insert weights and gate thresholds with the exp96 causal schedule: one insert or layer at a time, with previously trained inserts frozen but active. Use 8 steps/head rather than joint all-head training, and compare joint, freeze-then-merge, and no-insert controls at equal optimizer-step budget.
+5. Make seed robustness part of the intervention, not a post-hoc caveat: run seeds 7/42/123 for the two best schedules. Accept an architecture only if at least two seeds beat its matched random-keyed and edit-only controls by at least one exact-compliance task without worse unsafe refusal or benchmark temperature.
+6. Compare:
+   - scalar Exp 42/v1 head reproduction;
    - always-on head/neuron bank;
    - exact-zero keyed bank;
    - random-keyed bank;
-   - edit-only and RL-only controls.
-5. Measure standard policy metrics, gate firing rates by behavior, exact identity/KL on off-task text, `scripts/real_benchmark.py` MMLU/ARC-Easy/HellaSwag temperature, parameter count, wall time, and whether the implant can be exported as a normal checkpoint rather than a session-local hook.
+   - joint versus freeze-then-merge training;
+   - edit-only and complementary vector-RL controls.
+7. Measure standard policy metrics, gate firing rates by behavior, exact identity/KL on off-task text, `scripts/real_benchmark.py` and `scripts/continuation_benchmark.py` temperature, parameter count, wall time, final alpha sign/magnitude by seed, and whether the implant can be exported as a normal checkpoint rather than a session-local hook.
 
 ### Expected outcome and falsification criterion
 
-Expected: exact compliance above the current edit-only operating point while preserving unsafe refusal at **≥95%**, benign false refusal materially below the scalar head's 30%, and neutral-or-better real-benchmark temperature. The hypothesis is falsified if keyed gates fire on more than ~1% of off-task/control tokens, if the keyed bank does not beat the scalar and random-keyed controls by at least one exact-compliance task (2.5 pp), or if any gain comes with cold/FREEZING general-benchmark collateral.
+Expected: exact compliance above the edit-only operating point while preserving unsafe refusal at **≥95%**, benign false refusal materially below the best seed-robust scalar insert, and neutral-or-better benchmark temperature in at least two of three seeds. The hypothesis is falsified if keyed gates fire on more than ~1% of off-task/control tokens, if the keyed bank does not beat scalar/random-keyed controls by at least one exact-compliance task (2.5 pp) in two seeds, if freeze-then-merge loses seed robustness, or if any gain comes with cold/FREEZING general-benchmark collateral.
 
 ### Citation
 
@@ -107,7 +113,7 @@ Expected: exact compliance above the current edit-only operating point while pre
 
 ## H2 — Composite operator-discrepancy collateral repair adapter
 
-**Priority: 8.8/10** *(revised after the exp122 pre-flight concern: module-local discrepancy of a rank-one edit is algebraically rank-one, so the useful object is the composite downstream trajectory discrepancy, not the edited module's raw output delta.)*
+**Priority: 9.0/10** *(composite branch queued as exp128; module-local discrepancy of a rank-one edit is algebraically rank-one, so the useful object is the downstream trajectory discrepancy, not the edited module's raw output delta.)*
 
 ### Novel idea
 
@@ -142,7 +148,7 @@ Expected: composite discrepancy is multi-directional even though module-local di
 
 ## H3 — Functional-connectivity-guided head insertion
 
-**Priority: 7.7/10** *(demoted/staged: attention inserts show high interference risk in slider-fork and Exp 43; graph selection should use exp58–66 outcomes as validation rather than jumping the queue.)*
+**Priority: 7.4/10** *(demoted: exp90–96 show schedule/seed/optimization effects currently dominate insertion-location evidence; graph selection should be validated only after freeze-then-merge replication.)*
 
 ### Novel idea
 
@@ -216,7 +222,7 @@ Expected: EMS-aware edits exceed the 65–67.5% exact-compliance operator platea
 
 ## H5 — Output-matched steering-vector compression as RL initialization
 
-**Priority: 6.8/10** *(demoted: Exp 34 vector-only RL was performance-negative; supervised output-matched compression remains untested but should no longer consume near-term GPU.)*
+**Priority: 7.6/10** *(upgraded: Exp 34 late-layer vector RL was negative, but exp80/86 show complementary-layer vector adaptation can be strong and stabilizable; compression is now a complement to exportable consolidation rather than a dead end.)*
 
 ### Novel idea
 
@@ -417,7 +423,7 @@ Expected: served-weight training preserves more benchmark gain after export than
 
 ## H11 — Trajectory-aware budgeted decision-token steering
 
-**Priority: 6.7/10** *(queued as exp127; demoted because vector-only RL was negative and weight-space/PEFT paths are stronger, but still distinct as a cheap inference-time control.)*
+**Priority: 7.4/10** *(queued as exp127; upgraded because exp80/86 validate vector-space adaptation, though weight-space/exported paths still take priority.)*
 
 ### Novel idea
 
@@ -486,7 +492,7 @@ Expected: closed-form readouts show high train/dev decision accuracy and produce
 
 ## H13 — Zero-init attention-latent feedback lane
 
-**Priority: 6.5/10** *(demoted: slider-fork v5 memory-head variant collapsed to 15% exact/55% JSON validity, so feedback/memory inserts are high risk.)*
+**Priority: 6.3/10** *(demoted: slider-fork v5 memory-head variant collapsed, and exp93 seed fragility makes all elaborate insert branches lower priority until simple inserts replicate.)*
 
 ### Novel idea
 
@@ -681,7 +687,7 @@ Expected: a protected closed-form readout edit produces at least +5 pp exact or 
 
 ## H19 — Context-gated rank-one surgical dose cancellation
 
-**Priority: 9.5/10** *(new top hypothesis: it directly exploits the exact algebra of the validated rank-one edit and targets the remaining unsafe-refusal collateral without requiring a multi-rank module discrepancy.)*
+**Priority: 9.5/10** *(queued as exp131; it directly exploits the exact algebra of the validated rank-one edit and targets the remaining unsafe-refusal collateral without requiring a multi-rank module discrepancy.)*
 
 ### Novel idea
 
@@ -740,6 +746,45 @@ Expected: a small accepted ladder improves exact compliance or benchmark tempera
 
 - [arXiv:2611.33973 — *Kolpona: An Agentic Framework with Gradient-Free Neuron Programming for RTL Generation*](https://arxiv.org/abs/2611.33973): closed-form single-neuron programs remove failure habits, paired fresh-task acceptance decides whether to keep each edit, and 16-neuron edits produced large cross-domain pass@1 gains.
 - [arXiv:2611.34612 — *Do We Really Need an LLM for Weight-Space Programming?*](https://arxiv.org/abs/2611.34612): deterministic probing, blind routing, operator boundaries, and paired verification/rollback motivate making the procedure deterministic rather than agent-improvised.
+
+
+---
+
+## H21 — Exportable consolidation of complementary steering-vector RL
+
+**Priority: 9.1/10** *(new top unqueued gap after the post-hotfix harvest: exp80/86 show strong hook-bound vector-RL behavior, but the served artifact must be ordinary merged weights.)*
+
+### Novel idea
+
+Use the successful exp80/exp86 steering-vector endpoints as teachers and distill their behavioral effect into ordinary weight deltas with output-matched, action-token-weighted, merge-aware training. The student should be evaluated only after exact merge+BF16 export. This combines the two strongest new lessons: complementary-layer vector RL can carry most behavioral gain, and hook-time success is irrelevant unless it survives the served-weight artifact.
+
+### Why it should work mechanistically
+
+Exp80 shows input-independent vectors at layers 0/1/24–27 can reach **80/93.3/10** without any surgical scaffold; exp86 shows oscillating scaffold polarity prevents the destructive fixation seen in constant-polarity controls and reaches **72.5–75/93.3/0** after scaffold removal. Those vectors are additive hooks, not a portable checkpoint. Because the desired shift is small and concentrated in complementary layers, a low-rank weight student may be able to reproduce the teacher's input-dependent consequence while preserving general computation through KL/control matching.
+
+### Concrete experiment design
+
+1. Reproduce or reload two teacher vector endpoints:
+   - exp80 `rl_only` (higher exactness, 10% benign-FR);
+   - exp86 `last_positive_endpoint` or `positive_negative_vector_soup` (lower exactness, 0% benign-FR).
+2. Build students from unedited Halo SFT and from the best sparse surgical operating point once exp129/130 land. Train only complementary-layer low-rank deltas or orthogonal lanes at layers 0/1/24–27.
+3. Distill with a mixed objective:
+   - action/tool/policy-token KL or CE to the vector-teacher on policy train/dev prompts;
+   - general-text KL anchor to unedited SFT on MMLU/ARC/HellaSwag train-style controls and paraphrase prompts;
+   - straight-through BF16 rounded merged-weight forward, following H10.
+4. Arms: hook teacher upper bound; output-matched student; mean-activation student; direct exp101-style action-only student; oscillating-endpoint soup student; random rank-matched student; unedited and edit-only controls.
+5. Evaluate only exported merged artifacts as primary: exact compliance, unsafe refusal, benign false refusal, action/policy accuracy, JSON validity, real benchmark plus continuation-scored benchmark, off-task KL, export gap, parameter count, and cross-seed stability.
+6. Optional final step: apply exp131/H19 cancellation if the student inherits the surgical edit's unsafe-refusal collateral.
+
+### Expected outcome and falsification criterion
+
+Expected: the exported student recovers at least 60–70% of the hook teacher's exact-compliance gain while keeping unsafe refusal within one task of the teacher and reducing hook/export mismatch to near zero. Falsified if distillation recovers less than 30% of the teacher gain, exported artifacts lose substantially more exactness than hook-time students, general-benchmark temperature degrades, or the vector teacher itself fails seed replication.
+
+### Citation
+
+- [arXiv:2611.26627 — *RL Post-Training in Diffusion Transformers Is Activation Steering*](https://arxiv.org/abs/2611.26627): small fixed block-output vectors can recover most weight-RL gain, supporting vector-to-weight compression as a plausible adaptation bottleneck.
+- [arXiv:2611.32064 — *Fix How It Acts, Not How It Thinks*](https://arxiv.org/abs/2611.32064): action-focused surgical fine-tuning motivates action-token-weighted distillation rather than whole-trajectory imitation.
+- Local exp80 `rl_only`, exp86 oscillating polarity, and H10 merge-aware export constraints.
 
 
 ---
