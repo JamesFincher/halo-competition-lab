@@ -18,7 +18,7 @@ sys.path.insert(0,str(ROOT/'experiments/edit_then_target_rl/scripts'))
 sys.path.insert(0,str(ROOT))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
-from scripts.continuation_benchmark import run_continuation_benchmark  # noqa: E402
+from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
 def load_exp152():
  spec=importlib.util.spec_from_file_location('exp152mod',ROOT/'experiments/exp152_qwen3_behavioral_scale_pivot/scripts/run_qwen3_behavioral_scale_pivot.py')
@@ -87,7 +87,7 @@ def nested_complete_pair_subset(rows:list[dict],n_rows:int)->list[dict]:
     return out
 
 def measure(model,tok,eval_rows,device,max_new_tokens,continuation_n):
- return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n)}
+ return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n),'transfer_benchmark':run_transfer_benchmark(model,tok,device,max(continuation_n//2,1))}
 
 def memory_stats(device):
  if device.type!='cuda':return {'device':'cpu'}
