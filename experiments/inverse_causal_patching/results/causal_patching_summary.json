@@ -1,0 +1,157 @@
+{
+  "device": "cuda",
+  "wall_sec": 5.29,
+  "base_target_margin": 3.125,
+  "layer_deltas": [
+    {
+      "layer": 0,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 1,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 2,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 3,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 4,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 5,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 6,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 7,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 8,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 9,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 10,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 11,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 12,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 13,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 14,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 15,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 16,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 17,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 18,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 19,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 20,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 21,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 22,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 23,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 24,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 25,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 26,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 27,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 28,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    },
+    {
+      "layer": 29,
+      "margin_after_patch": 3.125,
+      "delta": 0.0
+    }
+  ]
+}

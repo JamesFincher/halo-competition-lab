@@ -71,23 +71,22 @@ def main():
         return acts
 
     results = []
-    src = pos_rows[0]
+    src_row = pos_rows[0]
     tgt = neg_rows[-1]
-    acts_src = capture_resid(sft, src["ids"])
+    acts_src = capture_resid(sft, src_row["ids"])
     base_marg_tgt, tgt_ids = margin_at_pos(sft, tgt["prompt"])
-    print(f"  patch pair: src margin={src['margin']:.2f} -> tgt margin={base_marg_tgt:.2f}", flush=True)
+    print(f"  patch pair: src margin={src_row['margin']:.2f} -> tgt margin={base_marg_tgt:.2f}", flush=True)
     for li in range(n_layers):
-        def mkpatch(layer_idx):
+        patch_vec = acts_src[li].reshape(-1).to(device)
+
+        def mkpatch(vec):
             def hook(_mod, inp, out):
                 o = out[0] if isinstance(out, tuple) else out
                 o2 = o.clone()
-                len_diff = o2.shape[1] - acts_src[layer_idx].shape[0] if acts_src[layer_idx].dim() == 2 else 0
-                patch_vec = acts_src[layer_idx]
-                if patch_vec.dim() == 2: patch_vec = patch_vec[0]
-                o2[:, -1, :] = patch_vec.to(o2.device, o2.dtype).unsqueeze(0) if patch_vec.dim() == 1 else patch_vec.to(o2.device, o2.dtype)
+                o2[:, -1, :] = vec.to(o2.dtype).view(1, -1).expand(o2.shape[0], -1)
                 return (o2,) + tuple(out[1:]) if isinstance(out, tuple) else o2
             return hook
-        h = sft.model.layers[li].register_forward_hook(mkpatch(li))
+        h = sft.model.layers[li].register_forward_hook(mkpatch(patch_vec))
         marg, _ = margin_at_pos(sft, tgt["prompt"])
         h.remove()
         results.append({"layer": li, "margin_after_patch": round(marg, 3), "delta": round(marg - base_marg_tgt, 3)})
