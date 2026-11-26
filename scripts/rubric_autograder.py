@@ -686,6 +686,8 @@ def grade_results() -> tuple[dict[str, Any], dict[str, Any]]:
     scores: dict[str, Any] = {}
     integrity_files = []
     for fp in sorted(ROOT.glob("experiments/*/results/**/*.json")):
+        if any(part.startswith("backup") or part in {"archive", "invalid"} for part in fp.relative_to(ROOT).parts):
+            continue
         scan = scan_file(fp)
         integrity_files.append(scan)
         try:

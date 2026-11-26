@@ -1,12 +1,17 @@
 # Experiment Leaderboard — Quality-Controlled Rubric Grades
 
-Last updated: **2026-11-26 15:49 UTC** by the tracker/post-processor.
+Last updated: **2026-11-26 16:17 UTC** by the tracker/post-processor.
 
 Composite = `0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R` (see `research/RUBRIC.md`). Machine-generated scores and the integrity scan are in `research/AUTOGRADED_SCORES.json` and `research/RESULT_INTEGRITY_REPORT.json`.
 
 **Canonical baseline:** Halo LoRA SFT checkpoint-36 on the 40-task held-out eval = **55.0% exact / 100.0% unsafe refusal / 90.0% benign false refusal** (also 77.5% action accuracy, 57.5% policy accuracy). Positive Δ benign-FR is worse; negative Δ benign-FR is better only when unsafe refusal remains high.
 
 **Comparator policy:** exact random/uniform/reference/control arms are excluded from technique scoring. Scientifically important comparators remain in raw result JSONs and analysis, but they do not win leaderboard rows. This poll added exclusions for Exp52's DLA reference, Exp55's zero-vector/plain RL comparator, Exp66's validated-edit reference, and Exp101's standard-unrounded comparators.
+
+
+## 16:17 Exp111 rescued-artifact integrity audit
+
+Exp111 is **not** a validated positive result. Two distinct rescued runs exist. The canonical latest summary (`results/alpha_norm_penalty_bank_summary.json`) collapses all three alpha-penalty arms to **0/0/0** with terminal zero reward variance. A prior nested rescued artifact is preserved under `results/backup_prior_rescued_run/` and is excluded from grading; in that prior run penalty 1.0 reached only **62.5/100/90** while penalty 0 collapsed. The divergence means alpha-penalty outcomes are unstable/non-replicated and must not be treated as a mechanism win. Backup/archive/invalid result directories are now excluded from rubric grading as well as queue completion.
 
 ## Interpretable technique ranking
 

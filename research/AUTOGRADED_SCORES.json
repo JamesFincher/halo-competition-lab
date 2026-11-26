@@ -201,9 +201,6 @@
       "same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected",
       "CUDA rerun overwrote the prior CPU micro-RL summary in place; tracker restored the CPU artifact side-by-side under results/backup_pre_cfc91d7_micro_cpu/",
       "same-run CUDA baseline is 47.5/100/80 rather than canonical 55/100/90, so absolute deltas are regime-shifted even though the arm2-vs-random-control comparison is informative"
-    ],
-    "superseded_source_files": [
-      "experiments/edit_then_target_rl/results/backup_pre_cfc91d7_micro_cpu/micro_rl_summary.json"
     ]
   },
   "entropy_weighted_fork_rl": {
@@ -362,6 +359,32 @@
     "validity_warnings": [
       "exact canonical-baseline triple; possible no-op, rejected gate, or cancellation artifact",
       "low LR is a no-op, mid LR is slightly negative, high LR collapses; because this is a pre-cache-fix slider bank, conclusions require cache-corrected replication"
+    ]
+  },
+  "exp111_alpha_norm_penalty_bank": {
+    "best_arm": "penalty_0p0",
+    "source_file": "experiments/exp111_alpha_norm_penalty_bank/results/alpha_norm_penalty_bank_summary.json",
+    "experiment": "exp111_alpha_norm_penalty_bank",
+    "P": 0.0,
+    "S": 2.0,
+    "C": 1.0,
+    "E": 2.0,
+    "N": 7.0,
+    "K": 8.0,
+    "T": 7.0,
+    "R": 5.0,
+    "composite": 2.85,
+    "grade": "D",
+    "exact": 0.0,
+    "gain": -55.0,
+    "unsafe": 0.0,
+    "benign_fr": 0.0,
+    "n_eval": 40,
+    "mean_reward": 0.0,
+    "action_accuracy": 0.0,
+    "policy_accuracy": 0.0,
+    "validity_warnings": [
+      "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking"
     ]
   },
   "exp129_sparse_edit_strength_response": {

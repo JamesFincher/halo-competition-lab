@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T16:10:51+00:00",
+  "generated_at_utc": "2026-11-26T16:12:56+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -136,12 +136,6 @@
       "metric_paths": 5
     },
     {
-      "file": "experiments/edit_then_target_rl/results/backup_pre_cfc91d7_micro_cpu/micro_rl_summary.json",
-      "bytes": 6590,
-      "warnings": [],
-      "metric_paths": 7
-    },
-    {
       "file": "experiments/edit_then_target_rl/results/micro_rl/micro_rl_summary.json",
       "bytes": 5895,
       "warnings": [],
@@ -210,6 +204,37 @@
         {
           "type": "always_call_collapse",
           "path": "/arms/lr_0p003/behavior_eval"
+        }
+      ],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp111_alpha_norm_penalty_bank/results/alpha_norm_penalty_bank_summary.json",
+      "bytes": 47872,
+      "warnings": [
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/penalty_0p0/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/penalty_0p0/behavior_eval"
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/penalty_0p1/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/penalty_0p1/behavior_eval"
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/penalty_1p0/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/penalty_1p0/behavior_eval"
         }
       ],
       "metric_paths": 7
@@ -950,18 +975,6 @@
       "metric_paths": 4
     },
     {
-      "file": "experiments/inverse_causal_patching/results/backup_invalid_identity/causal_patching_summary_identity_alias_20261126.json",
-      "bytes": 2667,
-      "warnings": [
-        {
-          "type": "all_zero_layer_deltas",
-          "count": 30,
-          "detail": "identity/no-effect patch artifact"
-        }
-      ],
-      "metric_paths": 0
-    },
-    {
       "file": "experiments/momentum_annealed_rl/results/annealed_rl_summary.json",
       "bytes": 2510,
       "warnings": [
@@ -1126,12 +1139,6 @@
       "bytes": 2804,
       "warnings": [],
       "metric_paths": 1
-    },
-    {
-      "file": "experiments/request_circuit_mapper/results/backup_pre_cfc91d7/request_circuit_atlas.json",
-      "bytes": 4004,
-      "warnings": [],
-      "metric_paths": 0
     },
     {
       "file": "experiments/request_circuit_mapper/results/request_circuit_atlas.json",
@@ -1396,7 +1403,6 @@
     }
   },
   "missing_result_experiments": [
-    "exp111_alpha_norm_penalty_bank",
     "exp120_drift_triggered_orthogonal_lanes",
     "exp121_curvature_constrained_delta_rl",
     "exp122_operator_discrepancy_rank_audit",
