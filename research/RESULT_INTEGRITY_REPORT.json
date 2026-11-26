@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T14:29:09+00:00",
+  "generated_at_utc": "2026-11-26T14:31:47+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1248,6 +1248,7 @@
     "exp144_sparse_edit_anchored_mlp_lora",
     "exp147_additive_capability_behavior_union",
     "exp148_legacy_scorer_flattening_audit",
+    "exp150_l20_cache_corrected_seed_replication",
     "exp84_momentum_carryover_half_edit",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"

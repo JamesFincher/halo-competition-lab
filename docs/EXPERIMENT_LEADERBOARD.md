@@ -185,4 +185,4 @@ Rows below are sorted by raw composite score, **not by scientific trustworthines
 - **No NaN/Inf values and no invalid JSON objects** were detected in committed result scans.
 - **Exp67 telemetry gap:** `exp67_single_coordinate_decision_steering/results/step_metrics.jsonl` is empty even though the final summary is complete; treat optimizer-trace conclusions as unavailable for that experiment.
 - **Diagnostic-only result:** `benchmark_failure_tree` is complete as a benchmark diagnostic (38.3% accuracy, suppression delta 0.0 pp) but has no behavioral intervention metrics and is not leaderboard-graded.
-- Known missing/queued experiments remain tracked in `research/RESULT_INTEGRITY_REPORT.json`; exp102/111/120–128/131/133/139–142/144/147/148 are queues, not completed negative results.
+- Known missing/queued experiments remain tracked in `research/RESULT_INTEGRITY_REPORT.json`; exp102/111/120–128/131/133/139–142/144/147/148/150 are queues; exp149 is an intentionally staged conditional follow-up, not an autoqueue item, not completed negative results.
