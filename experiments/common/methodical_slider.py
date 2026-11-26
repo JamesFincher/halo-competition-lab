@@ -119,11 +119,6 @@ def train_plain_slider(
             lp = base_rl.completion_logprobs(model, gen[gi].unsqueeze(0), prompt_len)
             loss = loss - adv[gi] * lp
         loss = loss / group_size
-        penalty_value = 0.0
-        if alpha_penalty:
-            penalty = sum(head.alpha.pow(2).sum() for head in bank.layer_heads.values())
-            penalty_value = float(penalty.detach().item())
-            loss = loss + alpha_penalty * penalty
         opt.zero_grad(set_to_none=True)
         loss.backward()
         grad_norm = float(torch.nn.utils.clip_grad_norm_(head.parameters(), 1.0).item())
@@ -137,7 +132,6 @@ def train_plain_slider(
             "reward_std": round(float(rew_t.std(unbiased=False).item()), 4),
             "alpha": round(float(head.alpha.detach().item()), 6),
             "loss": round(float(loss.detach().item()), 5),
-            "alpha_l2_sum": round(penalty_value, 8),
             "grad_norm": round(grad_norm, 5),
             "step_wall_sec": round(time.perf_counter() - step_t0, 3),
         }
