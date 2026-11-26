@@ -25,6 +25,7 @@ import argparse
 import copy
 import json
 import math
+import os
 import random
 import re
 import time
@@ -87,6 +88,9 @@ def evaluate_heldout(
     device: torch.device,
     max_new_tokens: int = 80,
 ) -> dict:
+    if os.environ.get("HALO_SMOKE_TEST") == "1":
+        eval_rows = eval_rows[:2]
+        max_new_tokens = min(max_new_tokens, 8)
     model.eval()
     n = len(eval_rows)
     json_valid = action_ok = policy_ok = exact = 0

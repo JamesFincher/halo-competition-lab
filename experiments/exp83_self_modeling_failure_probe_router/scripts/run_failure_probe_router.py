@@ -59,7 +59,7 @@ def failure_label(text, target, info):
 
 def collect_probe_data(model, tokenizer, rows, device, group_size, seed):
     torch.manual_seed(seed)
-    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
+    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[0] for x in ("call", "ref"))
     records = []
     for row_i, row in enumerate(rows):
         prompt = base_rl.build_prompt(tokenizer, row["messages"])
@@ -134,7 +134,7 @@ def train_router_arm(arm, init_model, ref_model, tokenizer, prompt_stream, devic
     model = copy.deepcopy(init_model).to(device); vec_rl.freeze_weights(model)
     vectors = vec_rl.attach_vectors(model, vec_rl.DISJOINT_LAYERS, device)
     opt = torch.optim.AdamW(list(vectors.values()), lr=lr, weight_decay=0.0)
-    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
+    action_ids = set(tokenizer.encode(x, add_special_tokens=False)[0] for x in ("call", "ref"))
     rng = random.Random(seed); trace = []
     for step in range(1, steps + 1):
         rows = [prompt_stream[(2 * (step - 1)) % len(prompt_stream)], prompt_stream[(2 * (step - 1) + 1) % len(prompt_stream)]]

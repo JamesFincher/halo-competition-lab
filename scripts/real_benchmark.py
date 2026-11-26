@@ -24,6 +24,37 @@ def score_mc(model, tok, device, items, batch=16):
             correct += int(best == q["answer"])
     return 100.0 * correct / max(len(items), 1)
 
+def run_benchmark(model, tok, device, n: int = 100) -> dict:
+    """Score an already-loaded causal LM on real MMLU/ARC-Easy/HellaSwag items."""
+    import os
+    if os.environ.get("HALO_SMOKE_TEST") == "1":
+        n = min(n, 2)
+    from datasets import load_dataset
+    res = {}
+    try:
+        mmlu = load_dataset("cais/mmlu", "all", split=f"test[:{n}]")
+        items = [{"context": r["question"], "choices": r["choices"], "answer": r["choices"][r["answer"]]} for r in mmlu]
+        res["mmlu"] = round(score_mc(model, tok, device, items), 2)
+        print(f"  MMLU: {res['mmlu']}%", flush=True)
+    except Exception as e:
+        print(f"  MMLU failed: {str(e)[:80]}", flush=True)
+    try:
+        arc = load_dataset("allenai/ai2_arc", "ARC-Easy", split=f"test[:{n}]")
+        items = [{"context": r["question"], "choices": r["choices"]["text"], "answer": r["choices"]["text"][r["choices"]["label"].index(r["answerKey"])]} for r in arc]
+        res["arc_easy"] = round(score_mc(model, tok, device, items), 2)
+        print(f"  ARC-Easy: {res['arc_easy']}%", flush=True)
+    except Exception as e:
+        print(f"  ARC failed: {str(e)[:80]}", flush=True)
+    try:
+        hs = load_dataset("Rowan/hellaswag", split=f"validation[:{n}]")
+        items = [{"context": r["ctx"], "choices": r["endings"], "answer": r["endings"][int(r["label"])]} for r in hs]
+        res["hellaswag"] = round(score_mc(model, tok, device, items), 2)
+        print(f"  HellaSwag: {res['hellaswag']}%", flush=True)
+    except Exception as e:
+        print(f"  HellaSwag failed: {str(e)[:80]}", flush=True)
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=100)
@@ -34,7 +65,6 @@ def main():
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"[RealBench] MMLU+ARC+HellaSwag on {device}", flush=True)
-    from datasets import load_dataset
     tok = AutoTokenizer.from_pretrained("HuggingFaceTB/SmolLM2-135M-Instruct")
     if tok.pad_token is None: tok.pad_token = tok.eos_token
     model = AutoModelForCausalLM.from_pretrained("HuggingFaceTB/SmolLM2-135M-Instruct", dtype=torch.float32).to(device).eval()
@@ -82,37 +112,14 @@ def main():
                 wf[:, idx] -= 0.7 * torch.outer(u, proj)
                 w.copy_(wf.to(w.dtype))
         print("  edit applied", flush=True)
-    res = {}
-    # MMLU (real test items, stratified across subjects)
-    try:
-        mmlu = load_dataset("cais/mmlu", "all", split=f"test[:{args.n}]")
-        items = [{"context": r["question"], "choices": r["choices"], "answer": r["choices"][r["answer"]]} for r in mmlu]
-        res["mmlu"] = round(score_mc(model, tok, device, items), 2)
-        print(f"  MMLU: {res['mmlu']}%", flush=True)
-    except Exception as e:
-        print(f"  MMLU failed: {str(e)[:80]}", flush=True)
-    # ARC-Easy
-    try:
-        arc = load_dataset("allenai/ai2_arc", "ARC-Easy", split=f"test[:{args.n}]")
-        items = [{"context": r["question"], "choices": r["choices"]["text"], "answer": r["choices"]["text"][r["choices"]["label"].index(r["answerKey"])]} for r in arc]
-        res["arc_easy"] = round(score_mc(model, tok, device, items), 2)
-        print(f"  ARC-Easy: {res['arc_easy']}%", flush=True)
-    except Exception as e:
-        print(f"  ARC failed: {str(e)[:80]}", flush=True)
-    # HellaSwag
-    try:
-        hs = load_dataset("Rowan/hellaswag", split=f"validation[:{args.n}]")
-        items = [{"context": r["ctx"], "choices": r["endings"], "answer": r["endings"][int(r["label"])]} for r in hs]
-        res["hellaswag"] = round(score_mc(model, tok, device, items), 2)
-        print(f"  HellaSwag: {res['hellaswag']}%", flush=True)
-    except Exception as e:
-        print(f"  HellaSwag failed: {str(e)[:80]}", flush=True)
+    res = run_benchmark(model, tok, device, args.n)
     res["wall_sec"] = round(time.time()-t0, 2)
     res["device"] = str(device)
     res["n_per_bench"] = args.n
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(res, indent=2))
     print(f"[RealBench DONE] {res}", flush=True)
+
 
 if __name__ == "__main__":
     main()
