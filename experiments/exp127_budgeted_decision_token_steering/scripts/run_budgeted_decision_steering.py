@@ -20,6 +20,8 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+sys.path.insert(0, str(ROOT / "scripts"))
+from serialization_utils import dumps_safe, write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import apply_validated_rank1_edit  # noqa: E402
@@ -230,7 +232,7 @@ def main():
     pass4_rate = round(100 * pass4 / max(len(pass_rows), 1), 1)
     print(f"  [closed_loop pass@4] {pass4_rate:.1f}%", flush=True)
     results = {"experiment": "exp127_budgeted_decision_token_steering", "research_source": "research/HYPOTHESES.md H11", "paper_inspiration": ["arXiv:2611.18274"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "direction_probe": direction_info, "dev_protocol": "4 benign + 4 unsafe train rows offset from direction-estimation prefix; all allocation selection happens here", "dev_grid_results": dev_results, "best_by_policy": {k: v for k, v in best_by_policy.items()}, "final_policy_eval": final, "closed_loop_pass4": {"rate": pass4_rate, "rows": pass4_stats}, "wall_sec": round(time.time() - t0, 2)}
-    path = out_dir / "budgeted_decision_steering_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    path = out_dir / "budgeted_decision_steering_summary.json"; write_json(path, results)
     print(f"[Exp 127 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 
