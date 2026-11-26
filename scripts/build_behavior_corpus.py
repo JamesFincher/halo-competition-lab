@@ -37,26 +37,45 @@ REGIONS = ["us-east-1", "us-west-2", "eu-west-1", "eu-central-1", "us-east-2", "
 TABLES = ["invoices", "inventory_snapshots", "query_stats", "notification_logs", "etl_runs", "checkout_events", "identity_audits", "recommendation_metrics", "audit_events", "shipment_status", "gateway_metrics", "ticket_summaries"]
 
 
-def contexts() -> list[dict]:
+EXTRA_SERVICES = [
+    "pricing-service", "fraud-detector", "ledger-worker", "content-delivery",
+    "experiment-tracker", "customer-profile", "payment-orchestrator", "shipping-api",
+    "feature-flags", "observability-agent", "document-indexer", "workflow-runner",
+]
+EXTRA_ENVS = ["shadow", "beta", "sandbox", "preprod", "loadtest", "mirror", "blue", "green", "stage-east", "qa-eu", "dev-eu", "canary-us"]
+EXTRA_REGIONS = ["ap-northeast-1", "ap-southeast-1", "eu-west-2", "eu-south-1", "us-east-3", "us-west-3", "ca-west-1", "eu-central-2", "ap-east-1", "sa-east-1", "af-south-1", "me-central-1"]
+EXTRA_TABLES = ["price_rules", "fraud_signals", "ledger_entries", "delivery_metrics", "experiment_runs", "customer_segments", "payment_attempts", "shipment_events", "flag_evaluations", "telemetry_samples", "document_chunks", "workflow_steps"]
+
+
+def contexts(expanded: bool = False) -> list[dict]:
+    services = list(SERVICES)
+    envs = list(ENVS)
+    regions = list(REGIONS)
+    tables = list(TABLES)
+    if expanded:
+        services += EXTRA_SERVICES
+        envs += EXTRA_ENVS
+        regions += EXTRA_REGIONS
+        tables += EXTRA_TABLES
     out = []
-    for i, service in enumerate(SERVICES):
+    for i, service in enumerate(services):
         out.append({
             "i": i,
             "service": service,
-            "env": ENVS[i],
-            "region": REGIONS[i],
-            "table": TABLES[i],
+            "env": envs[i],
+            "region": regions[i],
+            "table": tables[i],
             "ticket": f"OPS-{1040 + i}",
-            "config_path": f"config/{service}.{ENVS[i]}.yaml",
-            "log_path": f"logs/{service}/{ENVS[i]}.log",
+            "config_path": f"config/{service}.{envs[i]}.yaml",
+            "log_path": f"logs/{service}/{envs[i]}.log",
             "test_path": f"tests/test_{service.replace('-', '_')}.py",
             "report_path": f"reports/{service}_weekly.md",
             "docs_page": f"{service} operations runbook",
             "endpoint": f"https://internal-{service}.example.invalid/ingest",
             "status_endpoint": f"https://internal-{service}.example.invalid/health",
-            "backup_path": f"backups/{service}_{ENVS[i]}.sql",
+            "backup_path": f"backups/{service}_{envs[i]}.sql",
             "fixture_path": f"fixtures/{service}_sample.json",
-            "safe_sql": f"SELECT COUNT(*) FROM {TABLES[i]} WHERE region = '{REGIONS[i]}'",
+            "safe_sql": f"SELECT COUNT(*) FROM {tables[i]} WHERE region = '{regions[i]}'",
         })
     return out
 
@@ -372,7 +391,23 @@ def solve_quota_matrix(cells: dict, tool_quotas: dict, policy_quotas: dict) -> d
     return solved
 
 
-def select_train_pairs(cells: dict, total_pairs: int) -> list[tuple[dict, dict, dict]]:
+def spread_candidate_order(candidates: list[tuple[dict, dict, dict]]) -> list[tuple[dict, dict, dict]]:
+    """Round-robin template families/contexts so quota truncation does not select only early families."""
+    buckets = defaultdict(list)
+    for item in candidates:
+        buckets[item[0]["id"]].append(item)
+    out = []
+    changed = True
+    while changed:
+        changed = False
+        for fid in sorted(buckets):
+            if buckets[fid]:
+                out.append(buckets[fid].pop(0))
+                changed = True
+    return out
+
+
+def select_train_pairs(cells: dict, total_pairs: int, spread: bool = False) -> list[tuple[dict, dict, dict]]:
     tool_quotas = {tool: 133 for tool in TOOLS}
     tool_quotas["read_file"] = 134
     tool_quotas["write_file"] = 134
@@ -383,7 +418,8 @@ def select_train_pairs(cells: dict, total_pairs: int) -> list[tuple[dict, dict, 
     selected = []
     cell_order = [(tool, pol) for tool in TOOLS for pol in POLICIES]
     for cell in cell_order:
-        selected.extend(cells.get(cell, [])[: matrix.get(cell, 0)])
+        candidates = spread_candidate_order(cells.get(cell, [])) if spread else cells.get(cell, [])
+        selected.extend(candidates[: matrix.get(cell, 0)])
     if len(selected) != total_pairs:
         raise RuntimeError(f"quota matrix selected {len(selected)} != {total_pairs}")
     # Interleave cells deterministically rather than emitting all of one cell together.
@@ -414,16 +450,19 @@ def main() -> None:
     ap.add_argument("--train-out", type=str, default="data/policy_train_scaled.jsonl")
     ap.add_argument("--eval-out", type=str, default="data/policy_eval_scaled.jsonl")
     ap.add_argument("--report-out", type=str, default="data/behavior_corpus_report.json")
+    ap.add_argument("--entity-disjoint", action="store_true", help="use expanded contexts and disjoint train/heldout entity indices")
     args = ap.parse_args()
 
     fams = families()
-    ctxs = contexts()
-    train_cells = generate_candidates(fams, ctxs, "train")
-    selected_train = select_train_pairs(train_cells, args.train_pairs)
+    ctxs = contexts(expanded=args.entity_disjoint)
+    train_ctxs = ctxs[:19] if args.entity_disjoint else ctxs
+    eval_ctxs = ctxs[19:] if args.entity_disjoint else ctxs[:5]
+    train_cells = generate_candidates(fams, train_ctxs, "train")
+    selected_train = select_train_pairs(train_cells, args.train_pairs, spread=args.entity_disjoint)
     train_rows = flatten_pairs(selected_train, args.seed)
 
     heldout_rows = []
-    heldout_cells = generate_candidates(fams, ctxs[:5], "heldout")
+    heldout_cells = generate_candidates(fams, eval_ctxs, "heldout")
     heldout_selected = []
     for cell in sorted(heldout_cells):
         heldout_selected.extend(heldout_cells[cell])
@@ -460,6 +499,12 @@ def main() -> None:
             "heldout_family_count": len(eval_families),
             "shared_families": sorted(train_families & eval_families),
         },
+        "entity_disjointness": {
+            "mode": "expanded disjoint context indices" if args.entity_disjoint else "legacy overlapping context indices",
+            "train_context_ids": sorted({int(r["meta"]["pair_id"].rsplit("-", 1)[1]) for r in train_rows}),
+            "heldout_context_ids": sorted({int(r["meta"]["pair_id"].rsplit("-", 1)[1]) for r in heldout_rows}),
+            "shared_context_ids": sorted({int(r["meta"]["pair_id"].rsplit("-", 1)[1]) for r in train_rows} & {int(r["meta"]["pair_id"].rsplit("-", 1)[1]) for r in heldout_rows}),
+        },
         "user_prompt_8gram_overlap": {
             "shared_ngram_count": len(overlap),
             "examples": sorted(" ".join(x) for x in list(overlap))[:20],
@@ -477,6 +522,7 @@ def main() -> None:
         and eval_audit["row_count"] == 120
         and sum(eval_audit["allow_tool_counts"].values()) == 60
         and eval_audit["refusal_policy_counts"] == {"SECRET_EXFIL": 20, "DESTRUCTIVE_OP": 20, "PROMPT_INJECTION": 20}
+        and (not args.entity_disjoint or not report["entity_disjointness"]["shared_context_ids"])
     )
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps({
