@@ -1,0 +1,231 @@
+{
+  "experiment": "exp87_multiperspective_abstention_factorization",
+  "research_source": "research/HYPOTHESES.md H15",
+  "paper_inspiration": [
+    "arXiv:2306.11681",
+    "arXiv:2410.12405"
+  ],
+  "config": {
+    "n_pairs": 10,
+    "group_size": 5,
+    "steering_alpha": 1.0,
+    "seed": 42
+  },
+  "device": "cuda",
+  "construct_validity_note": "Counterfactual harmless controls are lexical/semantic approximations constrained by the existing 3-policy schema; ambiguity prompts are measurement-only because the schema has no unknown-tool refusal code.",
+  "n_counterfactual_pairs": 10,
+  "n_behavior_margin_pairs": 10,
+  "counterfactual_policy_codes": [
+    "SECRET_EXFIL",
+    "PROMPT_INJECTION",
+    "SECRET_EXFIL",
+    "DESTRUCTIVE_OP",
+    "PROMPT_INJECTION",
+    "DESTRUCTIVE_OP",
+    "SECRET_EXFIL",
+    "DESTRUCTIVE_OP",
+    "SECRET_EXFIL",
+    "SECRET_EXFIL"
+  ],
+  "layer_metrics": {
+    "18": {
+      "pairwise_direction_cosines": {
+        "false_refusal_margin__true_harmfulness": 0.00725,
+        "ambiguity_unknown__true_harmfulness": 0.18237,
+        "ambiguity_unknown__false_refusal_margin": -0.05158
+      },
+      "linear_cka": {
+        "false_refusal_margin__true_harmfulness": 0.31386,
+        "ambiguity_unknown__true_harmfulness": 0.35673,
+        "ambiguity_unknown__false_refusal_margin": 0.4048
+      },
+      "stability": {
+        "true_harmfulness": {
+          "split_half_cosine": 0.39251,
+          "diagonal_whitened_split_cosine": 0.34998,
+          "n_diffs": 10
+        },
+        "false_refusal_margin": {
+          "split_half_cosine": 0.99198,
+          "diagonal_whitened_split_cosine": 0.9949,
+          "n_diffs": 10
+        },
+        "ambiguity_unknown": {
+          "split_half_cosine": 0.93378,
+          "diagonal_whitened_split_cosine": 0.95993,
+          "n_diffs": 10
+        }
+      }
+    },
+    "20": {
+      "pairwise_direction_cosines": {
+        "false_refusal_margin__true_harmfulness": -0.107,
+        "ambiguity_unknown__true_harmfulness": 0.25301,
+        "ambiguity_unknown__false_refusal_margin": -0.03812
+      },
+      "linear_cka": {
+        "false_refusal_margin__true_harmfulness": 0.39586,
+        "ambiguity_unknown__true_harmfulness": 0.35152,
+        "ambiguity_unknown__false_refusal_margin": 0.37542
+      },
+      "stability": {
+        "true_harmfulness": {
+          "split_half_cosine": 0.34554,
+          "diagonal_whitened_split_cosine": 0.41189,
+          "n_diffs": 10
+        },
+        "false_refusal_margin": {
+          "split_half_cosine": 0.99098,
+          "diagonal_whitened_split_cosine": 0.99381,
+          "n_diffs": 10
+        },
+        "ambiguity_unknown": {
+          "split_half_cosine": 0.92603,
+          "diagonal_whitened_split_cosine": 0.95439,
+          "n_diffs": 10
+        }
+      }
+    },
+    "24": {
+      "pairwise_direction_cosines": {
+        "false_refusal_margin__true_harmfulness": -0.04442,
+        "ambiguity_unknown__true_harmfulness": 0.41425,
+        "ambiguity_unknown__false_refusal_margin": -0.05004
+      },
+      "linear_cka": {
+        "false_refusal_margin__true_harmfulness": 0.37386,
+        "ambiguity_unknown__true_harmfulness": 0.17456,
+        "ambiguity_unknown__false_refusal_margin": 0.30497
+      },
+      "stability": {
+        "true_harmfulness": {
+          "split_half_cosine": 0.277,
+          "diagonal_whitened_split_cosine": 0.25717,
+          "n_diffs": 10
+        },
+        "false_refusal_margin": {
+          "split_half_cosine": 0.99327,
+          "diagonal_whitened_split_cosine": 0.99656,
+          "n_diffs": 10
+        },
+        "ambiguity_unknown": {
+          "split_half_cosine": 0.88556,
+          "diagonal_whitened_split_cosine": 0.93419,
+          "n_diffs": 10
+        }
+      }
+    },
+    "28": {
+      "pairwise_direction_cosines": {
+        "false_refusal_margin__true_harmfulness": -0.01211,
+        "ambiguity_unknown__true_harmfulness": 0.30326,
+        "ambiguity_unknown__false_refusal_margin": -0.09134
+      },
+      "linear_cka": {
+        "false_refusal_margin__true_harmfulness": 0.38792,
+        "ambiguity_unknown__true_harmfulness": 0.19635,
+        "ambiguity_unknown__false_refusal_margin": 0.30141
+      },
+      "stability": {
+        "true_harmfulness": {
+          "split_half_cosine": 0.28245,
+          "diagonal_whitened_split_cosine": 0.26569,
+          "n_diffs": 10
+        },
+        "false_refusal_margin": {
+          "split_half_cosine": 0.99165,
+          "diagonal_whitened_split_cosine": 0.99086,
+          "n_diffs": 10
+        },
+        "ambiguity_unknown": {
+          "split_half_cosine": 0.88935,
+          "diagonal_whitened_split_cosine": 0.93639,
+          "n_diffs": 10
+        }
+      }
+    },
+    "29": {
+      "pairwise_direction_cosines": {
+        "false_refusal_margin__true_harmfulness": 0.2104,
+        "ambiguity_unknown__true_harmfulness": 0.14531,
+        "ambiguity_unknown__false_refusal_margin": -0.04824
+      },
+      "linear_cka": {
+        "false_refusal_margin__true_harmfulness": 0.46006,
+        "ambiguity_unknown__true_harmfulness": 0.23611,
+        "ambiguity_unknown__false_refusal_margin": 0.31167
+      },
+      "stability": {
+        "true_harmfulness": {
+          "split_half_cosine": 0.21461,
+          "diagonal_whitened_split_cosine": 0.24925,
+          "n_diffs": 10
+        },
+        "false_refusal_margin": {
+          "split_half_cosine": 0.9901,
+          "diagonal_whitened_split_cosine": 0.98687,
+          "n_diffs": 10
+        },
+        "ambiguity_unknown": {
+          "split_half_cosine": 0.87727,
+          "diagonal_whitened_split_cosine": 0.93532,
+          "n_diffs": 10
+        }
+      }
+    }
+  },
+  "steering_layer": 24,
+  "steering_evals": {
+    "no_steering": {
+      "n_eval": 40,
+      "mean_reward": 0.775,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 77.5,
+      "policy_accuracy": 57.5,
+      "unsafe_refusal_rate": 100.0,
+      "benign_false_refusal_rate": 90.0,
+      "exact_compliance_rate": 55.0
+    },
+    "negative_false_margin": {
+      "n_eval": 40,
+      "mean_reward": 0.775,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 77.5,
+      "policy_accuracy": 57.5,
+      "unsafe_refusal_rate": 100.0,
+      "benign_false_refusal_rate": 90.0,
+      "exact_compliance_rate": 55.0
+    },
+    "positive_false_margin_control": {
+      "n_eval": 40,
+      "mean_reward": 0.775,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 77.5,
+      "policy_accuracy": 57.5,
+      "unsafe_refusal_rate": 100.0,
+      "benign_false_refusal_rate": 90.0,
+      "exact_compliance_rate": 55.0
+    },
+    "negative_orthogonalized_margin": {
+      "n_eval": 40,
+      "mean_reward": 0.775,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 77.5,
+      "policy_accuracy": 57.5,
+      "unsafe_refusal_rate": 100.0,
+      "benign_false_refusal_rate": 90.0,
+      "exact_compliance_rate": 55.0
+    },
+    "negative_random_control": {
+      "n_eval": 40,
+      "mean_reward": 0.775,
+      "json_valid_rate": 100.0,
+      "action_accuracy": 77.5,
+      "policy_accuracy": 57.5,
+      "unsafe_refusal_rate": 100.0,
+      "benign_false_refusal_rate": 90.0,
+      "exact_compliance_rate": 55.0
+    }
+  },
+  "wall_sec": 635.78
+}
