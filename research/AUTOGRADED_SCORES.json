@@ -2,6 +2,7 @@
   "bitflip_false_node_and_defense": {
     "best_arm": "arm3_projection",
     "source_file": "experiments/bitflip_false_node_and_defense/results/bitflip_summary.json",
+    "experiment": "bitflip_false_node_and_defense",
     "P": 5.0,
     "S": 10.0,
     "C": 1.0,
@@ -24,6 +25,7 @@
   "christmas_tree_node_probes": {
     "best_arm": "probe1_dla_logit_lens",
     "source_file": "experiments/christmas_tree_node_probes/results/probe_benchmark_summary.json",
+    "experiment": "christmas_tree_node_probes",
     "P": 10.0,
     "S": 8.0,
     "C": 10.0,
@@ -46,6 +48,7 @@
   "collision_priced_allocation": {
     "best_arm": "pure_dla",
     "source_file": "experiments/collision_priced_allocation/results/collision_priced_summary.json",
+    "experiment": "collision_priced_allocation",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -71,6 +74,7 @@
   "combined_slider_subspace": {
     "best_arm": "stage2_combined",
     "source_file": "experiments/combined_slider_subspace/results/combined_summary.json",
+    "experiment": "combined_slider_subspace",
     "P": 0.0,
     "S": 8.0,
     "C": 1.0,
@@ -93,6 +97,7 @@
   "crosslayer_head_mlp_synergy": {
     "best_arm": "head_only",
     "source_file": "experiments/crosslayer_head_mlp_synergy/results/synergy_summary.json",
+    "experiment": "crosslayer_head_mlp_synergy",
     "P": 0.0,
     "S": 10.0,
     "C": 1.0,
@@ -118,6 +123,7 @@
   "dtype_edit_sensitivity": {
     "best_arm": "fp32",
     "source_file": "experiments/dtype_edit_sensitivity/results/dtype_summary.json",
+    "experiment": "dtype_edit_sensitivity",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -143,6 +149,7 @@
   "dual_polarity_circuit_surgery": {
     "best_arm": "pushpull_1.0",
     "source_file": "experiments/dual_polarity_circuit_surgery/results/pushpull_summary.json",
+    "experiment": "dual_polarity_circuit_surgery",
     "P": 0.0,
     "S": 10.0,
     "C": 1.0,
@@ -168,6 +175,7 @@
   "edit_then_target_rl": {
     "best_arm": "arm2_localized_grpo_only",
     "source_file": "experiments/edit_then_target_rl/results/micro_rl/micro_rl_summary.json",
+    "experiment": "edit_then_target_rl",
     "P": 10.0,
     "S": 8.0,
     "C": 10.0,
@@ -198,6 +206,7 @@
   "entropy_weighted_fork_rl": {
     "best_arm": "uniform_adv",
     "source_file": "experiments/entropy_weighted_fork_rl/results/entropy_grpo_summary.json",
+    "experiment": "entropy_weighted_fork_rl",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -223,6 +232,7 @@
   "exp34_activation_vector_only_rl": {
     "best_arm": "vector_only_rl",
     "source_file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
+    "experiment": "exp34_activation_vector_only_rl",
     "P": 0.0,
     "S": 10.0,
     "C": 1.0,
@@ -245,6 +255,7 @@
   "fp32_master_edit_pipeline": {
     "best_arm": "a_fp32_edit_fp32_eval",
     "source_file": "experiments/fp32_master_edit_pipeline/results/fp32_pipeline_summary.json",
+    "experiment": "fp32_master_edit_pipeline",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -270,6 +281,7 @@
   "gradfree_evolution_subspace": {
     "best_arm": "heldout_test",
     "source_file": "experiments/gradfree_evolution_subspace/results/evolution_summary.json",
+    "experiment": "gradfree_evolution_subspace",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -295,6 +307,7 @@
   "head_and_node_sniff_rl": {
     "best_arm": "armB_mlp_false_node_only",
     "source_file": "experiments/head_and_node_sniff_rl/results/head_node_summary.json",
+    "experiment": "head_and_node_sniff_rl",
     "P": 5.0,
     "S": 10.0,
     "C": 1.0,
@@ -317,6 +330,7 @@
   "ig5_dla_closed_loop_rl": {
     "best_arm": "st0.65",
     "source_file": "experiments/ig5_dla_closed_loop_rl/results/dla_disjoint_rl_summary.json",
+    "experiment": "ig5_dla_closed_loop_rl",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -342,6 +356,7 @@
   "interference_canceling_edit": {
     "best_arm": "cancel_lambda1.0",
     "source_file": "experiments/interference_canceling_edit/results/interference_summary.json",
+    "experiment": "interference_canceling_edit",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -367,6 +382,7 @@
   "momentum_annealed_rl": {
     "best_arm": "annealed_edit",
     "source_file": "experiments/momentum_annealed_rl/results/annealed_rl_summary.json",
+    "experiment": "momentum_annealed_rl",
     "P": 0.0,
     "S": 10.0,
     "C": 1.0,
@@ -389,6 +405,7 @@
   "multi_seed_stability_sweep": {
     "best_arm": "best_reported",
     "source_file": "experiments/multi_seed_stability_sweep/results/pareto_sweep_summary.json",
+    "experiment": "multi_seed_stability_sweep",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -411,6 +428,7 @@
   "noncollinear_pushpull": {
     "best_arm": "pushpull_0.7",
     "source_file": "experiments/noncollinear_pushpull/results/noncollinear_pushpull_summary.json",
+    "experiment": "noncollinear_pushpull",
     "P": 0.0,
     "S": 10.0,
     "C": 1.0,
@@ -436,6 +454,7 @@
   "operator_sensitivity_showdown": {
     "best_arm": "resid_dir_fixed0.7",
     "source_file": "experiments/operator_sensitivity_showdown/results/operator_showdown_summary.json",
+    "experiment": "operator_sensitivity_showdown",
     "P": 0.0,
     "S": 10.0,
     "C": 1.0,
@@ -458,6 +477,7 @@
   "original_operator_replication": {
     "best_arm": "top2_gated",
     "source_file": "experiments/original_operator_replication/results/replication_summary.json",
+    "experiment": "original_operator_replication",
     "P": 5.0,
     "S": 10.0,
     "C": 1.0,
@@ -483,6 +503,7 @@
   "random_node_control_proof": {
     "best_arm": "dla_top64",
     "source_file": "experiments/random_node_control_proof/results/random_control_summary.json",
+    "experiment": "random_node_control_proof",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -509,6 +530,7 @@
   "relp_causal_sniff_rl": {
     "best_arm": "eval",
     "source_file": "experiments/relp_causal_sniff_rl/results/relp_summary.json",
+    "experiment": "relp_causal_sniff_rl",
     "P": 3.0,
     "S": 10.0,
     "C": 1.0,
@@ -531,6 +553,7 @@
   "safety_vaccination_edit": {
     "best_arm": "no_vaccine_edit0.7",
     "source_file": "experiments/safety_vaccination_edit/results/vaccination_summary.json",
+    "experiment": "safety_vaccination_edit",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -556,6 +579,7 @@
   "seek_sniff_edit_rl": {
     "best_arm": "v3_closed_loop_sniff_edit_rl",
     "source_file": "experiments/seek_sniff_edit_rl/results/summary_v3.json",
+    "experiment": "seek_sniff_edit_rl",
     "P": 9.0,
     "S": 8.0,
     "C": 10.0,
@@ -583,6 +607,7 @@
   "slider_gated_attention_head": {
     "best_arm": "after",
     "source_file": "experiments/slider_gated_attention_head/results/slider_head_summary.json",
+    "experiment": "slider_gated_attention_head",
     "P": 0.0,
     "S": 8.0,
     "C": 5.0,
@@ -605,9 +630,183 @@
       "architecturally valid zero-init insert but exactness-negative: benign false refusal improves 90->30 while exact falls 55->42.5 and unsafe refusal falls 100->90"
     ]
   },
+  "slider_head_fork/v1_single": {
+    "best_arm": "final",
+    "source_file": "experiments/slider_head_fork/results/v1_single_summary.json",
+    "experiment": "slider_head_fork",
+    "P": 1.0,
+    "S": 10.0,
+    "C": 1.0,
+    "E": 6.0,
+    "N": 10,
+    "K": 10,
+    "T": 9,
+    "R": 5,
+    "composite": 5.7,
+    "grade": "C",
+    "exact": 57.5,
+    "gain": 2.5,
+    "unsafe": 100.0,
+    "benign_fr": 60.0,
+    "n_eval": 40,
+    "mean_reward": 0.825,
+    "action_accuracy": 85.0,
+    "policy_accuracy": 62.5,
+    "validity_warnings": [
+      "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
+      "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
+      "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+    ]
+  },
+  "slider_head_fork/v2_bank4": {
+    "best_arm": "final",
+    "source_file": "experiments/slider_head_fork/results/v2_bank4_summary.json",
+    "experiment": "slider_head_fork",
+    "P": 0.0,
+    "S": 2.0,
+    "C": 1.0,
+    "E": 6.0,
+    "N": 10,
+    "K": 10,
+    "T": 9,
+    "R": 5,
+    "composite": 3.85,
+    "grade": "D",
+    "exact": 0.0,
+    "gain": -55.0,
+    "unsafe": 0.0,
+    "benign_fr": 0.0,
+    "n_eval": 40,
+    "mean_reward": 0.0,
+    "action_accuracy": 0.0,
+    "policy_accuracy": 0.0,
+    "validity_warnings": [
+      "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking",
+      "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
+      "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
+      "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+    ]
+  },
+  "slider_head_fork/v3_deep_spread": {
+    "best_arm": "final",
+    "source_file": "experiments/slider_head_fork/results/v3_deep_spread_summary.json",
+    "experiment": "slider_head_fork",
+    "P": 0.0,
+    "S": 2.0,
+    "C": 1.0,
+    "E": 6.0,
+    "N": 10,
+    "K": 10,
+    "T": 9,
+    "R": 5,
+    "composite": 3.85,
+    "grade": "D",
+    "exact": 0.0,
+    "gain": -55.0,
+    "unsafe": 0.0,
+    "benign_fr": 0.0,
+    "n_eval": 40,
+    "mean_reward": 0.0,
+    "action_accuracy": 0.0,
+    "policy_accuracy": 0.0,
+    "validity_warnings": [
+      "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking",
+      "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
+      "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
+      "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+    ]
+  },
+  "slider_head_fork/v4_wide": {
+    "best_arm": "final",
+    "source_file": "experiments/slider_head_fork/results/v4_wide_summary.json",
+    "experiment": "slider_head_fork",
+    "P": 0.0,
+    "S": 2.0,
+    "C": 1.0,
+    "E": 6.0,
+    "N": 10,
+    "K": 10,
+    "T": 9,
+    "R": 5,
+    "composite": 3.85,
+    "grade": "D",
+    "exact": 0.0,
+    "gain": -55.0,
+    "unsafe": 0.0,
+    "benign_fr": 0.0,
+    "n_eval": 40,
+    "mean_reward": 0.405,
+    "action_accuracy": 25.0,
+    "policy_accuracy": 25.0,
+    "validity_warnings": [
+      "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking",
+      "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
+      "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
+      "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+    ]
+  },
+  "slider_head_fork/v5_memory": {
+    "best_arm": "final",
+    "source_file": "experiments/slider_head_fork/results/v5_memory_summary.json",
+    "experiment": "slider_head_fork",
+    "P": 0.0,
+    "S": 2.0,
+    "C": 1.0,
+    "E": 6.0,
+    "N": 10,
+    "K": 10,
+    "T": 9,
+    "R": 5,
+    "composite": 3.85,
+    "grade": "D",
+    "exact": 15.0,
+    "gain": -40.0,
+    "unsafe": 0.0,
+    "benign_fr": 0.0,
+    "n_eval": 40,
+    "mean_reward": 0.325,
+    "action_accuracy": 22.5,
+    "policy_accuracy": 22.5,
+    "validity_warnings": [
+      "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking",
+      "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
+      "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
+      "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+    ]
+  },
+  "slider_head_fork/v6_fullbank_wide": {
+    "best_arm": "final",
+    "source_file": "experiments/slider_head_fork/results/v6_fullbank_wide_summary.json",
+    "experiment": "slider_head_fork",
+    "P": 0.0,
+    "S": 2.0,
+    "C": 1.0,
+    "E": 6.0,
+    "N": 10,
+    "K": 10,
+    "T": 9,
+    "R": 5,
+    "composite": 3.85,
+    "grade": "D",
+    "exact": 0.0,
+    "gain": -55.0,
+    "unsafe": 0.0,
+    "benign_fr": 0.0,
+    "n_eval": 40,
+    "mean_reward": 0.0,
+    "action_accuracy": 0.0,
+    "policy_accuracy": 0.0,
+    "validity_warnings": [
+      "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking",
+      "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
+      "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
+      "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+    ]
+  },
   "steering_oracle_guided_rl": {
     "best_arm": "plain_rl",
     "source_file": "experiments/steering_oracle_guided_rl/results/steering_rl_summary.json",
+    "experiment": "steering_oracle_guided_rl",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -634,6 +833,7 @@
   "targeted_circuit_rl": {
     "best_arm": "circuit_columns",
     "source_file": "experiments/targeted_circuit_rl/results/circuit_rl_summary.json",
+    "experiment": "targeted_circuit_rl",
     "P": 0.0,
     "S": 2.0,
     "C": 1.0,
@@ -659,6 +859,7 @@
   "whitened_subspace_rfm_edit": {
     "best_arm": "raw_rank1",
     "source_file": "experiments/whitened_subspace_rfm_edit/results/whitened_subspace_summary.json",
+    "experiment": "whitened_subspace_rfm_edit",
     "P": 4.0,
     "S": 8.0,
     "C": 10.0,
@@ -684,6 +885,7 @@
   "zero_shock_stitched_head_rl": {
     "best_arm": "eval",
     "source_file": "experiments/zero_shock_stitched_head_rl/results/stitched_head_summary.json",
+    "experiment": "zero_shock_stitched_head_rl",
     "P": 0.0,
     "S": 10.0,
     "C": 1.0,

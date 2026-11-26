@@ -37,6 +37,7 @@ SCORE_OVERRIDES: dict[str, dict[str, float]] = {
     "whitened_subspace_rfm_edit": {"N": 9, "K": 7, "T": 6, "R": 6},
     "original_operator_replication": {"N": 2, "K": 9, "T": 8, "R": 6},
     "slider_gated_attention_head": {"N": 10, "K": 10, "T": 9, "R": 5},
+    "slider_head_fork": {"N": 10, "K": 10, "T": 9, "R": 5},
     "zero_shock_stitched_head_rl": {"N": 9, "K": 6, "T": 8, "R": 5},
     "combined_slider_subspace": {"N": 8, "K": 10, "T": 8, "R": 5},
 }
@@ -71,6 +72,11 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "edit_then_target_rl": [
         "CUDA rerun overwrote the prior CPU micro-RL summary in place; tracker restored the CPU artifact side-by-side under results/backup_pre_cfc91d7_micro_cpu/",
         "same-run CUDA baseline is 47.5/100/80 rather than canonical 55/100/90, so absolute deltas are regime-shifted even though the arm2-vs-random-control comparison is informative"
+    ],
+    "slider_head_fork": [
+        "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
+        "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
+        "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
     ],
 }
 
@@ -217,6 +223,9 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
 
     if isinstance(d.get("accepted"), dict):
         add_candidate(candidates, "accepted_pre_rl", d["accepted"], "/accepted")
+
+    if isinstance(d.get("final_eval"), dict) and "exact_compliance_rate" in d["final_eval"]:
+        add_candidate(candidates, "final", {"eval": d["final_eval"], **d}, "/final_eval")
 
     if isinstance(d.get("eval"), dict) and "exact_compliance_rate" in d["eval"]:
         add_candidate(candidates, "eval", {"eval": d["eval"]}, "/eval")
@@ -415,9 +424,14 @@ def grade_results() -> tuple[dict[str, Any], dict[str, Any]]:
         if best_cand["meta"].get("accepted_strength") == 0.0:
             warnings.append("accepted_strength=0.0; result is a no-op baseline copy, not a deployed intervention")
         source = fp.relative_to(ROOT).as_posix()
+        score_key = exp
+        variant = data.get("variant")
+        if isinstance(variant, str) and variant:
+            score_key = f"{exp}/{variant}"
         row = {
             "best_arm": best_cand["label"],
             "source_file": source,
+            "experiment": exp,
             **best_score,
         }
         if warnings:
@@ -425,15 +439,15 @@ def grade_results() -> tuple[dict[str, Any], dict[str, Any]]:
         # Some experiments have versioned summary files (summary_v1..v4). Keep the
         # highest-composite arm across all files instead of letting lexicographic scan
         # order silently overwrite a better earlier arm.
-        if exp in scores:
-            old = scores[exp]
+        if score_key in scores:
+            old = scores[score_key]
             if row["composite"] > old["composite"]:
                 row["superseded_source_files"] = sorted(set([old.get("source_file"), *old.get("superseded_source_files", [])]) - {None})
-                scores[exp] = row
+                scores[score_key] = row
             else:
                 old["superseded_source_files"] = sorted(set([source, *old.get("superseded_source_files", [])]))
         else:
-            scores[exp] = row
+            scores[score_key] = row
 
     num_map, gaps = experiment_numbers()
     duplicates = {str(n): dirs for n, dirs in num_map.items() if len(dirs) > 1}

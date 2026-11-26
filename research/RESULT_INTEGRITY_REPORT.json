@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T10:13:03+00:00",
+  "generated_at_utc": "2026-11-26T10:37:46+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -535,6 +535,79 @@
       "metric_paths": 2
     },
     {
+      "file": "experiments/slider_head_fork/results/v1_single_summary.json",
+      "bytes": 1084,
+      "warnings": [],
+      "metric_paths": 2
+    },
+    {
+      "file": "experiments/slider_head_fork/results/v2_bank4_summary.json",
+      "bytes": 1481,
+      "warnings": [
+        {
+          "type": "zero_json_valid",
+          "path": "/final_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/final_eval"
+        }
+      ],
+      "metric_paths": 2
+    },
+    {
+      "file": "experiments/slider_head_fork/results/v3_deep_spread_summary.json",
+      "bytes": 1351,
+      "warnings": [
+        {
+          "type": "zero_json_valid",
+          "path": "/final_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/final_eval"
+        }
+      ],
+      "metric_paths": 2
+    },
+    {
+      "file": "experiments/slider_head_fork/results/v4_wide_summary.json",
+      "bytes": 1081,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/final_eval"
+        }
+      ],
+      "metric_paths": 2
+    },
+    {
+      "file": "experiments/slider_head_fork/results/v5_memory_summary.json",
+      "bytes": 1082,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/final_eval"
+        }
+      ],
+      "metric_paths": 2
+    },
+    {
+      "file": "experiments/slider_head_fork/results/v6_fullbank_wide_summary.json",
+      "bytes": 1361,
+      "warnings": [
+        {
+          "type": "zero_json_valid",
+          "path": "/final_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/final_eval"
+        }
+      ],
+      "metric_paths": 2
+    },
+    {
       "file": "experiments/steering_oracle_guided_rl/results/steering_rl_summary.json",
       "bytes": 2256,
       "warnings": [
@@ -606,6 +679,7 @@
   ],
   "missing_result_experiments": [
     "adaptive_k_proportional_edit",
+    "benchmark_failure_tree",
     "exp50_surgically_anchored_vector_rl",
     "exp51_decision_anchor_hidden_align",
     "exp52_pgs_credit_direction",
@@ -627,8 +701,11 @@
     "exp80_edit_strength_scaffold_annealing",
     "exp81_principal_subspace_guardrailed_rl",
     "exp82_rank1_rl_trajectory_extrapolation",
-    "inverse_causal_patching",
-    "slider_head_fork"
+    "exp83_self_modeling_failure_probe_router",
+    "exp84_momentum_carryover_half_edit",
+    "exp85_evolution_strategies_32d_surgical_subspace",
+    "exp86_oscillating_polarity_edit_cycling",
+    "inverse_causal_patching"
   ],
   "duplicate_experiment_numbers": {},
   "missing_experiment_numbers": [
@@ -696,6 +773,11 @@
     "edit_then_target_rl": [
       "CUDA rerun overwrote the prior CPU micro-RL summary in place; tracker restored the CPU artifact side-by-side under results/backup_pre_cfc91d7_micro_cpu/",
       "same-run CUDA baseline is 47.5/100/80 rather than canonical 55/100/90, so absolute deltas are regime-shifted even though the arm2-vs-random-control comparison is informative"
+    ],
+    "slider_head_fork": [
+      "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
+      "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
+      "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
     ]
   }
 }

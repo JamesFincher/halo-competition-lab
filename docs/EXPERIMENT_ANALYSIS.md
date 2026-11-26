@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 10:20 UTC. This document is updated continuously as H100 swarm results land.
+Last updated: 2026-11-26 10:35 UTC. This document is updated continuously as H100 swarm results land.
 
 ## Current ingestion status
 
@@ -31,6 +31,7 @@ Last updated: 2026-11-26 10:20 UTC. This document is updated continuously as H10
 | 41 | `original_operator_replication` | result landed; valid but mislabeled replication target | Reproduces the false-node residual operator (67.5/100/80), not Exp 17 DLA/IG. |
 | 42 | `slider_gated_attention_head` | result landed; valid, exactness-negative | Slider head cuts benign false refusal 90→30 but exact falls 55→42.5 and unsafe refusal 100→90. |
 | 43 | `combined_slider_subspace` | result landed; valid composition, negative | Combined edit+slider reaches 50/96.7/70, worse exactness than either promising parent. |
+| fork | `slider_head_fork` | iteration-1 results landed; v1 positive, bank/wide collapse | Single L27 head improves to 57.5/100/60; multi-head/wide variants collapse; benchmark scores absent. |
 | 44–49 | — | unassigned numbering gaps | Reserved/missing, not active collisions. |
 | 50 | `exp50_surgically_anchored_vector_rl` | queued/running | Can steering-vector RL harden the validated surgical edit while weights stay frozen? |
 | 51 | `exp51_decision_anchor_hidden_align` | queued/running | Can hidden-state decision anchors improve RL credit without weight destruction? |
@@ -45,6 +46,18 @@ Last updated: 2026-11-26 10:20 UTC. This document is updated continuously as H10
 | 60 | `exp60_benign_keyed_refusal_inverter` | queued/running | Can a benign-keyed neuron write negative refusal only in benign contexts? |
 | 61 | `exp61_keyed_zero_gqa_slider` | queued/running | Can exact-zero keyed GQA sliders preserve architecture neutrality while gaining control? |
 | 62 | `exp62_policy_preserving_gqa_slider` | queued/running | Can a policy-preserving GQA slider reduce false refusal without Exp 42's policy/exactness loss? |
+| 63 | `exp63_validated_edit_dose_response` | queued/running | What strength/column-count dose maximizes the validated raw-rank1 edit? |
+| 64 | `exp64_validated_edit_layer_ablation` | queued/running | Are layers 29+28 both necessary, and does L27 help? |
+| 65 | `exp65_slider_insertion_layer_sweep` | queued/running | Which insertion layer makes warm GQA sliders most effective? |
+| 66 | `exp66_edit_plus_warm_slider_composition` | queued/running | Does the validated edit compose with a warm slider better than Exp 43? |
+| 67 | `exp67_single_coordinate_decision_steering` | queued/running | Can one norm-calibrated MLP coordinate shift decision behavior? |
+| 80 | `exp80_edit_strength_scaffold_annealing` | queued/running | Can a strong edit act as temporary training wheels and then be removed? |
+| 81 | `exp81_principal_subspace_guardrailed_rl` | queued/running | Can low-dimensional guardrailed RL harden the validated edit? |
+| 82 | `exp82_rank1_rl_trajectory_extrapolation` | queued/running | Can rank-1 extrapolation predict/amplify RL direction? |
+| 83 | `exp83_self_modeling_failure_probe_router` | queued/running | Can self-modeling failure probes route advantage? |
+| 84 | `exp84_momentum_carryover_half_edit` | queued/running | Does momentum carry over when scaffold strength halves? |
+| 85 | `exp85_evolution_strategies_32d_surgical_subspace` | queued/running | Can ES optimize a 32D surgical subspace? |
+| 86 | `exp86_oscillating_polarity_edit_cycling` | queued/running | Does oscillating edit polarity avoid destructive fixation? |
 
 ## Measurement baseline and interpretation rules
 
@@ -583,3 +596,20 @@ Same-run CUDA baseline is **47.5% exact / 100% unsafe / 80% benign-FR**, not the
 ### Post-harvest integrity correction
 
 Commit `cfc91d7` was both a harvest and an experiment-generation commit. It introduced three integrity faults now corrected by the tracker: (1) Exp 1's CPU artifact was overwritten without a backup; (2) fp32-master was accidentally relabeled from Exp 40 to Exp 34, colliding with the resurrected activation-vector Exp 34; (3) a stray top-level `experiments/README.md` duplicated the Exp 43 README. The collision/stray file are fixed and pre-overwrite artifacts are now backed up side-by-side.
+
+### Slider-head fork iteration 1 — single-head positive boundary, multi-head collapse boundary
+
+**Inputs:** `experiments/slider_head_fork/results/v1_single_summary.json` through `v6_fullbank_wide_summary.json`, all n=40 behavioral evals with canonical same-run baseline **55.0 / 100 / 90**. These are valid result files (no NaNs or partial evals), but they are incomplete relative to the fork README: no MMLU/ARC-Easy/HellaSwag before/after scores are present, and trained `.pt` head weights are not committed — only metadata JSONs.
+
+| Variant | Final alpha(s) | Exact 55→ | Unsafe 100→ | Benign-FR 90→ | Interpretation |
+|---|---:|---:|---:|---:|---|
+| v1 single L27 dim64 | +0.0117 | **57.5 (+2.5)** | **100.0 (+0.0)** | **60.0 (-30.0)** | First safety-preserving positive slider result; small but clean operating point. |
+| v2 four-head bank L24–27 | mixed, abs up to 0.0348 | 0.0 | 0.0 | 0.0 | Valid collapse boundary; JSON validity also 0. |
+| v3 deep spread L8/18/28 | negative, abs up to 0.0167 | 0.0 | 0.0 | 0.0 | Deep uncontrolled inserts collapse behavior. |
+| v4 wide L27 dim128 | -0.0265 | 0.0 | 0.0 | 0.0 | Wide single head is outside stable dose regime. |
+| v5 memory L27 dim64 | -0.0111 | 15.0 | 0.0 | 0.0 | Collapse; also causally invalid because memory path omits causal masking. |
+| v6 full-bank wide | mixed, abs up to 0.0484 | 0.0 | 0.0 | 0.0 | Largest bank is fully destructive. |
+
+**Mechanistic interpretation:** there is a narrow stability/utility boundary. One small positive-alpha L27 head can reduce benign false refusal by 30 pp while preserving unsafe refusal and slightly improving exactness. Once magnitude, width, depth, or number of simultaneous lanes rises, training enters zero-reward collapse. The collapse is self-locking in this trainer because zero-variance rewards produce zero advantages, so the head receives no recovery gradient.
+
+**Cross-experiment significance:** v1 is better than Exp42's original slider operating point on safety/exactness (57.5/100/60 versus 42.5/90/30) but much less aggressive at false-refusal reduction. It is also cleaner than Exp43's composition (50/96.7/70). The next attention experiments should sweep alpha/dose around v1 rather than jumping directly to multi-head banks, and should add a collapse-recovery or KL/damage constraint before interpreting negative bank results as architectural impossibilities.
