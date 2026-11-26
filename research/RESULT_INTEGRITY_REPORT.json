@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T21:16:51+00:00",
+  "generated_at_utc": "2026-11-26T21:33:13+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -556,6 +556,103 @@
         }
       ],
       "metric_paths": 8
+    },
+    {
+      "file": "experiments/exp152_qwen3_behavioral_scale_pivot/results/qwen3_behavioral_scale_summary.json",
+      "bytes": 29601,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms[0]/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[0]/evaluation/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[0]/evaluation/behavior_scaled_v1_120_bridge",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[1]/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[1]/evaluation/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[1]/evaluation/behavior_scaled_v1_120_bridge",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[2]/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[2]/evaluation/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[2]/evaluation/behavior_scaled_v1_120_bridge",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[3]/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[3]/evaluation/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[3]/evaluation/behavior_scaled_v1_120_bridge",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[4]/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[4]/evaluation/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[4]/evaluation/behavior_scaled_v1_120_bridge",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[5]/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[5]/evaluation/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[5]/evaluation/behavior_scaled_v1_120_bridge",
+          "n_eval": 120
+        }
+      ],
+      "metric_paths": 24
     },
     {
       "file": "experiments/exp153_olmoe_expert_stage_zero/results/olmoe_stage_zero_summary.json",
@@ -1615,7 +1712,6 @@
     "exp128_trajectory_collateral_repair_adapter",
     "exp131_context_gated_dose_cancellation",
     "exp133_alpha_init_continuation_confirmation",
-    "exp152_qwen3_behavioral_scale_pivot",
     "exp155_olmoe_expert_surface_controls",
     "exp156_qwen3_entity_disjoint_seed_replication",
     "exp158_olmoe_capability_data_mechanism",
@@ -1738,7 +1834,7 @@
       "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
-      "primary behavior_scaled120 surface is entity-disjoint corpus v2; behavior_scaled_v1_120_bridge is only a comparability bridge, so compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; H22 arms use 64 edited columns rather than the validated 135M 16-column operating point, so width/dose remains uncontrolled"
+      "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"
     ],
     "exp153_olmoe_expert_stage_zero": [
       "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
