@@ -39,6 +39,10 @@ Last updated: 2026-11-26 10:00 UTC. This document is updated continuously as H10
 | 54 | `exp54_activation_capped_scaffolding` | queued/running | Can activation scaffolding bootstrap RL without permanent damage? |
 | 55 | `exp55_policy_hint_internalization` | queued/running | Can policy hints be internalized into behavior? |
 | 56 | `exp56_boundary_temperature_controller` | queued/running | Can a boundary-temperature controller modulate refusal/compliance behavior? |
+| 57 | `exp57_halo_native_targeted_lora` | queued/running | Does the micro edit→targeted-RL loop transfer when expressed as Halo-native anchored LoRA? |
+| 58 | `exp58_attention_head_sparse_rl` | queued/running | Can sparse attention-head RL add routing without overwriting MLP surgery? |
+| 59 | `exp59_warm_gqa_slider_heads` | queued/running | Do architecture-matched warm GQA slider heads improve on Exp 42's random single-head insert? |
+| 60 | `exp60_benign_keyed_refusal_inverter` | queued/running | Can a benign-keyed neuron write negative refusal only in benign contexts? |
 
 ## Measurement baseline and interpretation rules
 

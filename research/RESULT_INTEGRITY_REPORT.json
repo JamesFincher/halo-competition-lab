@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T09:55:28+00:00",
+  "generated_at_utc": "2026-11-26T09:56:06+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -498,6 +498,10 @@
     "exp54_activation_capped_scaffolding",
     "exp55_policy_hint_internalization",
     "exp56_boundary_temperature_controller",
+    "exp57_halo_native_targeted_lora",
+    "exp58_attention_head_sparse_rl",
+    "exp59_warm_gqa_slider_heads",
+    "exp60_benign_keyed_refusal_inverter",
     "multi_seed_stability_sweep"
   ],
   "duplicate_experiment_numbers": {},

@@ -69,11 +69,11 @@ Rows below are sorted by raw composite score, **not by scientific trustworthines
 
 - **No duplicate experiment numbers** are present in active `experiments/*/README.md` files.
 - **Numbering gaps:** 34 and 44–49. Exp 34 was deleted when the activation-vector experiment was reworked into the exp50 lineage; treat 34 as retired/superseded unless the orchestrator explicitly restores it. Gaps 44–49 appear reserved/unassigned, not collisions.
-- **Missing result artifacts:** `adaptive_k_proportional_edit` (exp24), `multi_seed_stability_sweep` (exp22), `combined_slider_subspace` (exp43), and exp50–56. Exp 43 has a reported VM-side result but no committed JSON yet at this timestamp.
+- **Missing result artifacts:** `adaptive_k_proportional_edit` (exp24), `multi_seed_stability_sweep` (exp22), `combined_slider_subspace` (exp43), and exp50–60. Exp 43 has a reported VM-side result but no committed JSON yet at this timestamp.
 - **Degenerate/invalid artifacts:** Exp 27 still has all-zero layer deltas because source and target remain the same prompt; Exp 25 uses only 20-row dev/test splits; several gated edits are exact baseline copies because the gate rejected deployment or selected strength 0.0.
 - **In-place overwrite warnings:** commit `dfbec20` modified `steering_rl_summary.json` and `stitched_head_summary.json` in place. Git history preserves the old values, but there is no side-by-side backup artifact; future reruns should write versioned filenames or a backup directory before overwriting.
 - **NaN/crash scan:** no NaN/Inf values or invalid JSON objects were found in the 37 currently committed result JSON files. Missing-output crashes remain for exp22/exp24 as documented above.
 
 ## Pending or not-yet-gradeable
 
-Exp 22 needs a successful summary write/rerun; exp24 needs a device-mismatch fix/rerun; exp27 needs a source/target patching fix; exp31 needs ground-truth policy-code categories; exp43 and exp50–56 are queued/running or awaiting committed results. The autograder intentionally does not grade pure atlases or missing artifacts.
+Exp 22 needs a successful summary write/rerun; exp24 needs a device-mismatch fix/rerun; exp27 needs a source/target patching fix; exp31 needs ground-truth policy-code categories; exp43 and exp50–60 are queued/running or awaiting committed results. The autograder intentionally does not grade pure atlases or missing artifacts.
