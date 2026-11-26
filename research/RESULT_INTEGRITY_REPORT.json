@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T10:00:53+00:00",
+  "generated_at_utc": "2026-11-26T10:05:53+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -504,6 +504,10 @@
     "exp60_benign_keyed_refusal_inverter",
     "exp61_keyed_zero_gqa_slider",
     "exp62_policy_preserving_gqa_slider",
+    "exp63_validated_edit_dose_response",
+    "exp64_validated_edit_layer_ablation",
+    "exp65_slider_insertion_layer_sweep",
+    "exp66_edit_plus_warm_slider_composition",
     "inverse_causal_patching",
     "multi_seed_stability_sweep"
   ],

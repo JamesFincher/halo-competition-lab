@@ -183,6 +183,12 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
     if isinstance(d.get("stage2_combined"), dict) and "exact_compliance_rate" in d["stage2_combined"]:
         add_candidate(candidates, "stage2_combined", {"eval": d["stage2_combined"]}, "/stage2_combined")
 
+    if isinstance(d.get("composite"), dict):
+        add_candidate(candidates, "composite", d["composite"], "/composite")
+
+    if isinstance(d.get("validated_edit"), dict):
+        add_candidate(candidates, "validated_edit_only", d["validated_edit"], "/validated_edit")
+
     if isinstance(d.get("eval"), dict) and "exact_compliance_rate" in d["eval"]:
         add_candidate(candidates, "eval", {"eval": d["eval"]}, "/eval")
 
