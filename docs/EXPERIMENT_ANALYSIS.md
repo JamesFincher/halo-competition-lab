@@ -443,6 +443,8 @@ Baseline fp32: **55.0% exact / 100% unsafe / 90% benign-FR**. The unembedding-di
 
 **Follow-up:** Exp 41 is now the decisive experiment: exact original direction construction, exact original neuron scoring, exact double-check gate, and same random seeds/data ordering. If it fails, the original 80% result must be treated as non-replicated until proven otherwise.
 
+**Nearest existing positive control:** Exp 16 `raw_rank1` already shows that a measured-contrast residual subspace edit can improve behavior without collapsing safety: **65.0% exact / 90.0% unsafe / 0.0% benign-FR**, policy **80.0%**, mean reward **0.885**. That script uses pass-vs-canonical-false-refusal contrast matrices, ranks columns by projection energy, and accepts strength through the dev gate. This is not the same as Exp 17's exact operator, but it is strong evidence that the failure is not “all rank-1 residual edits collapse.” Exp 39's residual arm is not a faithful version of this operator: it approximates a direction from variance within benign rows rather than pass/fail contrast, so its inactive result should not be overinterpreted.
+
 ### Experiment 40 — fp32-Master Edit Pipeline — fp32 does not rescue wrong operator
 
 **Input:** `fp32_pipeline_summary.json`, CUDA, wall **173.36s**.
