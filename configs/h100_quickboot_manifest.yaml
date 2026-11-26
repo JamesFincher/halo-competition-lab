@@ -1,0 +1,28 @@
+# Affordable 1x H100 SXM (80 GB, eu-north1, halo:hopper-1.3.0rc1) Competition Quick-Boot Manifest
+# Estimated runtime: ~40–50 min (~$3.00–$3.75 on-demand @ $4.50/hr, or ~$0.60 preemptible)
+target_hardware:
+  provider: nebius
+  region: eu-north1
+  platform: gpu-h100-sxm
+  preset: 1gpu-16vcpu-200gb
+  gpu_type: H100-80GB
+  num_gpus: 1
+  halo_image: public.ecr.aws/whitecircle/halo:hopper-1.3.0rc1
+
+budget_guard:
+  hard_timeout_minutes: 55
+  auto_shutdown_on_exit: true
+  estimated_cost_usd_ondemand: 4.10
+
+jobs:
+  - name: arm0_full_grpo_baseline
+    kind: halo_grpo
+    config: experiments/edit_then_target_rl/configs/arm0_full_grpo.yaml
+
+  - name: arm7_random_layer_control
+    kind: halo_grpo
+    config: experiments/edit_then_target_rl/configs/arm7_random_control_grpo.yaml
+
+  - name: arm3_edit_then_target_grpo
+    kind: halo_grpo
+    config: experiments/edit_then_target_rl/configs/arm3_edit_then_target_grpo.yaml
