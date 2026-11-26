@@ -88,6 +88,7 @@ def evaluate_heldout(
     device: torch.device,
     max_new_tokens: int = 80,
     use_cache: bool = True,
+    batch_size: int = 1,
 ) -> dict:
     if os.environ.get("HALO_SMOKE_TEST") == "1":
         eval_rows = eval_rows[:2]
@@ -99,24 +100,15 @@ def evaluate_heldout(
     unsafe_total = unsafe_refusal = 0
     total_reward = 0.0
 
-    for row in eval_rows:
-        prompt = build_prompt(tokenizer, row["messages"])
-        enc = tokenizer(prompt, return_tensors="pt").to(device)
-        out_ids = model.generate(
-            **enc,
-            max_new_tokens=max_new_tokens,
-            do_sample=False,
-            pad_token_id=tokenizer.eos_token_id,
-            use_cache=use_cache,
-        )
-        gen = tokenizer.decode(out_ids[0][enc["input_ids"].shape[1] :], skip_special_tokens=True)
+    def consume(row: dict, gen: str) -> None:
+        nonlocal total_reward, json_valid, action_ok, policy_ok, exact
+        nonlocal benign_total, benign_false_refusal, unsafe_total, unsafe_refusal
         rew, info = score_completion(gen, row["target"])
         total_reward += rew
         json_valid += int(info["json_valid"])
         action_ok += int(info["action_ok"])
         policy_ok += int(info["policy_ok"])
         exact += int(info["exact"])
-
         obj = parse_json_object(gen)
         pred_action = obj.get("action") if obj else None
         if row["target"]["action"] == "call_tool":
@@ -127,6 +119,45 @@ def evaluate_heldout(
             unsafe_total += 1
             if pred_action == "refuse":
                 unsafe_refusal += 1
+
+    if batch_size <= 1:
+        for row in eval_rows:
+            prompt = build_prompt(tokenizer, row["messages"])
+            enc = tokenizer(prompt, return_tensors="pt").to(device)
+            out_ids = model.generate(
+                **enc,
+                max_new_tokens=max_new_tokens,
+                do_sample=False,
+                pad_token_id=tokenizer.eos_token_id,
+                use_cache=use_cache,
+            )
+            gen = tokenizer.decode(out_ids[0][enc["input_ids"].shape[1] :], skip_special_tokens=True)
+            consume(row, gen)
+    else:
+        # Decoder-only batch generation requires left padding so every row's prompt ends
+        # at the same right boundary. Right padding would insert pad tokens before the
+        # generated continuation and corrupt positions/content.
+        old_padding_side = getattr(tokenizer, "padding_side", "right")
+        tokenizer.padding_side = "left"
+        pad_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id
+        try:
+            for start in range(0, len(eval_rows), batch_size):
+                rows = eval_rows[start:start + batch_size]
+                prompts = [build_prompt(tokenizer, row["messages"]) for row in rows]
+                enc = tokenizer(prompts, return_tensors="pt", padding=True).to(device)
+                out_ids = model.generate(
+                    **enc,
+                    max_new_tokens=max_new_tokens,
+                    do_sample=False,
+                    pad_token_id=pad_id,
+                    use_cache=use_cache,
+                )
+                prompt_width = int(enc["input_ids"].shape[1])
+                for row, ids in zip(rows, out_ids):
+                    gen = tokenizer.decode(ids[prompt_width:], skip_special_tokens=True)
+                    consume(row, gen)
+        finally:
+            tokenizer.padding_side = old_padding_side
 
     return {
         "n_eval": n,

@@ -362,8 +362,8 @@ def main():
     behavior_eval=base_rl.load_rows(ROOT/"data/policy_eval_scaled_v2.jsonl")
     behavior_eval_v1=base_rl.load_rows(ROOT/"data/policy_eval_scaled.jsonl")
     baseline={
-      "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True),
-      "behavior_scaled_v1_120_bridge":base_rl.evaluate_heldout(probe_model,tok,behavior_eval_v1,device,max_new_tokens=args.max_new_tokens,use_cache=True),
+      "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4),
+      "behavior_scaled_v1_120_bridge":base_rl.evaluate_heldout(probe_model,tok,behavior_eval_v1,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4),
       "continuation_benchmark":run_continuation_benchmark(probe_model,tok,device,args.continuation_n),
       "transfer_benchmark":run_transfer_benchmark(probe_model,tok,device,args.continuation_n // 2),
       "cache_consistency":cache_consistency(probe_model,tok,device),
@@ -398,8 +398,8 @@ def main():
         trainable={name:param for name,param in model.named_parameters() if param.requires_grad}
         surface={"type":"dense_attention_lora_all_layers","target_modules":["q_proj","k_proj","v_proj","o_proj"],"rank":spec["rank"],"parameter_matched_note":"rank 12 gives 3,145,728 attention-LoRA params on real OLMoE, exactly matching 8 experts/layer x rank 8 x 16 layers"}
       train_info=train_trainables(model,trainable,tok,cap_train,device,args.steps,args.batch_size,args.max_len,args.lr,ckpt_base/arm,args.checkpoint_interval)
-      behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True)
-      behavior_v1=base_rl.evaluate_heldout(model,tok,behavior_eval_v1,device,max_new_tokens=args.max_new_tokens,use_cache=True)
+      behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4)
+      behavior_v1=base_rl.evaluate_heldout(model,tok,behavior_eval_v1,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4)
       continuation=run_continuation_benchmark(model,tok,device,args.continuation_n)
       transfer=run_transfer_benchmark(model,tok,device,args.continuation_n // 2)
       if spec["kind"]=="inactive_experts":

@@ -357,7 +357,7 @@ def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: 
 @torch.no_grad()
 def endpoint(model, tokenizer, original_eval: list[dict], v2_eval: list[dict], device: torch.device, continuation_n: int, max_new_tokens: int) -> dict:
     return {
-        "behavior_original40_bridge": base_rl.evaluate_heldout(model, tokenizer, original_eval, device, max_new_tokens=max_new_tokens, use_cache=True),
+        "behavior_original40_bridge": base_rl.evaluate_heldout(model, tokenizer, original_eval, device, max_new_tokens=max_new_tokens, use_cache=True,batch_size=4),
         "behavior_scaled120": evaluate_behavior_detailed(model, tokenizer, v2_eval, device, max_new_tokens=max_new_tokens),
         "continuation_benchmark": run_continuation_benchmark(model, tokenizer, device, continuation_n),
     }

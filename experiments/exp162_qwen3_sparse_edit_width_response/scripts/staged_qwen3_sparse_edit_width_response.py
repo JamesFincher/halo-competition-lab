@@ -34,7 +34,7 @@ def done():
  return {json.loads(x)['arm'] for x in ARM_JSONL.read_text().splitlines() if x.strip()}
 
 def measure(model,tok,eval_rows,device,max_new_tokens,continuation_n):
- return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n)}
+ return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n)}
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--max-new-tokens',type=int,default=72);ap.add_argument('--continuation-n',type=int,default=100);ap.add_argument('--strength',type=float,default=0.9);ap.add_argument('--n-pairs',type=int,default=12);ap.add_argument('--seed',type=int,default=42);args=ap.parse_args()
