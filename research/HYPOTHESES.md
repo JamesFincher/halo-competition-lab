@@ -23,9 +23,9 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 |---:|---|---|---|
 | 9.7 | H22 — Ultra-sparse edit anchored complementary MLP-only LoRA | surgical edit + targeted PEFT composition | queued as exp144; highest-priority result to read next |
 | 9.4 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | queued as exp87; now the key gate because exp136 shows cancellation works but learned context separation is insufficient |
-| 8.9 | H19 — Context-gated rank-one surgical dose cancellation | input-conditioned surgical repair | exp136 mixed: oracle validates the safety/exactness tradeoff, learned gate underperforms edit-only |
 | 9.3 | H2 — Composite operator-discrepancy collateral repair | closed-form trajectory repair | queued as exp128 after upstream output-space projection fix; increasingly important because H19 oracle repair costs exactness |
 | 9.1 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | queued as exp121; more important because auxiliary training often damages the anchor |
+| 8.9 | H19 — Context-gated rank-one surgical dose cancellation | input-conditioned surgical repair | exp136 mixed: oracle validates the safety/exactness tradeoff, learned gate underperforms edit-only |
 | 8.8 | H21 — Exportable consolidation of complementary steering-vector RL | vector-to-weight distillation + deployment-exact PEFT | revised downward after exp101: teacher/KL distillation matters, rounding alone does not |
 | 8.7 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | queued as exp123; strengthened by complementary MLP-only LoRA validation |
 | 8.6 | H18 — Protected FisherGate decision-readout edit | closed-form weight-space programming | unqueued; staged behind exp102 |
