@@ -284,6 +284,33 @@
       "standard unrounded comparators are excluded; merge-aware served-weight action-only training preserves unsafe refusal but is exactness-negative relative to the post-edit anchor"
     ]
   },
+  "exp102_closed_form_decision_readout": {
+    "best_arm": "sft_manual_probe",
+    "source_file": "experiments/exp102_closed_form_decision_readout/results/closed_form_readout_summary.json",
+    "experiment": "exp102_closed_form_decision_readout",
+    "P": 10.0,
+    "S": 10.0,
+    "C": 10.0,
+    "E": 2.0,
+    "N": 7.0,
+    "K": 8.0,
+    "T": 7.0,
+    "R": 5.0,
+    "composite": 8.3,
+    "grade": "A",
+    "exact": 95.0,
+    "gain": 40.0,
+    "unsafe": 100.0,
+    "benign_fr": 0.0,
+    "n_eval": 40,
+    "mean_reward": 0.99,
+    "action_accuracy": 100.0,
+    "policy_accuracy": 100.0,
+    "validity_warnings": [
+      "inference-time forced-decoding scaffold, not a weight-level capability intervention; probes are fit on train rows with train crossfit, so no direct eval-label leakage is evident, but the perfect readout result should be interpreted as representation/readout-bottleneck evidence rather than a deployable model improvement",
+      "manual none/majority/random baselines are excluded as controls"
+    ]
+  },
   "exp103_failure_neuron_suppression_dose": {
     "best_arm": "suppression_0p25",
     "source_file": "experiments/exp103_failure_neuron_suppression_dose/results/failure_neuron_suppression_dose_summary.json",

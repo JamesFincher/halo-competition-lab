@@ -188,6 +188,10 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "exp147_additive_capability_behavior_union": [
         "cache-corrected behavior-only head is near-baseline rather than destructive; capability/behavior unions and learned blends are exactness-negative, so composition interferes rather than synergizes; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
     ],
+    "exp102_closed_form_decision_readout": [
+        "inference-time forced-decoding scaffold, not a weight-level capability intervention; probes are fit on train rows with train crossfit, so no direct eval-label leakage is evident, but the perfect readout result should be interpreted as representation/readout-bottleneck evidence rather than a deployable model improvement",
+        "manual none/majority/random baselines are excluded as controls"
+    ],
     "exp82_rank1_rl_trajectory_extrapolation": [
         "actual RL and persistence controls are excluded; rank-one trajectory fits look strong geometrically but extrapolation catastrophically collapses",
         "validation is insufficient: cosine is high (0.90-0.93) but predicted step-8 vector norms are 1.21-1.33x actual and relative errors are ~0.50-0.56, so collapse does not isolate nonlinear-trajectory failure from magnitude/validation error"
@@ -244,6 +248,7 @@ EXPERIMENT_REFERENCE_LABELS: dict[str, set[str]] = {
     "exp140_answer_focused_capability_objective": {"full_text_uniform_reference"},
     "exp141_benchmark_format_capability": {"lettered_answer_only_reference"},
     "exp144_sparse_edit_anchored_mlp_lora": {"vector_only_post_edit_lower_bound"},
+    "exp102_closed_form_decision_readout": {"sft_manual_none", "validated_edit_manual_none", "sft_manual_majority", "validated_edit_manual_majority", "sft_manual_random", "validated_edit_manual_random"},
 }
 
 
@@ -377,6 +382,16 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
     if isinstance(d.get("controls"), dict):
         for label, control in d["controls"].items():
             add_candidate(candidates, str(label), control, f"/controls/{label}")
+
+    if isinstance(d.get("models"), dict):
+        for model_label, model_results in d["models"].items():
+            if not isinstance(model_results, dict):
+                continue
+            for label, result in model_results.items():
+                if isinstance(result, dict) and isinstance(result.get("metrics"), dict):
+                    add_candidate(candidates, f"{model_label}_{label}", {"eval": result["metrics"], **result}, f"/models/{model_label}/{label}/metrics")
+                else:
+                    add_candidate(candidates, f"{model_label}_{label}", result, f"/models/{model_label}/{label}")
 
     if isinstance(d.get("modes"), dict):
         for label, mode in d["modes"].items():

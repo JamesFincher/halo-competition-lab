@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T14:56:42+00:00",
+  "generated_at_utc": "2026-11-26T15:25:21+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -176,6 +176,21 @@
       "file": "experiments/exp101_merge_aware_served_weight_finetune/results/merge_aware_finetune_summary.json",
       "bytes": 14739,
       "warnings": [],
+      "metric_paths": 10
+    },
+    {
+      "file": "experiments/exp102_closed_form_decision_readout/results/closed_form_readout_summary.json",
+      "bytes": 75916,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/models/sft/builtin_greedy_evaluate_heldout"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/models/sft/manual_none/metrics"
+        }
+      ],
       "metric_paths": 10
     },
     {
@@ -410,6 +425,12 @@
       "bytes": 61083,
       "warnings": [],
       "metric_paths": 11
+    },
+    {
+      "file": "experiments/exp148_legacy_scorer_flattening_audit/results/legacy_scorer_flattening_audit_summary.json",
+      "bytes": 18161,
+      "warnings": [],
+      "metric_paths": 0
     },
     {
       "file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
@@ -1339,7 +1360,6 @@
   ],
   "missing_result_experiments": [
     "adaptive_k_proportional_edit",
-    "exp102_closed_form_decision_readout",
     "exp111_alpha_norm_penalty_bank",
     "exp120_drift_triggered_orthogonal_lanes",
     "exp121_curvature_constrained_delta_rl",
@@ -1352,7 +1372,6 @@
     "exp128_trajectory_collateral_repair_adapter",
     "exp131_context_gated_dose_cancellation",
     "exp133_alpha_init_continuation_confirmation",
-    "exp148_legacy_scorer_flattening_audit",
     "exp149_h22_continuation_followup",
     "exp150_l20_cache_corrected_seed_replication",
     "exp84_momentum_carryover_half_edit",
@@ -1524,6 +1543,10 @@
     ],
     "exp147_additive_capability_behavior_union": [
       "cache-corrected behavior-only head is near-baseline rather than destructive; capability/behavior unions and learned blends are exactness-negative, so composition interferes rather than synergizes; behavioral eval uses max_new_tokens=48 and same-run baseline is shifted to 52.5/93.3/90"
+    ],
+    "exp102_closed_form_decision_readout": [
+      "inference-time forced-decoding scaffold, not a weight-level capability intervention; probes are fit on train rows with train crossfit, so no direct eval-label leakage is evident, but the perfect readout result should be interpreted as representation/readout-bottleneck evidence rather than a deployable model improvement",
+      "manual none/majority/random baselines are excluded as controls"
     ],
     "exp82_rank1_rl_trajectory_extrapolation": [
       "actual RL and persistence controls are excluded; rank-one trajectory fits look strong geometrically but extrapolation catastrophically collapses",
