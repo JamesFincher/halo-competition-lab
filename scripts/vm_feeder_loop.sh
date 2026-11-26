@@ -100,5 +100,9 @@ PY
       echo "$(date): launched autowave"
     fi
   fi
+  # push result artifacts to HF dataset so harvesting does not depend on any live session
+  if [ -n "$HF_TOKEN" ]; then
+    sudo docker run --rm --ipc=host -v ~/halo-competition-lab:/lab -e HF_TOKEN="$HF_TOKEN" -e HF_HOME=/mnt/halo/hf -w /lab public.ecr.aws/whitecircle/halo:hopper python scripts/push_results_to_hf.py >/dev/null 2>&1
+  fi
   sleep 120
 done
