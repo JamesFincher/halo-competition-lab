@@ -150,6 +150,9 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "exp157_olmoe_expert_adapter_export_validation": [
         "export validation is a no-training diagnostic using small v1 behavior/continuation canaries, not a full behavior intervention result; logits/greedy equality are the primary evidence"
     ],
+    "exp160_olmoe_checkpoint_transfer_export_eval": [
+        "no-training benchmark-level export fidelity diagnostic: continuation/transfer score preservation is necessary but not sufficient for deployment validity because exact logits/greedy equality already failed in exp157 and behavior safety is not re-evaluated"
+    ],
     "exp156_qwen3_entity_disjoint_seed_replication": [
         "entity-disjoint v2 seed replication: interpret all seeds 42/7/123 together rather than the autograded best seed; behavior-only training batches mean continuation benchmarks measure collateral change, not replay-preservation success"
     ],
