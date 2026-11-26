@@ -18,6 +18,10 @@ Last updated: 2026-11-26 08:50 UTC. This document is updated continuously as H10
 | 28 | `crosslayer_head_mlp_synergy` | waiting for `synergy_summary.json` | Does coordinated attention-head + MLP surgery beat either mechanism alone? |
 | 29 | `momentum_annealed_rl` | waiting for `annealed_rl_summary.json` | Does annealing the surgical scaffold let RL own the behavior better than a fixed edit? |
 | 30 | `steering_oracle_guided_rl` | waiting for `steering_rl_summary.json` | Does steered exploration distill into better unsteered weights than plain post-edit RL? |
+| 31 | `request_circuit_mapper` | added in wave 2; waiting for `request_circuit_atlas.json` | Which layers/neurons carry each semantic request type, and which are type-exclusive? |
+| 32 | `targeted_circuit_rl` | added in wave 2; waiting for `circuit_rl_summary.json` | Does column-masked circuit-only RL preserve safety better than full-layer RL? |
+| 33 | `dtype_edit_sensitivity` | added in wave 2; waiting for `dtype_summary.json` | Does bf16 application corrupt rank-1 surgical edits relative to fp32? |
+| 34 | `exp34_activation_vector_only_rl` | added in wave 2; waiting for `activation_vector_rl_summary.json` | Can activation-vector-only RL match weight-space RL while weights stay frozen? |
 
 ## Measurement baseline and interpretation rules
 
@@ -173,4 +177,43 @@ Measurement cautions:
 
 ## Result log
 
-No Exp 19–30 result JSONs are present in the repository yet. Entries will be appended below as each summary lands, with exact metrics, hypothesis verdicts, composition implications, and follow-up recommendations.
+### Experiment 19 — Surgical Cross-Talk & Hub Protection Audit — preliminary diagnostic landed
+
+**Input:** `experiments/surgical_crosstalk_audit/results/crosstalk_summary.json`, CUDA, wall time **45.35s**. This was a wave-1 bf16-era run, so treat the exact magnitudes as provisional until the fp32 wave-2 validation program confirms them.
+
+**What happened quantitatively:**
+
+| Target behavior | Hub protection | Target margin delta | Mean collateral abs delta | Largest collateral effect |
+|---|---|---:|---:|---|
+| False over-refusal | no | **-9.2031** | **1.6094** | true safety refusal **-9.2188** |
+| False over-refusal | yes | **-8.5156** | **1.4748** | true safety refusal **-8.5157** |
+| Sycophancy bias | no | **-5.0416** | **0.3229** | verbosity **-1.0208**, JSON **+0.7500** |
+| Sycophancy bias | yes | **-4.9166** | **0.3082** | verbosity **-0.9792**, JSON **+0.7500** |
+| Verbosity/hedging | no | **-5.3125** | **0.4800** | JSON **+1.9791**, sycophancy **-0.6458** |
+| Verbosity/hedging | yes | **-5.2917** | **0.4574** | JSON **+1.8750**, sycophancy **-0.6666** |
+
+**Hypothesis verdict:** mostly confirmed for cross-talk, but not for hub protection as a useful fix. The atlas predicted refusal-behavior overlap; the measured false-refusal edit moved true safety refusal by essentially the same amount as the target (ratio **1.0017** unprotected, **1.0000** protected). Sycophancy and verbosity also co-moved as predicted, but much more weakly. Hub protection reduced mean collateral only slightly — **8.36%** for false over-refusal, **4.55%** for sycophancy, **4.71%** for verbosity — while attenuating target movement by **7.47%**, **2.48%**, and **0.39%** respectively. For the critical refusal case, protection is almost proportional attenuation rather than selective decoupling.
+
+**Interpretation:** the key negative result is that `false_over_refusal` and `true_safety_refusal` are not separable by simply excluding the four atlas hub neurons. This explains why the best DLA/IG edits trade 0% benign false refusal for a drop from 100% to 90% unsafe refusal: the current refusal-direction edit is acting on a shared refusal circuit, not a false-only circuit.
+
+**Implication for combinations:** suppression-only refusal editing is probably capped unless paired with either (a) a compliance-direction push that does not erase unsafe refusal, (b) request-type-specific neuron targeting from Exp 31, or (c) a safety-restoration arm. Hub protection should not become a default wrapper yet.
+
+**Recommended follow-up:** rerun in fp32 after Exp 33 quantifies dtype sensitivity, then test a two-direction objective: suppress false-refusal neurons while explicitly preserving or amplifying true-safety refusal margins on unsafe prompts. A margin-only audit is not enough; the follow-up must report the standard 40-task exact/unsafe/benign-FR metrics.
+
+### Experiment 27 — Inverse Causal Patching Localization — invalid first result, not gradeable
+
+**Input:** `experiments/inverse_causal_patching/results/causal_patching_summary.json`, CUDA, wall time **5.29s**.
+
+Every layer has `margin_after_patch = 3.125` and `delta = 0.0`, including layers 27–29. This is not evidence that no layer is causal. The result is an identity-patch artifact: `pos_rows[0]` is the minimum-margin prompt, and `neg_rows[-1]` is also the minimum-margin prompt because `neg_rows` is sorted in the opposite direction. The source and target are therefore the same row, so patching activations cannot change the margin.
+
+**Hypothesis verdict:** no verdict. The experiment did not test the hypothesis.
+
+**Interpretation:** the all-zero table is internally consistent with source=target aliasing. The later hook-shape and fp32 fixes were necessary but insufficient; the source/target selection logic is the blocking bug.
+
+**Recommended follow-up:** rerun with the minimum-margin benign prompt as source and the maximum-refusal-margin benign prompt as target, then expand beyond one pair. A strong version should use at least 3 source/target pairs, report mean ± std layer restoration, and include a same-prompt identity control explicitly labeled as such.
+
+### Cross-result update after Exps 19 + 27
+
+1. The largest confirmed mechanistic constraint is now **true/false refusal entanglement**, not merely neuron-budget selection. DLA can find refusal-circuit neurons, but the shared circuit makes safety-preserving suppression hard.
+2. The highest-value near-term experiment is therefore not another uniform refusal-suppression sweep; it is a method that separates request type or direction: Exp 23 push-pull, Exp 31 type-specific circuits, or a safety-constrained edit.
+3. Exp 27 must be rerun before layer causality evidence can inform the layer choice. Until then, layers 29/28 remain empirically useful but not causally validated.

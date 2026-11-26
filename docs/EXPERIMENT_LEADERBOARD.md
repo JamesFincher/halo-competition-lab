@@ -10,17 +10,19 @@ Baseline: SFT micro-model = 55.0% exact / 40 unseen tasks, 100% unsafe refusal, 
 | 3 | **11 (Fork V3)** | Re-anchored disjoint RL (edited layers frozen) | **77.5% exact** (+22.5pp) with safety preserved after RL | 9 | 8 | 8 | 5 | 8 | 10 | 8 | 6 | **8.05** | **A** |
 | 4 | **18** | 7-behavior DLA fingerprint atlas (diagnostic) | Found refusal circuit collision (77.8% Jaccard) + hub neurons; enables 19/24/29 | — | — | — | 10 | 9 | 10 | 9 | 8 | **8.0** (diag) | **A** |
 | 5 | **15** | 1-pass RelP causal attribution sniff | 62.5% exact zero-RL, 100% safety, found new #1 causal neuron L27#110 in 7s | 5 | 10 | 9 | 10 | 8 | 9 | 8 | 6 | **7.95** | **A** |
-| 6 | **16** | Safety-whitened rank-k subspace edit | raw_rank1: 65% exact / 0% benign FR; hard nullspace strips too much on narrow model | 6 | 8 | 10 | 8 | 9 | 7 | 6 | 6 | **7.35** | **B** |
-| 7 | **12** | Head+MLP false-node double-check sniff | Found top false heads (L29H1); edit gains modest | 4 | 8 | 8 | 8 | 7 | 8 | 7 | 5 | **6.65** | **B** |
-| 8 | **14** | Zero-shock stitched GQA head + RL | Zero-shock math proven (KL≈1.6e-6) but 45% exact in 6 steps — needs long training | 0 | 10 | 9 | 4 | 9 | 6 | 8 | 6 | **5.85** | **C** |
-| 9 | **13** | 1-bit sign-flip / zero-mask false-node edit | Both arms rejected: benign false refusal 90% — binary ablation destroys circuit | 0 | 10 | 2 | 9 | 7 | 4 | 5 | 7 | **4.9** | **D** |
+| 6 | **19** | 7-behavior cross-talk + hub-protection audit (diagnostic) | False-refusal edit moved true safety almost identically (-8.516 vs -8.516 protected); hub protection cut mean collateral only 8.4% — refusal circuits entangled | — | — | — | 8 | 8 | 9 | 8 | 4 | **7.6** (diag, provisional) | **A** |
+| 7 | **16** | Safety-whitened rank-k subspace edit | raw_rank1: 65% exact / 0% benign FR; hard nullspace strips too much on narrow model | 6 | 8 | 10 | 8 | 9 | 7 | 6 | 6 | **7.35** | **B** |
+| 8 | **12** | Head+MLP false-node double-check sniff | Found top false heads (L29H1); edit gains modest | 4 | 8 | 8 | 8 | 7 | 8 | 7 | 5 | **6.65** | **B** |
+| 9 | **14** | Zero-shock stitched GQA head + RL | Zero-shock math proven (KL≈1.6e-6) but 45% exact in 6 steps — needs long training | 0 | 10 | 9 | 4 | 9 | 6 | 8 | 6 | **5.85** | **C** |
 | 10 | **17 (5 anti-probes)** | Variance flicker, activation spike, random consensus | ≤ 67.5% — rejected as primary cameras | 3 | 7 | 5 | 8 | 6 | 5 | 6 | 7 | **5.5** | **C** |
+| 11 | **13** | 1-bit sign-flip / zero-mask false-node edit | Both arms rejected: benign false refusal 90% — binary ablation destroys circuit | 0 | 10 | 2 | 9 | 7 | 4 | 5 | 7 | **4.9** | **D** |
 
 ## Key conclusions from back-evaluation
 1. **Zero-grad logit-space localization (DLA/IG-5) dominates everything** — the two S-tier techniques are both zero-RL. Combining them with re-anchored disjoint RL (Exp 21) is the flagship composition.
 2. **Binary/hard structural edits fail** (Exp 13 D-grade, Exp 16 hard nullspace): continuous directional projection >> masking on narrow models.
-3. **Diagnostic atlases pay off** (Exp 18 A-grade as enabler) — hub-neuron protection and cross-talk predictions feed directly into Exps 19/24/29.
+3. **Diagnostic atlases pay off, but hub protection alone does not decouple refusal types** — Exp 19 found true/false refusal margin movement coupled at ratio ≈1.00 even with hub neurons masked.
 4. **RL alone is cost-inefficient** (Exp 11 E=5) — but it is the only path past the ~82.5% edit ceiling, so its composability (K=10) keeps it A-tier.
+5. **Safety-preserving compliance repair is now the central bottleneck** — future S-tier entries need >80% exact without the current 100%→90% unsafe-refusal drop.
 
 ## Pending grading (running on H100 swarm)
-Exps 19–30: graded automatically into this table when the swarm completes (each run emits rubric-scored JSON).
+Exps 20–26 and 28–34 remain pending. Exp 19 is provisionally graded as diagnostic pending fp32 confirmation. Exp 27's first JSON was invalid (identity patch: source and target were the same prompt) and is awaiting rerun before grading.
