@@ -208,7 +208,7 @@ def main() -> None:
 
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
+    dtype = torch.float32  # wave-1 finding: fp32 avoids bf16 rounding loss in surgical edits
     out_dir = ROOT / "experiments/exp34_activation_vector_only_rl/results"
     out_dir.mkdir(parents=True, exist_ok=True)
     print(f"[Exp 34] Activation-Vector-Only RL on {device} ({dtype})", flush=True)
