@@ -60,7 +60,8 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "mislabeled replication target: implementation uses Exp12 false-node selection, not Exp17 probe1-DLA or probe4-IG selection; the 80-82.5% CPU-era DLA/IG result remains untested on GPU"
     ],
     "slider_gated_attention_head": [
-        "architecturally valid zero-init insert but exactness-negative: benign false refusal improves 90->30 while exact falls 55->42.5 and unsafe refusal falls 100->90"
+        "architecturally valid zero-init insert but exactness-negative: benign false refusal improves 90->30 while exact falls 55->42.5 and unsafe refusal falls 100->90",
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; behavioral conclusions need cache-corrected replication"
     ],
     "whitened_subspace_rfm_edit": [
         "raw_rank1 is the valid positive arm; safety_null_rank2/3/4 are accepted_strength=0 no-op baseline copies, not active interventions"
@@ -78,7 +79,44 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "slider_head_fork": [
         "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
         "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
-        "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+        "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test",
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width conclusions need cache-corrected replication"
+    ],
+    "combined_slider_subspace": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; composition conclusions need cache-corrected replication"
+    ],
+    "exp59_warm_gqa_slider_heads": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; warm-GQA conclusions need cache-corrected replication"
+    ],
+    "exp61_keyed_zero_gqa_slider": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; keyed-GQA conclusions need cache-corrected replication"
+    ],
+    "exp62_policy_preserving_gqa_slider": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; policy-preserving dose conclusions need cache-corrected replication"
+    ],
+    "exp65_slider_insertion_layer_sweep": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; insertion-depth conclusions need cache-corrected replication"
+    ],
+    "exp66_edit_plus_warm_slider_composition": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; composition collapse needs cache-corrected replication"
+    ],
+    "exp90_single_slider_width_ablation": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; width conclusions need cache-corrected replication"
+    ],
+    "exp91_single_slider_depth_ablation": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; the L20-collapse/L27-optimal ordering is superseded by exp146 and must not be interpreted causally"
+    ],
+    "exp92_shared_alpha_head_count_ablation": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; head-count conclusions need cache-corrected replication"
+    ],
+    "exp93_v1_seed_replication": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; seed-nonrobustness conclusion needs cache-corrected replication"
+    ],
+    "exp94_alpha_clamp_multilayer_bank": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; multi-layer collapse conclusion needs cache-corrected replication"
+    ],
+    "exp96_freeze_then_merge_schedule": [
+        "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; freeze-merge benefit needs cache-corrected replication"
     ],
     "exp85_evolution_strategies_32d_surgical_subspace": [
         "fixed-dose and random-search references are excluded as controls; ES dev selection did not beat the fixed-dose reference, so the strong final eval may be selection noise despite n=40"
@@ -131,6 +169,28 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "exp132_capability_objective_slider_ablation": [
         "hybrid capability-primary objective is behaviorally positive, but benchmark evidence is mixed: coarse MMLU/ARC improve while normalized continuation metrics decline; behavior-only arm is destructive"
     ],
+    "exp82_rank1_rl_trajectory_extrapolation": [
+        "actual RL and persistence controls are excluded; rank-one trajectory fits look strong geometrically but extrapolation catastrophically collapses",
+        "validation is insufficient: cosine is high (0.90-0.93) but predicted step-8 vector norms are 1.21-1.33x actual and relative errors are ~0.50-0.56, so collapse does not isolate nonlinear-trajectory failure from magnitude/validation error"
+    ],
+    "exp87_multiperspective_abstention_factorization": [
+        "false-refusal and ambiguity directions are stable while true-harmfulness is unstable, but all behavioral steering arms are exact-baseline no-ops at the tested dose"
+    ],
+    "exp103_failure_neuron_suppression_dose": [
+        "failure-neuron suppression is monotonically behaviorally destructive and does not repair benchmark behavior"
+    ],
+    "exp105_slider_lr_response_bank": [
+        "low LR is a no-op, mid LR is slightly negative, high LR collapses; because this is a pre-cache-fix slider bank, conclusions require cache-corrected replication"
+    ],
+    "exp143_contrastive_choice_capability": [
+        "correct-answer reference is excluded; the actual contrastive-choice objective does not improve contrastive validation accuracy and remains behaviorally exactness-negative"
+    ],
+    "exp145_inversion_logit_diagnostic": [
+        "cache-corrected L20 slider is behaviorally positive under a shifted same-run baseline (52.5/93.3/90); diagnostic duplicates exp146 and supersedes legacy-cache L20 collapse interpretations"
+    ],
+    "exp146_cache_mode_inversion_diagnostic": [
+        "decisive cache artifact control: legacy cached generation collapses while cache-corrected full-context generation is positive; compare against same-run cache-corrected baseline 52.5/93.3/90, not canonical legacy-cache baseline alone"
+    ],
     "exp134_routed_width_mixture_head": [
         "single-width reference heads are excluded; the actual routed width mixture is exactness-negative and over-refuses benign prompts"
     ],
@@ -159,6 +219,9 @@ EXPERIMENT_REFERENCE_LABELS: dict[str, set[str]] = {
     "exp136_sparse_context_gated_dose_cancellation": {"edit_only"},
     "exp137_cross_layer_cascade_blend": {"shared_lower_alone"},
     "exp138_subtractive_frozen_head_gate": {"trained_feature_additive"},
+    "exp82_rank1_rl_trajectory_extrapolation": {"actual_step8_rl"},
+    "exp87_multiperspective_abstention_factorization": {"no_steering"},
+    "exp143_contrastive_choice_capability": {"correct_answer_causal_reference"},
 }
 
 
@@ -263,6 +326,14 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
     if isinstance(d.get("causal_edit_arms"), dict):
         for label, arm in d["causal_edit_arms"].items():
             add_candidate(candidates, str(label), arm, f"/causal_edit_arms/{label}")
+
+    if isinstance(d.get("endpoint_evals"), dict):
+        for label, result in d["endpoint_evals"].items():
+            add_candidate(candidates, str(label), result, f"/endpoint_evals/{label}")
+
+    if isinstance(d.get("steering_evals"), dict):
+        for label, result in d["steering_evals"].items():
+            add_candidate(candidates, str(label), result, f"/steering_evals/{label}")
 
     if isinstance(d.get("stages"), dict):
         for label, stage in d["stages"].items():

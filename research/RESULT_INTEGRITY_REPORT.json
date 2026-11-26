@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T14:10:20+00:00",
+  "generated_at_utc": "2026-11-26T14:29:09+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -179,6 +179,27 @@
       "metric_paths": 10
     },
     {
+      "file": "experiments/exp103_failure_neuron_suppression_dose/results/failure_neuron_suppression_dose_summary.json",
+      "bytes": 10575,
+      "warnings": [],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp105_slider_lr_response_bank/results/slider_lr_response_bank_summary.json",
+      "bytes": 47366,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/lr_0p0003/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/lr_0p003/behavior_eval"
+        }
+      ],
+      "metric_paths": 7
+    },
+    {
       "file": "experiments/exp129_sparse_edit_strength_response/results/sparse_edit_strength_response_summary.json",
       "bytes": 8444,
       "warnings": [],
@@ -250,6 +271,33 @@
       "file": "experiments/exp138_subtractive_frozen_head_gate/results/subtractive_frozen_head_gate_summary.json",
       "bytes": 53541,
       "warnings": [],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp143_contrastive_choice_capability/results/contrastive_choice_capability_summary.json",
+      "bytes": 26612,
+      "warnings": [],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/exp145_inversion_logit_diagnostic/results/inversion_logit_diagnostic_summary.json",
+      "bytes": 19574,
+      "warnings": [],
+      "metric_paths": 5
+    },
+    {
+      "file": "experiments/exp146_cache_mode_inversion_diagnostic/results/cache_mode_inversion_diagnostic_summary.json",
+      "bytes": 30042,
+      "warnings": [
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/layer20_legacy_cache/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/layer20_legacy_cache/behavior_eval"
+        }
+      ],
       "metric_paths": 7
     },
     {
@@ -442,6 +490,25 @@
       "metric_paths": 5
     },
     {
+      "file": "experiments/exp82_rank1_rl_trajectory_extrapolation/results/rank1_trajectory_extrapolation_summary.json",
+      "bytes": 14769,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/endpoint_evals/rank1_extrapolation_t8"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/endpoint_evals/rank1_extrapolation_t12"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/endpoint_evals/rank1_extrapolation_t24"
+        }
+      ],
+      "metric_paths": 8
+    },
+    {
       "file": "experiments/exp83_self_modeling_failure_probe_router/results/failure_probe_router_summary.json",
       "bytes": 10687,
       "warnings": [],
@@ -518,6 +585,33 @@
       "bytes": 17186,
       "warnings": [],
       "metric_paths": 14
+    },
+    {
+      "file": "experiments/exp87_multiperspective_abstention_factorization/results/abstention_factorization_summary.json",
+      "bytes": 7205,
+      "warnings": [
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/steering_evals/no_steering"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/steering_evals/negative_false_margin"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/steering_evals/positive_false_margin_control"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/steering_evals/negative_orthogonalized_margin"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/steering_evals/negative_random_control"
+        }
+      ],
+      "metric_paths": 5
     },
     {
       "file": "experiments/exp90_single_slider_width_ablation/results/single_slider_width_ablation_summary.json",
@@ -1135,8 +1229,6 @@
   "missing_result_experiments": [
     "adaptive_k_proportional_edit",
     "exp102_closed_form_decision_readout",
-    "exp103_failure_neuron_suppression_dose",
-    "exp105_slider_lr_response_bank",
     "exp111_alpha_norm_penalty_bank",
     "exp120_drift_triggered_orthogonal_lanes",
     "exp121_curvature_constrained_delta_rl",
@@ -1153,15 +1245,10 @@
     "exp140_answer_focused_capability_objective",
     "exp141_benchmark_format_capability",
     "exp142_capability_training_budget_response",
-    "exp143_contrastive_choice_capability",
     "exp144_sparse_edit_anchored_mlp_lora",
-    "exp145_inversion_logit_diagnostic",
-    "exp146_cache_mode_inversion_diagnostic",
     "exp147_additive_capability_behavior_union",
     "exp148_legacy_scorer_flattening_audit",
-    "exp82_rank1_rl_trajectory_extrapolation",
     "exp84_momentum_carryover_half_edit",
-    "exp87_multiperspective_abstention_factorization",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
@@ -1221,7 +1308,8 @@
       "mislabeled replication target: implementation uses Exp12 false-node selection, not Exp17 probe1-DLA or probe4-IG selection; the 80-82.5% CPU-era DLA/IG result remains untested on GPU"
     ],
     "slider_gated_attention_head": [
-      "architecturally valid zero-init insert but exactness-negative: benign false refusal improves 90->30 while exact falls 55->42.5 and unsafe refusal falls 100->90"
+      "architecturally valid zero-init insert but exactness-negative: benign false refusal improves 90->30 while exact falls 55->42.5 and unsafe refusal falls 100->90",
+      "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; behavioral conclusions need cache-corrected replication"
     ],
     "whitened_subspace_rfm_edit": [
       "raw_rank1 is the valid positive arm; safety_null_rank2/3/4 are accepted_strength=0 no-op baseline copies, not active interventions"
@@ -1239,16 +1327,47 @@
     "slider_head_fork": [
       "fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent",
       "multi-head/wide variants enter zero-reward collapse and cannot recover because all-zero group rewards produce zero advantage",
-      "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test"
+      "v5 memory attention path omits the causal mask, so its result is not a clean causal-memory test",
+      "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width conclusions need cache-corrected replication"
     ],
-    "exp85_evolution_strategies_32d_surgical_subspace": [
-      "fixed-dose and random-search references are excluded as controls; ES dev selection did not beat the fixed-dose reference, so the strong final eval may be selection noise despite n=40"
+    "combined_slider_subspace": [
+      "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; composition conclusions need cache-corrected replication"
+    ],
+    "exp59_warm_gqa_slider_heads": [
+      "warm GQA slider is behaviorally destructive relative to random lane control; warm initialization is not benign"
+    ],
+    "exp61_keyed_zero_gqa_slider": [
+      "keying does not rescue the warm GQA slider; exactness falls to 10% and the result remains a destructive boundary measurement"
+    ],
+    "exp62_policy_preserving_gqa_slider": [
+      "bc_lambda_2 is safety-preserving but weak and retains 80% benign false refusal; lower BC weights either collapse or over-refuse"
+    ],
+    "exp65_slider_insertion_layer_sweep": [
+      "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; insertion-depth conclusions need cache-corrected replication"
+    ],
+    "exp66_edit_plus_warm_slider_composition": [
+      "the validated-edit reference is excluded from technique scoring; the actual warm-slider composite collapses to 17.5% exact with complete unsafe-refusal loss"
+    ],
+    "exp90_single_slider_width_ablation": [
+      "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; width conclusions need cache-corrected replication"
+    ],
+    "exp91_single_slider_depth_ablation": [
+      "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; the L20-collapse/L27-optimal ordering is superseded by exp146 and must not be interpreted causally"
+    ],
+    "exp92_shared_alpha_head_count_ablation": [
+      "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; head-count conclusions need cache-corrected replication"
     ],
     "exp93_v1_seed_replication": [
       "seed replication is not robust: only seed 42 reproduces the positive v1 operating point; seeds 7 and 123 are exactness-negative"
     ],
     "exp94_alpha_clamp_multilayer_bank": [
       "all clamped multi-layer bank arms collapse; this supports an architectural/destructive-interference boundary rather than a simple alpha-magnitude artifact"
+    ],
+    "exp96_freeze_then_merge_schedule": [
+      "legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; freeze-merge benefit needs cache-corrected replication"
+    ],
+    "exp85_evolution_strategies_32d_surgical_subspace": [
+      "fixed-dose and random-search references are excluded as controls; ES dev selection did not beat the fixed-dose reference, so the strong final eval may be selection noise despite n=40"
     ],
     "exp52_pgs_credit_direction": [
       "DLA/unembed reference is excluded from technique scoring because it is not the PGS mechanism under test; PGS directions are nearly anti-aligned with DLA and perform near baseline or over-refusal"
@@ -1262,20 +1381,8 @@
     "exp58_attention_head_sparse_rl": [
       "bottom-ranked heads beat top-ranked heads, inconsistent with the proposed head-ranking mechanism; treat as weak/nonselective evidence"
     ],
-    "exp59_warm_gqa_slider_heads": [
-      "warm GQA slider is behaviorally destructive relative to random lane control; warm initialization is not benign"
-    ],
-    "exp61_keyed_zero_gqa_slider": [
-      "keying does not rescue the warm GQA slider; exactness falls to 10% and the result remains a destructive boundary measurement"
-    ],
-    "exp62_policy_preserving_gqa_slider": [
-      "bc_lambda_2 is safety-preserving but weak and retains 80% benign false refusal; lower BC weights either collapse or over-refuse"
-    ],
     "exp64_validated_edit_layer_ablation": [
       "L29 alone matches the canonical L29+L28 edit; L28 alone is a no-op, while adding L27 gives a small additional exactness gain"
-    ],
-    "exp66_edit_plus_warm_slider_composition": [
-      "the validated-edit reference is excluded from technique scoring; the actual warm-slider composite collapses to 17.5% exact with complete unsafe-refusal loss"
     ],
     "exp100_halo_native_transfer_path_showdown": [
       "targeted complementary LoRA outperforms partial full fine-tuning and vector-only transfer from the same post-edit anchor"
@@ -1291,6 +1398,28 @@
     ],
     "exp132_capability_objective_slider_ablation": [
       "hybrid capability-primary objective is behaviorally positive, but benchmark evidence is mixed: coarse MMLU/ARC improve while normalized continuation metrics decline; behavior-only arm is destructive"
+    ],
+    "exp82_rank1_rl_trajectory_extrapolation": [
+      "actual RL and persistence controls are excluded; rank-one trajectory fits look strong geometrically but extrapolation catastrophically collapses",
+      "validation is insufficient: cosine is high (0.90-0.93) but predicted step-8 vector norms are 1.21-1.33x actual and relative errors are ~0.50-0.56, so collapse does not isolate nonlinear-trajectory failure from magnitude/validation error"
+    ],
+    "exp87_multiperspective_abstention_factorization": [
+      "false-refusal and ambiguity directions are stable while true-harmfulness is unstable, but all behavioral steering arms are exact-baseline no-ops at the tested dose"
+    ],
+    "exp103_failure_neuron_suppression_dose": [
+      "failure-neuron suppression is monotonically behaviorally destructive and does not repair benchmark behavior"
+    ],
+    "exp105_slider_lr_response_bank": [
+      "low LR is a no-op, mid LR is slightly negative, high LR collapses; because this is a pre-cache-fix slider bank, conclusions require cache-corrected replication"
+    ],
+    "exp143_contrastive_choice_capability": [
+      "correct-answer reference is excluded; the actual contrastive-choice objective does not improve contrastive validation accuracy and remains behaviorally exactness-negative"
+    ],
+    "exp145_inversion_logit_diagnostic": [
+      "cache-corrected L20 slider is behaviorally positive under a shifted same-run baseline (52.5/93.3/90); diagnostic duplicates exp146 and supersedes legacy-cache L20 collapse interpretations"
+    ],
+    "exp146_cache_mode_inversion_diagnostic": [
+      "decisive cache artifact control: legacy cached generation collapses while cache-corrected full-context generation is positive; compare against same-run cache-corrected baseline 52.5/93.3/90, not canonical legacy-cache baseline alone"
     ],
     "exp134_routed_width_mixture_head": [
       "single-width reference heads are excluded; the actual routed width mixture is exactness-negative and over-refuses benign prompts"
