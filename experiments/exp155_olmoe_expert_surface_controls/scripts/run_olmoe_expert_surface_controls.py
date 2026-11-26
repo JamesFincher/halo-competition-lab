@@ -360,9 +360,11 @@ def main():
     n_layers=len(probe_model.model.layers); n_exp=int(probe_model.config.num_experts)
     k=min(args.top_experts_per_layer,n_exp)
     inactive={li:sorted(int(x) for x in torch.argsort(answer_counts[li])[:k].tolist()) for li in range(n_layers)}
-    behavior_eval=base_rl.load_rows(ROOT/"data/policy_eval_scaled.jsonl")
+    behavior_eval=base_rl.load_rows(ROOT/"data/policy_eval_scaled_v2.jsonl")
+    behavior_eval_v1=base_rl.load_rows(ROOT/"data/policy_eval_scaled.jsonl")
     baseline={
       "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True),
+      "behavior_scaled_v1_120_bridge":base_rl.evaluate_heldout(probe_model,tok,behavior_eval_v1,device,max_new_tokens=args.max_new_tokens,use_cache=True),
       "continuation_benchmark":run_continuation_benchmark(probe_model,tok,device,args.continuation_n),
       "cache_consistency":cache_consistency(probe_model,tok,device),
     }
@@ -397,10 +399,11 @@ def main():
         surface={"type":"dense_attention_lora_all_layers","target_modules":["q_proj","k_proj","v_proj","o_proj"],"rank":spec["rank"],"parameter_matched_note":"rank 12 gives 3,145,728 attention-LoRA params on real OLMoE, exactly matching 8 experts/layer x rank 8 x 16 layers"}
       train_info=train_trainables(model,trainable,tok,cap_train,device,args.steps,args.batch_size,args.max_len,args.lr,ckpt_base/arm,args.checkpoint_interval)
       behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True)
+      behavior_v1=base_rl.evaluate_heldout(model,tok,behavior_eval_v1,device,max_new_tokens=args.max_new_tokens,use_cache=True)
       continuation=run_continuation_benchmark(model,tok,device,args.continuation_n)
       if spec["kind"]=="inactive_experts":
         cache_diag=cache_consistency(model,tok,device)
-      rec={"arm":arm,"surface":surface,"train_info":train_info,"behavior_scaled120":behavior,"continuation_benchmark":continuation,"baseline":baseline,"cache_consistency_after_training":cache_diag,"memory":memory_stats(device),"wall_sec":round(time.time()-arm_t0,2),"smoke_test":smoke()}
+      rec={"arm":arm,"surface":surface,"train_info":train_info,"behavior_scaled120":behavior,"behavior_scaled_v1_120_bridge":behavior_v1,"evaluation_surface":"behavior_scaled120 is entity-disjoint corpus v2; v1 is retained only as a bridge","continuation_benchmark":continuation,"baseline":baseline,"cache_consistency_after_training":cache_diag,"memory":memory_stats(device),"wall_sec":round(time.time()-arm_t0,2),"smoke_test":smoke()}
       append_arm(rec)
       del model,trainable
       if bank is not None: del bank

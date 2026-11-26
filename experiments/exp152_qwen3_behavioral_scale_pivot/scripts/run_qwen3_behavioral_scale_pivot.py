@@ -258,10 +258,11 @@ def train_lora(
 
 
 @torch.no_grad()
-def endpoint(model, tokenizer, original_eval: list[dict], scaled_eval: list[dict], device: torch.device, continuation_n: int, max_new_tokens: int) -> dict:
+def endpoint(model, tokenizer, original_eval: list[dict], scaled_eval: list[dict], v1_eval: list[dict], device: torch.device, continuation_n: int, max_new_tokens: int) -> dict:
     return {
         "behavior_original40": base_rl.evaluate_heldout(model, tokenizer, original_eval, device, max_new_tokens=max_new_tokens, use_cache=True),
         "behavior_scaled120": base_rl.evaluate_heldout(model, tokenizer, scaled_eval, device, max_new_tokens=max_new_tokens, use_cache=True),
+        "behavior_scaled_v1_120_bridge": base_rl.evaluate_heldout(model, tokenizer, v1_eval, device, max_new_tokens=max_new_tokens, use_cache=True),
         "continuation_benchmark": run_continuation_benchmark(model, tokenizer, device, continuation_n),
     }
 
@@ -319,8 +320,9 @@ def main() -> None:
     tokenizer = load_tokenizer(MODEL_NAME)
     original_train = base_rl.load_rows(ROOT / "data/policy_train.jsonl")
     original_eval = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
-    scaled_train = base_rl.load_rows(ROOT / "data/policy_train_scaled.jsonl")
-    scaled_eval = base_rl.load_rows(ROOT / "data/policy_eval_scaled.jsonl")
+    scaled_train = base_rl.load_rows(ROOT / "data/policy_train_scaled_v2.jsonl")
+    scaled_eval = base_rl.load_rows(ROOT / "data/policy_eval_scaled_v2.jsonl")
+    v1_eval = base_rl.load_rows(ROOT / "data/policy_eval_scaled.jsonl")
     capability_rows = jsonl_rows(ROOT / "data/capability_train_scaled.jsonl")
     rng = random.Random(args.seed)
     rng.shuffle(scaled_train)
@@ -385,7 +387,7 @@ def main() -> None:
                 args.checkpoint_interval,
                 spec["replay"],
             )
-        eval_out = endpoint(model, tokenizer, original_eval, scaled_eval, device, args.continuation_n, args.max_new_tokens)
+        eval_out = endpoint(model, tokenizer, original_eval, scaled_eval, v1_eval, device, args.continuation_n, args.max_new_tokens)
         record = {
             "arm": arm,
             "model": MODEL_NAME,
@@ -412,10 +414,11 @@ def main() -> None:
         "question": "Does scaling model class and unique counterfactual behavior data break the 135M 80-82.5% ceiling at fixed update budget?",
         "design": {
             "fixed_update_budget_steps": args.steps,
-            "data_comparison": "original 160 rows repeated versus scaled 1600 unique counterfactual rows at identical optimizer steps/tokens",
+            "data_comparison": "original 160 rows repeated versus entity-disjoint v2 scaled 1600 unique counterfactual rows at identical optimizer steps/tokens; v1 eval retained as a bridge",
             "critical_reference": "lora_scaled_fixed_updates",
             "composition": "architecture-mapped final-two-layer sparse edit plus complementary MLP-only LoRA on preceding four layers",
             "cache_note": "all interventions are weight/LoRA edits, so normal cached generation is valid",
+            "evaluation_surface": "behavior_scaled120 is entity-disjoint corpus v2; behavior_scaled_v1_120_bridge is the earlier compositional v1 surface",
         },
         "arms": arm_records,
         "wall_sec": round(time.time() - t0, 2),
