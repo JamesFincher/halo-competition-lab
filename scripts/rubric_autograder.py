@@ -131,6 +131,21 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "exp132_capability_objective_slider_ablation": [
         "hybrid capability-primary objective is behaviorally positive, but benchmark evidence is mixed: coarse MMLU/ARC improve while normalized continuation metrics decline; behavior-only arm is destructive"
     ],
+    "exp134_routed_width_mixture_head": [
+        "single-width reference heads are excluded; the actual routed width mixture is exactness-negative and over-refuses benign prompts"
+    ],
+    "exp135_capability_behavior_head_blend": [
+        "capability/behavior blending does not produce a positive behavioral operating point; learned blend remains exactness-negative despite capability-loss reduction"
+    ],
+    "exp136_sparse_context_gated_dose_cancellation": [
+        "edit_only is excluded as the reference; learned cancellation trades 5pp exactness for no unsafe-refusal gain relative to edit-only, while oracle cancellation shows the safety/exactness cost frontier"
+    ],
+    "exp137_cross_layer_cascade_blend": [
+        "shared-lower-only and parallel-control comparators are excluded; cross-layer cascade is safer than parallel but still exactness-negative"
+    ],
+    "exp138_subtractive_frozen_head_gate": [
+        "trained-feature and positive-control stages are excluded; negative subtractive gate preserves unsafe refusal but worsens benign over-refusal, confirming sign sensitivity rather than a performance win"
+    ],
 }
 
 # Comparator arms that are scientifically important but are not the mechanism under test.
@@ -140,6 +155,10 @@ EXPERIMENT_REFERENCE_LABELS: dict[str, set[str]] = {
     "exp55_policy_hint_internalization": {"rl_only_zero_vectors_plain"},
     "exp66_edit_plus_warm_slider_composition": {"validated_edit_only"},
     "exp101_merge_aware_served_weight_finetune": {"standard_unrounded_all_tokens", "standard_unrounded_action_only"},
+    "exp134_routed_width_mixture_head": {"width16_single_reference", "width64_single_reference"},
+    "exp136_sparse_context_gated_dose_cancellation": {"edit_only"},
+    "exp137_cross_layer_cascade_blend": {"shared_lower_alone"},
+    "exp138_subtractive_frozen_head_gate": {"trained_feature_additive"},
 }
 
 
@@ -244,6 +263,10 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
     if isinstance(d.get("causal_edit_arms"), dict):
         for label, arm in d["causal_edit_arms"].items():
             add_candidate(candidates, str(label), arm, f"/causal_edit_arms/{label}")
+
+    if isinstance(d.get("stages"), dict):
+        for label, stage in d["stages"].items():
+            add_candidate(candidates, str(label), stage, f"/stages/{label}")
 
     if isinstance(d.get("modes"), dict):
         for label, mode in d["modes"].items():
@@ -389,6 +412,10 @@ def scan_file(fp: Path) -> dict[str, Any]:
     metrics = list(metric_objects(data))
     entry["metric_paths"] = len(metrics)
     for path, ev in metrics:
+        # Derived delta objects are arithmetic comparisons, not independent evals; scanning
+        # them as partial n=0/negative-delta evaluations creates false integrity warnings.
+        if "delta_vs_baseline" in path:
+            continue
         if ev.get("n_eval") not in (None, 40):
             entry["warnings"].append({"type": "partial_eval", "path": path, "n_eval": ev.get("n_eval")})
         if ev.get("json_valid_rate") == 0:

@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T13:31:53+00:00",
+  "generated_at_utc": "2026-11-26T13:52:29+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -181,117 +181,75 @@
     {
       "file": "experiments/exp129_sparse_edit_strength_response/results/sparse_edit_strength_response_summary.json",
       "bytes": 8444,
-      "warnings": [
-        {
-          "type": "partial_eval",
-          "path": "/arms/strength_0p5/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/strength_0p5/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/strength_0p7/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/strength_0p7/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/strength_0p9/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/strength_0p9/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/strength_1p2/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/strength_1p2/behavior_delta_vs_baseline"
-        }
-      ],
+      "warnings": [],
       "metric_paths": 9
     },
     {
       "file": "experiments/exp130_sparse_edit_column_count_response/results/sparse_edit_column_count_response_summary.json",
       "bytes": 8391,
-      "warnings": [
-        {
-          "type": "partial_eval",
-          "path": "/arms/columns_4/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/columns_4/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/columns_8/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/columns_8/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/columns_16/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/columns_16/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/columns_32/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/columns_32/behavior_delta_vs_baseline"
-        }
-      ],
+      "warnings": [],
       "metric_paths": 9
     },
     {
       "file": "experiments/exp132_capability_objective_slider_ablation/results/capability_objective_slider_ablation_summary.json",
       "bytes": 59974,
+      "warnings": [],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp134_routed_width_mixture_head/results/routed_width_mixture_head_summary.json",
+      "bytes": 51439,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/uniform_width_mixture_control/behavior_eval"
+        }
+      ],
+      "metric_paths": 9
+    },
+    {
+      "file": "experiments/exp135_capability_behavior_head_blend/results/capability_behavior_head_blend_summary.json",
+      "bytes": 59115,
+      "warnings": [],
+      "metric_paths": 9
+    },
+    {
+      "file": "experiments/exp136_sparse_context_gated_dose_cancellation/results/context_gated_dose_cancellation_summary.json",
+      "bytes": 6070,
       "warnings": [
         {
           "type": "partial_eval",
-          "path": "/arms/capability_only/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/capability_only/behavior_delta_vs_baseline"
+          "path": "/dev_fraction_sweep[0]/metrics",
+          "n_eval": 16
         },
         {
           "type": "partial_eval",
-          "path": "/arms/behavior_only/behavior_delta_vs_baseline",
-          "n_eval": 0
+          "path": "/dev_fraction_sweep[1]/metrics",
+          "n_eval": 16
         },
         {
           "type": "partial_eval",
-          "path": "/arms/hybrid_capability_primary/behavior_delta_vs_baseline",
-          "n_eval": 0
+          "path": "/dev_fraction_sweep[2]/metrics",
+          "n_eval": 16
         },
         {
-          "type": "zero_json_valid",
-          "path": "/arms/hybrid_capability_primary/behavior_delta_vs_baseline"
+          "type": "partial_eval",
+          "path": "/dev_fraction_sweep[3]/metrics",
+          "n_eval": 16
         }
       ],
+      "metric_paths": 11
+    },
+    {
+      "file": "experiments/exp137_cross_layer_cascade_blend/results/cross_layer_cascade_blend_summary.json",
+      "bytes": 58712,
+      "warnings": [],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp138_subtractive_frozen_head_gate/results/subtractive_frozen_head_gate_summary.json",
+      "bytes": 53541,
+      "warnings": [],
       "metric_paths": 7
     },
     {
@@ -566,48 +524,8 @@
       "bytes": 33876,
       "warnings": [
         {
-          "type": "partial_eval",
-          "path": "/arms/width_16/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/width_16/behavior_delta_vs_baseline"
-        },
-        {
           "type": "exact_baseline_copy_or_noop",
           "path": "/arms/width_32/behavior_eval"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/width_32/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/width_32/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "always_call_collapse",
-          "path": "/arms/width_32/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/width_64/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/width_64/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/width_128/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/width_128/behavior_delta_vs_baseline"
         }
       ],
       "metric_paths": 9
@@ -617,61 +535,16 @@
       "bytes": 43235,
       "warnings": [
         {
-          "type": "partial_eval",
-          "path": "/arms/layer_16/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
           "type": "always_call_collapse",
           "path": "/arms/layer_20/behavior_eval"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/layer_20/behavior_delta_vs_baseline",
-          "n_eval": 0
         },
         {
           "type": "exact_baseline_copy_or_noop",
           "path": "/arms/layer_24/behavior_eval"
         },
         {
-          "type": "partial_eval",
-          "path": "/arms/layer_24/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/layer_24/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "always_call_collapse",
-          "path": "/arms/layer_24/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/layer_27/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/layer_27/behavior_delta_vs_baseline"
-        },
-        {
           "type": "exact_baseline_copy_or_noop",
           "path": "/arms/layer_29/behavior_eval"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/layer_29/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/layer_29/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "always_call_collapse",
-          "path": "/arms/layer_29/behavior_delta_vs_baseline"
         }
       ],
       "metric_paths": 11
@@ -679,65 +552,13 @@
     {
       "file": "experiments/exp92_shared_alpha_head_count_ablation/results/shared_alpha_head_count_ablation_summary.json",
       "bytes": 25919,
-      "warnings": [
-        {
-          "type": "partial_eval",
-          "path": "/arms/count_1/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/count_1/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/count_2/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/count_2/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/count_4/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/count_4/behavior_delta_vs_baseline"
-        }
-      ],
+      "warnings": [],
       "metric_paths": 7
     },
     {
       "file": "experiments/exp93_v1_seed_replication/results/v1_seed_replication_summary.json",
       "bytes": 25801,
-      "warnings": [
-        {
-          "type": "partial_eval",
-          "path": "/arms/seed_7/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/seed_7/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/seed_42/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/seed_42/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/seed_123/behavior_delta_vs_baseline",
-          "n_eval": 0
-        }
-      ],
+      "warnings": [],
       "metric_paths": 7
     },
     {
@@ -753,11 +574,6 @@
           "path": "/arms/clamp_none/behavior_eval"
         },
         {
-          "type": "partial_eval",
-          "path": "/arms/clamp_none/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
           "type": "zero_json_valid",
           "path": "/arms/clamp_0p03/behavior_eval"
         },
@@ -766,18 +582,8 @@
           "path": "/arms/clamp_0p03/behavior_eval"
         },
         {
-          "type": "partial_eval",
-          "path": "/arms/clamp_0p03/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
           "type": "always_call_collapse",
           "path": "/arms/clamp_0p01/behavior_eval"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/clamp_0p01/behavior_delta_vs_baseline",
-          "n_eval": 0
         }
       ],
       "metric_paths": 7
@@ -785,35 +591,7 @@
     {
       "file": "experiments/exp95_validated_edit_strength_response/results/validated_edit_strength_response_summary.json",
       "bytes": 6461,
-      "warnings": [
-        {
-          "type": "partial_eval",
-          "path": "/arms/strength_0p5/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/strength_0p5/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/strength_0p9/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/strength_0p9/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/strength_1p3/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/strength_1p3/behavior_delta_vs_baseline"
-        }
-      ],
+      "warnings": [],
       "metric_paths": 7
     },
     {
@@ -827,20 +605,6 @@
         {
           "type": "always_call_collapse",
           "path": "/arms/joint_32/behavior_eval"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/joint_32/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/freeze_then_merge_8x4/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/freeze_then_merge_8x4/behavior_delta_vs_baseline"
         }
       ],
       "metric_paths": 5
@@ -848,35 +612,7 @@
     {
       "file": "experiments/exp98_validated_edit_column_count_response/results/validated_edit_column_count_response_summary.json",
       "bytes": 6533,
-      "warnings": [
-        {
-          "type": "partial_eval",
-          "path": "/arms/columns_32/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/columns_32/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/columns_64/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/columns_64/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/columns_128/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/columns_128/behavior_delta_vs_baseline"
-        }
-      ],
+      "warnings": [],
       "metric_paths": 7
     },
     {
@@ -884,56 +620,12 @@
       "bytes": 10045,
       "warnings": [
         {
-          "type": "partial_eval",
-          "path": "/arms/l29_only_64/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/l29_only_64/behavior_delta_vs_baseline"
-        },
-        {
           "type": "exact_baseline_copy_or_noop",
           "path": "/arms/l28_only_64/behavior_eval"
         },
         {
-          "type": "partial_eval",
-          "path": "/arms/l28_only_64/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/l28_only_64/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "always_call_collapse",
-          "path": "/arms/l28_only_64/behavior_delta_vs_baseline"
-        },
-        {
           "type": "exact_baseline_copy_or_noop",
           "path": "/arms/l27_only_64/behavior_eval"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/l27_only_64/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/l27_only_64/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "always_call_collapse",
-          "path": "/arms/l27_only_64/behavior_delta_vs_baseline"
-        },
-        {
-          "type": "partial_eval",
-          "path": "/arms/l29_l28_split_32_each/behavior_delta_vs_baseline",
-          "n_eval": 0
-        },
-        {
-          "type": "zero_json_valid",
-          "path": "/arms/l29_l28_split_32_each/behavior_delta_vs_baseline"
         }
       ],
       "metric_paths": 9
@@ -1457,11 +1149,6 @@
     "exp128_trajectory_collateral_repair_adapter",
     "exp131_context_gated_dose_cancellation",
     "exp133_alpha_init_continuation_confirmation",
-    "exp134_routed_width_mixture_head",
-    "exp135_capability_behavior_head_blend",
-    "exp136_sparse_context_gated_dose_cancellation",
-    "exp137_cross_layer_cascade_blend",
-    "exp138_subtractive_frozen_head_gate",
     "exp139_cache_corrected_capability_objective",
     "exp140_answer_focused_capability_objective",
     "exp141_benchmark_format_capability",
@@ -1469,6 +1156,7 @@
     "exp143_contrastive_choice_capability",
     "exp144_sparse_edit_anchored_mlp_lora",
     "exp145_inversion_logit_diagnostic",
+    "exp146_cache_mode_inversion_diagnostic",
     "exp82_rank1_rl_trajectory_extrapolation",
     "exp84_momentum_carryover_half_edit",
     "exp87_multiperspective_abstention_factorization",
@@ -1609,6 +1297,21 @@
     ],
     "exp132_capability_objective_slider_ablation": [
       "hybrid capability-primary objective is behaviorally positive, but benchmark evidence is mixed: coarse MMLU/ARC improve while normalized continuation metrics decline; behavior-only arm is destructive"
+    ],
+    "exp134_routed_width_mixture_head": [
+      "single-width reference heads are excluded; the actual routed width mixture is exactness-negative and over-refuses benign prompts"
+    ],
+    "exp135_capability_behavior_head_blend": [
+      "capability/behavior blending does not produce a positive behavioral operating point; learned blend remains exactness-negative despite capability-loss reduction"
+    ],
+    "exp136_sparse_context_gated_dose_cancellation": [
+      "edit_only is excluded as the reference; learned cancellation trades 5pp exactness for no unsafe-refusal gain relative to edit-only, while oracle cancellation shows the safety/exactness cost frontier"
+    ],
+    "exp137_cross_layer_cascade_blend": [
+      "shared-lower-only and parallel-control comparators are excluded; cross-layer cascade is safer than parallel but still exactness-negative"
+    ],
+    "exp138_subtractive_frozen_head_gate": [
+      "trained-feature and positive-control stages are excluded; negative subtractive gate preserves unsafe refusal but worsens benign over-refusal, confirming sign sensitivity rather than a performance win"
     ]
   }
 }
