@@ -1,0 +1,2009 @@
+{
+  "experiment": "exp132_capability_objective_slider_ablation",
+  "controlled_variable": "training objective only: pure capability vs pure behavioral vs hybrid capability-primary",
+  "scientific_question": "Can an inserted zero-init slider head add measurable capability in a saturated 135M residual stream when trained with a capability signal?",
+  "fixed_conditions": {
+    "layer": 27,
+    "head_dim": 64,
+    "head_count": 1,
+    "seed": 42,
+    "optimizer": "AdamW lr=3e-3 default betas/weight decay",
+    "steps": 32,
+    "capability_batch_size": 4,
+    "behavior_group_size": 4,
+    "behavior_prompt_stream": "12 benign then 12 unsafe, fixed order",
+    "hybrid_loss": "capability_loss + behavior_weight * behavior_loss"
+  },
+  "objective_scaling": {
+    "capability_weight": 1.0,
+    "behavior_weight": 10.0
+  },
+  "capability_corpus": {
+    "train_count": 144,
+    "validation_count": 48,
+    "sha256": "15b1c3a11ed90404048d8eb41e09567c333701902ca86695c02b63ff8b6e8397",
+    "provenance": [
+      {
+        "source": "mmlu_validation",
+        "dataset": "cais/mmlu/all",
+        "split": "validation",
+        "eval_split_excluded": "test",
+        "rows_loaded": 64
+      },
+      {
+        "source": "arc_easy_train",
+        "dataset": "allenai/ai2_arc/ARC-Easy",
+        "split": "train",
+        "eval_split_excluded": "test",
+        "rows_loaded": 64
+      },
+      {
+        "source": "hellaswag_train",
+        "dataset": "Rowan/hellaswag",
+        "split": "train",
+        "eval_split_excluded": "validation",
+        "rows_loaded": 64
+      }
+    ],
+    "load_errors": {},
+    "contamination_control": "uses only MMLU validation, ARC-Easy train, HellaSwag train; benchmark uses MMLU test, ARC-Easy test, HellaSwag validation"
+  },
+  "config": {
+    "steps": 32,
+    "group_size": 4,
+    "batch_size": 4,
+    "lr": 0.003,
+    "bench_n": 50,
+    "cap_items_per_source": 64,
+    "behavior_weight": 10.0,
+    "max_new_tokens": 48,
+    "seed": 42
+  },
+  "baseline_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "baseline_benchmark": {
+    "mmlu": 26.0,
+    "arc_easy": 38.0,
+    "hellaswag": 32.0
+  },
+  "baseline_continuation_benchmark": {
+    "mmlu": {
+      "sum_acc": 18.0,
+      "token_norm_acc": 24.0,
+      "byte_norm_acc": 22.0,
+      "n": 50
+    },
+    "arc_easy": {
+      "sum_acc": 44.0,
+      "token_norm_acc": 52.0,
+      "byte_norm_acc": 46.0,
+      "n": 50
+    },
+    "hellaswag": {
+      "sum_acc": 40.0,
+      "token_norm_acc": 38.0,
+      "byte_norm_acc": 50.0,
+      "n": 50
+    }
+  },
+  "baseline_capability_validation_loss": 3.088552,
+  "transformerlens_probe": {
+    "call_tool_final_resid_norm_mean": 606.36017,
+    "refuse_final_resid_norm_mean": 617.85901,
+    "benign_unsafe_mean_cosine": 0.98781,
+    "resid_effective_rank": 4.0967,
+    "attention_entropy_mean": 1.33908
+  },
+  "arms": {
+    "capability_only": {
+      "objective": "capability_only",
+      "parameter_count": 147457,
+      "zero_init_identity_max_diff": 0.0,
+      "final_alpha": 0.005835,
+      "behavior_eval": {
+        "n_eval": 40,
+        "mean_reward": 0.815,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 80.0,
+        "policy_accuracy": 70.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 80.0,
+        "exact_compliance_rate": 67.5
+      },
+      "behavior_delta_vs_baseline": {
+        "n_eval": 0,
+        "mean_reward": 0.04,
+        "json_valid_rate": 0.0,
+        "action_accuracy": 2.5,
+        "policy_accuracy": 12.5,
+        "unsafe_refusal_rate": 0.0,
+        "benign_false_refusal_rate": -10.0,
+        "exact_compliance_rate": 12.5
+      },
+      "benchmark": {
+        "mmlu": 22.0,
+        "arc_easy": 40.0,
+        "hellaswag": 32.0
+      },
+      "benchmark_delta_vs_baseline": {
+        "mmlu": -4.0,
+        "arc_easy": 2.0,
+        "hellaswag": 0.0
+      },
+      "continuation_benchmark": {
+        "mmlu": {
+          "sum_acc": 8.0,
+          "token_norm_acc": 14.0,
+          "byte_norm_acc": 16.0,
+          "n": 50
+        },
+        "arc_easy": {
+          "sum_acc": 48.0,
+          "token_norm_acc": 54.0,
+          "byte_norm_acc": 48.0,
+          "n": 50
+        },
+        "hellaswag": {
+          "sum_acc": 36.0,
+          "token_norm_acc": 40.0,
+          "byte_norm_acc": 42.0,
+          "n": 50
+        }
+      },
+      "continuation_delta_vs_baseline": {
+        "mmlu": {
+          "sum_acc": -10.0,
+          "token_norm_acc": -10.0,
+          "byte_norm_acc": -6.0
+        },
+        "arc_easy": {
+          "sum_acc": 4.0,
+          "token_norm_acc": 2.0,
+          "byte_norm_acc": 2.0
+        },
+        "hellaswag": {
+          "sum_acc": -4.0,
+          "token_norm_acc": 2.0,
+          "byte_norm_acc": -8.0
+        }
+      },
+      "capability_validation_loss": 2.82031,
+      "capability_validation_loss_delta_vs_baseline": -0.268242,
+      "trace": [
+        {
+          "step": 0,
+          "objective": "capability_only",
+          "capability_loss": 2.86636,
+          "capability_sources": [
+            "arc_easy_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.003,
+          "total_loss": 2.86636,
+          "grad_norm": 1.09968,
+          "step_wall_sec": 0.651
+        },
+        {
+          "step": 1,
+          "objective": "capability_only",
+          "capability_loss": 3.41608,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.004538,
+          "total_loss": 3.41608,
+          "grad_norm": 0.37688,
+          "step_wall_sec": 0.203
+        },
+        {
+          "step": 2,
+          "objective": "capability_only",
+          "capability_loss": 2.41798,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.006719,
+          "total_loss": 2.41798,
+          "grad_norm": 1.82845,
+          "step_wall_sec": 0.173
+        },
+        {
+          "step": 3,
+          "objective": "capability_only",
+          "capability_loss": 3.49244,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.009145,
+          "total_loss": 3.49244,
+          "grad_norm": 1.47074,
+          "step_wall_sec": 0.162
+        },
+        {
+          "step": 4,
+          "objective": "capability_only",
+          "capability_loss": 2.43264,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.01174,
+          "total_loss": 2.43264,
+          "grad_norm": 2.4602,
+          "step_wall_sec": 0.181
+        },
+        {
+          "step": 5,
+          "objective": "capability_only",
+          "capability_loss": 3.2505,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.013023,
+          "total_loss": 3.2505,
+          "grad_norm": 4.16958,
+          "step_wall_sec": 0.186
+        },
+        {
+          "step": 6,
+          "objective": "capability_only",
+          "capability_loss": 2.53128,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.013391,
+          "total_loss": 2.53128,
+          "grad_norm": 10.0348,
+          "step_wall_sec": 0.185
+        },
+        {
+          "step": 7,
+          "objective": "capability_only",
+          "capability_loss": 3.29457,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.013105,
+          "total_loss": 3.29457,
+          "grad_norm": 18.13671,
+          "step_wall_sec": 0.195
+        },
+        {
+          "step": 8,
+          "objective": "capability_only",
+          "capability_loss": 3.00131,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.012336,
+          "total_loss": 3.00131,
+          "grad_norm": 11.19652,
+          "step_wall_sec": 0.166
+        },
+        {
+          "step": 9,
+          "objective": "capability_only",
+          "capability_loss": 2.66619,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.011191,
+          "total_loss": 2.66619,
+          "grad_norm": 13.32143,
+          "step_wall_sec": 0.182
+        },
+        {
+          "step": 10,
+          "objective": "capability_only",
+          "capability_loss": 1.9887,
+          "capability_sources": [
+            "arc_easy_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.009751,
+          "total_loss": 1.9887,
+          "grad_norm": 8.8637,
+          "step_wall_sec": 0.153
+        },
+        {
+          "step": 11,
+          "objective": "capability_only",
+          "capability_loss": 3.77035,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.008818,
+          "total_loss": 3.77035,
+          "grad_norm": 1.6722,
+          "step_wall_sec": 0.185
+        },
+        {
+          "step": 12,
+          "objective": "capability_only",
+          "capability_loss": 2.88904,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.008043,
+          "total_loss": 2.88904,
+          "grad_norm": 0.72998,
+          "step_wall_sec": 0.2
+        },
+        {
+          "step": 13,
+          "objective": "capability_only",
+          "capability_loss": 3.14667,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.007815,
+          "total_loss": 3.14667,
+          "grad_norm": 14.43855,
+          "step_wall_sec": 0.152
+        },
+        {
+          "step": 14,
+          "objective": "capability_only",
+          "capability_loss": 2.25746,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.007195,
+          "total_loss": 2.25746,
+          "grad_norm": 6.75846,
+          "step_wall_sec": 0.157
+        },
+        {
+          "step": 15,
+          "objective": "capability_only",
+          "capability_loss": 3.58915,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.007064,
+          "total_loss": 3.58915,
+          "grad_norm": 13.22891,
+          "step_wall_sec": 0.182
+        },
+        {
+          "step": 16,
+          "objective": "capability_only",
+          "capability_loss": 3.00427,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.007338,
+          "total_loss": 3.00427,
+          "grad_norm": 3.71862,
+          "step_wall_sec": 0.188
+        },
+        {
+          "step": 17,
+          "objective": "capability_only",
+          "capability_loss": 2.75326,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.00763,
+          "total_loss": 2.75326,
+          "grad_norm": 0.64103,
+          "step_wall_sec": 0.188
+        },
+        {
+          "step": 18,
+          "objective": "capability_only",
+          "capability_loss": 3.06652,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.008245,
+          "total_loss": 3.06652,
+          "grad_norm": 1.66888,
+          "step_wall_sec": 0.197
+        },
+        {
+          "step": 19,
+          "objective": "capability_only",
+          "capability_loss": 2.7931,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.008403,
+          "total_loss": 2.7931,
+          "grad_norm": 13.11126,
+          "step_wall_sec": 0.163
+        },
+        {
+          "step": 20,
+          "objective": "capability_only",
+          "capability_loss": 3.27249,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.008165,
+          "total_loss": 3.27249,
+          "grad_norm": 16.1418,
+          "step_wall_sec": 0.189
+        },
+        {
+          "step": 21,
+          "objective": "capability_only",
+          "capability_loss": 3.61062,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.007586,
+          "total_loss": 3.61062,
+          "grad_norm": 7.384,
+          "step_wall_sec": 0.211
+        },
+        {
+          "step": 22,
+          "objective": "capability_only",
+          "capability_loss": 3.02653,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.006709,
+          "total_loss": 3.02653,
+          "grad_norm": 15.96258,
+          "step_wall_sec": 0.197
+        },
+        {
+          "step": 23,
+          "objective": "capability_only",
+          "capability_loss": 2.42014,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.005572,
+          "total_loss": 2.42014,
+          "grad_norm": 18.47192,
+          "step_wall_sec": 0.187
+        },
+        {
+          "step": 24,
+          "objective": "capability_only",
+          "capability_loss": 1.93489,
+          "capability_sources": [
+            "arc_easy_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.004207,
+          "total_loss": 1.93489,
+          "grad_norm": 6.17973,
+          "step_wall_sec": 0.195
+        },
+        {
+          "step": 25,
+          "objective": "capability_only",
+          "capability_loss": 2.73148,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.003344,
+          "total_loss": 2.73148,
+          "grad_norm": 38.61681,
+          "step_wall_sec": 0.154
+        },
+        {
+          "step": 26,
+          "objective": "capability_only",
+          "capability_loss": 3.08212,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.002923,
+          "total_loss": 3.08212,
+          "grad_norm": 38.00775,
+          "step_wall_sec": 0.189
+        },
+        {
+          "step": 27,
+          "objective": "capability_only",
+          "capability_loss": 3.8433,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.002891,
+          "total_loss": 3.8433,
+          "grad_norm": 78.90647,
+          "step_wall_sec": 0.173
+        },
+        {
+          "step": 28,
+          "objective": "capability_only",
+          "capability_loss": 2.32342,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.003204,
+          "total_loss": 2.32342,
+          "grad_norm": 31.68318,
+          "step_wall_sec": 0.189
+        },
+        {
+          "step": 29,
+          "objective": "capability_only",
+          "capability_loss": 2.6364,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.003821,
+          "total_loss": 2.6364,
+          "grad_norm": 56.922,
+          "step_wall_sec": 0.138
+        },
+        {
+          "step": 30,
+          "objective": "capability_only",
+          "capability_loss": 2.63664,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.004709,
+          "total_loss": 2.63664,
+          "grad_norm": 21.58068,
+          "step_wall_sec": 0.151
+        },
+        {
+          "step": 31,
+          "objective": "capability_only",
+          "capability_loss": 2.53192,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": null,
+          "reward_std": null,
+          "raw_behavior_loss": null,
+          "weighted_behavior_loss": null,
+          "prompt_action": null,
+          "alpha": 0.005835,
+          "total_loss": 2.53192,
+          "grad_norm": 5.33728,
+          "step_wall_sec": 0.156
+        }
+      ]
+    },
+    "behavior_only": {
+      "objective": "behavior_only",
+      "parameter_count": 147457,
+      "zero_init_identity_max_diff": 0.0,
+      "final_alpha": -0.017781,
+      "behavior_eval": {
+        "n_eval": 40,
+        "mean_reward": 0.5,
+        "json_valid_rate": 95.0,
+        "action_accuracy": 27.5,
+        "policy_accuracy": 27.5,
+        "unsafe_refusal_rate": 3.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 12.5
+      },
+      "behavior_delta_vs_baseline": {
+        "n_eval": 0,
+        "mean_reward": -0.28,
+        "json_valid_rate": -5.0,
+        "action_accuracy": -50.0,
+        "policy_accuracy": -30.0,
+        "unsafe_refusal_rate": -96.7,
+        "benign_false_refusal_rate": -90.0,
+        "exact_compliance_rate": -42.5
+      },
+      "benchmark": {
+        "mmlu": 40.0,
+        "arc_easy": 34.0,
+        "hellaswag": 26.0
+      },
+      "benchmark_delta_vs_baseline": {
+        "mmlu": 14.0,
+        "arc_easy": -4.0,
+        "hellaswag": -6.0
+      },
+      "continuation_benchmark": {
+        "mmlu": {
+          "sum_acc": 22.0,
+          "token_norm_acc": 34.0,
+          "byte_norm_acc": 30.0,
+          "n": 50
+        },
+        "arc_easy": {
+          "sum_acc": 34.0,
+          "token_norm_acc": 40.0,
+          "byte_norm_acc": 28.0,
+          "n": 50
+        },
+        "hellaswag": {
+          "sum_acc": 28.0,
+          "token_norm_acc": 36.0,
+          "byte_norm_acc": 38.0,
+          "n": 50
+        }
+      },
+      "continuation_delta_vs_baseline": {
+        "mmlu": {
+          "sum_acc": 4.0,
+          "token_norm_acc": 10.0,
+          "byte_norm_acc": 8.0
+        },
+        "arc_easy": {
+          "sum_acc": -10.0,
+          "token_norm_acc": -12.0,
+          "byte_norm_acc": -18.0
+        },
+        "hellaswag": {
+          "sum_acc": -12.0,
+          "token_norm_acc": -2.0,
+          "byte_norm_acc": -12.0
+        }
+      },
+      "capability_validation_loss": 4.899827,
+      "capability_validation_loss_delta_vs_baseline": 1.811275,
+      "trace": [
+        {
+          "step": 0,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.35,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": -0.05965,
+          "weighted_behavior_loss": -0.59649,
+          "prompt_action": "call_tool",
+          "alpha": -0.003,
+          "total_loss": -0.59649,
+          "grad_norm": 0.72786,
+          "step_wall_sec": 3.492
+        },
+        {
+          "step": 1,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.55,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": -0.02148,
+          "weighted_behavior_loss": -0.2148,
+          "prompt_action": "call_tool",
+          "alpha": -0.002385,
+          "total_loss": -0.2148,
+          "grad_norm": 1.96812,
+          "step_wall_sec": 2.935
+        },
+        {
+          "step": 2,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.9,
+          "reward_std": 0.1,
+          "raw_behavior_loss": -0.00408,
+          "weighted_behavior_loss": -0.04076,
+          "prompt_action": "call_tool",
+          "alpha": -0.001927,
+          "total_loss": -0.04076,
+          "grad_norm": 0.01111,
+          "step_wall_sec": 2.19
+        },
+        {
+          "step": 3,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.4,
+          "reward_std": 0.2,
+          "raw_behavior_loss": -0.00864,
+          "weighted_behavior_loss": -0.08642,
+          "prompt_action": "call_tool",
+          "alpha": -0.000536,
+          "total_loss": -0.08642,
+          "grad_norm": 4.58784,
+          "step_wall_sec": 2.815
+        },
+        {
+          "step": 4,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.35,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": 0.02186,
+          "weighted_behavior_loss": 0.21855,
+          "prompt_action": "call_tool",
+          "alpha": -0.000415,
+          "total_loss": 0.21855,
+          "grad_norm": 18.90579,
+          "step_wall_sec": 3.369
+        },
+        {
+          "step": 5,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.35,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": -0.00271,
+          "weighted_behavior_loss": -0.0271,
+          "prompt_action": "call_tool",
+          "alpha": -0.001061,
+          "total_loss": -0.0271,
+          "grad_norm": 12.10702,
+          "step_wall_sec": 3.368
+        },
+        {
+          "step": 6,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.4,
+          "reward_std": 0.3464,
+          "raw_behavior_loss": -0.02435,
+          "weighted_behavior_loss": -0.24346,
+          "prompt_action": "call_tool",
+          "alpha": -0.000924,
+          "total_loss": -0.24346,
+          "grad_norm": 3.06117,
+          "step_wall_sec": 3.341
+        },
+        {
+          "step": 7,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.5,
+          "reward_std": 0.3,
+          "raw_behavior_loss": 0.10342,
+          "weighted_behavior_loss": 1.03418,
+          "prompt_action": "call_tool",
+          "alpha": -0.001396,
+          "total_loss": 1.03418,
+          "grad_norm": 142.99571,
+          "step_wall_sec": 3.306
+        },
+        {
+          "step": 8,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "raw_behavior_loss": 0.0,
+          "weighted_behavior_loss": 0.0,
+          "prompt_action": "call_tool",
+          "alpha": -0.001815,
+          "total_loss": 0.0,
+          "grad_norm": 0.0,
+          "step_wall_sec": 3.334
+        },
+        {
+          "step": 9,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "raw_behavior_loss": 0.0,
+          "weighted_behavior_loss": 0.0,
+          "prompt_action": "call_tool",
+          "alpha": -0.00219,
+          "total_loss": 0.0,
+          "grad_norm": 0.0,
+          "step_wall_sec": 3.478
+        },
+        {
+          "step": 10,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "raw_behavior_loss": 0.0,
+          "weighted_behavior_loss": 0.0,
+          "prompt_action": "call_tool",
+          "alpha": -0.002525,
+          "total_loss": 0.0,
+          "grad_norm": 0.0,
+          "step_wall_sec": 3.495
+        },
+        {
+          "step": 11,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.65,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": -0.06288,
+          "weighted_behavior_loss": -0.62878,
+          "prompt_action": "call_tool",
+          "alpha": -0.002277,
+          "total_loss": -0.62878,
+          "grad_norm": 119.67747,
+          "step_wall_sec": 3.248
+        },
+        {
+          "step": 12,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.65,
+          "reward_std": 0.3841,
+          "raw_behavior_loss": 0.08729,
+          "weighted_behavior_loss": 0.87287,
+          "prompt_action": "refuse",
+          "alpha": -0.002565,
+          "total_loss": 0.87287,
+          "grad_norm": 92.67062,
+          "step_wall_sec": 3.997
+        },
+        {
+          "step": 13,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.75,
+          "reward_std": 0.2179,
+          "raw_behavior_loss": -0.01727,
+          "weighted_behavior_loss": -0.17266,
+          "prompt_action": "refuse",
+          "alpha": -0.002338,
+          "total_loss": -0.17266,
+          "grad_norm": 13.55822,
+          "step_wall_sec": 3.98
+        },
+        {
+          "step": 14,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.4,
+          "reward_std": 0.4,
+          "raw_behavior_loss": 0.00437,
+          "weighted_behavior_loss": 0.04368,
+          "prompt_action": "refuse",
+          "alpha": -0.002595,
+          "total_loss": 0.04368,
+          "grad_norm": 43.94114,
+          "step_wall_sec": 4.08
+        },
+        {
+          "step": 15,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.8,
+          "reward_std": 0.0,
+          "raw_behavior_loss": 0.0,
+          "weighted_behavior_loss": 0.0,
+          "prompt_action": "refuse",
+          "alpha": -0.002827,
+          "total_loss": 0.0,
+          "grad_norm": 0.0,
+          "step_wall_sec": 3.668
+        },
+        {
+          "step": 16,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.65,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": 0.01019,
+          "weighted_behavior_loss": 0.10192,
+          "prompt_action": "refuse",
+          "alpha": -0.003466,
+          "total_loss": 0.10192,
+          "grad_norm": 42.23424,
+          "step_wall_sec": 3.806
+        },
+        {
+          "step": 17,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.75,
+          "reward_std": 0.433,
+          "raw_behavior_loss": 0.01714,
+          "weighted_behavior_loss": 0.17136,
+          "prompt_action": "refuse",
+          "alpha": -0.004445,
+          "total_loss": 0.17136,
+          "grad_norm": 126.52351,
+          "step_wall_sec": 3.404
+        },
+        {
+          "step": 18,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.95,
+          "reward_std": 0.0866,
+          "raw_behavior_loss": 0.00743,
+          "weighted_behavior_loss": 0.07425,
+          "prompt_action": "refuse",
+          "alpha": -0.005712,
+          "total_loss": 0.07425,
+          "grad_norm": 7.01036,
+          "step_wall_sec": 3.018
+        },
+        {
+          "step": 19,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.65,
+          "reward_std": 0.3841,
+          "raw_behavior_loss": 0.00137,
+          "weighted_behavior_loss": 0.01368,
+          "prompt_action": "refuse",
+          "alpha": -0.007224,
+          "total_loss": 0.01368,
+          "grad_norm": 24.54685,
+          "step_wall_sec": 2.719
+        },
+        {
+          "step": 20,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.45,
+          "reward_std": 0.3571,
+          "raw_behavior_loss": 0.01381,
+          "weighted_behavior_loss": 0.13812,
+          "prompt_action": "refuse",
+          "alpha": -0.008946,
+          "total_loss": 0.13812,
+          "grad_norm": 32.67348,
+          "step_wall_sec": 2.97
+        },
+        {
+          "step": 21,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.65,
+          "reward_std": 0.2958,
+          "raw_behavior_loss": -0.01609,
+          "weighted_behavior_loss": -0.16094,
+          "prompt_action": "refuse",
+          "alpha": -0.010847,
+          "total_loss": -0.16094,
+          "grad_norm": 8.11636,
+          "step_wall_sec": 4.021
+        },
+        {
+          "step": 22,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.65,
+          "reward_std": 0.3571,
+          "raw_behavior_loss": 0.00185,
+          "weighted_behavior_loss": 0.01852,
+          "prompt_action": "refuse",
+          "alpha": -0.012524,
+          "total_loss": 0.01852,
+          "grad_norm": 132.89386,
+          "step_wall_sec": 4.077
+        },
+        {
+          "step": 23,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.25,
+          "reward_std": 0.1658,
+          "raw_behavior_loss": 0.06589,
+          "weighted_behavior_loss": 0.65893,
+          "prompt_action": "refuse",
+          "alpha": -0.013626,
+          "total_loss": 0.65893,
+          "grad_norm": 68.43609,
+          "step_wall_sec": 3.316
+        },
+        {
+          "step": 24,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.25,
+          "reward_std": 0.3279,
+          "raw_behavior_loss": 0.17962,
+          "weighted_behavior_loss": 1.79618,
+          "prompt_action": "call_tool",
+          "alpha": -0.014228,
+          "total_loss": 1.79618,
+          "grad_norm": 281.93903,
+          "step_wall_sec": 2.622
+        },
+        {
+          "step": 25,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.8,
+          "reward_std": 0.1414,
+          "raw_behavior_loss": -0.01744,
+          "weighted_behavior_loss": -0.17444,
+          "prompt_action": "call_tool",
+          "alpha": -0.014432,
+          "total_loss": -0.17444,
+          "grad_norm": 2.95968,
+          "step_wall_sec": 2.447
+        },
+        {
+          "step": 26,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.95,
+          "reward_std": 0.0866,
+          "raw_behavior_loss": -0.00285,
+          "weighted_behavior_loss": -0.0285,
+          "prompt_action": "call_tool",
+          "alpha": -0.014586,
+          "total_loss": -0.0285,
+          "grad_norm": 0.42458,
+          "step_wall_sec": 2.732
+        },
+        {
+          "step": 27,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.45,
+          "reward_std": 0.3571,
+          "raw_behavior_loss": -0.15283,
+          "weighted_behavior_loss": -1.52832,
+          "prompt_action": "call_tool",
+          "alpha": -0.015094,
+          "total_loss": -1.52832,
+          "grad_norm": 75.44281,
+          "step_wall_sec": 4.181
+        },
+        {
+          "step": 28,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.5,
+          "reward_std": 0.4123,
+          "raw_behavior_loss": -0.20685,
+          "weighted_behavior_loss": -2.06853,
+          "prompt_action": "call_tool",
+          "alpha": -0.015912,
+          "total_loss": -2.06853,
+          "grad_norm": 161.1908,
+          "step_wall_sec": 3.202
+        },
+        {
+          "step": 29,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.9,
+          "reward_std": 0.1,
+          "raw_behavior_loss": -0.0066,
+          "weighted_behavior_loss": -0.06599,
+          "prompt_action": "call_tool",
+          "alpha": -0.016279,
+          "total_loss": -0.06599,
+          "grad_norm": 17.61615,
+          "step_wall_sec": 2.881
+        },
+        {
+          "step": 30,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.7,
+          "reward_std": 0.3,
+          "raw_behavior_loss": -0.16225,
+          "weighted_behavior_loss": -1.62253,
+          "prompt_action": "call_tool",
+          "alpha": -0.016884,
+          "total_loss": -1.62253,
+          "grad_norm": 11.55496,
+          "step_wall_sec": 3.001
+        },
+        {
+          "step": 31,
+          "objective": "behavior_only",
+          "capability_loss": null,
+          "capability_sources": [],
+          "mean_reward": 0.7,
+          "reward_std": 0.4123,
+          "raw_behavior_loss": -0.27781,
+          "weighted_behavior_loss": -2.77815,
+          "prompt_action": "call_tool",
+          "alpha": -0.017781,
+          "total_loss": -2.77815,
+          "grad_norm": 147.82443,
+          "step_wall_sec": 2.564
+        }
+      ]
+    },
+    "hybrid_capability_primary": {
+      "objective": "hybrid_capability_primary",
+      "parameter_count": 147457,
+      "zero_init_identity_max_diff": 0.0,
+      "final_alpha": 0.010088,
+      "behavior_eval": {
+        "n_eval": 40,
+        "mean_reward": 0.915,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 95.0,
+        "policy_accuracy": 80.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 72.5
+      },
+      "behavior_delta_vs_baseline": {
+        "n_eval": 0,
+        "mean_reward": 0.14,
+        "json_valid_rate": 0.0,
+        "action_accuracy": 17.5,
+        "policy_accuracy": 22.5,
+        "unsafe_refusal_rate": -6.7,
+        "benign_false_refusal_rate": -90.0,
+        "exact_compliance_rate": 17.5
+      },
+      "benchmark": {
+        "mmlu": 30.0,
+        "arc_easy": 40.0,
+        "hellaswag": 32.0
+      },
+      "benchmark_delta_vs_baseline": {
+        "mmlu": 4.0,
+        "arc_easy": 2.0,
+        "hellaswag": 0.0
+      },
+      "continuation_benchmark": {
+        "mmlu": {
+          "sum_acc": 12.0,
+          "token_norm_acc": 16.0,
+          "byte_norm_acc": 16.0,
+          "n": 50
+        },
+        "arc_easy": {
+          "sum_acc": 46.0,
+          "token_norm_acc": 50.0,
+          "byte_norm_acc": 44.0,
+          "n": 50
+        },
+        "hellaswag": {
+          "sum_acc": 34.0,
+          "token_norm_acc": 34.0,
+          "byte_norm_acc": 40.0,
+          "n": 50
+        }
+      },
+      "continuation_delta_vs_baseline": {
+        "mmlu": {
+          "sum_acc": -6.0,
+          "token_norm_acc": -8.0,
+          "byte_norm_acc": -6.0
+        },
+        "arc_easy": {
+          "sum_acc": 2.0,
+          "token_norm_acc": -2.0,
+          "byte_norm_acc": -2.0
+        },
+        "hellaswag": {
+          "sum_acc": -6.0,
+          "token_norm_acc": -4.0,
+          "byte_norm_acc": -10.0
+        }
+      },
+      "capability_validation_loss": 3.033644,
+      "capability_validation_loss_delta_vs_baseline": -0.054908,
+      "trace": [
+        {
+          "step": 0,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.86636,
+          "capability_sources": [
+            "arc_easy_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.35,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": -0.05965,
+          "weighted_behavior_loss": -0.59649,
+          "prompt_action": "call_tool",
+          "alpha": 0.003,
+          "total_loss": 2.26987,
+          "grad_norm": 0.37182,
+          "step_wall_sec": 2.712
+        },
+        {
+          "step": 1,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.41608,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.55,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": 0.00985,
+          "weighted_behavior_loss": 0.0985,
+          "prompt_action": "call_tool",
+          "alpha": 0.005814,
+          "total_loss": 3.51458,
+          "grad_norm": 1.07816,
+          "step_wall_sec": 2.604
+        },
+        {
+          "step": 2,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.42978,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.7,
+          "reward_std": 0.3,
+          "raw_behavior_loss": -0.08366,
+          "weighted_behavior_loss": -0.83655,
+          "prompt_action": "call_tool",
+          "alpha": 0.006302,
+          "total_loss": 1.59323,
+          "grad_norm": 3.2315,
+          "step_wall_sec": 2.635
+        },
+        {
+          "step": 3,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.50686,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.4,
+          "reward_std": 0.2,
+          "raw_behavior_loss": -0.01137,
+          "weighted_behavior_loss": -0.11367,
+          "prompt_action": "call_tool",
+          "alpha": 0.007568,
+          "total_loss": 3.3932,
+          "grad_norm": 4.80511,
+          "step_wall_sec": 2.686
+        },
+        {
+          "step": 4,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.47696,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.35,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": 0.02602,
+          "weighted_behavior_loss": 0.26019,
+          "prompt_action": "call_tool",
+          "alpha": 0.007592,
+          "total_loss": 2.73715,
+          "grad_norm": 8.18178,
+          "step_wall_sec": 3.013
+        },
+        {
+          "step": 5,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.29699,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.35,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": 0.00704,
+          "weighted_behavior_loss": 0.07043,
+          "prompt_action": "call_tool",
+          "alpha": 0.006869,
+          "total_loss": 3.36742,
+          "grad_norm": 6.42717,
+          "step_wall_sec": 2.704
+        },
+        {
+          "step": 6,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.59294,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.4,
+          "reward_std": 0.3464,
+          "raw_behavior_loss": -0.01705,
+          "weighted_behavior_loss": -0.17046,
+          "prompt_action": "call_tool",
+          "alpha": 0.006293,
+          "total_loss": 2.42247,
+          "grad_norm": 1.21571,
+          "step_wall_sec": 2.741
+        },
+        {
+          "step": 7,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.29378,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.5,
+          "reward_std": 0.3,
+          "raw_behavior_loss": 0.13417,
+          "weighted_behavior_loss": 1.34172,
+          "prompt_action": "call_tool",
+          "alpha": 0.005189,
+          "total_loss": 4.6355,
+          "grad_norm": 41.77449,
+          "step_wall_sec": 2.528
+        },
+        {
+          "step": 8,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.11148,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.35,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": -0.02307,
+          "weighted_behavior_loss": -0.23074,
+          "prompt_action": "call_tool",
+          "alpha": 0.004877,
+          "total_loss": 2.88075,
+          "grad_norm": 19.5748,
+          "step_wall_sec": 2.552
+        },
+        {
+          "step": 9,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.70719,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "raw_behavior_loss": 0.0,
+          "weighted_behavior_loss": 0.0,
+          "prompt_action": "call_tool",
+          "alpha": 0.005157,
+          "total_loss": 2.70719,
+          "grad_norm": 10.31262,
+          "step_wall_sec": 2.654
+        },
+        {
+          "step": 10,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.01737,
+          "capability_sources": [
+            "arc_easy_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.35,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": 0.00336,
+          "weighted_behavior_loss": 0.03363,
+          "prompt_action": "call_tool",
+          "alpha": 0.005896,
+          "total_loss": 2.051,
+          "grad_norm": 23.02688,
+          "step_wall_sec": 3.036
+        },
+        {
+          "step": 11,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.84814,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.5,
+          "reward_std": 0.2236,
+          "raw_behavior_loss": -0.05407,
+          "weighted_behavior_loss": -0.54069,
+          "prompt_action": "call_tool",
+          "alpha": 0.006999,
+          "total_loss": 3.30746,
+          "grad_norm": 29.63589,
+          "step_wall_sec": 2.856
+        },
+        {
+          "step": 12,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.96743,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.55,
+          "reward_std": 0.3841,
+          "raw_behavior_loss": 0.03159,
+          "weighted_behavior_loss": 0.31594,
+          "prompt_action": "refuse",
+          "alpha": 0.007495,
+          "total_loss": 3.28337,
+          "grad_norm": 33.01016,
+          "step_wall_sec": 3.08
+        },
+        {
+          "step": 13,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.22258,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.5,
+          "reward_std": 0.3,
+          "raw_behavior_loss": 0.0049,
+          "weighted_behavior_loss": 0.04903,
+          "prompt_action": "refuse",
+          "alpha": 0.007489,
+          "total_loss": 3.27161,
+          "grad_norm": 29.17731,
+          "step_wall_sec": 3.02
+        },
+        {
+          "step": 14,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.28842,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.65,
+          "reward_std": 0.2958,
+          "raw_behavior_loss": 0.04775,
+          "weighted_behavior_loss": 0.47747,
+          "prompt_action": "refuse",
+          "alpha": 0.007067,
+          "total_loss": 2.76589,
+          "grad_norm": 51.49289,
+          "step_wall_sec": 3.182
+        },
+        {
+          "step": 15,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.69646,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": 0.75,
+          "reward_std": 0.3279,
+          "raw_behavior_loss": -0.00144,
+          "weighted_behavior_loss": -0.01438,
+          "prompt_action": "refuse",
+          "alpha": 0.006294,
+          "total_loss": 3.68208,
+          "grad_norm": 38.75243,
+          "step_wall_sec": 2.737
+        },
+        {
+          "step": 16,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.08767,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.55,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": 0.02212,
+          "weighted_behavior_loss": 0.22115,
+          "prompt_action": "refuse",
+          "alpha": 0.005226,
+          "total_loss": 3.30883,
+          "grad_norm": 44.84945,
+          "step_wall_sec": 2.763
+        },
+        {
+          "step": 17,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.84073,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.95,
+          "reward_std": 0.0866,
+          "raw_behavior_loss": -0.01037,
+          "weighted_behavior_loss": -0.10375,
+          "prompt_action": "refuse",
+          "alpha": 0.00466,
+          "total_loss": 2.73699,
+          "grad_norm": 3.26663,
+          "step_wall_sec": 2.761
+        },
+        {
+          "step": 18,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.20031,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": 0.85,
+          "reward_std": 0.1658,
+          "raw_behavior_loss": 0.02575,
+          "weighted_behavior_loss": 0.25754,
+          "prompt_action": "refuse",
+          "alpha": 0.00383,
+          "total_loss": 3.45785,
+          "grad_norm": 1.65584,
+          "step_wall_sec": 2.623
+        },
+        {
+          "step": 19,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.88066,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.7,
+          "reward_std": 0.4123,
+          "raw_behavior_loss": 0.03186,
+          "weighted_behavior_loss": 0.31861,
+          "prompt_action": "refuse",
+          "alpha": 0.003468,
+          "total_loss": 3.19928,
+          "grad_norm": 80.3331,
+          "step_wall_sec": 3.017
+        },
+        {
+          "step": 20,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.3291,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.75,
+          "reward_std": 0.3279,
+          "raw_behavior_loss": 0.01452,
+          "weighted_behavior_loss": 0.14525,
+          "prompt_action": "refuse",
+          "alpha": 0.002784,
+          "total_loss": 3.47435,
+          "grad_norm": 19.35882,
+          "step_wall_sec": 2.7
+        },
+        {
+          "step": 21,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.83008,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.9,
+          "reward_std": 0.1,
+          "raw_behavior_loss": 0.00746,
+          "weighted_behavior_loss": 0.07459,
+          "prompt_action": "refuse",
+          "alpha": 0.002537,
+          "total_loss": 3.90468,
+          "grad_norm": 57.7168,
+          "step_wall_sec": 2.732
+        },
+        {
+          "step": 22,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.11576,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.65,
+          "reward_std": 0.3841,
+          "raw_behavior_loss": 0.03585,
+          "weighted_behavior_loss": 0.35855,
+          "prompt_action": "refuse",
+          "alpha": 0.002671,
+          "total_loss": 3.47431,
+          "grad_norm": 38.49286,
+          "step_wall_sec": 2.835
+        },
+        {
+          "step": 23,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.52147,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.55,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": 0.02109,
+          "weighted_behavior_loss": 0.2109,
+          "prompt_action": "refuse",
+          "alpha": 0.002442,
+          "total_loss": 2.73238,
+          "grad_norm": 22.21687,
+          "step_wall_sec": 2.587
+        },
+        {
+          "step": 24,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 1.98348,
+          "capability_sources": [
+            "arc_easy_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "raw_behavior_loss": 0.0,
+          "weighted_behavior_loss": 0.0,
+          "prompt_action": "call_tool",
+          "alpha": 0.002583,
+          "total_loss": 1.98348,
+          "grad_norm": 21.20643,
+          "step_wall_sec": 2.522
+        },
+        {
+          "step": 25,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.91365,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.55,
+          "reward_std": 0.3571,
+          "raw_behavior_loss": -0.02683,
+          "weighted_behavior_loss": -0.2683,
+          "prompt_action": "call_tool",
+          "alpha": 0.003049,
+          "total_loss": 2.64535,
+          "grad_norm": 141.23613,
+          "step_wall_sec": 2.788
+        },
+        {
+          "step": 26,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.15416,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": 1.0,
+          "reward_std": 0.0,
+          "raw_behavior_loss": 0.0,
+          "weighted_behavior_loss": 0.0,
+          "prompt_action": "call_tool",
+          "alpha": 0.003803,
+          "total_loss": 3.15416,
+          "grad_norm": 30.71262,
+          "step_wall_sec": 2.411
+        },
+        {
+          "step": 27,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 3.89449,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": 0.6,
+          "reward_std": 0.3464,
+          "raw_behavior_loss": -0.04213,
+          "weighted_behavior_loss": -0.42132,
+          "prompt_action": "call_tool",
+          "alpha": 0.004811,
+          "total_loss": 3.47317,
+          "grad_norm": 79.06265,
+          "step_wall_sec": 2.467
+        },
+        {
+          "step": 28,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.32532,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.35,
+          "reward_std": 0.2598,
+          "raw_behavior_loss": -0.01769,
+          "weighted_behavior_loss": -0.1769,
+          "prompt_action": "call_tool",
+          "alpha": 0.006045,
+          "total_loss": 2.14843,
+          "grad_norm": 80.51865,
+          "step_wall_sec": 2.79
+        },
+        {
+          "step": 29,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.64245,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train"
+          ],
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "raw_behavior_loss": 0.0,
+          "weighted_behavior_loss": 0.0,
+          "prompt_action": "call_tool",
+          "alpha": 0.007435,
+          "total_loss": 2.64245,
+          "grad_norm": 1.20751,
+          "step_wall_sec": 2.496
+        },
+        {
+          "step": 30,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.60457,
+          "capability_sources": [
+            "arc_easy_train",
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.75,
+          "reward_std": 0.3279,
+          "raw_behavior_loss": -0.09574,
+          "weighted_behavior_loss": -0.9574,
+          "prompt_action": "call_tool",
+          "alpha": 0.009007,
+          "total_loss": 1.64716,
+          "grad_norm": 81.27646,
+          "step_wall_sec": 2.469
+        },
+        {
+          "step": 31,
+          "objective": "hybrid_capability_primary",
+          "capability_loss": 2.66987,
+          "capability_sources": [
+            "hellaswag_train",
+            "mmlu_validation"
+          ],
+          "mean_reward": 0.6,
+          "reward_std": 0.2449,
+          "raw_behavior_loss": -0.05213,
+          "weighted_behavior_loss": -0.52133,
+          "prompt_action": "call_tool",
+          "alpha": 0.010088,
+          "total_loss": 2.14854,
+          "grad_norm": 16.3723,
+          "step_wall_sec": 2.583
+        }
+      ]
+    }
+  },
+  "wall_sec": 1166.96
+}

@@ -1,0 +1,302 @@
+{
+  "experiment": "exp130_sparse_edit_column_count_response",
+  "controlled_variable": "edited columns per layer only (4/8/16/32; 8/16/32/64 total across two layers)",
+  "fixed_conditions": {
+    "operator": "validated raw-rank1 residual-direction projection",
+    "edit_layers": [
+      29,
+      28
+    ],
+    "strength": 0.9,
+    "direction_measurement": "same fixed subspaces measured once on the unedited base model",
+    "n_pairs": 12
+  },
+  "config": {
+    "n_pairs": 12,
+    "bench_n": 50
+  },
+  "baseline_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "baseline_benchmark": {
+    "mmlu": 26.0,
+    "arc_easy": 38.0,
+    "hellaswag": 32.0
+  },
+  "baseline_transformerlens_probe": {
+    "29": {
+      "call_tool_final_resid_norm_mean": 665.14844,
+      "refuse_final_resid_norm_mean": 660.09149,
+      "benign_unsafe_mean_cosine": 0.973,
+      "resid_effective_rank": 4.2832,
+      "attention_entropy_mean": 1.39258
+    },
+    "28": {
+      "call_tool_final_resid_norm_mean": 670.69415,
+      "refuse_final_resid_norm_mean": 679.93622,
+      "benign_unsafe_mean_cosine": 0.98742,
+      "resid_effective_rank": 4.2156,
+      "attention_entropy_mean": 1.41115
+    }
+  },
+  "top_singular_values": {
+    "29": [
+      594.5204,
+      118.6872,
+      86.3038,
+      59.6096
+    ],
+    "28": [
+      421.3778,
+      87.0138,
+      65.8286,
+      45.4563
+    ]
+  },
+  "arms": {
+    "columns_4": {
+      "top_columns_per_layer": 4,
+      "total_columns_two_layers": 8,
+      "strength": 0.9,
+      "edit_info": {
+        "edit_layers": [
+          29,
+          28
+        ],
+        "edited_weights": 4608,
+        "edited_pct": 0.00343
+      },
+      "behavior_eval": {
+        "n_eval": 40,
+        "mean_reward": 0.815,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 82.5,
+        "policy_accuracy": 65.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 70.0,
+        "exact_compliance_rate": 60.0
+      },
+      "behavior_delta_vs_baseline": {
+        "n_eval": 0,
+        "mean_reward": 0.04,
+        "json_valid_rate": 0.0,
+        "action_accuracy": 5.0,
+        "policy_accuracy": 7.5,
+        "unsafe_refusal_rate": 0.0,
+        "benign_false_refusal_rate": -20.0,
+        "exact_compliance_rate": 5.0
+      },
+      "benchmark": {
+        "mmlu": 26.0,
+        "arc_easy": 38.0,
+        "hellaswag": 32.0
+      },
+      "benchmark_delta_vs_baseline": {
+        "mmlu": 0.0,
+        "arc_easy": 0.0,
+        "hellaswag": 0.0
+      },
+      "transformerlens_probe": {
+        "29": {
+          "call_tool_final_resid_norm_mean": 668.9353,
+          "refuse_final_resid_norm_mean": 663.10577,
+          "benign_unsafe_mean_cosine": 0.97386,
+          "resid_effective_rank": 4.2856,
+          "attention_entropy_mean": 1.3892
+        },
+        "28": {
+          "call_tool_final_resid_norm_mean": 670.75122,
+          "refuse_final_resid_norm_mean": 680.00183,
+          "benign_unsafe_mean_cosine": 0.98742,
+          "resid_effective_rank": 4.2156,
+          "attention_entropy_mean": 1.41115
+        }
+      }
+    },
+    "columns_8": {
+      "top_columns_per_layer": 8,
+      "total_columns_two_layers": 16,
+      "strength": 0.9,
+      "edit_info": {
+        "edit_layers": [
+          29,
+          28
+        ],
+        "edited_weights": 9216,
+        "edited_pct": 0.00685
+      },
+      "behavior_eval": {
+        "n_eval": 40,
+        "mean_reward": 0.925,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 95.0,
+        "policy_accuracy": 90.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 77.5
+      },
+      "behavior_delta_vs_baseline": {
+        "n_eval": 0,
+        "mean_reward": 0.15,
+        "json_valid_rate": 0.0,
+        "action_accuracy": 17.5,
+        "policy_accuracy": 32.5,
+        "unsafe_refusal_rate": -6.7,
+        "benign_false_refusal_rate": -90.0,
+        "exact_compliance_rate": 22.5
+      },
+      "benchmark": {
+        "mmlu": 26.0,
+        "arc_easy": 38.0,
+        "hellaswag": 32.0
+      },
+      "benchmark_delta_vs_baseline": {
+        "mmlu": 0.0,
+        "arc_easy": 0.0,
+        "hellaswag": 0.0
+      },
+      "transformerlens_probe": {
+        "29": {
+          "call_tool_final_resid_norm_mean": 674.55322,
+          "refuse_final_resid_norm_mean": 668.53534,
+          "benign_unsafe_mean_cosine": 0.97464,
+          "resid_effective_rank": 4.2798,
+          "attention_entropy_mean": 1.38767
+        },
+        "28": {
+          "call_tool_final_resid_norm_mean": 671.04932,
+          "refuse_final_resid_norm_mean": 680.32739,
+          "benign_unsafe_mean_cosine": 0.98744,
+          "resid_effective_rank": 4.2142,
+          "attention_entropy_mean": 1.41115
+        }
+      }
+    },
+    "columns_16": {
+      "top_columns_per_layer": 16,
+      "total_columns_two_layers": 32,
+      "strength": 0.9,
+      "edit_info": {
+        "edit_layers": [
+          29,
+          28
+        ],
+        "edited_weights": 18432,
+        "edited_pct": 0.0137
+      },
+      "behavior_eval": {
+        "n_eval": 40,
+        "mean_reward": 0.93,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 95.0,
+        "policy_accuracy": 95.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 80.0
+      },
+      "behavior_delta_vs_baseline": {
+        "n_eval": 0,
+        "mean_reward": 0.16,
+        "json_valid_rate": 0.0,
+        "action_accuracy": 17.5,
+        "policy_accuracy": 37.5,
+        "unsafe_refusal_rate": -6.7,
+        "benign_false_refusal_rate": -90.0,
+        "exact_compliance_rate": 25.0
+      },
+      "benchmark": {
+        "mmlu": 26.0,
+        "arc_easy": 38.0,
+        "hellaswag": 32.0
+      },
+      "benchmark_delta_vs_baseline": {
+        "mmlu": 0.0,
+        "arc_easy": 0.0,
+        "hellaswag": 0.0
+      },
+      "transformerlens_probe": {
+        "29": {
+          "call_tool_final_resid_norm_mean": 675.95435,
+          "refuse_final_resid_norm_mean": 672.04346,
+          "benign_unsafe_mean_cosine": 0.97524,
+          "resid_effective_rank": 4.277,
+          "attention_entropy_mean": 1.38561
+        },
+        "28": {
+          "call_tool_final_resid_norm_mean": 671.3728,
+          "refuse_final_resid_norm_mean": 680.82526,
+          "benign_unsafe_mean_cosine": 0.98746,
+          "resid_effective_rank": 4.2136,
+          "attention_entropy_mean": 1.41115
+        }
+      }
+    },
+    "columns_32": {
+      "top_columns_per_layer": 32,
+      "total_columns_two_layers": 64,
+      "strength": 0.9,
+      "edit_info": {
+        "edit_layers": [
+          29,
+          28
+        ],
+        "edited_weights": 36864,
+        "edited_pct": 0.02741
+      },
+      "behavior_eval": {
+        "n_eval": 40,
+        "mean_reward": 0.9,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 92.5,
+        "policy_accuracy": 87.5,
+        "unsafe_refusal_rate": 90.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 72.5
+      },
+      "behavior_delta_vs_baseline": {
+        "n_eval": 0,
+        "mean_reward": 0.12,
+        "json_valid_rate": 0.0,
+        "action_accuracy": 15.0,
+        "policy_accuracy": 30.0,
+        "unsafe_refusal_rate": -10.0,
+        "benign_false_refusal_rate": -90.0,
+        "exact_compliance_rate": 17.5
+      },
+      "benchmark": {
+        "mmlu": 26.0,
+        "arc_easy": 38.0,
+        "hellaswag": 32.0
+      },
+      "benchmark_delta_vs_baseline": {
+        "mmlu": 0.0,
+        "arc_easy": 0.0,
+        "hellaswag": 0.0
+      },
+      "transformerlens_probe": {
+        "29": {
+          "call_tool_final_resid_norm_mean": 678.81372,
+          "refuse_final_resid_norm_mean": 675.59735,
+          "benign_unsafe_mean_cosine": 0.97552,
+          "resid_effective_rank": 4.2681,
+          "attention_entropy_mean": 1.38228
+        },
+        "28": {
+          "call_tool_final_resid_norm_mean": 671.14612,
+          "refuse_final_resid_norm_mean": 680.6488,
+          "benign_unsafe_mean_cosine": 0.98745,
+          "resid_effective_rank": 4.2122,
+          "attention_entropy_mean": 1.41115
+        }
+      }
+    }
+  },
+  "wall_sec": 948.87
+}
