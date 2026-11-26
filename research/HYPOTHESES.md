@@ -6,7 +6,7 @@ Last updated: 2026-11-26 by the hypothesizer agent.
 
 Validated local assets:
 
-- **Best surgical operator:** measured residual/pass-vs-failure subspace edits, not unembedding-logit directions. Exp 16 `raw_rank1` reached **65% exact / 90% unsafe refusal / 0% benign false refusal**; Exp 41's faithful contrastive+dev-gated operator reached **67.5% exact / 100% unsafe / 80% benign-FR** but did not reproduce the older 80% CPU-era result.
+- **Best surgical operator:** measured residual/pass-vs-failure subspace edits, not unembedding-logit directions. Exp 16 `raw_rank1` reached **65% exact / 90% unsafe refusal / 0% benign false refusal**; Exp 41 reached **67.5% exact / 100% unsafe / 80% benign-FR**, but the post-processor determined it replicated the Exp 12 false-node branch, **not** the original Exp 17 DLA/IG operator; the 80–82.5% CPU-era DLA/IG results remain un-replicated on GPU.
 - **Best architectural insert:** Exp 42's zero-init slider-gated attention head was exactly identical at initialization and reduced benign false refusal **90%→30%** at \(\alpha\approx0.031\), but exact compliance fell **55%→42.5%** and policy accuracy fell **57.5%→42.5%**.
 - **Best composition target:** combine subtractive residual-subspace edits, additive zero-damage inserts, and tiny vector/head-only RL. Exps 50–56 already cover vector-only RL, decision-anchor alignment, PGS directions, internal advantage sculpting, activation-cap scaffolding, policy-hint internalization, boundary-token temperature, and Halo-native targeted LoRA transfer, so those are not duplicated here.
 - **Known dead ends:** unembedding-direction weight edits collapse into always-call behavior at all tested strengths; fp32 does not rescue them; degenerate collinear push-pull is a sign/strength artifact; hard nullspaces and binary masks are too destructive on a 135M model.
@@ -17,7 +17,7 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 | Priority | Hypothesis | Main type | Status |
 |---:|---|---|---|
-| 9.4 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | partially scoped by exp59; input-conditioned exact-zero gates remain untested |
+| 9.1 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | partially scoped by exp59/61; multi-group MLP+head bank remains untested |
 | 9.3 | H2 — Operator-discrepancy collateral repair adapter | closed-form subspace repair | proposed |
 | 8.9 | H3 — Functional-connectivity-guided head insertion | attention-head modification | partially scoped by exp58/59; graph-selected connectivity remains untested |
 | 8.8 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | proposed |
@@ -36,7 +36,7 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 ## H1 — Exact-zero keyed modular implant bank
 
-**Priority: 9.4/10** *(reduced slightly because exp59 now covers warm architecture-matched scalar GQA inserts; the untested novelty is input-conditioned exact-zero gating and mixed head+MLP banks.)*
+**Priority: 9.1/10** *(reduced because exp59 now covers warm scalar GQA inserts and exp61 covers a single exact-zero keyed warm GQA lane; the untested novelty is a richer multi-group bank mixing heads and MLP neurons with more expressive exact-zero gates.)*
 
 ### Novel idea
 
