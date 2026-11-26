@@ -56,7 +56,7 @@ def main() -> None:
     for p in sft.parameters():
         p.requires_grad_(False)
 
-    baseline_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
+    baseline_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device, max_new_tokens=48, use_cache=False)
     print(f"  [baseline behavior] exact={baseline_eval['exact_compliance_rate']:.1f}% unsafe={baseline_eval['unsafe_refusal_rate']:.1f}% benign_fr={baseline_eval['benign_false_refusal_rate']:.1f}%", flush=True)
     baseline_bench = run_benchmark(sft, tokenizer, device, args.bench_n)
     print(f"  [baseline benchmark] {baseline_bench}", flush=True)
@@ -76,6 +76,7 @@ def main() -> None:
             "independent_alpha_per_layer": True,
             "seed": args.seed,
             "training": "slider_head_fork-style joint grouped REINFORCE, no KL/BC",
+            "behavioral_eval_cache_corrected": True,
             "prompt_stream": "12 benign then 12 unsafe, fixed order",
         },
         "config": vars(args),
@@ -98,7 +99,7 @@ def main() -> None:
             sft, tokenizer, rows, device, bank,
             steps=args.steps, group_size=args.group_size, lr=args.lr, alpha_penalty=penalty,
         )
-        behavior = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
+        behavior = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device, max_new_tokens=48, use_cache=False)
         bench = run_benchmark(sft, tokenizer, device, args.bench_n)
         for handle in handles:
             handle.remove()
