@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 11:20 UTC. This document is updated continuously as H100 swarm results land.
+Last updated: 2026-11-26 11:40 UTC. This document is updated continuously as H100 swarm results land.
 
 ## Current ingestion status
 
@@ -84,10 +84,11 @@ Last updated: 2026-11-26 11:20 UTC. This document is updated continuously as H10
 | 123 | `exp123_input_gated_kronecker_lanes` | queued/running | Can input-gated Kronecker lanes isolate adaptation capacity? |
 | 124 | `exp124_ems_anchor_preserving_subspace_edit` | queued/running | Can empirical-margin-sensitivity edits preserve the anchor while improving behavior? |
 | 125 | `exp125_displacement_probe_edit_auditor` | queued/running | Can displacement probes audit edits and choose better references? |
+| 126 | `exp126_spectral_sink_microgates` | queued/running | Can post-SDPA microgates suppress spectral attention sinks with low collateral? |
 
 ## Pipeline scheduling note — newest-first starvation risk
 
-At 11:20 UTC the feeder queue synthesis still prioritizes missing experiments by highest experiment number and caps each auto-wave at 8. With the current tree, that queue is exp125/124/123/122/121/120/111/105, which means exp93 seed replication, exp90–92 controlled slider ablations, exp24/27 replications/fixes, and exp50–87 can be starved indefinitely if exploratory experiments continue landing faster than waves finish. This scheduling risk was reported at 11:00 UTC. More importantly, no experiment-result JSON has landed since cf9f8a3 at 10:24:15Z; at 11:19 UTC the parent received a hard-stall alert after 55+ minutes without results despite 51 missing experiment scripts. Queue files themselves have no duplicate experiment names, and the transient exp103/104 collision was renumbered upstream to exp111/120.
+At 11:20 UTC the feeder queue synthesis still prioritizes missing experiments by highest experiment number and caps each auto-wave at 8. With the current tree, that queue is exp125/124/123/122/121/120/111/105, which means exp93 seed replication, exp90–92 controlled slider ablations, exp24/27 replications/fixes, and exp50–87 can be starved indefinitely if exploratory experiments continue landing faster than waves finish. This scheduling risk was reported at 11:00 UTC. More importantly, no experiment-result JSON has landed since cf9f8a3 at 10:24:15Z; at 11:19 UTC the parent received a hard-stall alert after 55+ minutes without results despite 51 missing experiment scripts. The parent response is visible upstream: commit 932edd2 at 11:26 hotfixed a shared `train_plain_slider` NameError caused by an alpha-penalty block referencing undefined bank variables, and commit 96969f5 at 11:32 added defensive JSON serialization across the new experiment family. Those are plausible root causes for crash-before-write behavior, so the next poll should distinguish post-hotfix recovery from continuing runner failure rather than immediately re-alerting. Queue files themselves have no duplicate experiment names, and the transient exp103/104 collision was renumbered upstream to exp111/120.
 
 ## Measurement baseline and interpretation rules
 
