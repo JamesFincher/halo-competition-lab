@@ -1,0 +1,8 @@
+{
+  "mmlu": 20.0,
+  "arc_easy": 31.0,
+  "hellaswag": 25.0,
+  "wall_sec": 48.4,
+  "device": "cuda",
+  "n_per_bench": 100
+}
