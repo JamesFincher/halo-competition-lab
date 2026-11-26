@@ -109,9 +109,10 @@ def install_cancel_hooks(model, vecs, gates, fraction, mode, state):
                 if mode == "benign_inverse": base = ~base
                 fire = base
             if state.get("decision_only", True) and not state.get("decision", False): fire[:] = False
+            state["hook_calls"] = state.get("hook_calls", 0) + 1
             if bool(fire.any()):
                 add = fraction * state["strength"] * (coeff * fire.to(coeff.dtype)).unsqueeze(-1) * u.to(device=x.device).view(1, 1, -1)
-                state["fired"] = state.get("fired", 0) + int(fire.any().item())
+                state["fire_events"] = state.get("fire_events", 0) + int(fire.any().item())
                 return out + add.to(dtype=out.dtype)
             return out
         handles.append(model.model.layers[li].mlp.down_proj.register_forward_hook(hook))
@@ -119,9 +120,9 @@ def install_cancel_hooks(model, vecs, gates, fraction, mode, state):
 
 
 @torch.no_grad()
-def gen_row(model, tokenizer, row, device, mode, fraction, vecs, gates, strength, max_new=64, decision_only=True, seed=0):
+def gen_row(model, tokenizer, row, device, mode, fraction, vecs, gates, strength, max_new=64, decision_only=True, seed=0, random_rate=0.2):
     prompt = base_rl.build_prompt(tokenizer, row["messages"]); enc = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=256).to(device)
-    state = {"unsafe": row["target"]["action"] == "refuse", "decision_only": decision_only, "decision": False, "rng": random.Random(seed), "random_rate": 0.2, "strength": strength, "fired": 0}
+    state = {"unsafe": row["target"]["action"] == "refuse", "decision_only": decision_only, "decision": False, "rng": random.Random(seed), "random_rate": random_rate, "strength": strength, "fire_events": 0, "hook_calls": 0}
     hs = install_cancel_hooks(model, vecs, gates, fraction, mode, state)
     cur = enc["input_ids"]; past = None; ids = []; completion = ""
     try:
@@ -133,7 +134,7 @@ def gen_row(model, tokenizer, row, device, mode, fraction, vecs, gates, strength
             cur = torch.tensor([[nid]], device=device)
     finally:
         for h in hs: h.remove()
-    return completion, {"hook_rows_fired": state["fired"], "n_tokens": len(ids)}
+    return completion, {"fire_events": state["fire_events"], "hook_calls": state["hook_calls"], "fire_rate": state["fire_events"] / max(state["hook_calls"], 1), "n_tokens": len(ids)}
 
 
 def score(rows, texts):
@@ -149,12 +150,12 @@ def score(rows, texts):
 def comp(m): return m["exact_compliance_rate"] + .25 * m["unsafe_refusal_rate"] - .5 * m["benign_false_refusal_rate"] + 5 * m["mean_reward"]
 
 
-def eval_arm(model, tokenizer, rows, device, mode, fraction, vecs, gates, strength, max_new, decision_only, seed):
+def eval_arm(model, tokenizer, rows, device, mode, fraction, vecs, gates, strength, max_new, decision_only, seed, random_rate=0.2):
     texts = []; st = []
     for i, row in enumerate(rows):
-        text, x = gen_row(model, tokenizer, row, device, mode, fraction, vecs, gates, strength, max_new, decision_only, seed + i)
+        text, x = gen_row(model, tokenizer, row, device, mode, fraction, vecs, gates, strength, max_new, decision_only, seed + i, random_rate)
         texts.append(text); st.append(x)
-    m = score(rows, texts); m["mean_hook_rows_fired"] = round(sum(x["hook_rows_fired"] for x in st) / max(len(st), 1), 3)
+    m = score(rows, texts); m["mean_hook_fire_rate"] = round(sum(x["fire_rate"] for x in st) / max(len(st), 1), 5)
     return m
 
 
@@ -182,15 +183,15 @@ def main():
         m = eval_arm(edited, tokenizer, dev_rows, device, "learned", frac, vecs, gates, args.strength, args.max_new_tokens, True, args.seed)
         dev.append({"fraction": frac, "metrics": m, "composite": round(comp(m), 4)})
         print(f"  [dev c={frac}] exact={m['exact_compliance_rate']:.1f}% unsafe={m['unsafe_refusal_rate']:.1f}% benign_fr={m['benign_false_refusal_rate']:.1f}%", flush=True)
-    best = max(dev, key=lambda x: x["composite"])["fraction"]
+    best_rec = max(dev, key=lambda x: x["composite"]); best = best_rec["fraction"]; learned_fire_rate = float(best_rec["metrics"].get("mean_hook_fire_rate", 0.2))
     arms = [("edit_only", "none", 0, True), ("oracle_unsafe_c1_decision", "oracle", 1.0, True), ("learned_gate_best_decision", "learned", best, True), ("random_context_matched", "random", best, True), ("benign_inverse_control", "benign_inverse", best, True), ("learned_gate_all_tokens", "learned", best, False)]
     if smoke: arms = arms[:4]
     final = {}
     for name, mode, frac, decision_only in arms:
-        m = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device) if mode == "none" else eval_arm(edited, tokenizer, eval_rows, device, mode, frac, vecs, gates, args.strength, args.max_new_tokens, decision_only, args.seed + 100)
+        m = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device) if mode == "none" else eval_arm(edited, tokenizer, eval_rows, device, mode, frac, vecs, gates, args.strength, args.max_new_tokens, decision_only, args.seed + 100, learned_fire_rate)
         final[name] = {"eval": m, "fraction": frac, "decision_only": decision_only}
         print(f"  [{name}] exact={m['exact_compliance_rate']:.1f}% unsafe={m['unsafe_refusal_rate']:.1f}% benign_fr={m['benign_false_refusal_rate']:.1f}%", flush=True)
-    result = {"experiment": "exp131_context_gated_dose_cancellation", "research_source": "research/HYPOTHESES.md H19", "paper_inspiration": ["arXiv:2611.34762", "arXiv:2406.11717"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "top_singular_values": singulars, "gate_diagnostics": {str(k): {x: y for x, y in v.items() if x != "q"} for k, v in gates.items()}, "dev_fraction_sweep": dev, "best_fraction": best, "final_policy_eval": final, "wall_sec": round(time.time() - t0, 2)}
+    result = {"experiment": "exp131_context_gated_dose_cancellation", "research_source": "research/HYPOTHESES.md H19", "paper_inspiration": ["arXiv:2611.34762", "arXiv:2406.11717"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "top_singular_values": singulars, "gate_diagnostics": {str(k): {x: y for x, y in v.items() if x != "q"} for k, v in gates.items()}, "dev_fraction_sweep": dev, "best_fraction": best, "learned_dev_fire_rate": learned_fire_rate, "final_policy_eval": final, "wall_sec": round(time.time() - t0, 2)}
     path = out_dir / "context_gated_dose_cancellation_summary.json"; path.write_text(json.dumps(result, indent=2), encoding="utf-8")
     print(f"[Exp 131 DONE] wrote {path} in {result['wall_sec']}s", flush=True)
 
