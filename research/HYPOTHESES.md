@@ -12,7 +12,7 @@ Validated local assets:
 - **Attention-insert evidence weakened further:** exp65 insertion after L27 reaches **65/93.3/0**, but exp61 exact-zero keyed warm GQA collapses (**10/90/20**), exp59 warm GQA is harmful, exp66 edit+warm-slider composition collapses, and exp93 seed fragility remains unresolved. Freeze-then-merge is promising but attention insertion is behind sparse surgery + complementary MLP LoRA until seed replication and the creative blending controls land.
 - **Capability-objective evidence is mixed:** exp132 `hybrid_capability_primary` reaches **72.5/93.3/0** and coarse MMLU/ARC move up slightly, but normalized continuation MMLU/HellaSwag decline; `capability_only` reduces validation loss without a clean benchmark win. exp139–141 are queued to disentangle cache artifacts, answer focus, and benchmark format before raw-capability claims are made.
 - **Deployment-aware training caution:** exp101 export serialization is internally consistent, but merge-aware served-weight action-token training underperforms badly (**42.5/100/0** versus post-edit anchor 65/90/0). Export validity is necessary but not sufficient; H10 is demoted and H21 must rely on teacher/KL distillation rather than rounding alone.
-- **Queue/result state at 13:10 UTC:** exp50–67, exp99–101, exp129/130/132 results landed. exp128’s output-space projection was corrected upstream, exp136 queues the sparse version of H19, and exp134/135/137/138 queue creative attention blends. Still missing: exp87/102/103/105/111/120–128/131/133–140.
+- **Queue/result state at 14:10 UTC:** H22 is now queued as exp144. exp134–138 results are negative for architectural blending relative to the sparse static edit; exp136 sparse H19 shows oracle cancellation can restore unsafe refusal to 100% but costs exactness, while the learned gate underperforms edit-only. exp139–148 queue capability-transfer/inversion diagnostics.
 - **Known dead ends:** unembedding-direction weight edits collapse into always-call behavior at all tested strengths; fp32 does not rescue them; degenerate collinear push-pull is a sign/strength artifact; hard nullspaces and binary masks are too destructive on a 135M model.
 
 Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 through 2026-11-25 in weight-space programming, activation steering, attention-head intervention, parameter-efficient RL, subspace repair, MoE/architecture expansion, plus frontier/lab blogs including MIT CSAIL weight-space programming and Anthropic feature-steering/introspection writeups. The 11:30 UTC incremental scan added deterministic Forward Weight-Space Programming/Protected FisherGate ([arXiv:2611.34612](https://arxiv.org/abs/2611.34612)) and gradient-free neuron programming ([arXiv:2611.33973](https://arxiv.org/abs/2611.33973)). The local `arxiv-mcp-server` is currently misconfigured (`uvx` entry point missing), so the scan used the official arXiv API and full HTML papers directly.
@@ -21,10 +21,10 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 | Priority | Hypothesis | Main type | Status |
 |---:|---|---|---|
-| 9.7 | H22 — Ultra-sparse edit anchored complementary MLP-only LoRA | surgical edit + targeted PEFT composition | new: direct combination of exp129/130's 80/93.3/0 sparse operator and exp57/100's validated transfer recipe |
-| 9.5 | H19 — Context-gated rank-one surgical dose cancellation | input-conditioned surgical repair | queued as exp131 canonical and exp136 sparse follow-up |
-| 9.2 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | queued as exp87; key gate for H19/H2 |
-| 9.2 | H2 — Composite operator-discrepancy collateral repair | closed-form trajectory repair | queued as exp128 after upstream output-space projection fix; should be retested at sparse dose |
+| 9.7 | H22 — Ultra-sparse edit anchored complementary MLP-only LoRA | surgical edit + targeted PEFT composition | queued as exp144; highest-priority result to read next |
+| 9.4 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | queued as exp87; now the key gate because exp136 shows cancellation works but learned context separation is insufficient |
+| 8.9 | H19 — Context-gated rank-one surgical dose cancellation | input-conditioned surgical repair | exp136 mixed: oracle validates the safety/exactness tradeoff, learned gate underperforms edit-only |
+| 9.3 | H2 — Composite operator-discrepancy collateral repair | closed-form trajectory repair | queued as exp128 after upstream output-space projection fix; increasingly important because H19 oracle repair costs exactness |
 | 9.1 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | queued as exp121; more important because auxiliary training often damages the anchor |
 | 8.8 | H21 — Exportable consolidation of complementary steering-vector RL | vector-to-weight distillation + deployment-exact PEFT | revised downward after exp101: teacher/KL distillation matters, rounding alone does not |
 | 8.7 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | queued as exp123; strengthened by complementary MLP-only LoRA validation |
@@ -38,8 +38,8 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 7.1 | H11 — Trajectory-aware budgeted decision-token steering | activation steering | queued as exp127; mixed evidence, still distinct as inference-time control |
 | 7.1 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | queued as exp126 |
 | 7.0 | H17 — Prepare-for-truncation elastic low-rank deployment | compression/raw capability | exploratory |
-| 6.7 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | demoted: exp61 keyed warm GQA collapsed and composition remains fragile despite freeze-then-merge promise |
-| 6.6 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted: insertion depth exists, but keying/composition/seed failures dominate graph selection |
+| 6.2 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | demoted further: exp134–138 blending/cascade/gate variants do not beat the sparse static edit |
+| 6.2 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted further: insertion depth exists, but blending/cascade/gate results do not beat simpler sparse surgery |
 | 6.1 | H13 — Zero-init attention-latent feedback lane | raw-capability architectural insert | demoted: attention composition and seed fragility remain unresolved |
 | 5.8 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | exp101 negative as implemented; keep only as an export-control component, not a default training method |
 | 5.4 | H16 — Norm-calibrated single-coordinate decision steering | sparse activation surgery | exp67 negative at tested doses; no positive operating point |
@@ -49,8 +49,8 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 Updated after the 13:10 UTC harvest (exp50–67, exp99–101, exp129/130/132). The central result is that two independently validated positives have not yet been combined: ultra-sparse surgery (**80/93.3/0**) and post-edit complementary MLP-only LoRA (**75/90/0** on the weaker canonical edit).
 
-1. **Implement H22 first.** Combine exp129/130's 16-columns/layer strength-0.9 sparse edit with exp57/100's freeze-edit → post-edit KL anchor → complementary MLP-only LoRA recipe. This is the highest-value unqueued experiment because both parents are validated and the composition is not redundant.
-2. **Repair the sparse edit's remaining unsafe-refusal loss.** Read exp131 canonical H19 and exp136 sparse H19 together with exp87/H15. The target is now only 2/30 unsafe failures at the 80/93.3/0 operating point.
+1. **Read exp144/H22 first.** It is now queued and is the highest-value composition: exp129/130's 16-columns/layer strength-0.9 sparse edit plus exp57/100's freeze-edit → post-edit KL anchor → complementary MLP-only LoRA recipe.
+2. **Repair context separation, not cancellation algebra.** exp136 shows oracle cancellation restores unsafe refusal but costs exactness, while the learned gate underperforms edit-only. exp87/H15 and better false-vs-true gate features are now the bottleneck before more H19 dose cancellation.
 3. **Run/reinterpret H2 at the correct dose.** exp128 has the upstream output-space projection fix, but its canonical top64/0.9 substrate is no longer the best operator. Use it first as a methodological test, then repeat at 16 columns/layer if the mechanism is positive.
 4. **Use exp57/100 as the PEFT comparator.** exp120/H7, exp121/H9, and exp123/H6 must beat or explain the simpler complementary MLP-only LoRA recipe; otherwise they are complexity without benefit.
 5. **Decision-readout branch remains gated:** exp102/H12 before H18. Do not confuse H16's negative single-coordinate result with readout failure; exp67 tested a raw coordinate actuator, not a trained readout.
@@ -76,7 +76,7 @@ Hold or stage behind current queue:
 
 ## H1 — Exact-zero keyed modular implant bank
 
-**Priority: 6.7/10** *(demoted after exp61/66: exact-zero keying did not rescue warm GQA and edit+warm-slider composition collapsed; freeze-then-merge remains promising but attention banks are behind sparse surgery plus MLP-LoRA composition.)*
+**Priority: 6.2/10** *(demoted after exp134–138: routed width mixtures, capability/behavior blending, cross-layer cascades, and subtractive gates do not beat the ultra-sparse static edit; attention banks are exploratory rather than central.)*
 
 ### Novel idea
 
@@ -153,7 +153,7 @@ Expected: composite discrepancy is multi-directional even though module-local di
 
 ## H3 — Functional-connectivity-guided head insertion
 
-**Priority: 6.6/10** *(demoted: exp65 shows an insertion-depth effect, but exp61/66/93 show keying, composition, and seed fragility dominate graph-selection value.)*
+**Priority: 6.2/10** *(demoted: exp65/91 support L27 as the best insertion site, but exp134–138 show architectural routing/blending does not yet beat simpler sparse surgery.)*
 
 ### Novel idea
 
@@ -692,7 +692,7 @@ Expected: a protected closed-form readout edit produces at least +5 pp exact or 
 
 ## H19 — Context-gated rank-one surgical dose cancellation
 
-**Priority: 9.5/10** *(queued as exp131 canonical and exp136 sparse; it directly exploits the exact algebra of the validated rank-one edit and targets the remaining unsafe-refusal collateral at the new 80/93.3/0 operating point.)*
+**Priority: 8.9/10** *(exp136 sparse result is mixed: oracle cancellation restores unsafe refusal to 100% but costs 15 pp exactness, while the learned gate reaches only 75/93.3/0 versus edit-only 80/93.3/0; the algebra is validated but context separation is not yet good enough.)*
 
 ### Novel idea
 
@@ -796,7 +796,7 @@ Expected: the exported student recovers at least 60–70% of the hook teacher's 
 
 ## H22 — Ultra-sparse edit anchored complementary MLP-only LoRA
 
-**Priority: 9.7/10** *(new top unqueued composition: both parents are independently validated, but the combination has not been tested.)*
+**Priority: 9.7/10** *(queued as exp144; highest-priority composition because both parents are independently validated, but the combination has not yet been tested.)*
 
 ### Novel idea
 
