@@ -1,4 +1,4 @@
-# Experiment 31 — Activation-Vector-Only RL on Frozen Weights
+# Experiment 34 — Activation-Vector-Only RL on Frozen Weights
 
 **Research inspiration:** `research/SUBAGENT1_FRONTIER_RL_INTERNALS.md` (steering-vector-guided / activation-space RL) + **arXiv:2611.26627**, *RL Post-Training in Diffusion Transformers Is Activation Steering*.
 
@@ -18,7 +18,7 @@ If most of policy-gradient RL's behavioral gain can be represented as a constant
 ## Run
 
 ```bash
-python3 experiments/activation_vector_only_rl/scripts/run_activation_vector_rl.py
+python3 experiments/exp34_activation_vector_only_rl/scripts/run_activation_vector_rl.py
 ```
 
 ## Output

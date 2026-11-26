@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experiment 31: Activation-Vector-Only RL on a Frozen Policy Model.
+"""Experiment 34: Activation-Vector-Only RL on a Frozen Policy Model.
 
 Inspired by arXiv:2611.26627 ("RL Post-Training in Diffusion Transformers Is
 Activation Steering"), which found that fixed activation shifts can recover most
@@ -209,9 +209,9 @@ def main() -> None:
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
-    out_dir = ROOT / "experiments/activation_vector_only_rl/results"
+    out_dir = ROOT / "experiments/exp34_activation_vector_only_rl/results"
     out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[Exp 31] Activation-Vector-Only RL on {device} ({dtype})", flush=True)
+    print(f"[Exp 34] Activation-Vector-Only RL on {device} ({dtype})", flush=True)
 
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl")
     eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
@@ -236,7 +236,7 @@ def main() -> None:
     )
 
     results = {
-        "experiment": "exp31_activation_vector_only_rl",
+        "experiment": "exp34_activation_vector_only_rl",
         "paper_inspiration": "arXiv:2611.26627 RL Post-Training in Diffusion Transformers Is Activation Steering",
         "config": vars(args),
         "device": str(device),
@@ -279,7 +279,7 @@ def main() -> None:
     results["wall_sec"] = round(time.time() - t0, 2)
     summary_path = out_dir / "activation_vector_rl_summary.json"
     summary_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
-    print(f"[Exp 31 DONE] wrote {summary_path} in {results['wall_sec']}s", flush=True)
+    print(f"[Exp 34 DONE] wrote {summary_path} in {results['wall_sec']}s", flush=True)
 
 
 if __name__ == "__main__":
