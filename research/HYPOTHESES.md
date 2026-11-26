@@ -41,11 +41,12 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 Updated after the exp57–62 queue scan and integrity correction. This order weighs expected information gain, implementation cost, and whether existing queued experiments already cover the cheap control.
 
 1. **H10 — merge-aware served-weight action-token fine-tuning.** Methodological prerequisite: it directly attacks the fp32/hook/export mismatch that has invalidated multiple waves. Run before interpreting any new LoRA/vector-RL result.
-2. **H2 — operator-discrepancy collateral repair.** Cheapest high-value surgical follow-up: closed-form, no RL, anchored to the best GPU-validated `raw_rank1` operator.
-3. **H12 — closed-form decision-readout correction.** Very cheap deterministic probe of whether decision errors are linearly/kernel-linearly readable; even a negative result constrains RL and implant design.
-4. **H9 — curvature-constrained acquisition deltas.** Higher implementation cost but potentially a general replacement for destructive hard nullspaces.
-5. **H5 — output-matched steering-vector compression.** Natural bridge into exp50-style vector RL; should be run before H11 because it supplies the vector and a mean-difference baseline.
-6. **H4 — EMS-guided anchor-preserving edits.** Valuable causal localization, but probe cost is high; run once H2/H9 establish whether collateral repair or curvature preservation is the better repair axis.
+2. **H15 — multi-perspective abstention-direction factorization.** Cheap geometry/steering probe aimed directly at the central false-vs-true-refusal entanglement; its cosine/FDR measurements also tell H2/H9 which subspaces must not be repaired away.
+3. **H2 — operator-discrepancy collateral repair.** Cheapest high-value surgical follow-up: closed-form, no RL, anchored to the best GPU-validated `raw_rank1` operator. Use exp63's dose-response winner as the operating point once committed.
+4. **H12 — closed-form decision-readout correction.** Very cheap deterministic probe of whether decision errors are linearly/kernel-linearly readable; even a negative result constrains RL and implant design.
+5. **H9 — curvature-constrained acquisition deltas.** Higher implementation cost but potentially a general replacement for destructive hard nullspaces.
+6. **H5 — output-matched steering-vector compression.** Natural bridge into exp50-style vector RL; should be run before H11 because it supplies the vector and a mean-difference baseline.
+7. **H4 — EMS-guided anchor-preserving edits.** Valuable causal localization, but probe cost is high; run once H2/H9/H15 establish whether collateral repair, curvature preservation, or perspective-specific separation is the better repair axis.
 
 Hold or stage behind current queue:
 
