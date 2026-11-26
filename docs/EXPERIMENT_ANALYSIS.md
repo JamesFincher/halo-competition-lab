@@ -73,7 +73,7 @@ This table is generated from `research/AUTOGRADED_SCORES.json` and covers every 
 
 | Exp | Experiment | Best extracted arm | Exact | Unsafe refusal | Benign FR | Policy | Score | Grade | Main validity note |
 |---:|---|---|---:|---:|---:|---:|---:|---|---|
-| 1 | `edit_then_target_rl` | `arm2_localized_grpo_only` | 80.0% | 93.3% | 0.0% | 87.5% | 8.10 | A | same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected |
+| 1 | `edit_then_target_rl` | `arm2_localized_grpo_only` | 80.0% | 93.3% | 0.0% | 87.5% | 8.10 | A | same-run CUDA baseline is 47.5/100/80 rather than canonical 55/100/90, so absolute deltas are regime-shifted even though the arm2-vs-random-control c… |
 | 11 | `seek_sniff_edit_rl` | `v3_closed_loop_sniff_edit_rl` | 77.5% | 90.0% | 0.0% | 90.0% | 7.85 | A | — |
 | 12 | `head_and_node_sniff_rl` | `armB_mlp_false_node_only` | 67.5% | 100.0% | 80.0% | 70.0% | 5.90 | C | — |
 | 13 | `bitflip_false_node_and_defense` | `arm3_projection` | 67.5% | 100.0% | 80.0% | 70.0% | 5.90 | C | — |
@@ -81,7 +81,7 @@ This table is generated from `research/AUTOGRADED_SCORES.json` and covers every 
 | 15 | `relp_causal_sniff_rl` | `eval` | 62.5% | 100.0% | 80.0% | 65.0% | 5.40 | D | — |
 | 16 | `whitened_subspace_rfm_edit` | `raw_rank1` | 65.0% | 90.0% | 0.0% | 80.0% | 6.70 | B | raw_rank1 is the valid positive arm; safety_null_rank2/3/4 are accepted_strength=0 no-op baseline copies, not active interventions |
 | 17 | `christmas_tree_node_probes` | `probe4_integrated_grads_5` | 82.5% | 90.0% | 0.0% | 92.5% | 9.05 | S | CPU-era probe result; exact Exp17 probe1-DLA/probe4-IG GPU replication remains open because exp41 used Exp12 false-node selection instead |
-| 20 | `random_node_control_proof` | `dla_top64` | 15.0% | 0.0% | 0.0% | 25.0% | 3.05 | D | same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected |
+| 20 | `random_node_control_proof` | `dla_top64` | 15.0% | 0.0% | 0.0% | 25.0% | 3.05 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | 21 | `ig5_dla_closed_loop_rl` | `st0.65` | 15.0% | 0.0% | 0.0% | 27.5% | 3.05 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | 22 | `multi_seed_stability_sweep` | `best_reported` | 37.5% | 46.7% | 0.0% | 50.0% | 3.05 | D | — |
 | 23 | `dual_polarity_circuit_surgery` | `pushpull_1.0` | 42.5% | 100.0% | 100.0% | 42.5% | 4.65 | D | same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected |
@@ -89,7 +89,7 @@ This table is generated from `research/AUTOGRADED_SCORES.json` and covers every 
 | 26 | `entropy_weighted_fork_rl` | `entropy_weighted` | 10.0% | 0.0% | 0.0% | 22.5% | 3.05 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | 28 | `crosslayer_head_mlp_synergy` | `head_only` | 45.0% | 100.0% | 60.0% | 50.0% | 4.65 | D | same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected |
 | 29 | `momentum_annealed_rl` | `annealed_edit` | 30.0% | 100.0% | 90.0% | 32.5% | 4.65 | D | — |
-| 30 | `steering_oracle_guided_rl` | `plain_rl` | 15.0% | 0.0% | 0.0% | 25.0% | 3.05 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
+| 30 | `steering_oracle_guided_rl` | `plain_rl` | 15.0% | 0.0% | 0.0% | 25.0% | 3.05 | D | result file was overwritten in place during the mega-wave harvest; previous values exist in git history but not as a side-by-side backup |
 | 32 | `targeted_circuit_rl` | `circuit_columns` | 12.5% | 0.0% | 0.0% | 27.5% | 3.25 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | 33 | `dtype_edit_sensitivity` | `bf16` | 15.0% | 0.0% | 0.0% | 25.0% | 3.25 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | 34 | `exp34_activation_vector_only_rl` | `vector_only_rl` | 40.0% | 100.0% | 90.0% | 42.5% | 4.85 | D | — |
@@ -100,14 +100,14 @@ This table is generated from `research/AUTOGRADED_SCORES.json` and covers every 
 | 39 | `operator_sensitivity_showdown` | `resid_dir_gated` | 55.0% | 100.0% | 90.0% | 57.5% | 4.65 | D | exact canonical-baseline triple; possible no-op, rejected gate, or cancellation artifact |
 | 40 | `fp32_master_edit_pipeline` | `b_fp32edit_bf16cast` | 15.0% | 0.0% | 0.0% | 27.5% | 3.25 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | 41 | `original_operator_replication` | `top2_gated` | 67.5% | 100.0% | 80.0% | 70.0% | 5.60 | C | mislabeled replication target: implementation uses Exp12 false-node selection, not Exp17 probe1-DLA or probe4-IG selection; the 80-82.5% CPU-era DLA/… |
-| 42 | `slider_gated_attention_head` | `after` | 42.5% | 90.0% | 30.0% | 42.5% | 5.65 | C | architecturally valid zero-init insert but exactness-negative: benign false refusal improves 90->30 while exact falls 55->42.5 and unsafe refusal fal… |
+| 42 | `slider_gated_attention_head` | `after` | 42.5% | 90.0% | 30.0% | 42.5% | 5.65 | C | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; behavioral conclusions need cache… |
 | 43 | `combined_slider_subspace` | `stage2_combined` | 50.0% | 96.7% | 70.0% | 55.0% | 4.80 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; composition conclusions need cach… |
 | 50 | `exp50_surgically_anchored_vector_rl` | `disjoint_layer_vectors` | 60.0% | 86.7% | 0.0% | 70.0% | 5.50 | D | — |
 | 51 | `exp51_decision_anchor_hidden_align` | `hidden_align_late_l29_lambda1em3` | 60.0% | 86.7% | 0.0% | 70.0% | 5.50 | D | — |
 | 52 | `exp52_pgs_credit_direction` | `pgs_l29` | 57.5% | 100.0% | 90.0% | 60.0% | 4.90 | D | DLA/unembed reference is excluded from technique scoring because it is not the PGS mechanism under test; PGS directions are nearly anti-aligned with … |
 | 53 | `exp53_dual_sided_advantage_sculpting` | `complianceheavy_0.3_0.1` | 72.5% | 83.3% | 0.0% | 82.5% | 6.75 | B | — |
 | 54 | `exp54_activation_capped_scaffolding` | `cap_annealed_rl` | 60.0% | 86.7% | 0.0% | 70.0% | 5.50 | D | — |
-| 55 | `exp55_policy_hint_internalization` | `ash_joint_hint_init_mixed` | 0.0% | 0.0% | 0.0% | 0.0% | 3.05 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
+| 55 | `exp55_policy_hint_internalization` | `ash_joint_hint_init_mixed` | 0.0% | 0.0% | 0.0% | 0.0% | 3.05 | D | the zero-vector/plain RL comparator is excluded from technique scoring; the hint-internalization arm enters complete always-call collapse |
 | 56 | `exp56_boundary_temperature_controller` | `schema_frozen_selective_fixed` | 32.5% | 96.7% | 100.0% | 37.5% | 4.05 | D | — |
 | 57 | `exp57_halo_native_targeted_lora` | `halo_regex_complementary_mlp_r16` | 75.0% | 90.0% | 0.0% | 87.5% | 7.60 | A | strong positive transfer result: post-edit-anchored complementary MLP-only LoRA improves exactness while preserving zero benign false refusal |
 | 58 | `exp58_attention_head_sparse_rl` | `bottom_ranked_heads` | 67.5% | 83.3% | 0.0% | 80.0% | 6.25 | C | bottom-ranked heads beat top-ranked heads, inconsistent with the proposed head-ranking mechanism; treat as weak/nonselective evidence |
@@ -118,29 +118,29 @@ This table is generated from `research/AUTOGRADED_SCORES.json` and covers every 
 | 63 | `exp63_validated_edit_dose_response` | `strength_0p90_cols32` | 72.5% | 90.0% | 0.0% | 87.5% | 7.35 | B | — |
 | 64 | `exp64_validated_edit_layer_ablation` | `l29_l28_plus_l27` | 67.5% | 90.0% | 0.0% | 82.5% | 6.85 | B | L29 alone matches the canonical L29+L28 edit; L28 alone is a no-op, while adding L27 gives a small additional exactness gain |
 | 65 | `exp65_slider_insertion_layer_sweep` | `insert_after_l27` | 65.0% | 93.3% | 0.0% | 70.0% | 6.60 | B | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; insertion-depth conclusions need … |
-| 66 | `exp66_edit_plus_warm_slider_composition` | `composite` | 17.5% | 0.0% | 0.0% | 25.0% | 3.25 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
+| 66 | `exp66_edit_plus_warm_slider_composition` | `composite` | 17.5% | 0.0% | 0.0% | 25.0% | 3.25 | D | the validated-edit reference is excluded from technique scoring; the actual warm-slider composite collapses to 17.5% exact with complete unsafe-refus… |
 | 67 | `exp67_single_coordinate_decision_steering` | `opposite_decision_dose` | 55.0% | 100.0% | 100.0% | 55.0% | 4.65 | D | — |
 | 80 | `exp80_edit_strength_scaffold_annealing` | `rl_only` | 80.0% | 93.3% | 10.0% | 85.0% | 7.60 | A | — |
 | 81 | `exp81_principal_subspace_guardrailed_rl` | `kl_layer_disjoint_unconstrained` | 15.0% | 0.0% | 0.0% | 27.5% | 3.05 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
-| 82 | `exp82_rank1_rl_trajectory_extrapolation` | `rank1_extrapolation_t8` | 15.0% | 0.0% | 0.0% | 25.0% | 2.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
+| 82 | `exp82_rank1_rl_trajectory_extrapolation` | `rank1_extrapolation_t8` | 15.0% | 0.0% | 0.0% | 25.0% | 2.85 | D | validation is insufficient: cosine is high (0.90-0.93) but predicted step-8 vector norms are 1.21-1.33x actual and relative errors are ~0.50-0.56, so… |
 | 83 | `exp83_self_modeling_failure_probe_router` | `probe_routed` | 47.5% | 70.0% | 0.0% | 57.5% | 4.40 | D | — |
 | 85 | `exp85_evolution_strategies_32d_surgical_subspace` | `es_final_center` | 82.5% | 93.3% | 0.0% | 95.0% | 7.90 | A | fixed-dose and random-search references are excluded as controls; ES dev selection did not beat the fixed-dose reference, so the strong final eval ma… |
 | 86 | `exp86_oscillating_polarity_edit_cycling` | `oscillating_decay` | 72.5% | 93.3% | 0.0% | 80.0% | 7.35 | B | — |
-| 87 | `exp87_multiperspective_abstention_factorization` | `negative_false_margin` | 55.0% | 100.0% | 90.0% | 57.5% | 4.45 | D | exact canonical-baseline triple; possible no-op, rejected gate, or cancellation artifact |
+| 87 | `exp87_multiperspective_abstention_factorization` | `negative_false_margin` | 55.0% | 100.0% | 90.0% | 57.5% | 4.45 | D | false-refusal and ambiguity directions are stable while true-harmfulness is unstable, but all behavioral steering arms are exact-baseline no-ops at t… |
 | 90 | `exp90_single_slider_width_ablation` | `width_16` | 50.0% | 93.3% | 0.0% | 57.5% | 5.40 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; width conclusions need cache-corr… |
 | 91 | `exp91_single_slider_depth_ablation` | `layer_27` | 60.0% | 100.0% | 50.0% | 65.0% | 4.95 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; the L20-collapse/L27-optimal orde… |
 | 92 | `exp92_shared_alpha_head_count_ablation` | `count_1` | 60.0% | 100.0% | 50.0% | 65.0% | 4.95 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; head-count conclusions need cache… |
 | 93 | `exp93_v1_seed_replication` | `seed_42` | 60.0% | 100.0% | 50.0% | 65.0% | 4.95 | D | seed replication is not robust: only seed 42 reproduces the positive v1 operating point; seeds 7 and 123 are exactness-negative |
-| 94 | `exp94_alpha_clamp_multilayer_bank` | `clamp_none` | 0.0% | 0.0% | 0.0% | 0.0% | 2.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
+| 94 | `exp94_alpha_clamp_multilayer_bank` | `clamp_none` | 0.0% | 0.0% | 0.0% | 0.0% | 2.85 | D | all clamped multi-layer bank arms collapse; this supports an architectural/destructive-interference boundary rather than a simple alpha-magnitude art… |
 | 95 | `exp95_validated_edit_strength_response` | `strength_0p9` | 65.0% | 90.0% | 0.0% | 80.0% | 6.40 | C | — |
 | 96 | `exp96_freeze_then_merge_schedule` | `freeze_then_merge_8x4` | 70.0% | 90.0% | 0.0% | 80.0% | 6.90 | B | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; freeze-merge benefit needs cache-… |
 | 98 | `exp98_validated_edit_column_count_response` | `columns_32` | 72.5% | 90.0% | 0.0% | 87.5% | 7.15 | B | — |
 | 99 | `exp99_validated_edit_layer_allocation` | `l29_l28_split_32_each` | 72.5% | 90.0% | 0.0% | 87.5% | 7.15 | B | — |
 | 100 | `exp100_halo_native_transfer_path_showdown` | `targeted_lora_complement_mlp_only` | 67.5% | 90.0% | 0.0% | 82.5% | 6.65 | B | targeted complementary LoRA outperforms partial full fine-tuning and vector-only transfer from the same post-edit anchor |
 | 101 | `exp101_merge_aware_served_weight_finetune` | `served_weight_action_only` | 42.5% | 100.0% | 0.0% | 57.5% | 5.80 | C | standard unrounded comparators are excluded; merge-aware served-weight action-only training preserves unsafe refusal but is exactness-negative relati… |
-| 102 | `exp102_closed_form_decision_readout` | `sft_manual_probe` | 95.0% | 100.0% | 0.0% | 100.0% | 8.30 | A | inference-time forced-decoding scaffold, not a weight-level capability intervention; probes are fit on train rows with train crossfit, so no direct e… |
+| 102 | `exp102_closed_form_decision_readout` | `sft_manual_probe` | 95.0% | 100.0% | 0.0% | 100.0% | 8.30 | A | manual none/majority/random baselines are excluded as controls |
 | 103 | `exp103_failure_neuron_suppression_dose` | `suppression_0p25` | 30.0% | 100.0% | 90.0% | 32.5% | 4.45 | D | failure-neuron suppression is monotonically behaviorally destructive and does not repair benchmark behavior |
-| 105 | `exp105_slider_lr_response_bank` | `lr_0p0003` | 55.0% | 100.0% | 90.0% | 57.5% | 4.45 | D | exact canonical-baseline triple; possible no-op, rejected gate, or cancellation artifact |
+| 105 | `exp105_slider_lr_response_bank` | `lr_0p0003` | 55.0% | 100.0% | 90.0% | 57.5% | 4.45 | D | low LR is a no-op, mid LR is slightly negative, high LR collapses; because this is a pre-cache-fix slider bank, conclusions require cache-corrected r… |
 | 111 | `exp111_alpha_norm_penalty_bank` | `penalty_0p0` | 0.0% | 0.0% | 0.0% | 0.0% | 2.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
 | 129 | `exp129_sparse_edit_strength_response` | `strength_0p9` | 80.0% | 93.3% | 0.0% | 95.0% | 7.90 | A | ultra-sparse 16-column-per-layer edit has a strong dose response and exact zero benchmark movement at the best dose; independently matches exp130 col… |
 | 130 | `exp130_sparse_edit_column_count_response` | `columns_16` | 80.0% | 93.3% | 0.0% | 95.0% | 7.90 | A | columns_16 independently reproduces exp129 strength_0p9 exactly because it is the same canonical sparse configuration; treat as deterministic replica… |
@@ -155,16 +155,16 @@ This table is generated from `research/AUTOGRADED_SCORES.json` and covers every 
 | 141 | `exp141_benchmark_format_capability` | `benchmark_direct_answer_only` | 37.5% | 63.3% | 0.0% | 47.5% | 4.20 | D | benchmark-direct formatting does not improve transfer and is worse behaviorally than the lettered reference; behavioral eval uses max_new_tokens=48 a… |
 | 142 | `exp142_capability_training_budget_response` | `budget_4x_128_steps` | 40.0% | 83.3% | 0.0% | 50.0% | 4.80 | D | larger capability-training budgets do not rescue benchmark transfer; validation loss is nonmonotonic and behavioral safety/exactness degrade; behavio… |
 | 143 | `exp143_contrastive_choice_capability` | `contrastive_choice_objective` | 45.0% | 93.3% | 90.0% | 47.5% | 4.05 | D | correct-answer reference is excluded; the actual contrastive-choice objective does not improve contrastive validation accuracy and remains behavioral… |
-| 144 | `exp144_sparse_edit_anchored_mlp_lora` | `h22_seed7` | 82.5% | 93.3% | 0.0% | 95.0% | 7.90 | A | H22 reaches 82.5/93.3/0 across seeds, but random-layer MLP control matches it exactly; layer-specific complementary transfer is falsified, and the re… |
+| 144 | `exp144_sparse_edit_anchored_mlp_lora` | `h22_seed7` | 82.5% | 93.3% | 0.0% | 95.0% | 7.90 | A | controls/vector lower bound are excluded as comparators |
 | 145 | `exp145_inversion_logit_diagnostic` | `layer_20` | 72.5% | 90.0% | 0.0% | 80.0% | 7.15 | B | cache-corrected L20 slider is behaviorally positive under a shifted same-run baseline (52.5/93.3/90); diagnostic duplicates exp146 and supersedes leg… |
 | 146 | `exp146_cache_mode_inversion_diagnostic` | `layer20_cache_corrected` | 72.5% | 90.0% | 0.0% | 80.0% | 7.15 | B | decisive cache artifact control: legacy cached generation collapses while cache-corrected full-context generation is positive; compare against same-r… |
 | 147 | `exp147_additive_capability_behavior_union` | `behavior_alone` | 50.0% | 93.3% | 90.0% | 52.5% | 4.05 | D | cache-corrected behavior-only head is near-baseline rather than destructive; capability/behavior unions and learned blends are exactness-negative, so… |
-| — | `slider_head_fork/v1_single` | `final` | 57.5% | 100.0% | 60.0% | 62.5% | 5.70 | C | fork iteration-1 artifacts contain behavioral evals only; promised MMLU/ARC-Easy/HellaSwag benchmark scores are absent |
-| — | `slider_head_fork/v2_bank4` | `final` | 0.0% | 0.0% | 0.0% | 0.0% | 3.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
-| — | `slider_head_fork/v3_deep_spread` | `final` | 0.0% | 0.0% | 0.0% | 0.0% | 3.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
-| — | `slider_head_fork/v4_wide` | `final` | 0.0% | 0.0% | 0.0% | 25.0% | 3.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
-| — | `slider_head_fork/v5_memory` | `final` | 15.0% | 0.0% | 0.0% | 22.5% | 3.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
-| — | `slider_head_fork/v6_fullbank_wide` | `final` | 0.0% | 0.0% | 0.0% | 0.0% | 3.85 | D | always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking |
+| — | `slider_head_fork/v1_single` | `final` | 57.5% | 100.0% | 60.0% | 62.5% | 5.70 | C | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width c… |
+| — | `slider_head_fork/v2_bank4` | `final` | 0.0% | 0.0% | 0.0% | 0.0% | 3.85 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width c… |
+| — | `slider_head_fork/v3_deep_spread` | `final` | 0.0% | 0.0% | 0.0% | 0.0% | 3.85 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width c… |
+| — | `slider_head_fork/v4_wide` | `final` | 0.0% | 0.0% | 0.0% | 25.0% | 3.85 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width c… |
+| — | `slider_head_fork/v5_memory` | `final` | 15.0% | 0.0% | 0.0% | 22.5% | 3.85 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width c… |
+| — | `slider_head_fork/v6_fullbank_wide` | `final` | 0.0% | 0.0% | 0.0% | 0.0% | 3.85 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width c… |
 
 ## Diagnostic and nonstandard-result ledger
 

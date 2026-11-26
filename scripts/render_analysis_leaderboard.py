@@ -73,7 +73,9 @@ def warn_marker(row: dict) -> str:
 
 def first_warning(row: dict, limit: int = 150) -> str:
     warnings = row.get("validity_warnings") or []
-    return clean(warnings[0], limit) if warnings else "—"
+    # Experiment-specific semantic notes are appended after generic metric warnings;
+    # prefer them because they carry the actual interpretation.
+    return clean(warnings[-1], limit) if warnings else "—"
 
 
 def fmt_metric(x: object) -> str:
