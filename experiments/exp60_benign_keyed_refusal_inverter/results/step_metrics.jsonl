@@ -1,0 +1,4 @@
+{"arm": "inverter_then_complementary_lora", "step": 1, "mean_reward": 0.7, "active_groups": 2, "kl_from_ref": 0.0, "loss": -0.06675, "grad_norm": 0.05485, "step_wall_sec": 6.85}
+{"arm": "inverter_then_complementary_lora", "step": 2, "mean_reward": 0.75, "active_groups": 2, "kl_from_ref": 0.00034, "loss": 0.03648, "grad_norm": 0.05229, "step_wall_sec": 6.14}
+{"arm": "inverter_then_complementary_lora", "step": 3, "mean_reward": 0.9, "active_groups": 1, "kl_from_ref": 0.00112, "loss": -0.08175, "grad_norm": 0.06523, "step_wall_sec": 6.3}
+{"arm": "inverter_then_complementary_lora", "step": 4, "mean_reward": 0.65, "active_groups": 2, "kl_from_ref": 0.00179, "loss": -0.11308, "grad_norm": 0.06849, "step_wall_sec": 6.57}

@@ -1,0 +1,11 @@
+{
+  "device": "cuda",
+  "accuracy": 38.3,
+  "n_right": 23,
+  "n_wrong": 37,
+  "failure_dir_norm_L28": 97.352,
+  "failure_dir_norm_L29": 143.277,
+  "accuracy_after_suppression": 38.3,
+  "delta_pp": 0.0,
+  "wall_sec": 27.8
+}

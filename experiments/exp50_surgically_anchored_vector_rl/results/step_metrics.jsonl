@@ -1,0 +1,32 @@
+{"arm": "all_layer_vectors", "step": 1, "mean_verifier_reward": 0.725, "active_groups": 2, "mean_abs_kl": 0.0, "loss": -0.1644, "grad_norm": 0.14799, "max_vector_l2": 0.47999, "step_wall_sec": 2.69}
+{"arm": "all_layer_vectors", "step": 2, "mean_verifier_reward": 0.65, "active_groups": 1, "mean_abs_kl": 0.02628, "loss": 0.06982, "grad_norm": 0.18285, "max_vector_l2": 0.77369, "step_wall_sec": 2.19}
+{"arm": "all_layer_vectors", "step": 3, "mean_verifier_reward": 0.725, "active_groups": 1, "mean_abs_kl": 0.23825, "loss": -0.08915, "grad_norm": 0.10235, "max_vector_l2": 1.02675, "step_wall_sec": 2.08}
+{"arm": "all_layer_vectors", "step": 4, "mean_verifier_reward": 0.75, "active_groups": 2, "mean_abs_kl": 1.0256, "loss": 0.23878, "grad_norm": 0.37813, "max_vector_l2": 1.17222, "step_wall_sec": 2.77}
+{"arm": "all_layer_vectors", "step": 5, "mean_verifier_reward": 0.625, "active_groups": 2, "mean_abs_kl": 0.3002, "loss": -0.08605, "grad_norm": 0.09108, "max_vector_l2": 1.32963, "step_wall_sec": 2.47}
+{"arm": "all_layer_vectors", "step": 6, "mean_verifier_reward": 0.725, "active_groups": 1, "mean_abs_kl": 0.31235, "loss": -0.09638, "grad_norm": 0.11515, "max_vector_l2": 1.48157, "step_wall_sec": 2.08}
+{"arm": "all_layer_vectors", "step": 7, "mean_verifier_reward": 0.75, "active_groups": 1, "mean_abs_kl": 0.2205, "loss": -0.57127, "grad_norm": 0.28533, "max_vector_l2": 1.61017, "step_wall_sec": 2.09}
+{"arm": "all_layer_vectors", "step": 8, "mean_verifier_reward": 0.525, "active_groups": 1, "mean_abs_kl": 0.41824, "loss": 0.16739, "grad_norm": 0.14528, "max_vector_l2": 1.7194, "step_wall_sec": 2.56}
+{"arm": "disjoint_layer_vectors", "step": 1, "mean_verifier_reward": 0.725, "active_groups": 2, "mean_abs_kl": 0.0, "loss": -0.1644, "grad_norm": 0.08856, "max_vector_l2": 0.47999, "step_wall_sec": 2.4}
+{"arm": "disjoint_layer_vectors", "step": 2, "mean_verifier_reward": 0.65, "active_groups": 2, "mean_abs_kl": 0.02511, "loss": -0.39137, "grad_norm": 0.17601, "max_vector_l2": 0.73647, "step_wall_sec": 2.33}
+{"arm": "disjoint_layer_vectors", "step": 3, "mean_verifier_reward": 0.9, "active_groups": 2, "mean_abs_kl": 0.04972, "loss": 0.11533, "grad_norm": 0.08552, "max_vector_l2": 0.91757, "step_wall_sec": 2.41}
+{"arm": "disjoint_layer_vectors", "step": 4, "mean_verifier_reward": 0.775, "active_groups": 2, "mean_abs_kl": 0.13117, "loss": -0.16006, "grad_norm": 0.05602, "max_vector_l2": 1.10065, "step_wall_sec": 2.48}
+{"arm": "disjoint_layer_vectors", "step": 5, "mean_verifier_reward": 0.65, "active_groups": 2, "mean_abs_kl": 0.0793, "loss": -0.17178, "grad_norm": 0.07504, "max_vector_l2": 1.29184, "step_wall_sec": 2.37}
+{"arm": "disjoint_layer_vectors", "step": 6, "mean_verifier_reward": 0.675, "active_groups": 2, "mean_abs_kl": 0.25329, "loss": -0.31843, "grad_norm": 0.06882, "max_vector_l2": 1.51673, "step_wall_sec": 2.37}
+{"arm": "disjoint_layer_vectors", "step": 7, "mean_verifier_reward": 0.4, "active_groups": 1, "mean_abs_kl": 0.20352, "loss": -0.44244, "grad_norm": 0.12827, "max_vector_l2": 1.78167, "step_wall_sec": 2.05}
+{"arm": "disjoint_layer_vectors", "step": 8, "mean_verifier_reward": 0.8, "active_groups": 0, "mean_abs_kl": 0.0, "loss": 0.0, "grad_norm": 0.0, "max_vector_l2": 1.78167, "step_wall_sec": 1.63}
+{"arm": "random_layer_control", "step": 1, "mean_verifier_reward": 0.725, "active_groups": 2, "mean_abs_kl": 0.0, "loss": -0.1644, "grad_norm": 0.09008, "max_vector_l2": 0.47999, "step_wall_sec": 2.43}
+{"arm": "random_layer_control", "step": 2, "mean_verifier_reward": 0.625, "active_groups": 2, "mean_abs_kl": 0.03214, "loss": -0.2544, "grad_norm": 0.12921, "max_vector_l2": 0.76686, "step_wall_sec": 2.58}
+{"arm": "random_layer_control", "step": 3, "mean_verifier_reward": 0.75, "active_groups": 1, "mean_abs_kl": 0.11482, "loss": -0.032, "grad_norm": 0.10644, "max_vector_l2": 0.98818, "step_wall_sec": 2.11}
+{"arm": "random_layer_control", "step": 4, "mean_verifier_reward": 0.7, "active_groups": 2, "mean_abs_kl": 0.20309, "loss": -0.07466, "grad_norm": 0.05295, "max_vector_l2": 1.19619, "step_wall_sec": 2.4}
+{"arm": "random_layer_control", "step": 5, "mean_verifier_reward": 0.6, "active_groups": 2, "mean_abs_kl": 0.22065, "loss": -0.16908, "grad_norm": 0.09897, "max_vector_l2": 1.39319, "step_wall_sec": 2.45}
+{"arm": "random_layer_control", "step": 6, "mean_verifier_reward": 0.675, "active_groups": 2, "mean_abs_kl": 0.13365, "loss": 0.08088, "grad_norm": 0.06193, "max_vector_l2": 1.56536, "step_wall_sec": 2.39}
+{"arm": "random_layer_control", "step": 7, "mean_verifier_reward": 0.775, "active_groups": 2, "mean_abs_kl": 0.16485, "loss": 0.03475, "grad_norm": 0.06615, "max_vector_l2": 1.72273, "step_wall_sec": 2.36}
+{"arm": "random_layer_control", "step": 8, "mean_verifier_reward": 0.6, "active_groups": 2, "mean_abs_kl": 0.35838, "loss": 0.03225, "grad_norm": 0.08569, "max_vector_l2": 1.84809, "step_wall_sec": 2.47}
+{"arm": "lora_disjoint_control", "step": 1, "mean_reward": 0.625, "active_groups": 2, "kl_from_ref": 0.0, "loss": -0.06473, "grad_norm": 0.09582, "step_wall_sec": 7.62}
+{"arm": "lora_disjoint_control", "step": 2, "mean_reward": 0.7, "active_groups": 2, "kl_from_ref": 0.00223, "loss": -0.06334, "grad_norm": 0.11884, "step_wall_sec": 7.68}
+{"arm": "lora_disjoint_control", "step": 3, "mean_reward": 0.65, "active_groups": 2, "kl_from_ref": 0.00298, "loss": 0.00568, "grad_norm": 0.08938, "step_wall_sec": 8.27}
+{"arm": "lora_disjoint_control", "step": 4, "mean_reward": 0.55, "active_groups": 2, "kl_from_ref": 0.00886, "loss": -0.09615, "grad_norm": 0.10315, "step_wall_sec": 7.81}
+{"arm": "lora_disjoint_control", "step": 5, "mean_reward": 0.475, "active_groups": 2, "kl_from_ref": 0.00803, "loss": 0.00669, "grad_norm": 0.17672, "step_wall_sec": 7.75}
+{"arm": "lora_disjoint_control", "step": 6, "mean_reward": 0.875, "active_groups": 2, "kl_from_ref": 0.00708, "loss": -0.03405, "grad_norm": 0.07764, "step_wall_sec": 7.76}
+{"arm": "lora_disjoint_control", "step": 7, "mean_reward": 0.75, "active_groups": 2, "kl_from_ref": 0.00879, "loss": -0.07929, "grad_norm": 0.14508, "step_wall_sec": 8.11}
+{"arm": "lora_disjoint_control", "step": 8, "mean_reward": 0.75, "active_groups": 2, "kl_from_ref": 0.0123, "loss": -0.09501, "grad_norm": 0.12684, "step_wall_sec": 7.65}

@@ -1,0 +1,16 @@
+{"arm": "rl_only_zero_vectors_plain", "step": 1, "mean_reward": 0.725, "active_groups": 2, "dead_groups": 0, "hinted_groups": 0, "mean_abs_kl": 0.0, "mimic_loss": 0.0, "loss": -0.1644, "grad_norm": 0.01169}
+{"arm": "rl_only_zero_vectors_plain", "step": 2, "mean_reward": 0.65, "active_groups": 2, "dead_groups": 0, "hinted_groups": 0, "mean_abs_kl": 0.00298, "mimic_loss": 0.0, "loss": -0.24766, "grad_norm": 0.0253}
+{"arm": "rl_only_zero_vectors_plain", "step": 3, "mean_reward": 0.975, "active_groups": 1, "dead_groups": 1, "hinted_groups": 0, "mean_abs_kl": 0.02814, "mimic_loss": 0.0, "loss": -0.12358, "grad_norm": 0.01947}
+{"arm": "rl_only_zero_vectors_plain", "step": 4, "mean_reward": 0.75, "active_groups": 1, "dead_groups": 1, "hinted_groups": 0, "mean_abs_kl": 0.03153, "mimic_loss": 0.0, "loss": -0.51603, "grad_norm": 0.04798}
+{"arm": "rl_only_zero_vectors_plain", "step": 5, "mean_reward": 0.525, "active_groups": 1, "dead_groups": 1, "hinted_groups": 0, "mean_abs_kl": 0.02433, "mimic_loss": 0.0, "loss": 0.32607, "grad_norm": 0.0322}
+{"arm": "rl_only_zero_vectors_plain", "step": 6, "mean_reward": 0.825, "active_groups": 1, "dead_groups": 1, "hinted_groups": 0, "mean_abs_kl": 0.09561, "mimic_loss": 0.0, "loss": 0.34738, "grad_norm": 0.03628}
+{"arm": "rl_only_zero_vectors_plain", "step": 7, "mean_reward": 0.65, "active_groups": 2, "dead_groups": 0, "hinted_groups": 0, "mean_abs_kl": 0.06211, "mimic_loss": 0.0, "loss": -0.16918, "grad_norm": 0.01974}
+{"arm": "rl_only_zero_vectors_plain", "step": 8, "mean_reward": 0.65, "active_groups": 2, "dead_groups": 0, "hinted_groups": 0, "mean_abs_kl": 0.04932, "mimic_loss": 0.0, "loss": -0.1103, "grad_norm": 0.01142}
+{"arm": "ash_joint_hint_init_mixed", "step": 1, "mean_reward": 0.0, "active_groups": 0, "dead_groups": 2, "hinted_groups": 0, "mean_abs_kl": 0.0, "mimic_loss": 0.0, "loss": 0.0, "grad_norm": 0.0}
+{"arm": "ash_joint_hint_init_mixed", "step": 2, "mean_reward": 0.0, "active_groups": 0, "dead_groups": 2, "hinted_groups": 0, "mean_abs_kl": 0.0, "mimic_loss": 0.0, "loss": 0.0, "grad_norm": 0.0}
+{"arm": "ash_joint_hint_init_mixed", "step": 3, "mean_reward": 0.0, "active_groups": 0, "dead_groups": 2, "hinted_groups": 0, "mean_abs_kl": 0.0, "mimic_loss": 0.0, "loss": 0.0, "grad_norm": 0.0}
+{"arm": "ash_joint_hint_init_mixed", "step": 4, "mean_reward": 0.0, "active_groups": 0, "dead_groups": 2, "hinted_groups": 0, "mean_abs_kl": 0.0, "mimic_loss": 0.0, "loss": 0.0, "grad_norm": 0.0}
+{"arm": "ash_joint_hint_init_mixed", "step": 5, "mean_reward": 0.0, "active_groups": 0, "dead_groups": 2, "hinted_groups": 0, "mean_abs_kl": 0.0, "mimic_loss": 0.0, "loss": 0.0, "grad_norm": 0.0}
+{"arm": "ash_joint_hint_init_mixed", "step": 6, "mean_reward": 0.0, "active_groups": 0, "dead_groups": 2, "hinted_groups": 0, "mean_abs_kl": 0.0, "mimic_loss": 0.0, "loss": 0.0, "grad_norm": 0.0}
+{"arm": "ash_joint_hint_init_mixed", "step": 7, "mean_reward": 0.0, "active_groups": 0, "dead_groups": 2, "hinted_groups": 0, "mean_abs_kl": 0.0, "mimic_loss": 0.0, "loss": 0.0, "grad_norm": 0.0}
+{"arm": "ash_joint_hint_init_mixed", "step": 8, "mean_reward": 0.0, "active_groups": 0, "dead_groups": 2, "hinted_groups": 0, "mean_abs_kl": 0.0, "mimic_loss": 0.0, "loss": 0.0, "grad_norm": 0.0}

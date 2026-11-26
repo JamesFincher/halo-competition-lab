@@ -1,0 +1,16 @@
+{"arm": "targeted_lora_complement_allproj", "step": 1, "mean_reward": 0.625, "active_groups": 2, "kl_from_ref": 0.0, "loss": -0.06473, "grad_norm": 0.05085, "step_wall_sec": 21.27}
+{"arm": "targeted_lora_complement_allproj", "step": 2, "mean_reward": 0.7, "active_groups": 2, "kl_from_ref": 0.0004, "loss": -0.06359, "grad_norm": 0.06986, "step_wall_sec": 19.97}
+{"arm": "targeted_lora_complement_allproj", "step": 3, "mean_reward": 0.825, "active_groups": 2, "kl_from_ref": 0.00051, "loss": -0.02119, "grad_norm": 0.04463, "step_wall_sec": 22.72}
+{"arm": "targeted_lora_complement_allproj", "step": 4, "mean_reward": 0.55, "active_groups": 2, "kl_from_ref": 0.00093, "loss": -0.05258, "grad_norm": 0.05998, "step_wall_sec": 28.17}
+{"arm": "targeted_lora_complement_mlp_only", "step": 1, "mean_reward": 0.625, "active_groups": 2, "kl_from_ref": 0.0, "loss": -0.06473, "grad_norm": 0.03163, "step_wall_sec": 23.46}
+{"arm": "targeted_lora_complement_mlp_only", "step": 2, "mean_reward": 0.725, "active_groups": 2, "kl_from_ref": 0.00019, "loss": -0.06353, "grad_norm": 0.03637, "step_wall_sec": 23.79}
+{"arm": "targeted_lora_complement_mlp_only", "step": 3, "mean_reward": 0.825, "active_groups": 1, "kl_from_ref": 0.00024, "loss": 0.00857, "grad_norm": 0.0322, "step_wall_sec": 19.88}
+{"arm": "targeted_lora_complement_mlp_only", "step": 4, "mean_reward": 0.6, "active_groups": 2, "kl_from_ref": 0.00043, "loss": -0.0621, "grad_norm": 0.03307, "step_wall_sec": 18.77}
+{"arm": "partial_fullft_complement_allproj", "step": 1, "mean_reward": 0.725, "active_groups": 2, "dead_groups": 0, "mean_abs_kl": 0.0, "loss": -0.1644, "grad_norm": 0.52283, "complement_weight_drift_l2": 0.1127}
+{"arm": "partial_fullft_complement_allproj", "step": 2, "mean_reward": 0.65, "active_groups": 2, "dead_groups": 0, "mean_abs_kl": 0.01115, "loss": -0.25467, "grad_norm": 0.76058, "complement_weight_drift_l2": 0.17993}
+{"arm": "partial_fullft_complement_allproj", "step": 3, "mean_reward": 0.75, "active_groups": 1, "dead_groups": 1, "mean_abs_kl": 0.05805, "loss": 0.15043, "grad_norm": 1.15469, "complement_weight_drift_l2": 0.21711}
+{"arm": "partial_fullft_complement_allproj", "step": 4, "mean_reward": 0.7, "active_groups": 2, "dead_groups": 0, "mean_abs_kl": 0.05136, "loss": -0.05003, "grad_norm": 0.30306, "complement_weight_drift_l2": 0.25055}
+{"arm": "partial_fullft_complement_mlp_only", "step": 1, "mean_reward": 0.725, "active_groups": 2, "dead_groups": 0, "mean_abs_kl": 0.0, "loss": -0.1644, "grad_norm": 0.36488, "complement_weight_drift_l2": 0.09762}
+{"arm": "partial_fullft_complement_mlp_only", "step": 2, "mean_reward": 0.65, "active_groups": 2, "dead_groups": 0, "mean_abs_kl": 0.00875, "loss": -0.25298, "grad_norm": 0.61081, "complement_weight_drift_l2": 0.15631}
+{"arm": "partial_fullft_complement_mlp_only", "step": 3, "mean_reward": 0.75, "active_groups": 1, "dead_groups": 1, "mean_abs_kl": 0.0474, "loss": 0.15283, "grad_norm": 0.87985, "complement_weight_drift_l2": 0.18634}
+{"arm": "partial_fullft_complement_mlp_only", "step": 4, "mean_reward": 0.725, "active_groups": 2, "dead_groups": 0, "mean_abs_kl": 0.04477, "loss": -0.11707, "grad_norm": 0.30301, "complement_weight_drift_l2": 0.21531}

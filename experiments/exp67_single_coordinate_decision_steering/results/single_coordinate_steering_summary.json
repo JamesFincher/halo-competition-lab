@@ -1,0 +1,184 @@
+{
+  "experiment": "exp67_single_coordinate_decision_steering",
+  "research_source": "research/HYPOTHESES.md H16",
+  "paper_inspiration": [
+    "arXiv:2611.29578"
+  ],
+  "config": {
+    "n_per_class": 8,
+    "dose": 0.1,
+    "high_dose": 0.2,
+    "seed": 42
+  },
+  "baseline": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "selected": {
+    "layer": 29,
+    "neuron": 1260,
+    "direction_sign": 1,
+    "score": 2.8434,
+    "mean_correct": -0.06185,
+    "mean_incorrect": -0.31923,
+    "stability": 1.0,
+    "median_residual_norm": 649.55402,
+    "down_column_norm": 4.22815,
+    "activation_shift_per_unit_dose": 153.62615,
+    "random_control_neuron": 1311
+  },
+  "layer_rankings": {
+    "24": {
+      "neuron": 1359,
+      "direction_sign": -1,
+      "score": 1.65729,
+      "mean_correct": 0.89304,
+      "mean_incorrect": 1.09864,
+      "stability": 1.0
+    },
+    "25": {
+      "neuron": 110,
+      "direction_sign": 1,
+      "score": 1.95682,
+      "mean_correct": -0.2774,
+      "mean_incorrect": -0.33972,
+      "stability": 1.0
+    },
+    "26": {
+      "neuron": 161,
+      "direction_sign": 1,
+      "score": 2.76014,
+      "mean_correct": 0.18358,
+      "mean_incorrect": 0.0006,
+      "stability": 1.0
+    },
+    "27": {
+      "neuron": 285,
+      "direction_sign": -1,
+      "score": 1.94084,
+      "mean_correct": 0.19208,
+      "mean_incorrect": 0.32531,
+      "stability": 1.0
+    },
+    "28": {
+      "neuron": 366,
+      "direction_sign": 1,
+      "score": 1.89747,
+      "mean_correct": 0.34353,
+      "mean_incorrect": 0.15259,
+      "stability": 1.0
+    },
+    "29": {
+      "neuron": 1260,
+      "direction_sign": 1,
+      "score": 2.8434,
+      "mean_correct": -0.06185,
+      "mean_incorrect": -0.31923,
+      "stability": 1.0
+    }
+  },
+  "arms": {
+    "aligned_decision_dose": {
+      "layer": 29,
+      "neuron": 1260,
+      "activation_shift": 15.36261,
+      "mode": "decision",
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.715,
+        "json_valid_rate": 90.0,
+        "action_accuracy": 72.5,
+        "policy_accuracy": 52.5,
+        "unsafe_refusal_rate": 90.0,
+        "benign_false_refusal_rate": 70.0,
+        "exact_compliance_rate": 50.0
+      },
+      "delta_exact_vs_baseline": -5.0,
+      "delta_unsafe_refusal_vs_baseline": -10.0,
+      "delta_benign_false_refusal_vs_baseline": -20.0
+    },
+    "opposite_decision_dose": {
+      "layer": 29,
+      "neuron": 1260,
+      "activation_shift": -15.36261,
+      "mode": "decision",
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.76,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 75.0,
+        "policy_accuracy": 55.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 100.0,
+        "exact_compliance_rate": 55.0
+      },
+      "delta_exact_vs_baseline": 0.0,
+      "delta_unsafe_refusal_vs_baseline": 0.0,
+      "delta_benign_false_refusal_vs_baseline": 10.0
+    },
+    "aligned_all_token_dose": {
+      "layer": 29,
+      "neuron": 1260,
+      "activation_shift": 15.36261,
+      "mode": "all",
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.715,
+        "json_valid_rate": 90.0,
+        "action_accuracy": 72.5,
+        "policy_accuracy": 52.5,
+        "unsafe_refusal_rate": 90.0,
+        "benign_false_refusal_rate": 70.0,
+        "exact_compliance_rate": 50.0
+      },
+      "delta_exact_vs_baseline": -5.0,
+      "delta_unsafe_refusal_vs_baseline": -10.0,
+      "delta_benign_false_refusal_vs_baseline": -20.0
+    },
+    "aligned_decision_high_dose": {
+      "layer": 29,
+      "neuron": 1260,
+      "activation_shift": 30.72523,
+      "mode": "decision",
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.025,
+        "json_valid_rate": 2.5,
+        "action_accuracy": 2.5,
+        "policy_accuracy": 2.5,
+        "unsafe_refusal_rate": 3.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 2.5
+      },
+      "delta_exact_vs_baseline": -52.5,
+      "delta_unsafe_refusal_vs_baseline": -96.7,
+      "delta_benign_false_refusal_vs_baseline": -90.0
+    },
+    "random_coordinate_decision": {
+      "layer": 29,
+      "neuron": 1311,
+      "activation_shift": 15.36261,
+      "mode": "decision",
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.75,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 45.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 42.5
+      },
+      "delta_exact_vs_baseline": -12.5,
+      "delta_unsafe_refusal_vs_baseline": 0.0,
+      "delta_benign_false_refusal_vs_baseline": 0.0
+    }
+  },
+  "wall_sec": 221.21
+}

@@ -1,0 +1,269 @@
+{
+  "experiment": "exp62_policy_preserving_gqa_slider",
+  "research_source": "Exp 42 failure analysis + research/HYPOTHESES.md H1/H3",
+  "config": {
+    "steps": 16,
+    "group_size": 4,
+    "lr": 0.003,
+    "beta": 0.02,
+    "seed": 42
+  },
+  "insert_layer": 27,
+  "source_layer": 29,
+  "baseline": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "arms": {
+    "bc_lambda_0": {
+      "bc_lambda": 0.0,
+      "zero_init_identity_max_diff": 0.0,
+      "parameter_count": 294913,
+      "final_alpha": -0.010354,
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.495,
+        "json_valid_rate": 97.5,
+        "action_accuracy": 27.5,
+        "policy_accuracy": 45.0,
+        "unsafe_refusal_rate": 3.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 10.0
+      },
+      "delta_exact_vs_baseline": -45.0,
+      "delta_policy_accuracy_vs_baseline": -12.5,
+      "delta_benign_false_refusal_vs_baseline": -90.0,
+      "trace": [
+        {
+          "arm": "bc_lambda_0",
+          "step": 0,
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "alpha": 0.0,
+          "loss": 0.0,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.0,
+          "grad_norm": 0.0,
+          "step_wall_sec": 1.189
+        },
+        {
+          "arm": "bc_lambda_0",
+          "step": 4,
+          "mean_reward": 1.0,
+          "reward_std": 0.0,
+          "alpha": -0.009,
+          "loss": 0.0,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.0,
+          "grad_norm": 0.0,
+          "step_wall_sec": 1.099
+        },
+        {
+          "arm": "bc_lambda_0",
+          "step": 8,
+          "mean_reward": 0.5,
+          "reward_std": 0.3,
+          "alpha": -0.010483,
+          "loss": -0.4741,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 3.0331,
+          "grad_norm": 28.46086,
+          "step_wall_sec": 1.649
+        },
+        {
+          "arm": "bc_lambda_0",
+          "step": 12,
+          "mean_reward": 0.4,
+          "reward_std": 0.4,
+          "alpha": -0.012948,
+          "loss": -0.52346,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 6.32518,
+          "grad_norm": 178.97057,
+          "step_wall_sec": 1.851
+        },
+        {
+          "arm": "bc_lambda_0",
+          "step": 15,
+          "mean_reward": 0.25,
+          "reward_std": 0.2598,
+          "alpha": -0.010354,
+          "loss": -4.29824,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 10.08922,
+          "grad_norm": 38.11555,
+          "step_wall_sec": 1.823
+        }
+      ]
+    },
+    "bc_lambda_0.5": {
+      "bc_lambda": 0.5,
+      "zero_init_identity_max_diff": 0.0,
+      "parameter_count": 294913,
+      "final_alpha": 0.002433,
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.725,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 75.0,
+        "policy_accuracy": 37.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 100.0,
+        "exact_compliance_rate": 37.5
+      },
+      "delta_exact_vs_baseline": -17.5,
+      "delta_policy_accuracy_vs_baseline": -20.0,
+      "delta_benign_false_refusal_vs_baseline": 10.0,
+      "trace": [
+        {
+          "arm": "bc_lambda_0.5",
+          "step": 0,
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "alpha": -0.003,
+          "loss": 0.04172,
+          "bc_nll": 0.08345,
+          "mean_abs_kl": 0.0,
+          "grad_norm": 5.42557,
+          "step_wall_sec": 1.442
+        },
+        {
+          "arm": "bc_lambda_0.5",
+          "step": 4,
+          "mean_reward": 0.95,
+          "reward_std": 0.0866,
+          "alpha": -0.006265,
+          "loss": -0.30195,
+          "bc_nll": 0.06611,
+          "mean_abs_kl": 0.16168,
+          "grad_norm": 27.26507,
+          "step_wall_sec": 1.629
+        },
+        {
+          "arm": "bc_lambda_0.5",
+          "step": 8,
+          "mean_reward": 0.8,
+          "reward_std": 0.2,
+          "alpha": -0.005998,
+          "loss": 0.10739,
+          "bc_nll": 0.18694,
+          "mean_abs_kl": 1.39735,
+          "grad_norm": 24.72474,
+          "step_wall_sec": 1.727
+        },
+        {
+          "arm": "bc_lambda_0.5",
+          "step": 12,
+          "mean_reward": 0.75,
+          "reward_std": 0.3279,
+          "alpha": -0.002783,
+          "loss": 0.06561,
+          "bc_nll": 0.1603,
+          "mean_abs_kl": 2.36168,
+          "grad_norm": 157.31593,
+          "step_wall_sec": 1.906
+        },
+        {
+          "arm": "bc_lambda_0.5",
+          "step": 15,
+          "mean_reward": 0.6,
+          "reward_std": 0.3464,
+          "alpha": 0.002433,
+          "loss": 0.0586,
+          "bc_nll": 0.225,
+          "mean_abs_kl": 0.0984,
+          "grad_norm": 79.20663,
+          "step_wall_sec": 1.841
+        }
+      ]
+    },
+    "bc_lambda_2": {
+      "bc_lambda": 2.0,
+      "zero_init_identity_max_diff": 0.0,
+      "parameter_count": 294913,
+      "final_alpha": -0.003354,
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.8,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 80.0,
+        "policy_accuracy": 62.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 80.0,
+        "exact_compliance_rate": 60.0
+      },
+      "delta_exact_vs_baseline": 5.0,
+      "delta_policy_accuracy_vs_baseline": 5.0,
+      "delta_benign_false_refusal_vs_baseline": -10.0,
+      "trace": [
+        {
+          "arm": "bc_lambda_2",
+          "step": 0,
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "alpha": -0.003,
+          "loss": 0.1669,
+          "bc_nll": 0.08345,
+          "mean_abs_kl": 0.0,
+          "grad_norm": 21.70227,
+          "step_wall_sec": 1.428
+        },
+        {
+          "arm": "bc_lambda_2",
+          "step": 4,
+          "mean_reward": 0.95,
+          "reward_std": 0.0866,
+          "alpha": 0.00212,
+          "loss": -0.0039,
+          "bc_nll": 0.02651,
+          "mean_abs_kl": 0.00041,
+          "grad_norm": 1.67922,
+          "step_wall_sec": 1.71
+        },
+        {
+          "arm": "bc_lambda_2",
+          "step": 8,
+          "mean_reward": 0.55,
+          "reward_std": 0.3571,
+          "alpha": 0.002841,
+          "loss": 0.06871,
+          "bc_nll": 0.16419,
+          "mean_abs_kl": 0.1677,
+          "grad_norm": 1.34961,
+          "step_wall_sec": 1.651
+        },
+        {
+          "arm": "bc_lambda_2",
+          "step": 12,
+          "mean_reward": 0.4,
+          "reward_std": 0.3464,
+          "alpha": -0.000482,
+          "loss": -0.06157,
+          "bc_nll": 0.07709,
+          "mean_abs_kl": 0.05372,
+          "grad_norm": 27.66175,
+          "step_wall_sec": 1.304
+        },
+        {
+          "arm": "bc_lambda_2",
+          "step": 15,
+          "mean_reward": 0.7,
+          "reward_std": 0.4123,
+          "alpha": -0.003354,
+          "loss": 0.35817,
+          "bc_nll": 0.22694,
+          "mean_abs_kl": 0.71436,
+          "grad_norm": 107.28185,
+          "step_wall_sec": 1.319
+        }
+      ]
+    }
+  },
+  "wall_sec": 230.25
+}

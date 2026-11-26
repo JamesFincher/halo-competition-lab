@@ -1,0 +1,245 @@
+{
+  "experiment": "exp61_keyed_zero_gqa_slider",
+  "research_source": "research/HYPOTHESES.md H1 exact-zero keyed modular implant bank",
+  "paper_inspiration": [
+    "arXiv:2611.28483"
+  ],
+  "config": {
+    "steps": 18,
+    "group_size": 4,
+    "lr": 0.003,
+    "beta": 0.02,
+    "seed": 42
+  },
+  "insert_layer": 27,
+  "source_layer": 29,
+  "baseline": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "key_calibration": {
+    "benign_final_token_gate_positive_rate": 1.0,
+    "unsafe_final_token_gate_positive_rate": 0.0833,
+    "benign_projection_mean": -4.90479,
+    "unsafe_projection_mean": -69.08929,
+    "threshold": -53.47289,
+    "scale": 36.30532
+  },
+  "arms": {
+    "always_on_warm_gqa": {
+      "keyed": false,
+      "zero_alpha_identity_max_diff": 0.0,
+      "parameter_count": 294913,
+      "final_alpha": -0.007306,
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.705,
+        "json_valid_rate": 95.0,
+        "action_accuracy": 70.0,
+        "policy_accuracy": 42.5,
+        "unsafe_refusal_rate": 60.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 27.5
+      },
+      "delta_exact_vs_baseline": -27.5,
+      "delta_benign_false_refusal_vs_baseline": -90.0,
+      "trace": [
+        {
+          "arm": "always_on_warm_gqa",
+          "step": 0,
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "alpha": 0.0,
+          "loss": 0.0,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.0,
+          "grad_norm": 0.0,
+          "step_wall_sec": 1.238
+        },
+        {
+          "arm": "always_on_warm_gqa",
+          "step": 3,
+          "mean_reward": 0.7,
+          "reward_std": 0.1732,
+          "alpha": -0.009,
+          "loss": -0.53792,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.67267,
+          "grad_norm": 85.35599,
+          "step_wall_sec": 1.522
+        },
+        {
+          "arm": "always_on_warm_gqa",
+          "step": 6,
+          "mean_reward": 0.2,
+          "reward_std": 0.3464,
+          "alpha": -0.01026,
+          "loss": 0.42044,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 1.8175,
+          "grad_norm": 45.9049,
+          "step_wall_sec": 1.701
+        },
+        {
+          "arm": "always_on_warm_gqa",
+          "step": 9,
+          "mean_reward": 0.25,
+          "reward_std": 0.1658,
+          "alpha": -0.0113,
+          "loss": -3.15612,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 5.12405,
+          "grad_norm": 303.5498,
+          "step_wall_sec": 1.704
+        },
+        {
+          "arm": "always_on_warm_gqa",
+          "step": 12,
+          "mean_reward": 0.4,
+          "reward_std": 0.4,
+          "alpha": -0.012948,
+          "loss": -0.52346,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 6.32518,
+          "grad_norm": 178.97057,
+          "step_wall_sec": 1.855
+        },
+        {
+          "arm": "always_on_warm_gqa",
+          "step": 15,
+          "mean_reward": 0.25,
+          "reward_std": 0.2598,
+          "alpha": -0.010354,
+          "loss": -4.29824,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 10.08922,
+          "grad_norm": 38.11555,
+          "step_wall_sec": 1.803
+        },
+        {
+          "arm": "always_on_warm_gqa",
+          "step": 17,
+          "mean_reward": 0.25,
+          "reward_std": 0.3279,
+          "alpha": -0.007306,
+          "loss": 0.06848,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 1.51917,
+          "grad_norm": 19.25386,
+          "step_wall_sec": 1.875
+        }
+      ]
+    },
+    "keyed_zero_warm_gqa": {
+      "keyed": true,
+      "zero_alpha_identity_max_diff": 0.0,
+      "parameter_count": 295490,
+      "final_alpha": 0.018071,
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.5,
+        "json_valid_rate": 72.5,
+        "action_accuracy": 67.5,
+        "policy_accuracy": 22.5,
+        "unsafe_refusal_rate": 90.0,
+        "benign_false_refusal_rate": 20.0,
+        "exact_compliance_rate": 10.0
+      },
+      "delta_exact_vs_baseline": -45.0,
+      "delta_benign_false_refusal_vs_baseline": -70.0,
+      "trace": [
+        {
+          "arm": "keyed_zero_warm_gqa",
+          "step": 0,
+          "mean_reward": 0.2,
+          "reward_std": 0.0,
+          "alpha": 0.0,
+          "loss": 0.0,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.0,
+          "grad_norm": 0.0,
+          "step_wall_sec": 1.342
+        },
+        {
+          "arm": "keyed_zero_warm_gqa",
+          "step": 3,
+          "mean_reward": 0.55,
+          "reward_std": 0.3841,
+          "alpha": 0.00681,
+          "loss": 0.36364,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.63336,
+          "grad_norm": 13.57807,
+          "step_wall_sec": 1.853
+        },
+        {
+          "arm": "keyed_zero_warm_gqa",
+          "step": 6,
+          "mean_reward": 0.3,
+          "reward_std": 0.3,
+          "alpha": 0.00967,
+          "loss": 0.64447,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.37576,
+          "grad_norm": 25.98059,
+          "step_wall_sec": 1.679
+        },
+        {
+          "arm": "keyed_zero_warm_gqa",
+          "step": 9,
+          "mean_reward": 0.15,
+          "reward_std": 0.2598,
+          "alpha": 0.011242,
+          "loss": 0.78694,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.80488,
+          "grad_norm": 10.16861,
+          "step_wall_sec": 1.799
+        },
+        {
+          "arm": "keyed_zero_warm_gqa",
+          "step": 12,
+          "mean_reward": 0.05,
+          "reward_std": 0.0866,
+          "alpha": 0.014498,
+          "loss": 0.48975,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.7603,
+          "grad_norm": 8.49262,
+          "step_wall_sec": 1.859
+        },
+        {
+          "arm": "keyed_zero_warm_gqa",
+          "step": 15,
+          "mean_reward": 0.7,
+          "reward_std": 0.4123,
+          "alpha": 0.017245,
+          "loss": 0.16959,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.26251,
+          "grad_norm": 5.78259,
+          "step_wall_sec": 1.824
+        },
+        {
+          "arm": "keyed_zero_warm_gqa",
+          "step": 17,
+          "mean_reward": 0.5,
+          "reward_std": 0.3,
+          "alpha": 0.018071,
+          "loss": 0.12559,
+          "bc_nll": 0.0,
+          "mean_abs_kl": 0.66162,
+          "grad_norm": 4.15585,
+          "step_wall_sec": 1.789
+        }
+      ]
+    }
+  },
+  "wall_sec": 191.38
+}
