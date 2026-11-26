@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experiment 34: fp32-Master Edit -> bf16 Cast Production Pipeline.
+"""Experiment 40: fp32-Master Edit -> bf16 Cast Production Pipeline.
 
 Wave-1 finding: editing directly in bf16 destroys the circuit (DLA 15% vs random 47.5% —
 a full inversion of fp32 results). Production Halo trains in bf16, so the comp-critical
@@ -36,7 +36,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     out = ROOT / "experiments/fp32_master_edit_pipeline/results"
     out.mkdir(parents=True, exist_ok=True)
-    print(f"[Exp 34] fp32-Master Edit Pipeline on {device}", flush=True)
+    print(f"[Exp 40] fp32-Master Edit Pipeline on {device}", flush=True)
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl")
     eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
     tok = AutoTokenizer.from_pretrained("HuggingFaceTB/SmolLM2-135M-Instruct")
@@ -91,7 +91,7 @@ def main():
     summary = {"device": str(device), "wall_sec": round(time.time()-t0,2), "results": results,
                "question": "does fp32-edit-then-cast preserve surgical precision in a bf16 production model?"}
     (out/"fp32_pipeline_summary.json").write_text(json.dumps(summary, indent=2))
-    print(f"[Exp 34 DONE] in {summary['wall_sec']}s", flush=True)
+    print(f"[Exp 40 DONE] in {summary['wall_sec']}s", flush=True)
 
 if __name__ == "__main__":
     main()
