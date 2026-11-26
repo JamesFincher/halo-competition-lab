@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T09:56:06+00:00",
+  "generated_at_utc": "2026-11-26T09:57:58+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -502,6 +502,7 @@
     "exp58_attention_head_sparse_rl",
     "exp59_warm_gqa_slider_heads",
     "exp60_benign_keyed_refusal_inverter",
+    "exp61_keyed_zero_gqa_slider",
     "multi_seed_stability_sweep"
   ],
   "duplicate_experiment_numbers": {},
@@ -527,5 +528,22 @@
       "file": "experiments/inverse_causal_patching/results/causal_patching_summary.json",
       "commit": "01f32cf51838fb9c44c494ed2eacf9a402e642dc 2026-11-26T09:05:15Z Add Exp 39: operator sensitivity showdown (replication-integrity control)"
     }
-  ]
+  ],
+  "semantic_validity_notes": {
+    "original_operator_replication": [
+      "mislabeled replication target: implementation uses Exp12 false-node selection, not Exp17 probe1-DLA or probe4-IG selection; the 80-82.5% CPU-era DLA/IG result remains untested on GPU"
+    ],
+    "slider_gated_attention_head": [
+      "architecturally valid zero-init insert but exactness-negative: benign false refusal improves 90->30 while exact falls 55->42.5 and unsafe refusal falls 100->90"
+    ],
+    "whitened_subspace_rfm_edit": [
+      "raw_rank1 is the valid positive arm; safety_null_rank2/3/4 are accepted_strength=0 no-op baseline copies, not active interventions"
+    ],
+    "inverse_causal_patching": [
+      "identity artifact: source and target selection still alias the same minimum-margin prompt, producing all-zero layer deltas"
+    ],
+    "steering_oracle_guided_rl": [
+      "result file was overwritten in place during the mega-wave harvest; previous values exist in git history but not as a side-by-side backup"
+    ]
+  }
 }

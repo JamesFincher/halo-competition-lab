@@ -401,7 +401,10 @@
     "n_eval": 40,
     "mean_reward": 0.815,
     "action_accuracy": 80.0,
-    "policy_accuracy": 70.0
+    "policy_accuracy": 70.0,
+    "validity_warnings": [
+      "mislabeled replication target: implementation uses Exp12 false-node selection, not Exp17 probe1-DLA or probe4-IG selection; the 80-82.5% CPU-era DLA/IG result remains untested on GPU"
+    ]
   },
   "random_node_control_proof": {
     "best_arm": "dla_top64",
@@ -523,7 +526,10 @@
     "n_eval": 40,
     "mean_reward": 0.775,
     "action_accuracy": 85.0,
-    "policy_accuracy": 42.5
+    "policy_accuracy": 42.5,
+    "validity_warnings": [
+      "architecturally valid zero-init insert but exactness-negative: benign false refusal improves 90->30 while exact falls 55->42.5 and unsafe refusal falls 100->90"
+    ]
   },
   "steering_oracle_guided_rl": {
     "best_arm": "plain_rl",
@@ -547,7 +553,8 @@
     "action_accuracy": 25.0,
     "policy_accuracy": 25.0,
     "validity_warnings": [
-      "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking"
+      "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking",
+      "result file was overwritten in place during the mega-wave harvest; previous values exist in git history but not as a side-by-side backup"
     ]
   },
   "targeted_circuit_rl": {
@@ -595,7 +602,10 @@
     "n_eval": 40,
     "mean_reward": 0.885,
     "action_accuracy": 92.5,
-    "policy_accuracy": 80.0
+    "policy_accuracy": 80.0,
+    "validity_warnings": [
+      "raw_rank1 is the valid positive arm; safety_null_rank2/3/4 are accepted_strength=0 no-op baseline copies, not active interventions"
+    ]
   },
   "zero_shock_stitched_head_rl": {
     "best_arm": "eval",

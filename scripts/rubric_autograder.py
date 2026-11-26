@@ -49,6 +49,26 @@ CONTROL_TOKENS = (
     "anti_bottom",
 )
 
+# Semantic QC findings that cannot be inferred reliably from metrics alone. Keep these
+# attached to generated scores so later automated refreshes do not silently lose them.
+EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
+    "original_operator_replication": [
+        "mislabeled replication target: implementation uses Exp12 false-node selection, not Exp17 probe1-DLA or probe4-IG selection; the 80-82.5% CPU-era DLA/IG result remains untested on GPU"
+    ],
+    "slider_gated_attention_head": [
+        "architecturally valid zero-init insert but exactness-negative: benign false refusal improves 90->30 while exact falls 55->42.5 and unsafe refusal falls 100->90"
+    ],
+    "whitened_subspace_rfm_edit": [
+        "raw_rank1 is the valid positive arm; safety_null_rank2/3/4 are accepted_strength=0 no-op baseline copies, not active interventions"
+    ],
+    "inverse_causal_patching": [
+        "identity artifact: source and target selection still alias the same minimum-margin prompt, producing all-zero layer deltas"
+    ],
+    "steering_oracle_guided_rl": [
+        "result file was overwritten in place during the mega-wave harvest; previous values exist in git history but not as a side-by-side backup"
+    ],
+}
+
 
 def metric_triple(ev: dict[str, Any]) -> tuple[float, float, float]:
     return (
@@ -342,6 +362,7 @@ def grade_results() -> tuple[dict[str, Any], dict[str, Any]]:
             scored.append((cand, scored_cand))
         best_cand, best_score = max(scored, key=lambda item: item[1]["composite"])
         warnings = warnings_for_metrics(data, best_cand["eval"])
+        warnings.extend(EXPERIMENT_VALIDITY_NOTES.get(exp, []))
         if best_cand["meta"].get("accepted") is False or best_cand["meta"].get("gate_accepted") is False:
             warnings.append("gate rejected the edit; result is a no-op baseline copy, not a deployed intervention")
         if best_cand["meta"].get("accepted_strength") == 0.0:
@@ -382,6 +403,11 @@ def grade_results() -> tuple[dict[str, Any], dict[str, Any]]:
         "duplicate_experiment_numbers": duplicates,
         "missing_experiment_numbers": gaps,
         "inplace_result_overwrite_warnings": inplace_result_overwrites(),
+        "semantic_validity_notes": {
+            exp: notes
+            for exp, notes in EXPERIMENT_VALIDITY_NOTES.items()
+            if (ROOT / "experiments" / exp).exists()
+        },
     }
     return scores, integrity
 
