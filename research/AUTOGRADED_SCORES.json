@@ -949,7 +949,7 @@
       "same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected",
       "partial/nonstandard eval n=120 (canonical heldout n=40)",
       "P gain uses same-run/model exact baseline 15.8%, not the canonical 135M SFT baseline",
-      "benchmark-selective expert targeting is falsified as the capability mechanism: random experts match/beat it on MMLU and ARC while showing the same HellaSwag decline; behavior eval is still v1 leakage-limited and export validation fails exactly"
+      "no selectivity advantage was observed under unmatched adapter initialization: random experts matched/beat selective experts on MMLU and ARC while showing the same HellaSwag decline, but init was not controlled across arms; behavior eval is still v1 leakage-limited and export validation fails exactly"
     ]
   },
   "exp34_activation_vector_only_rl": {

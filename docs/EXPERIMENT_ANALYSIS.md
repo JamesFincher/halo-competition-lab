@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 20:54 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
+Last updated: 2026-11-26 20:56 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
 
 ## Executive synthesis — current validated state
 
@@ -176,7 +176,7 @@ This table is generated from `research/AUTOGRADED_SCORES.json` and covers every 
 | 147 | `exp147_additive_capability_behavior_union` | `behavior_alone` | 50.0% | 93.3% | 90.0% | 52.5% | 4.05 | D | cache-corrected behavior-only head is near-baseline rather than destructive; capability/behavior unions and learned blends are exactness-negative, so… |
 | 149 | `exp149_h22_continuation_followup` | `h22_seed7` | 82.5% | 93.3% | 0.0% | 95.0% | 7.70 | A | continuation follow-up strengthens H22: exported artifacts preserve 82.5/93.3/0 across seeds 7/42/123 with zero legacy benchmark delta and at most a … |
 | 150 | `exp150_l20_cache_corrected_seed_replication` | `seed42` | 72.5% | 90.0% | 0.0% | 80.0% | 6.50 | C | cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 … |
-| 154 | `exp154_olmoe_benchmark_selective_expert_adapters` | `benchmark_selective_rank8` | 20.8% | 75.0% | 46.7% | 26.7% | 4.00 | D | benchmark-selective expert targeting is falsified as the capability mechanism: random experts match/beat it on MMLU and ARC while showing the same He… |
+| 154 | `exp154_olmoe_benchmark_selective_expert_adapters` | `benchmark_selective_rank8` | 20.8% | 75.0% | 46.7% | 26.7% | 4.00 | D | no selectivity advantage was observed under unmatched adapter initialization: random experts matched/beat selective experts on MMLU and ARC while sho… |
 | — | `slider_head_fork/v1_single` | `final` | 57.5% | 100.0% | 60.0% | 62.5% | 5.70 | C | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width c… |
 | — | `slider_head_fork/v2_bank4` | `final` | 0.0% | 0.0% | 0.0% | 0.0% | 3.85 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width c… |
 | — | `slider_head_fork/v3_deep_spread` | `final` | 0.0% | 0.0% | 0.0% | 0.0% | 3.85 | D | legacy generation-cache artifact: pre-fix cached decoding made inserted heads token-local rather than full-context; all fork behavioral/depth/width c… |
@@ -200,7 +200,7 @@ These completed experiments do not expose a standard intervention metric schema,
 
 ## Missing or pending result JSONs
 
-Integrity scan: **109 files**, **199 warnings**. Missing-result experiment directories currently reported: `exp120_drift_triggered_orthogonal_lanes`, `exp121_curvature_constrained_delta_rl`, `exp122_operator_discrepancy_rank_audit`, `exp123_input_gated_kronecker_lanes`, `exp124_ems_anchor_preserving_subspace_edit`, `exp125_displacement_probe_edit_auditor`, `exp127_budgeted_decision_token_steering`, `exp128_trajectory_collateral_repair_adapter`, `exp131_context_gated_dose_cancellation`, `exp133_alpha_init_continuation_confirmation`, `exp152_qwen3_behavioral_scale_pivot`, `exp155_olmoe_expert_surface_controls`, `exp156_qwen3_entity_disjoint_seed_replication`, `exp158_olmoe_capability_data_mechanism`, `exp97_independent_alpha_init_scale`, `inverse_causal_patching`.
+Integrity scan: **109 files**, **199 warnings**. Missing-result experiment directories currently reported: `exp120_drift_triggered_orthogonal_lanes`, `exp121_curvature_constrained_delta_rl`, `exp122_operator_discrepancy_rank_audit`, `exp123_input_gated_kronecker_lanes`, `exp124_ems_anchor_preserving_subspace_edit`, `exp125_displacement_probe_edit_auditor`, `exp127_budgeted_decision_token_steering`, `exp128_trajectory_collateral_repair_adapter`, `exp131_context_gated_dose_cancellation`, `exp133_alpha_init_continuation_confirmation`, `exp152_qwen3_behavioral_scale_pivot`, `exp155_olmoe_expert_surface_controls`, `exp156_qwen3_entity_disjoint_seed_replication`, `exp158_olmoe_capability_data_mechanism`, `exp159_olmoe_export_precision_diagnosis`, `exp97_independent_alpha_init_scale`, `inverse_causal_patching`.
 
 ## Historical wave-1/2/3 caveat
 

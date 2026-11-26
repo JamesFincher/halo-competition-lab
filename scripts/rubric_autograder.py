@@ -141,7 +141,7 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
     ],
     "exp154_olmoe_benchmark_selective_expert_adapters": [
-        "benchmark-selective expert targeting is falsified as the capability mechanism: random experts match/beat it on MMLU and ARC while showing the same HellaSwag decline; behavior eval is still v1 leakage-limited and export validation fails exactly"
+        "no selectivity advantage was observed under unmatched adapter initialization: random experts matched/beat selective experts on MMLU and ARC while showing the same HellaSwag decline, but init was not controlled across arms; behavior eval is still v1 leakage-limited and export validation fails exactly"
     ],
     "exp155_olmoe_expert_surface_controls": [
         "primary behavior_scaled120 surface is entity-disjoint corpus v2 with v1 retained only as a bridge; control comparisons remain internally valid, but compare behavior collateral against the same-file OLMoE baseline rather than canonical 135M metrics"
