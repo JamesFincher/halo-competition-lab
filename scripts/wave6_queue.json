@@ -1,0 +1,12 @@
+{
+ "experiments": [
+  {
+   "name": "exp42_slider_gated_head",
+   "script": "experiments/slider_gated_attention_head/scripts/run_slider_head.py"
+  },
+  {
+   "name": "benchmark_baseline",
+   "script": "scripts/industry_benchmark.py"
+  }
+ ]
+}
