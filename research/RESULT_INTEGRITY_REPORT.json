@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T12:53:15+00:00",
+  "generated_at_utc": "2026-11-26T13:10:47+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -177,6 +177,122 @@
       "bytes": 14739,
       "warnings": [],
       "metric_paths": 10
+    },
+    {
+      "file": "experiments/exp129_sparse_edit_strength_response/results/sparse_edit_strength_response_summary.json",
+      "bytes": 8444,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/strength_0p5/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/strength_0p5/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/strength_0p7/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/strength_0p7/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/strength_0p9/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/strength_0p9/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/strength_1p2/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/strength_1p2/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 9
+    },
+    {
+      "file": "experiments/exp130_sparse_edit_column_count_response/results/sparse_edit_column_count_response_summary.json",
+      "bytes": 8391,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/columns_4/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/columns_4/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/columns_8/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/columns_8/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/columns_16/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/columns_16/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/columns_32/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/columns_32/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 9
+    },
+    {
+      "file": "experiments/exp132_capability_objective_slider_ablation/results/capability_objective_slider_ablation_summary.json",
+      "bytes": 59974,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/capability_only/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/capability_only/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/behavior_only/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/hybrid_capability_primary/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/hybrid_capability_primary/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 7
     },
     {
       "file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
@@ -1275,16 +1391,15 @@
     "exp126_spectral_sink_microgates",
     "exp127_budgeted_decision_token_steering",
     "exp128_trajectory_collateral_repair_adapter",
-    "exp129_sparse_edit_strength_response",
-    "exp130_sparse_edit_column_count_response",
     "exp131_context_gated_dose_cancellation",
-    "exp132_capability_objective_slider_ablation",
     "exp133_alpha_init_continuation_confirmation",
     "exp134_routed_width_mixture_head",
     "exp135_capability_behavior_head_blend",
     "exp136_sparse_context_gated_dose_cancellation",
     "exp137_cross_layer_cascade_blend",
     "exp138_subtractive_frozen_head_gate",
+    "exp139_cache_corrected_capability_objective",
+    "exp140_answer_focused_capability_objective",
     "exp82_rank1_rl_trajectory_extrapolation",
     "exp84_momentum_carryover_half_edit",
     "exp87_multiperspective_abstention_factorization",
@@ -1421,6 +1536,15 @@
     ],
     "exp101_merge_aware_served_weight_finetune": [
       "standard unrounded comparators are excluded; merge-aware served-weight action-only training preserves unsafe refusal but is exactness-negative relative to the post-edit anchor"
+    ],
+    "exp129_sparse_edit_strength_response": [
+      "ultra-sparse 16-column-per-layer edit has a strong dose response and exact zero benchmark movement at the best dose; independently matches exp130 columns_16"
+    ],
+    "exp130_sparse_edit_column_count_response": [
+      "columns_16 independently reproduces exp129 strength_0p9 exactly because it is the same canonical sparse configuration; treat as deterministic replication, then still require seed replication"
+    ],
+    "exp132_capability_objective_slider_ablation": [
+      "hybrid capability-primary objective is behaviorally positive, but benchmark evidence is mixed: coarse MMLU/ARC improve while normalized continuation metrics decline; behavior-only arm is destructive"
     ]
   }
 }

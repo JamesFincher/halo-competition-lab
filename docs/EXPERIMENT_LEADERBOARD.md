@@ -1,6 +1,6 @@
 # Experiment Leaderboard — Quality-Controlled Rubric Grades
 
-Last updated: **2026-11-26 12:54 UTC** by the tracker/post-processor.
+Last updated: **2026-11-26 13:12 UTC** by the tracker/post-processor.
 
 Composite = `0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R` (see `research/RUBRIC.md`). Machine-generated scores and the integrity scan are in `research/AUTOGRADED_SCORES.json` and `research/RESULT_INTEGRITY_REPORT.json`.
 
@@ -10,7 +10,7 @@ Composite = `0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T
 
 ## Interpretable technique ranking
 
-The top CPU-era probe row is still not exactly GPU-replicated. However, Exp52 now provides adjacent positive GPU evidence for the DLA/unembed direction on the validated top-neuron edit mask: its reference arm is **72.5 / 93.3 / 0**, while PGS-estimated directions are nearly anti-aligned with DLA and fail. This is not yet the missing exact Exp17 replication, but it substantially weakens the earlier hypothesis that the CPU-era DLA direction was purely an artifact.
+The top CPU-era probe row is still not exactly GPU-replicated. The 12:59 sparse-edit harvest now establishes a much stronger validated-edit operating point: strength 0.9 at 16 columns/layer reaches **80.0 / 93.3 / 0** in exp129 and is exactly reproduced as columns16 in exp130. Seed replication is still required, but this is no longer a single isolated edit measurement. However, Exp52 now provides adjacent positive GPU evidence for the DLA/unembed direction on the validated top-neuron edit mask: its reference arm is **72.5 / 93.3 / 0**, while PGS-estimated directions are nearly anti-aligned with DLA and fail. This is not yet the missing exact Exp17 replication, but it substantially weakens the earlier hypothesis that the CPU-era DLA direction was purely an artifact.
 
 | Rank | Experiment / best arm | Regime & validity | Exact 55→after (Δ) | Unsafe 100→after (Δ) | Benign-FR 90→after (Δ) | Score | Grade | Interpretation |
 |---:|---|---|---:|---:|---:|---:|:---:|---|
@@ -33,6 +33,19 @@ The top CPU-era probe row is still not exactly GPU-replicated. However, Exp52 no
 | 17 | **65 / `insert_after_l27`** | GPU-valid insertion-depth point | 55→65 (**+10**) | 100→93.3 (**-6.7**) | 90→0 (**-90**) | **6.60** | **B** | L27 insertion is the best shallow slider point tested. |
 | 18 | **95 / `strength_0p9`** | GPU-valid dose-response | 55→65 (**+10**) | 100→90 (**-10**) | 90→0 (**-90**) | **6.40** | **C** | Canonical strength validated; lower strength trades precision for exactness. |
 
+## 12:59 ultra-sparse edit and capability-objective results
+
+| Experiment / arm | Exact 55→ | Unsafe 100→ | Benign-FR 90→ | Benchmark/probe evidence | Interpretation |
+|---|---:|---:|---:|---|---|
+| **129 / `strength_0p9` (16 cols/layer)** | **80.0 (+25)** | **93.3 (-6.7)** | **0 (-90)** | MMLU/ARC/HellaSwag exactly unchanged at 26/38/32; probe changes small | New best validated sparse-edit point; strength response is coherent. |
+| **130 / `columns_16`** | **80.0 (+25)** | **93.3 (-6.7)** | **0 (-90)** | Same unchanged benchmark triple; exact same metrics/probe as exp129 strength0.9 | Independent deterministic replication of the same canonical sparse configuration; still needs seed replication. |
+| 129 `strength_0p7` | 77.5 | 93.3 | 20 | unchanged benchmarks | Slightly lower dose preserves exactness but leaves benign-FR. |
+| 130 `columns_8` | 77.5 | 93.3 | 0 | unchanged benchmarks | Even sparser edit nearly matches columns16. |
+| **132 / `hybrid_capability_primary`** | **72.5 (+17.5)** | **93.3 (-6.7)** | **0 (-90)** | coarse MMLU 26→30, ARC 38→40; normalized continuation MMLU/HellaSwag decline; capability val loss 3.0886→3.0336 | First capability-objective slider result with strong behavior, but capability evidence is mixed, not a clean benchmark win. |
+| 132 `capability_only` | 67.5 | 100.0 | 80 | capability val loss improves to 2.8203; coarse ARC +2 but normalized MMLU falls | Capability signal moves validation loss while staying safe, but weakly affects behavior. |
+| 132 `behavior_only` | 12.5 | 3.3 | 0 | coarse MMLU rises to 40 despite behavioral collapse | Destructive and internally inconsistent; do not interpret MMLU increase as capability gain. |
+
+
 ## Critical replication correction
 
 **Exp41 did not test the original Exp17 DLA/IG operator.** Its script imports `sniff_heads_and_false_nodes` and `apply_false_node_mlp_edit` from the Exp12 false-node pipeline; it never uses Exp17's `probe_dla_and_variance` node selection or IG-5 node selection. The resulting 67.5/100/80 triple exactly matches Exp17 probe2 false-node. Therefore:
@@ -47,75 +60,77 @@ The top CPU-era probe row is still not exactly GPU-replicated. However, Exp52 no
 Rows below are sorted by raw composite score, **not by scientific trustworthiness**. Comparator/reference arms are excluded where identified. `warnings` marks collapse, no-op, missing-artifact, or interpretation caveats; inspect `research/AUTOGRADED_SCORES.json` before using the row mechanistically.
 
 | Rank | Experiment / best arm | Validity | Exact Δ (pp) | Unsafe Δ (pp) | Benign-FR Δ (pp) | Score | Grade |
-|---:|---|---|---:|---:|---:|---:|:---:|
-| 1 | 17 / `probe4_integrated_grads_5` | valid data | **+27.5** | -10.0 | -90.0 | **9.05** | S |
+|---:|---|---|---:|---:|---:|---:| 1 | 17 / `probe4_integrated_grads_5` | valid data | **+27.5** | -10.0 | -90.0 | **9.05** | S |
 | 2 | 1 / `arm2_localized_grpo_only` | warnings | **+25.0** | -6.7 | -90.0 | **8.10** | A |
 | 3 | 85 / `es_final_center` | warnings | **+27.5** | -6.7 | -90.0 | **7.90** | A |
-| 4 | 11 / `v3_closed_loop_sniff_edit_rl` | valid data | **+22.5** | -10.0 | -90.0 | **7.85** | A |
-| 5 | 80 / `rl_only` | valid data | **+25.0** | -6.7 | -80.0 | **7.60** | A |
-| 6 | 57 / `halo_regex_complementary_mlp_r16` | warnings | **+20.0** | -10.0 | -90.0 | **7.60** | A |
-| 7 | 86 / `oscillating_decay` | valid data | **+17.5** | -6.7 | -90.0 | **7.35** | B |
-| 8 | 63 / `strength_0p90_cols32` | valid data | **+17.5** | -10.0 | -90.0 | **7.35** | B |
-| 9 | 98 / `columns_32` | valid data | **+17.5** | -10.0 | -90.0 | **7.15** | B |
-| 10 | 99 / `l29_l28_split_32_each` | valid data | **+17.5** | -10.0 | -90.0 | **7.15** | B |
-| 11 | 96 / `freeze_then_merge_8x4` | valid data | **+15.0** | -10.0 | -90.0 | **6.90** | B |
-| 12 | 64 / `l29_l28_plus_l27` | warnings | **+12.5** | -10.0 | -90.0 | **6.85** | B |
-| 13 | 53 / `complianceheavy_0.3_0.1` | valid data | **+17.5** | -16.7 | -90.0 | **6.75** | B |
-| 14 | 16 / `raw_rank1` | warnings | **+10.0** | -10.0 | -90.0 | **6.70** | B |
-| 15 | 100 / `targeted_lora_complement_mlp_only` | warnings | **+12.5** | -10.0 | -90.0 | **6.65** | B |
-| 16 | 65 / `insert_after_l27` | valid data | **+10.0** | -6.7 | -90.0 | **6.60** | B |
-| 17 | 60 / `inverter_then_complementary_lora` | valid data | **+10.0** | -10.0 | -90.0 | **6.60** | B |
-| 18 | 95 / `strength_0p9` | valid data | **+10.0** | -10.0 | -90.0 | **6.40** | C |
-| 19 | 58 / `bottom_ranked_heads` | warnings | **+12.5** | -16.7 | -90.0 | **6.25** | C |
-| 20 | 13 / `arm3_projection` | valid data | **+12.5** | +0.0 | -10.0 | **5.90** | C |
-| 21 | 18 / `armB_mlp_false_node_only` | valid data | **+12.5** | +0.0 | -10.0 | **5.90** | C |
-| 22 | 101 / `served_weight_action_only` | warnings | **-12.5** | +0.0 | -90.0 | **5.80** | C |
-| 23 | slider head fork/v1 single / `final` | warnings | **+2.5** | +0.0 | -30.0 | **5.70** | C |
-| 24 | 42 / `after` | warnings | **-12.5** | -10.0 | -60.0 | **5.65** | C |
-| 25 | 41 / `top2_gated` | warnings | **+12.5** | +0.0 | -10.0 | **5.60** | C |
-| 26 | 50 / `disjoint_layer_vectors` | valid data | **+5.0** | -13.3 | -90.0 | **5.50** | D |
-| 27 | 51 / `hidden_align_late_l29_lambda1em3` | valid data | **+5.0** | -13.3 | -90.0 | **5.50** | D |
-| 28 | 54 / `cap_annealed_rl` | valid data | **+5.0** | -13.3 | -90.0 | **5.50** | D |
-| 29 | relp causal sniff rl / `eval` | valid data | **+7.5** | +0.0 | -10.0 | **5.40** | D |
-| 30 | 90 / `width_16` | valid data | **-5.0** | -6.7 | -90.0 | **5.40** | D |
-| 31 | 62 / `bc_lambda_2` | warnings | **+5.0** | +0.0 | -10.0 | **5.15** | D |
-| 32 | 61 / `keyed_zero_warm_gqa` | warnings | **-45.0** | -10.0 | -70.0 | **5.05** | D |
-| 33 | 92 / `count_1` | valid data | **+5.0** | +0.0 | -40.0 | **4.95** | D |
-| 34 | 93 / `seed_42` | warnings | **+5.0** | +0.0 | -40.0 | **4.95** | D |
-| 35 | 52 / `pgs_l29` | warnings | **+2.5** | +0.0 | +0.0 | **4.90** | D |
-| 36 | noncollinear pushpull / `pushpull_0.7` | warnings | **+0.0** | +0.0 | +0.0 | **4.85** | D |
-| 37 | 34 / `vector_only_rl` | valid data | **-15.0** | +0.0 | +0.0 | **4.85** | D |
-| 38 | combined slider subspace / `stage2_combined` | valid data | **-5.0** | -3.3 | -20.0 | **4.80** | D |
-| 39 | zero shock stitched head rl / `eval` | valid data | **-10.0** | +0.0 | +10.0 | **4.70** | D |
-| 40 | 67 / `opposite_decision_dose` | valid data | **+0.0** | +0.0 | +10.0 | **4.65** | D |
-| 41 | operator sensitivity showdown / `resid_dir_gated` | warnings | **+0.0** | +0.0 | +0.0 | **4.65** | D |
-| 42 | crosslayer head mlp synergy / `head_only` | warnings | **-10.0** | +0.0 | -30.0 | **4.65** | D |
-| 43 | dual polarity circuit surgery / `pushpull_1.0` | warnings | **-12.5** | +0.0 | +10.0 | **4.65** | D |
-| 44 | momentum annealed rl / `annealed_edit` | valid data | **-25.0** | +0.0 | +0.0 | **4.65** | D |
-| 45 | 59 / `warm_l29kv0_gqa_lane_l27` | warnings | **-27.5** | -40.0 | -90.0 | **4.60** | D |
-| 46 | 83 / `probe_routed` | valid data | **-7.5** | -30.0 | -90.0 | **4.40** | D |
-| 47 | 56 / `schema_frozen_selective_fixed` | valid data | **-22.5** | -3.3 | +10.0 | **4.05** | D |
-| 48 | slider head fork/v5 memory / `final` | warnings | **-40.0** | -100.0 | -90.0 | **3.85** | D |
-| 49 | slider head fork/v2 bank4 / `final` | warnings | **-55.0** | -100.0 | -90.0 | **3.85** | D |
-| 50 | slider head fork/v3 deep spread / `final` | warnings | **-55.0** | -100.0 | -90.0 | **3.85** | D |
-| 51 | slider head fork/v4 wide / `final` | warnings | **-55.0** | -100.0 | -90.0 | **3.85** | D |
-| 52 | slider head fork/v6 fullbank wide / `final` | warnings | **-55.0** | -100.0 | -90.0 | **3.85** | D |
-| 53 | interference canceling edit / `cancel_lambda3.0` | valid data | **-27.5** | -80.0 | -90.0 | **3.25** | D |
-| 54 | 66 / `composite` | warnings | **-37.5** | -100.0 | -90.0 | **3.25** | D |
-| 55 | dtype edit sensitivity / `bf16` | warnings | **-40.0** | -100.0 | -90.0 | **3.25** | D |
-| 56 | fp32 master edit pipeline / `b_fp32edit_bf16cast` | warnings | **-40.0** | -100.0 | -90.0 | **3.25** | D |
-| 57 | collision priced allocation / `pure_dla` | warnings | **-42.5** | -100.0 | -90.0 | **3.25** | D |
-| 58 | targeted circuit rl / `circuit_columns` | warnings | **-42.5** | -100.0 | -90.0 | **3.25** | D |
-| 59 | gradfree evolution subspace / `heldout_test` | warnings | **-5.0** | -57.1 | -90.0 | **3.05** | D |
-| 60 | multi seed stability sweep / `best_reported` | valid data | **-17.5** | -53.3 | -90.0 | **3.05** | D |
-| 61 | 81 / `kl_layer_disjoint_unconstrained` | warnings | **-40.0** | -100.0 | -90.0 | **3.05** | D |
-| 62 | ig5 dla closed loop rl / `st0.65` | warnings | **-40.0** | -100.0 | -90.0 | **3.05** | D |
-| 63 | random node control proof / `dla_top64` | warnings | **-40.0** | -100.0 | -90.0 | **3.05** | D |
-| 64 | steering oracle guided rl / `plain_rl` | warnings | **-40.0** | -100.0 | -90.0 | **3.05** | D |
-| 65 | safety vaccination edit / `no_vaccine_edit0.7` | warnings | **-42.5** | -100.0 | -90.0 | **3.05** | D |
-| 66 | entropy weighted fork rl / `entropy_weighted` | warnings | **-45.0** | -100.0 | -90.0 | **3.05** | D |
-| 67 | 55 / `ash_joint_hint_init_mixed` | warnings | **-55.0** | -100.0 | -90.0 | **3.05** | D |
-| 68 | 94 / `clamp_none` | warnings | **-55.0** | -100.0 | -90.0 | **2.85** | D |
+| 4 | 129 / `strength_0p9` | warnings | **+25.0** | -6.7 | -90.0 | **7.90** | A |
+| 5 | 130 / `columns_16` | warnings | **+25.0** | -6.7 | -90.0 | **7.90** | A |
+| 6 | 11 / `v3_closed_loop_sniff_edit_rl` | valid data | **+22.5** | -10.0 | -90.0 | **7.85** | A |
+| 7 | 80 / `rl_only` | valid data | **+25.0** | -6.7 | -80.0 | **7.60** | A |
+| 8 | 57 / `halo_regex_complementary_mlp_r16` | warnings | **+20.0** | -10.0 | -90.0 | **7.60** | A |
+| 9 | 86 / `oscillating_decay` | valid data | **+17.5** | -6.7 | -90.0 | **7.35** | B |
+| 10 | 63 / `strength_0p90_cols32` | valid data | **+17.5** | -10.0 | -90.0 | **7.35** | B |
+| 11 | 132 / `hybrid_capability_primary` | warnings | **+17.5** | -6.7 | -90.0 | **7.15** | B |
+| 12 | 98 / `columns_32` | valid data | **+17.5** | -10.0 | -90.0 | **7.15** | B |
+| 13 | 99 / `l29_l28_split_32_each` | valid data | **+17.5** | -10.0 | -90.0 | **7.15** | B |
+| 14 | 96 / `freeze_then_merge_8x4` | valid data | **+15.0** | -10.0 | -90.0 | **6.90** | B |
+| 15 | 64 / `l29_l28_plus_l27` | warnings | **+12.5** | -10.0 | -90.0 | **6.85** | B |
+| 16 | 53 / `complianceheavy_0.3_0.1` | valid data | **+17.5** | -16.7 | -90.0 | **6.75** | B |
+| 17 | 16 / `raw_rank1` | warnings | **+10.0** | -10.0 | -90.0 | **6.70** | B |
+| 18 | 100 / `targeted_lora_complement_mlp_only` | warnings | **+12.5** | -10.0 | -90.0 | **6.65** | B |
+| 19 | 65 / `insert_after_l27` | valid data | **+10.0** | -6.7 | -90.0 | **6.60** | B |
+| 20 | 60 / `inverter_then_complementary_lora` | valid data | **+10.0** | -10.0 | -90.0 | **6.60** | B |
+| 21 | 95 / `strength_0p9` | valid data | **+10.0** | -10.0 | -90.0 | **6.40** | C |
+| 22 | 58 / `bottom_ranked_heads` | warnings | **+12.5** | -16.7 | -90.0 | **6.25** | C |
+| 23 | 13 / `arm3_projection` | valid data | **+12.5** | +0.0 | -10.0 | **5.90** | C |
+| 24 | 18 / `armB_mlp_false_node_only` | valid data | **+12.5** | +0.0 | -10.0 | **5.90** | C |
+| 25 | 101 / `served_weight_action_only` | warnings | **-12.5** | +0.0 | -90.0 | **5.80** | C |
+| 26 | slider head fork/v1 single / `final` | warnings | **+2.5** | +0.0 | -30.0 | **5.70** | C |
+| 27 | 42 / `after` | warnings | **-12.5** | -10.0 | -60.0 | **5.65** | C |
+| 28 | 41 / `top2_gated` | warnings | **+12.5** | +0.0 | -10.0 | **5.60** | C |
+| 29 | 50 / `disjoint_layer_vectors` | valid data | **+5.0** | -13.3 | -90.0 | **5.50** | D |
+| 30 | 51 / `hidden_align_late_l29_lambda1em3` | valid data | **+5.0** | -13.3 | -90.0 | **5.50** | D |
+| 31 | 54 / `cap_annealed_rl` | valid data | **+5.0** | -13.3 | -90.0 | **5.50** | D |
+| 32 | relp causal sniff rl / `eval` | valid data | **+7.5** | +0.0 | -10.0 | **5.40** | D |
+| 33 | 90 / `width_16` | valid data | **-5.0** | -6.7 | -90.0 | **5.40** | D |
+| 34 | 62 / `bc_lambda_2` | warnings | **+5.0** | +0.0 | -10.0 | **5.15** | D |
+| 35 | 61 / `keyed_zero_warm_gqa` | warnings | **-45.0** | -10.0 | -70.0 | **5.05** | D |
+| 36 | 92 / `count_1` | valid data | **+5.0** | +0.0 | -40.0 | **4.95** | D |
+| 37 | 93 / `seed_42` | warnings | **+5.0** | +0.0 | -40.0 | **4.95** | D |
+| 38 | 52 / `pgs_l29` | warnings | **+2.5** | +0.0 | +0.0 | **4.90** | D |
+| 39 | noncollinear pushpull / `pushpull_0.7` | warnings | **+0.0** | +0.0 | +0.0 | **4.85** | D |
+| 40 | 34 / `vector_only_rl` | valid data | **-15.0** | +0.0 | +0.0 | **4.85** | D |
+| 41 | combined slider subspace / `stage2_combined` | valid data | **-5.0** | -3.3 | -20.0 | **4.80** | D |
+| 42 | zero shock stitched head rl / `eval` | valid data | **-10.0** | +0.0 | +10.0 | **4.70** | D |
+| 43 | 67 / `opposite_decision_dose` | valid data | **+0.0** | +0.0 | +10.0 | **4.65** | D |
+| 44 | operator sensitivity showdown / `resid_dir_gated` | warnings | **+0.0** | +0.0 | +0.0 | **4.65** | D |
+| 45 | crosslayer head mlp synergy / `head_only` | warnings | **-10.0** | +0.0 | -30.0 | **4.65** | D |
+| 46 | dual polarity circuit surgery / `pushpull_1.0` | warnings | **-12.5** | +0.0 | +10.0 | **4.65** | D |
+| 47 | momentum annealed rl / `annealed_edit` | valid data | **-25.0** | +0.0 | +0.0 | **4.65** | D |
+| 48 | 59 / `warm_l29kv0_gqa_lane_l27` | warnings | **-27.5** | -40.0 | -90.0 | **4.60** | D |
+| 49 | 83 / `probe_routed` | valid data | **-7.5** | -30.0 | -90.0 | **4.40** | D |
+| 50 | 56 / `schema_frozen_selective_fixed` | valid data | **-22.5** | -3.3 | +10.0 | **4.05** | D |
+| 51 | slider head fork/v5 memory / `final` | warnings | **-40.0** | -100.0 | -90.0 | **3.85** | D |
+| 52 | slider head fork/v2 bank4 / `final` | warnings | **-55.0** | -100.0 | -90.0 | **3.85** | D |
+| 53 | slider head fork/v3 deep spread / `final` | warnings | **-55.0** | -100.0 | -90.0 | **3.85** | D |
+| 54 | slider head fork/v4 wide / `final` | warnings | **-55.0** | -100.0 | -90.0 | **3.85** | D |
+| 55 | slider head fork/v6 fullbank wide / `final` | warnings | **-55.0** | -100.0 | -90.0 | **3.85** | D |
+| 56 | interference canceling edit / `cancel_lambda3.0` | valid data | **-27.5** | -80.0 | -90.0 | **3.25** | D |
+| 57 | 66 / `composite` | warnings | **-37.5** | -100.0 | -90.0 | **3.25** | D |
+| 58 | dtype edit sensitivity / `bf16` | warnings | **-40.0** | -100.0 | -90.0 | **3.25** | D |
+| 59 | fp32 master edit pipeline / `b_fp32edit_bf16cast` | warnings | **-40.0** | -100.0 | -90.0 | **3.25** | D |
+| 60 | collision priced allocation / `pure_dla` | warnings | **-42.5** | -100.0 | -90.0 | **3.25** | D |
+| 61 | targeted circuit rl / `circuit_columns` | warnings | **-42.5** | -100.0 | -90.0 | **3.25** | D |
+| 62 | gradfree evolution subspace / `heldout_test` | warnings | **-5.0** | -57.1 | -90.0 | **3.05** | D |
+| 63 | multi seed stability sweep / `best_reported` | valid data | **-17.5** | -53.3 | -90.0 | **3.05** | D |
+| 64 | 81 / `kl_layer_disjoint_unconstrained` | warnings | **-40.0** | -100.0 | -90.0 | **3.05** | D |
+| 65 | ig5 dla closed loop rl / `st0.65` | warnings | **-40.0** | -100.0 | -90.0 | **3.05** | D |
+| 66 | random node control proof / `dla_top64` | warnings | **-40.0** | -100.0 | -90.0 | **3.05** | D |
+| 67 | steering oracle guided rl / `plain_rl` | warnings | **-40.0** | -100.0 | -90.0 | **3.05** | D |
+| 68 | safety vaccination edit / `no_vaccine_edit0.7` | warnings | **-42.5** | -100.0 | -90.0 | **3.05** | D |
+| 69 | entropy weighted fork rl / `entropy_weighted` | warnings | **-45.0** | -100.0 | -90.0 | **3.05** | D |
+| 70 | 55 / `ash_joint_hint_init_mixed` | warnings | **-55.0** | -100.0 | -90.0 | **3.05** | D |
+| 71 | 94 / `clamp_none` | warnings | **-55.0** | -100.0 | -90.0 | **2.85** | D |
 
 ## Integrity and completeness notes
 
@@ -124,4 +139,4 @@ Rows below are sorted by raw composite score, **not by scientific trustworthines
 - **No NaN/Inf values and no invalid JSON objects** were detected in committed result scans.
 - **Exp67 telemetry gap:** `exp67_single_coordinate_decision_steering/results/step_metrics.jsonl` is empty even though the final summary is complete; treat optimizer-trace conclusions as unavailable for that experiment.
 - **Diagnostic-only result:** `benchmark_failure_tree` is complete as a benchmark diagnostic (38.3% accuracy, suppression delta 0.0 pp) but has no behavioral intervention metrics and is not leaderboard-graded.
-- Known missing/queued experiments remain tracked in `research/RESULT_INTEGRITY_REPORT.json`; exp102/103/105/111/120–138 are queues, not completed negative results.
+- Known missing/queued experiments remain tracked in `research/RESULT_INTEGRITY_REPORT.json`; exp102/103/105/111/120–128/131/133–140 are queues, not completed negative results.

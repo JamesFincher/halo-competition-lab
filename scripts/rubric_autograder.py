@@ -122,6 +122,15 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "exp101_merge_aware_served_weight_finetune": [
         "standard unrounded comparators are excluded; merge-aware served-weight action-only training preserves unsafe refusal but is exactness-negative relative to the post-edit anchor"
     ],
+    "exp129_sparse_edit_strength_response": [
+        "ultra-sparse 16-column-per-layer edit has a strong dose response and exact zero benchmark movement at the best dose; independently matches exp130 columns_16"
+    ],
+    "exp130_sparse_edit_column_count_response": [
+        "columns_16 independently reproduces exp129 strength_0p9 exactly because it is the same canonical sparse configuration; treat as deterministic replication, then still require seed replication"
+    ],
+    "exp132_capability_objective_slider_ablation": [
+        "hybrid capability-primary objective is behaviorally positive, but benchmark evidence is mixed: coarse MMLU/ARC improve while normalized continuation metrics decline; behavior-only arm is destructive"
+    ],
 }
 
 # Comparator arms that are scientifically important but are not the mechanism under test.
