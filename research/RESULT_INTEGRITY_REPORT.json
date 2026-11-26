@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T12:05:27+00:00",
+  "generated_at_utc": "2026-11-26T12:24:40+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1055,6 +1055,8 @@
     "exp129_sparse_edit_strength_response",
     "exp130_sparse_edit_column_count_response",
     "exp131_context_gated_dose_cancellation",
+    "exp132_capability_objective_slider_ablation",
+    "exp133_alpha_init_continuation_confirmation",
     "exp50_surgically_anchored_vector_rl",
     "exp51_decision_anchor_hidden_align",
     "exp52_pgs_credit_direction",

@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 12:05 UTC. This document is updated continuously as H100 swarm results land.
+Last updated: 2026-11-26 12:24 UTC. This document is updated continuously as H100 swarm results land.
 
 ## Current ingestion status
 
@@ -90,6 +90,8 @@ Last updated: 2026-11-26 12:05 UTC. This document is updated continuously as H10
 | 129 | `exp129_sparse_edit_strength_response` | queued/running | Sparse strength replication of the validated-edit dose response. |
 | 130 | `exp130_sparse_edit_column_count_response` | queued/running | Sparse column-count replication of the validated-edit width response. |
 | 131 | `exp131_context_gated_dose_cancellation` | queued/running; tracker-renumbered from colliding exp129 | Can context-gated rank-one dose cancellation preserve safety while reducing false refusal? |
+| 132 | `exp132_capability_objective_slider_ablation` | queued/running | Can capability-preserving objectives reduce slider collateral? |
+| 133 | `exp133_alpha_init_continuation_confirmation` | queued/running | Does alpha-init continuation confirm continuation-specific effects? |
 
 ## Pipeline scheduling note — newest-first starvation risk
 
