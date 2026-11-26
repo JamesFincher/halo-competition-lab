@@ -34,6 +34,17 @@ TINY_VALUES = {
     "--per-class": "1",
     "--n-per-class": "2",
     "--n-pairs": "2",
+    "--bench-n": "2",
+    "--probe-rows": "4",
+    "--population": "2",
+    "--generations": "1",
+    "--batch-size": "1",
+    "--ems-rows": "2",
+    "--candidate-top": "2",
+    "--candidate-random": "1",
+    "--observe-points": "2",
+    "--max-new-tokens": "8",
+    "--rank": "2",
     "--alphas": ["0.1"],
 }
 
