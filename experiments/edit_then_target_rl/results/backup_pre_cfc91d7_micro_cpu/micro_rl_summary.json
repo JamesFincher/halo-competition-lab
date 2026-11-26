@@ -1,0 +1,291 @@
+{
+  "config": {
+    "base_model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "sft_adapter": "/home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-36",
+    "steps": 6,
+    "group_size": 4,
+    "lr": 0.0003,
+    "beta": 0.02,
+    "seed": 42
+  },
+  "device": "cpu",
+  "localization": {
+    "top_8_layers": [
+      0,
+      1,
+      11,
+      19,
+      20,
+      27,
+      28,
+      29
+    ],
+    "random_8_layers": [
+      2,
+      5,
+      6,
+      9,
+      10,
+      14,
+      22,
+      25
+    ],
+    "top_2_contrastive_edit_layers": [
+      29,
+      28
+    ],
+    "surgical_edit": {
+      "edit_layers": [
+        29,
+        28
+      ],
+      "edited_weights": 36864,
+      "edited_fraction_pct": 0.02741,
+      "strength": 0.5
+    },
+    "top_5_ranked_layers": [
+      {
+        "layer": 29,
+        "combined": 0.6768,
+        "contrastive_l2": 172.0105,
+        "ls_lora": 0.4704,
+        "fisher_snip": 0.00016426
+      },
+      {
+        "layer": 0,
+        "combined": 0.6,
+        "contrastive_l2": 7.98349,
+        "ls_lora": 0.96939,
+        "fisher_snip": 0.00022354
+      },
+      {
+        "layer": 27,
+        "combined": 0.3159,
+        "contrastive_l2": 113.77634,
+        "ls_lora": 0.0465,
+        "fisher_snip": 0.00012904
+      },
+      {
+        "layer": 28,
+        "combined": 0.3076,
+        "contrastive_l2": 121.70992,
+        "ls_lora": 0.05283,
+        "fisher_snip": 0.00012114
+      },
+      {
+        "layer": 1,
+        "combined": 0.2998,
+        "contrastive_l2": 10.37238,
+        "ls_lora": 0.16672,
+        "fisher_snip": 0.00018642
+      }
+    ]
+  },
+  "arms": {
+    "starting_sft": {
+      "train_stats": {
+        "trainable_params": 0,
+        "trainable_pct": 0.0,
+        "total_wall_sec": 0.0
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.775,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 57.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 55.0
+      }
+    },
+    "arm1_surgical_edit_only": {
+      "train_stats": {
+        "trainable_params": 36864,
+        "trainable_pct": 0.02741,
+        "total_wall_sec": 0.5
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.88,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 87.5,
+        "policy_accuracy": 82.5,
+        "unsafe_refusal_rate": 96.7,
+        "benign_false_refusal_rate": 40.0,
+        "exact_compliance_rate": 77.5
+      }
+    },
+    "arm0_full_lora_grpo": {
+      "train_stats": {
+        "trainable_params": 2442240,
+        "trainable_pct": 1.783,
+        "total_wall_sec": 123.3,
+        "mean_step_sec": 20.55,
+        "reward_curve": [
+          0.75,
+          0.625,
+          0.8,
+          0.675,
+          0.575,
+          0.725
+        ],
+        "kl_curve": [
+          0.0,
+          0.01456,
+          0.01012,
+          0.02152,
+          0.02549,
+          0.03941
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.805,
+        "json_valid_rate": 97.5,
+        "action_accuracy": 90.0,
+        "policy_accuracy": 50.0,
+        "unsafe_refusal_rate": 86.7,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 27.5
+      }
+    },
+    "arm2_localized_grpo_only": {
+      "train_stats": {
+        "trainable_params": 1302528,
+        "trainable_pct": 0.959,
+        "total_wall_sec": 104.9,
+        "mean_step_sec": 17.48,
+        "reward_curve": [
+          0.575,
+          0.625,
+          0.95,
+          0.65,
+          0.575,
+          0.75
+        ],
+        "kl_curve": [
+          0.0,
+          0.00973,
+          0.00071,
+          0.01218,
+          0.0105,
+          0.01646
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.865,
+        "json_valid_rate": 97.5,
+        "action_accuracy": 92.5,
+        "policy_accuracy": 72.5,
+        "unsafe_refusal_rate": 90.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 55.0
+      }
+    },
+    "arm3_edit_then_target_grpo": {
+      "train_stats": {
+        "trainable_params": 1302528,
+        "trainable_pct": 0.959,
+        "total_wall_sec": 131.3,
+        "mean_step_sec": 21.89,
+        "reward_curve": [
+          0.65,
+          0.75,
+          0.775,
+          0.6,
+          0.525,
+          0.675
+        ],
+        "kl_curve": [
+          0.01154,
+          0.01518,
+          0.02978,
+          0.04194,
+          0.03587,
+          0.05295
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.64,
+        "json_valid_rate": 97.5,
+        "action_accuracy": 52.5,
+        "policy_accuracy": 45.0,
+        "unsafe_refusal_rate": 36.7,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 20.0
+      }
+    },
+    "arm4_random_layer_control": {
+      "train_stats": {
+        "trainable_params": 1302528,
+        "trainable_pct": 0.959,
+        "total_wall_sec": 80.1,
+        "mean_step_sec": 13.35,
+        "reward_curve": [
+          0.575,
+          0.65,
+          0.95,
+          0.65,
+          0.675,
+          0.65
+        ],
+        "kl_curve": [
+          0.0,
+          0.00656,
+          0.00045,
+          0.01553,
+          0.01968,
+          0.01234
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.905,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 97.5,
+        "policy_accuracy": 70.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 10.0,
+        "exact_compliance_rate": 60.0
+      }
+    },
+    "arm3b_edit_then_target_fixed": {
+      "fix_notes": "Anchored KL ref_model=edited_model, 4x lower Stage-2 lr=7.5e-5, excluded already-edited layers [28,29] -> complementary layers [0,1,11,19,20,27]",
+      "train_stats": {
+        "trainable_params": 976896,
+        "trainable_pct": 0.721,
+        "total_wall_sec": 92.2,
+        "mean_step_sec": 15.36,
+        "reward_curve": [
+          0.55,
+          0.625,
+          0.825,
+          0.7,
+          0.675,
+          0.625
+        ],
+        "kl_curve": [
+          0.0,
+          0.00158,
+          0.00054,
+          0.00166,
+          0.00162,
+          0.00231
+        ]
+      },
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.92,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 95.0,
+        "policy_accuracy": 90.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 72.5
+      }
+    }
+  }
+}

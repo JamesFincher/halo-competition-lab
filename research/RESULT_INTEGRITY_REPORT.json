@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T10:11:16+00:00",
+  "generated_at_utc": "2026-11-26T10:13:03+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -75,6 +75,12 @@
       "metric_paths": 5
     },
     {
+      "file": "experiments/combined_slider_subspace/results/combined_summary.json",
+      "bytes": 967,
+      "warnings": [],
+      "metric_paths": 3
+    },
+    {
       "file": "experiments/crosslayer_head_mlp_synergy/results/synergy_summary.json",
       "bytes": 1758,
       "warnings": [
@@ -124,10 +130,16 @@
       "metric_paths": 5
     },
     {
-      "file": "experiments/edit_then_target_rl/results/micro_rl/micro_rl_summary.json",
+      "file": "experiments/edit_then_target_rl/results/backup_pre_cfc91d7_micro_cpu/micro_rl_summary.json",
       "bytes": 6590,
       "warnings": [],
       "metric_paths": 7
+    },
+    {
+      "file": "experiments/edit_then_target_rl/results/micro_rl/micro_rl_summary.json",
+      "bytes": 5895,
+      "warnings": [],
+      "metric_paths": 6
     },
     {
       "file": "experiments/entropy_weighted_fork_rl/results/entropy_grpo_summary.json",
@@ -147,6 +159,21 @@
         }
       ],
       "metric_paths": 3
+    },
+    {
+      "file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
+      "bytes": 60707,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/dla_edit_only"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/edit_plus_vector_rl/eval"
+        }
+      ],
+      "metric_paths": 4
     },
     {
       "file": "experiments/fp32_master_edit_pipeline/results/fp32_pipeline_summary.json",
@@ -265,6 +292,89 @@
       "metric_paths": 2
     },
     {
+      "file": "experiments/multi_seed_stability_sweep/results/pareto_sweep_summary.json",
+      "bytes": 6491,
+      "warnings": [
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[1]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[2]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[3]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[4]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[5]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[6]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[7]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[8]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[9]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[10]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[11]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[12]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[13]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[14]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[15]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[16]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[17]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[18]"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/grid[19]"
+        }
+      ],
+      "metric_paths": 21
+    },
+    {
       "file": "experiments/noncollinear_pushpull/results/noncollinear_pushpull_summary.json",
       "bytes": 1537,
       "warnings": [
@@ -335,6 +445,12 @@
       "bytes": 2804,
       "warnings": [],
       "metric_paths": 1
+    },
+    {
+      "file": "experiments/request_circuit_mapper/results/backup_pre_cfc91d7/request_circuit_atlas.json",
+      "bytes": 4004,
+      "warnings": [],
+      "metric_paths": 0
     },
     {
       "file": "experiments/request_circuit_mapper/results/request_circuit_atlas.json",
@@ -464,7 +580,7 @@
     },
     {
       "file": "experiments/whitened_subspace_rfm_edit/results/whitened_subspace_summary.json",
-      "bytes": 3285,
+      "bytes": 3284,
       "warnings": [
         {
           "type": "exact_baseline_copy_or_noop",
@@ -490,7 +606,6 @@
   ],
   "missing_result_experiments": [
     "adaptive_k_proportional_edit",
-    "combined_slider_subspace",
     "exp50_surgically_anchored_vector_rl",
     "exp51_decision_anchor_hidden_align",
     "exp52_pgs_credit_direction",
@@ -511,12 +626,12 @@
     "exp67_single_coordinate_decision_steering",
     "exp80_edit_strength_scaffold_annealing",
     "exp81_principal_subspace_guardrailed_rl",
+    "exp82_rank1_rl_trajectory_extrapolation",
     "inverse_causal_patching",
-    "multi_seed_stability_sweep"
+    "slider_head_fork"
   ],
   "duplicate_experiment_numbers": {},
   "missing_experiment_numbers": [
-    34,
     44,
     45,
     46,
@@ -537,6 +652,18 @@
     79
   ],
   "inplace_result_overwrite_warnings": [
+    {
+      "file": "experiments/edit_then_target_rl/results/micro_rl/micro_rl_summary.json",
+      "commit": "cfc91d78dd3bff7926f62bde62888d44971e1ed0 2026-11-26T10:11:05Z Add slider head fork: iterative attention-capability program"
+    },
+    {
+      "file": "experiments/request_circuit_mapper/results/request_circuit_atlas.json",
+      "commit": "cfc91d78dd3bff7926f62bde62888d44971e1ed0 2026-11-26T10:11:05Z Add slider head fork: iterative attention-capability program"
+    },
+    {
+      "file": "experiments/whitened_subspace_rfm_edit/results/whitened_subspace_summary.json",
+      "commit": "cfc91d78dd3bff7926f62bde62888d44971e1ed0 2026-11-26T10:11:05Z Add slider head fork: iterative attention-capability program"
+    },
     {
       "file": "experiments/steering_oracle_guided_rl/results/steering_rl_summary.json",
       "commit": "dfbec20fba4b3875f8e54be4c026635cbae19ad3 2026-11-26T09:29:44Z Harvest mega-wave results: exp41 replication, exp42 slider head, whitened subspace, stitched head"
@@ -565,6 +692,10 @@
     ],
     "steering_oracle_guided_rl": [
       "result file was overwritten in place during the mega-wave harvest; previous values exist in git history but not as a side-by-side backup"
+    ],
+    "edit_then_target_rl": [
+      "CUDA rerun overwrote the prior CPU micro-RL summary in place; tracker restored the CPU artifact side-by-side under results/backup_pre_cfc91d7_micro_cpu/",
+      "same-run CUDA baseline is 47.5/100/80 rather than canonical 55/100/90, so absolute deltas are regime-shifted even though the arm2-vs-random-control comparison is informative"
     ]
   }
 }

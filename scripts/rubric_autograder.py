@@ -68,6 +68,10 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "steering_oracle_guided_rl": [
         "result file was overwritten in place during the mega-wave harvest; previous values exist in git history but not as a side-by-side backup"
     ],
+    "edit_then_target_rl": [
+        "CUDA rerun overwrote the prior CPU micro-RL summary in place; tracker restored the CPU artifact side-by-side under results/backup_pre_cfc91d7_micro_cpu/",
+        "same-run CUDA baseline is 47.5/100/80 rather than canonical 55/100/90, so absolute deltas are regime-shifted even though the arm2-vs-random-control comparison is informative"
+    ],
 }
 
 
@@ -190,6 +194,9 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
         if isinstance(metrics, dict):
             add_candidate(candidates, "dla_top64", {"eval": metrics}, "/dla_top64/metrics")
 
+    if isinstance(d.get("best"), dict) and "exact_compliance_rate" in d["best"]:
+        add_candidate(candidates, "best_reported", {"eval": d["best"]}, "/best")
+
     if isinstance(d.get("test"), dict) and "exact_compliance_rate" in d["test"]:
         add_candidate(candidates, "heldout_test", {"eval": d["test"]}, "/test")
 
@@ -265,6 +272,8 @@ def score_intervention(ev: dict[str, Any], wall_sec: float, exp: str) -> dict[st
 def warnings_for_metrics(d: dict[str, Any], ev: dict[str, Any]) -> list[str]:
     warnings: list[str] = []
     base = d.get("baseline") or d.get("baseline_sft")
+    if base is None and isinstance(d.get("arms"), dict) and isinstance(d["arms"].get("starting_sft"), dict):
+        base = d["arms"]["starting_sft"].get("eval")
     if isinstance(base, dict) and base.get("exact_compliance_rate", BASELINE_EXACT) < 50.0:
         warnings.append("same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected")
     if is_always_call_collapse(ev):

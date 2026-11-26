@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 10:00 UTC. This document is updated continuously as H100 swarm results land.
+Last updated: 2026-11-26 10:20 UTC. This document is updated continuously as H100 swarm results land.
 
 ## Current ingestion status
 
@@ -9,7 +9,7 @@ Last updated: 2026-11-26 10:00 UTC. This document is updated continuously as H10
 | 19 | `surgical_crosstalk_audit` | result landed; diagnostic, provisional | Hub protection barely decouples true/false refusal. |
 | 20 | `random_node_control_proof` | result landed; operator-invalid | DLA is causally potent but destructive under unembed-direction edit. |
 | 21 | `ig5_dla_closed_loop_rl` | result landed; operator-invalid | RL cannot recover a collapsed always-call reference. |
-| 22 | `multi_seed_stability_sweep` | log complete; summary JSON missing | bf16 dose-collapse visible in log; needs valid rerun/output. |
+| 22 | `multi_seed_stability_sweep` | result landed; operator-invalid | 19/20 grid points collapse; best low-dose arm is only 37.5/46.7/0. |
 | 23 | `dual_polarity_circuit_surgery` | result landed; mathematically degenerate | Apparent push-pull is a net sign/strength control. |
 | 24 | `adaptive_k_proportional_edit` | crashed on device mismatch; rerun pending | No evidence yet. |
 | 25 | `gradfree_evolution_subspace` | result landed; operator/objective-invalid | Fitness rewards unsafe compliance unless hard-constrained. |
@@ -21,7 +21,7 @@ Last updated: 2026-11-26 10:00 UTC. This document is updated continuously as H10
 | 31 | `request_circuit_mapper` | result landed; invalid classifier | Only two pseudo-types, not real policy-code categories. |
 | 32 | `targeted_circuit_rl` | result landed; invalid downstream | Invalid atlas + broken operator stack. |
 | 33 | `dtype_edit_sensitivity` | result landed; hypothesis largely refuted | fp32 and bf16 both collapse; dtype is not root cause. |
-| 34 | `exp34_activation_vector_only_rl` | retired/superseded | Folder absent after the activation-vector line was reworked into exp50; do not resurrect without provenance. |
+| 34 | `exp34_activation_vector_only_rl` | result landed; valid negative | Activation-vector-only RL is safe but exactness-negative (40/100/90); edit+vector collapses through the broken DLA operator. |
 | 35 | `interference_canceling_edit` | result landed; operator-invalid | Cancellation partially restores exactness but not safety. |
 | 36 | `safety_vaccination_edit` | result landed; negative under broken operator | No vaccine dose response. |
 | 37 | `collision_priced_allocation` | result landed; negative under broken operator | Selection changes but behavior does not. |
@@ -30,7 +30,7 @@ Last updated: 2026-11-26 10:00 UTC. This document is updated continuously as H10
 | 40 | `fp32_master_edit_pipeline` | result landed; hypothesis refuted | fp32-master does not rescue the wrong operator. |
 | 41 | `original_operator_replication` | result landed; valid but mislabeled replication target | Reproduces the false-node residual operator (67.5/100/80), not Exp 17 DLA/IG. |
 | 42 | `slider_gated_attention_head` | result landed; valid, exactness-negative | Slider head cuts benign false refusal 90→30 but exact falls 55→42.5 and unsafe refusal 100→90. |
-| 43 | `combined_slider_subspace` | VM-side result reported; committed JSON pending | Does surgical edit + slider head compose better than either parent? |
+| 43 | `combined_slider_subspace` | result landed; valid composition, negative | Combined edit+slider reaches 50/96.7/70, worse exactness than either promising parent. |
 | 44–49 | — | unassigned numbering gaps | Reserved/missing, not active collisions. |
 | 50 | `exp50_surgically_anchored_vector_rl` | queued/running | Can steering-vector RL harden the validated surgical edit while weights stay frozen? |
 | 51 | `exp51_decision_anchor_hidden_align` | queued/running | Can hidden-state decision anchors improve RL credit without weight destruction? |
@@ -553,3 +553,33 @@ Commit `dfbec20` overwrote the prior tracked summary in place. The old values re
 4. **Attention-head inserts are behaviorally potent but need controllers.** Exp 42 moves benign-FR by 60 pp with only alpha≈0.031, while Exp 28 head-only editing showed a smaller 20–30 pp benign-FR movement under a confounded baseline. This mechanism class is worth pursuing for raw performance, but current reward/control logic trades away policy correctness.
 5. **Safety and exactness are coupled but not identically.** Exp 41 preserves unsafe refusal perfectly while improving exactness only modestly; Exp 16 removes benign false refusal but costs unsafe refusal; Exp 42 reduces benign false refusal much more while harming exactness. These are three different operating points, not interchangeable “wins.”
 6. **Result-integrity process must be part of the pipeline.** Exact baseline copies usually mean gate rejection or cancellation, all-zero patching means identity artifacts, and in-place overwritten summaries must be backed up explicitly before reruns.
+
+### Experiment 1 GPU rerun — localized GRPO-only is a major positive but regime-shifted
+
+**Input:** current `experiments/edit_then_target_rl/results/micro_rl/micro_rl_summary.json`, CUDA, 8 steps/arm. The prior CPU artifact was overwritten in place by commit `cfc91d7`; the tracker restored it side-by-side under `results/backup_pre_cfc91d7_micro_cpu/`.
+
+Same-run CUDA baseline is **47.5% exact / 100% unsafe / 80% benign-FR**, not the canonical fp32 55/100/90. Against canonical baseline, `arm2_localized_grpo_only` is **80.0 / 93.3 / 0.0** (mean reward 0.930, action 95.0, policy 87.5). More importantly, it beats the matched random-layer control (**60.0 / 100 / 50**) by 20 pp exact and 50 pp benign-FR, so the localized-layer effect is not random sparse-RL noise. `arm3_edit_then_target_grpo` instead collapses into over-refusal (**37.5 / 100 / 100**) in this rerun.
+
+**Hypothesis verdict:** targeted localized GRPO is now the strongest raw-performance GPU result, but the absolute canonical deltas require an fp32/baseline-controlled replication because the run distribution shifted. The composition claim “edit then target RL helps” is not supported by this rerun.
+
+### Experiment 22 — Budget/strength Pareto sweep — valid output, operator-invalid mechanism
+
+**Input:** `experiments/multi_seed_stability_sweep/results/pareto_sweep_summary.json`, CUDA, wall **562.02s**. Nineteen of twenty grid points have the always-call collapse fingerprint. The best reported point (top-k=16, strength=0.4) is only **37.5% exact / 46.7% unsafe / 0% benign-FR**; no arm reaches 95% unsafe refusal.
+
+**Hypothesis verdict:** no stable dose exists for the broken DLA/unembed operator in this sweep. This is strong dose-response evidence against that operator, not evidence against surgical editing generally.
+
+### Experiment 34 — Activation-vector-only RL — safe but exactness-negative
+
+**Input:** `experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json`, CUDA fp32, wall **188.44s**. Vector-only RL on frozen weights ends at **40.0% exact / 100% unsafe / 90% benign-FR** versus baseline 55/100/90. Edit+vector remains fully collapsed (**7.5 / 0 / 0**) because it starts from the broken DLA edit.
+
+**Hypothesis verdict:** negative for input-invariant activation vectors as a raw-performance replacement at this short budget. They do not damage safety by themselves, but they reduce exact/policy compliance rather than learning the useful direction.
+
+### Experiment 43 — Combined surgical edit + slider head — composition negative
+
+**Input:** `experiments/combined_slider_subspace/results/combined_summary.json`, CUDA, wall **157.61s**. Stage-1 behavioral edit at strength 0.45 reaches **65.0 / 100 / 90**; after slider-head RL (`alpha=0.01318`) the combined model is **50.0 / 96.7 / 70**.
+
+**Hypothesis verdict:** the composition does not currently dominate either parent. Versus baseline it loses 5 pp exact and 3.3 pp unsafe refusal for a 20 pp benign-FR reduction; versus Exp 16 raw-rank1 it is much worse exactness and less over-refusal reduction; versus Exp 42 it is safer and more exact but much less effective at false-refusal reduction.
+
+### Post-harvest integrity correction
+
+Commit `cfc91d7` was both a harvest and an experiment-generation commit. It introduced three integrity faults now corrected by the tracker: (1) Exp 1's CPU artifact was overwritten without a backup; (2) fp32-master was accidentally relabeled from Exp 40 to Exp 34, colliding with the resurrected activation-vector Exp 34; (3) a stray top-level `experiments/README.md` duplicated the Exp 43 README. The collision/stray file are fixed and pre-overwrite artifacts are now backed up side-by-side.

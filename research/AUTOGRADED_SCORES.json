@@ -68,6 +68,28 @@
       "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking"
     ]
   },
+  "combined_slider_subspace": {
+    "best_arm": "stage2_combined",
+    "source_file": "experiments/combined_slider_subspace/results/combined_summary.json",
+    "P": 0.0,
+    "S": 8.0,
+    "C": 1.0,
+    "E": 6.0,
+    "N": 8,
+    "K": 10,
+    "T": 8,
+    "R": 5,
+    "composite": 4.8,
+    "grade": "D",
+    "exact": 50.0,
+    "gain": -5.0,
+    "unsafe": 96.7,
+    "benign_fr": 70.0,
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "action_accuracy": 80.0,
+    "policy_accuracy": 55.0
+  },
   "crosslayer_head_mlp_synergy": {
     "best_arm": "head_only",
     "source_file": "experiments/crosslayer_head_mlp_synergy/results/synergy_summary.json",
@@ -144,9 +166,9 @@
     ]
   },
   "edit_then_target_rl": {
-    "best_arm": "arm3b_edit_then_target_fixed",
+    "best_arm": "arm2_localized_grpo_only",
     "source_file": "experiments/edit_then_target_rl/results/micro_rl/micro_rl_summary.json",
-    "P": 7.0,
+    "P": 10.0,
     "S": 8.0,
     "C": 10.0,
     "E": 4.0,
@@ -154,16 +176,24 @@
     "K": 8.0,
     "T": 7.0,
     "R": 5.0,
-    "composite": 7.35,
-    "grade": "B",
-    "exact": 72.5,
-    "gain": 17.5,
+    "composite": 8.1,
+    "grade": "A",
+    "exact": 80.0,
+    "gain": 25.0,
     "unsafe": 93.3,
     "benign_fr": 0.0,
     "n_eval": 40,
-    "mean_reward": 0.92,
+    "mean_reward": 0.93,
     "action_accuracy": 95.0,
-    "policy_accuracy": 90.0
+    "policy_accuracy": 87.5,
+    "validity_warnings": [
+      "same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected",
+      "CUDA rerun overwrote the prior CPU micro-RL summary in place; tracker restored the CPU artifact side-by-side under results/backup_pre_cfc91d7_micro_cpu/",
+      "same-run CUDA baseline is 47.5/100/80 rather than canonical 55/100/90, so absolute deltas are regime-shifted even though the arm2-vs-random-control comparison is informative"
+    ],
+    "superseded_source_files": [
+      "experiments/edit_then_target_rl/results/backup_pre_cfc91d7_micro_cpu/micro_rl_summary.json"
+    ]
   },
   "entropy_weighted_fork_rl": {
     "best_arm": "uniform_adv",
@@ -189,6 +219,28 @@
     "validity_warnings": [
       "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking"
     ]
+  },
+  "exp34_activation_vector_only_rl": {
+    "best_arm": "vector_only_rl",
+    "source_file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
+    "P": 0.0,
+    "S": 10.0,
+    "C": 1.0,
+    "E": 6.0,
+    "N": 7.0,
+    "K": 8.0,
+    "T": 7.0,
+    "R": 5.0,
+    "composite": 4.85,
+    "grade": "D",
+    "exact": 40.0,
+    "gain": -15.0,
+    "unsafe": 100.0,
+    "benign_fr": 90.0,
+    "n_eval": 40,
+    "mean_reward": 0.745,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 42.5
   },
   "fp32_master_edit_pipeline": {
     "best_arm": "a_fp32_edit_fp32_eval",
@@ -333,6 +385,28 @@
     "mean_reward": 0.725,
     "action_accuracy": 77.5,
     "policy_accuracy": 32.5
+  },
+  "multi_seed_stability_sweep": {
+    "best_arm": "best_reported",
+    "source_file": "experiments/multi_seed_stability_sweep/results/pareto_sweep_summary.json",
+    "P": 0.0,
+    "S": 2.0,
+    "C": 1.0,
+    "E": 4.0,
+    "N": 7.0,
+    "K": 8.0,
+    "T": 7.0,
+    "R": 5.0,
+    "composite": 3.05,
+    "grade": "D",
+    "exact": 37.5,
+    "gain": -17.5,
+    "unsafe": 46.7,
+    "benign_fr": 0.0,
+    "n_eval": 40,
+    "mean_reward": 0.65,
+    "action_accuracy": 60.0,
+    "policy_accuracy": 50.0
   },
   "noncollinear_pushpull": {
     "best_arm": "pushpull_0.7",
@@ -588,12 +662,12 @@
     "P": 4.0,
     "S": 8.0,
     "C": 10.0,
-    "E": 2.0,
+    "E": 4.0,
     "N": 9,
     "K": 7,
     "T": 6,
     "R": 6,
-    "composite": 6.5,
+    "composite": 6.7,
     "grade": "B",
     "exact": 65.0,
     "gain": 10.0,
