@@ -3,8 +3,8 @@
 # Runs FOREVER on the VM — zero downtime by construction.
 cd ~/halo-competition-lab
 while true; do
-  git stash -q 2>/dev/null; git pull -q origin main 2>/dev/null
-  RUNNING=$(sudo docker ps --format '{{.Names}}' | grep -c '^wave\|^mega' || true)
+  git pull -q origin main 2>/dev/null || git checkout -q -- . 2>/dev/null; git pull -q origin main 2>/dev/null
+  RUNNING=$(sudo docker ps --format '{{.Names}}' | grep -c '^wave\|^mega\|^autowave' || true)
   if [ "$RUNNING" -eq 0 ]; then
     # build queue of all experiments missing results
     python3 - <<'PY' 2>/dev/null
@@ -12,7 +12,7 @@ import json, glob, os
 exps = []
 for s in sorted(glob.glob("experiments/*/scripts/run_*.py")):
     exp = s.split("/")[1]
-    if not glob.glob(f"experiments/{exp}/results/*summary*.json"):
+    if not glob.glob(f"experiments/{exp}/results/*.json"):
         exps.append({"name": exp, "script": s})
 # prioritize newest (higher exp numbers in name or path)
 json.dump({"experiments": exps[-8:]}, open("scripts/auto_queue.json", "w"), indent=1)
