@@ -24,10 +24,13 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 8.7 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | proposed |
 | 8.6 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | proposed |
 | 8.5 | H5 — Output-matched steering-vector compression | activation steering + RL initialization | proposed |
+| 8.4 | H12 — Closed-form decision-readout correction | gradient-free readout surgery | proposed |
 | 8.3 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | proposed |
 | 8.2 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT + attention heads | proposed |
 | 8.0 | H11 — Trajectory-aware budgeted decision-token steering | activation steering | proposed |
 | 7.9 | H8 — Displacement-probe edit auditor and reference chooser | cheap pre-GPU screening diagnostic | proposed |
+| 7.8 | H13 — Zero-init attention-latent feedback lane | raw-capability architectural insert | proposed |
+| 7.7 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | proposed |
 
 ---
 
@@ -420,6 +423,103 @@ Expected: trajectory-aware decision-token steering achieves most of always-on st
 
 - [arXiv:2611.18274 — *Right Token, Right Time: From Per-Token Gating to Trajectory-Aware Activation Steering*](https://arxiv.org/abs/2611.18274): fixed-budget per-token steering, Contrastive Feature Projection, and Closed-Loop Adaptive Bernoulli Steering with stability analysis.
 - Local Exp 42 always-on slider-side effects and Exp 56 boundary-token decision-position analysis.
+
+
+---
+
+## H12 — Closed-form decision-readout correction
+
+**Priority: 8.4/10**
+
+### Novel idea
+
+Use frozen hidden states as a readout feature extractor and solve a **closed-form decision-head correction** with shrinkage LDA/kernel ridge, then write that correction back as a tiny gated low-rank output patch at decision tokens. Unlike H5, which compresses an existing surgical/RL effect into constant vectors, this directly estimates the correct action/tool/policy-code decision boundary from labeled train/dev rows without any gradient training.
+
+### Why it should work mechanistically
+
+Many strict-schema failures may be linearly or kernel-linearly readable in late hidden states even when generation chooses the wrong token. A frozen encoder plus closed-form readout is robust in the low-label regime because it cannot wander through weight space. If the residual stream already separates correct from incorrect decisions, a small gated readout correction can exploit that information without retraining or damaging upstream computation.
+
+### Concrete experiment design
+
+1. Cache hidden states at layers 20–29 and token positions immediately before action, tool, and policy-code decisions across train/dev prompt families.
+2. Build multiple views: final-layer state, mean of late layers, decision-token state, preceding-schema state, and contrastive correct-vs-failure differences.
+3. Fit a candidate pool exactly: shrinkage LDA, PCA+LDA, linear ridge, random-feature ridge, and small RBF/additive kernel ridge. Select by cross-fitted dev predictions only.
+4. Convert the selected readout into a sparse logit/residual correction active only at decision positions. Compare raw probe accuracy, corrected greedy generation, corrected sampling/pass@4, and composition with the validated surgical edit.
+5. Measure exact compliance, unsafe refusal, benign false refusal, schema malformation, correction firing rate, real-benchmark temperature, parameter/storage cost, and determinism across repeated runs.
+
+### Expected outcome and falsification criterion
+
+Expected: closed-form readouts show high train/dev decision accuracy and produce a meaningful exact-compliance gain with little or no general-capability cost. Falsified if cross-fitted readout accuracy does not exceed simple linear probes/majority controls, if probe accuracy fails to transfer to generation corrections, or if the correction only works when fitted directly to eval-like prompts.
+
+### Citation
+
+- [arXiv:2611.33972 — *Fine-Tuning Without Gradients? Closed-Form, LLM-Written Classifiers on a Frozen Encoder*](https://arxiv.org/abs/2611.33972): exact shrinkage-LDA/kernel-ridge readouts beat full fine-tuning and LoRA in low-label regimes, with deterministic no-gradient adaptation.
+- Local need for tiny, reproducible decision-boundary corrections in strict JSON policy routing.
+
+---
+
+## H13 — Zero-init attention-latent feedback lane
+
+**Priority: 7.8/10**
+
+### Novel idea
+
+Test whether a small model's raw capability can be improved by an **additive attention-latent feedback lane** that lets the next token read selected deep sublayer states of the preceding token. Initialize the feedback path to exact zero, train only its low-rank source maps/tied KV attention, and compare fixed nearest-window feedback against learned attention.
+
+### Why it should work mechanistically
+
+A 135M model has limited serial depth per token. Deep-state feedback gives it a second chance to reuse contextual computation across positions without increasing the width or overwriting existing weights. The fresh ALF result suggests intermediate/deep nearby layers—not just final states—carry useful feedback, and that much of the gain survives single-pass decoding when previous-token states are cached.
+
+### Concrete experiment design
+
+1. Implement a zero-init additive lane that caches selected post-attention/post-MLP states from the previous token and injects them into the next token after layer 0 or a mid-layer interface.
+2. Compare fixed nearest-window feedback from layers 24/27/29 versus learned tied-KV attention over those states; include final-state-only and random-projection controls.
+3. Train only feedback parameters on a small mixture of general text plus policy-rollout teacher-forced data, preserving exact identity at initialization. Use a short continued-training budget, not full pretraining.
+4. Measure MMLU/ARC-Easy/HellaSwag temperature as the primary raw-performance endpoint, plus WikiText/perplexity proxy, policy metrics, added latency, cache memory, and whether fixed-window feedback retains most of the learned-attention gain.
+5. If the lane helps generally, test composition with H1/H3 attention inserts and the validated surgical edit.
+
+### Expected outcome and falsification criterion
+
+Expected: even a short zero-init adaptation produces neutral-to-warm benchmark movement or a perplexity gain, with fixed nearest-window feedback capturing most benefit at low cost. Falsified if the lane remains near zero/unused, if gains vanish under single-pass decoding, or if added latency/cache cost dominates any quality improvement on the small model.
+
+### Citation
+
+- [arXiv:2611.31154 — *Attention Latent Feedback*](https://arxiv.org/abs/2611.31154): deep-state feedback lowered held-out loss across scales, matched a 1.38× larger token budget at MoE-1.6B, improved MoE-4.0B seventeen-benchmark average accuracy 45.1→47.0, and retained exact single-pass decoding via cached prior-token states.
+
+---
+
+## H14 — Spectral-sink calibrated post-SDPA microgates
+
+**Priority: 7.7/10**
+
+### Novel idea
+
+Add or train tiny **post-SDPA multiplicative microgates** for existing attention heads, initialized exactly at identity, and calibrate them using spectral measurements of attention-sink structure rather than behavior loss alone. The goal is not ablation: it is to suppress pathological sink-aligned spectral spikes only where they measurably dominate head outputs.
+
+### Why it should work mechanistically
+
+Attention sinks create low-rank spectral spikes that can dominate token-space covariance and reduce effective rank. Post-SDPA gates can contract sink-induced modes and act as a value-path gradient valve. In a small model, a few heads may be sacrificing representational bandwidth to sink behavior; gentle identity-initialized gating could recover capacity without deleting heads or overwriting MLP weights.
+
+### Concrete experiment design
+
+1. Measure per-head attention mass on first/sink tokens, covariance spectra, effective rank, sink-subspace alignment, and value-gradient proxies across correct, false-refusal, true-refusal, malformed, and general-benchmark inputs.
+2. Add scalar or low-dimensional vector gates after SDPA for each existing head, initialized exactly at one. Compare:
+   - uniform learned gates;
+   - gates only on top sink-aligned heads;
+   - spectral-regularized gates penalizing dominant covariance eigenvalue;
+   - random-head gates;
+   - no-gate control.
+3. Train gates with a small exact-compliance objective plus a benchmark/KL preservation penalty; alternatively derive a one-shot spectral calibration and use RL only as a refinement.
+4. Measure standard policy metrics, MMLU/ARC/HellaSwag temperature, attention entropy, sink mass, covariance effective rank, alignment reduction, KL to base, and gate distribution by layer/head.
+5. Test composition with H3 graph-selected offsets and H1 modular inserts, since all three target attention rather than MLP refusal directions.
+
+### Expected outcome and falsification criterion
+
+Expected: sink-aligned selective gates increase effective rank and yield neutral-to-positive raw-benchmark movement without harming policy metrics; behavior gains, if any, should come at lower KL than dense head training. Falsified if SmolLM2 does not exhibit harmful sink spectra, if spectral suppression is uncorrelated with behavior/benchmark outcomes, or if gates collapse heads and reproduce the hard-ablation failure mode.
+
+### Citation
+
+- [arXiv:2611.20403 — *Attention Sinks as Spectral Spikes: A Mechanism Analysis of Gated Attention*](https://arxiv.org/abs/2611.20403): post-SDPA gating suppresses sink-induced spectral structure, reduces sink-subspace alignment/outlier mass, increases effective rank, and attenuates first-token value-gradient amplification.
 
 ---
 
