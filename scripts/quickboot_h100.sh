@@ -95,16 +95,15 @@ timeout --signal=SIGTERM --kill-after=30s "${HARD_TIMEOUT_MIN}m" \
     --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 --shm-size=64g \
     --cap-add=SYS_PTRACE \
     "${ENV_ARGS[@]}" \
-    -e PYTHONPATH=/workspace \
     -e HF_HOME="${CACHE_ROOT}/hf" \
     -e HF_DATASETS_CACHE="${CACHE_ROOT}/hf/datasets" \
     -e TMPDIR="${CACHE_ROOT}/t" \
     -e HALO_DATA_ROOT="${CACHE_ROOT}/s" \
-    -v "$(pwd)":/workspace \
+    -v "$(pwd)":/lab \
     -v "${CACHE_ROOT}:${CACHE_ROOT}" \
-    -w /workspace \
+    -w /lab \
     "${HALO_IMAGE}" \
-    python - "/workspace/${MANIFEST}" <<'PY'
+    python - "/lab/${MANIFEST}" <<'PY'
 import subprocess, sys, yaml
 manifest = yaml.safe_load(open(sys.argv[1]))
 jobs = manifest.get("jobs", [])
@@ -112,11 +111,11 @@ for idx, job in enumerate(jobs, 1):
     name, kind = job["name"], job["kind"]
     print(f"\n>>> [Job {idx}/{len(jobs)}] {name} ({kind})", flush=True)
     if kind == "halo_sft":
-        cmd = ["halo", "launch", "sft", f"/workspace/{job['config']}", "-n", "1"]
+        cmd = ["halo", "launch", "sft", f"/lab/{job['config']}", "-n", "1"]
     elif kind == "halo_grpo":
-        cmd = ["halo", "launch", "grpo", f"/workspace/{job['config']}", "-n", "1"]
+        cmd = ["halo", "launch", "grpo", f"/lab/{job['config']}", "-n", "1"]
     elif kind == "python_script":
-        cmd = ["python", f"/workspace/{job['script']}"] + job.get("args", [])
+        cmd = ["python", f"/lab/{job['script']}"] + job.get("args", [])
     else:
         raise ValueError(f"Unknown job kind: {kind}")
     subprocess.run(cmd, check=True)
