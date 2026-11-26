@@ -17,9 +17,9 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 | Priority | Hypothesis | Main type | Status |
 |---:|---|---|---|
-| 9.6 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | proposed |
+| 9.4 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | partially scoped by exp59; input-conditioned exact-zero gates remain untested |
 | 9.3 | H2 — Operator-discrepancy collateral repair adapter | closed-form subspace repair | proposed |
-| 8.9 | H3 — Functional-connectivity-guided head insertion | attention-head modification | proposed |
+| 8.9 | H3 — Functional-connectivity-guided head insertion | attention-head modification | partially scoped by exp58/59; graph-selected connectivity remains untested |
 | 8.8 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | proposed |
 | 8.7 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | proposed |
 | 8.6 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | proposed |
@@ -33,7 +33,7 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 ## H1 — Exact-zero keyed modular implant bank
 
-**Priority: 9.6/10**
+**Priority: 9.4/10** *(reduced slightly because exp59 now covers warm architecture-matched scalar GQA inserts; the untested novelty is input-conditioned exact-zero gating and mixed head+MLP banks.)*
 
 ### Novel idea
 
@@ -113,7 +113,7 @@ Expected: retain within 2.5 pp of the edit-only exact-compliance gain while lift
 
 ## H3 — Functional-connectivity-guided head insertion
 
-**Priority: 8.9/10**
+**Priority: 8.9/10** *(exp58/59 cover gradient-ranked sparse heads and warm scalar GQA inserts, but not functional-connectivity graph selection.)*
 
 ### Novel idea
 
