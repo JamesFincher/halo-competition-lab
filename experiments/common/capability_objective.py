@@ -188,6 +188,7 @@ def span_weighted_causal_lm_loss(
     device: torch.device,
     context_weight: float,
     answer_weight: float,
+    answer_starts: list[int | None] | None = None,
     max_length: int = 384,
 ) -> torch.Tensor:
     """Causal LM loss with separate weights for context and final-answer tokens.
@@ -202,7 +203,7 @@ def span_weighted_causal_lm_loss(
     enc = enc.to(device)
     token_weights = torch.zeros_like(enc["input_ids"], dtype=torch.float32)
     for row, text in enumerate(texts):
-        answer_start = answer_span_start(text)
+        answer_start = answer_starts[row] if answer_starts is not None else answer_span_start(text)
         for pos, (start, end) in enumerate(offsets[row].tolist()):
             if int(enc["attention_mask"][row, pos].item()) == 0:
                 continue
@@ -237,6 +238,7 @@ def evaluate_span_weighted_lm_loss(
     device: torch.device,
     context_weight: float,
     answer_weight: float,
+    answer_starts: list[int | None] | None = None,
     batch_size: int = 4,
     max_length: int = 384,
 ) -> float:
@@ -252,8 +254,9 @@ def evaluate_span_weighted_lm_loss(
         offsets = enc.pop("offset_mapping")
         enc = enc.to(device)
         token_weights = torch.zeros_like(enc["input_ids"], dtype=torch.float32)
+        chunk_starts = answer_starts[start : start + batch_size] if answer_starts is not None else None
         for row, text in enumerate(texts):
-            answer_start = answer_span_start(text)
+            answer_start = chunk_starts[row] if chunk_starts is not None else answer_span_start(text)
             for pos, (tok_start, tok_end) in enumerate(offsets[row].tolist()):
                 if int(enc["attention_mask"][row, pos].item()) == 0:
                     continue
