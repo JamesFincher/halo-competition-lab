@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T10:05:53+00:00",
+  "generated_at_utc": "2026-11-26T10:11:16+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -508,6 +508,9 @@
     "exp64_validated_edit_layer_ablation",
     "exp65_slider_insertion_layer_sweep",
     "exp66_edit_plus_warm_slider_composition",
+    "exp67_single_coordinate_decision_steering",
+    "exp80_edit_strength_scaffold_annealing",
+    "exp81_principal_subspace_guardrailed_rl",
     "inverse_causal_patching",
     "multi_seed_stability_sweep"
   ],
@@ -519,7 +522,19 @@
     46,
     47,
     48,
-    49
+    49,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
   ],
   "inplace_result_overwrite_warnings": [
     {

@@ -119,10 +119,26 @@ def metric_objects(x: Any, path: str = ""):
             yield from metric_objects(v, f"{path}[{i}]")
 
 
+PRIMARY_EVAL_KEYS = (
+    "eval",
+    "eval_lambda0_primary",
+    "eval_unhinted",
+    "eval_cap_off",
+    "eval_greedy",
+    "eval_zero_rl",
+)
+
+
 def add_candidate(candidates: list[dict[str, Any]], label: str, obj: Any, path: str) -> None:
     if not isinstance(obj, dict):
         return
-    ev = obj.get("eval") if isinstance(obj.get("eval"), dict) else obj
+    ev = None
+    for key in PRIMARY_EVAL_KEYS:
+        if isinstance(obj.get(key), dict):
+            ev = obj[key]
+            break
+    if ev is None:
+        ev = obj
     if not isinstance(ev, dict) or "exact_compliance_rate" not in ev:
         return
     meta = obj
@@ -188,6 +204,12 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
 
     if isinstance(d.get("validated_edit"), dict):
         add_candidate(candidates, "validated_edit_only", d["validated_edit"], "/validated_edit")
+
+    if isinstance(d.get("inverter_then_complementary_lora"), dict):
+        add_candidate(candidates, "inverter_then_complementary_lora", d["inverter_then_complementary_lora"], "/inverter_then_complementary_lora")
+
+    if isinstance(d.get("accepted"), dict):
+        add_candidate(candidates, "accepted_pre_rl", d["accepted"], "/accepted")
 
     if isinstance(d.get("eval"), dict) and "exact_compliance_rate" in d["eval"]:
         add_candidate(candidates, "eval", {"eval": d["eval"]}, "/eval")
