@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import re
 import subprocess
 from datetime import datetime, timezone
@@ -292,11 +293,20 @@ def experiment_numbers() -> tuple[dict[int, list[str]], list[int]]:
     return num_map, gaps
 
 
+def has_completed_result(expdir: Path) -> bool:
+    results = expdir / "results"
+    for dirpath, dirnames, filenames in os.walk(results):
+        dirnames[:] = [d for d in dirnames if not (d.startswith("backup") or d in {"archive", "invalid"})]
+        if any(name.endswith(".json") for name in filenames):
+            return True
+    return False
+
+
 def missing_result_experiments() -> list[str]:
     missing = []
     for script in sorted(ROOT.glob("experiments/*/scripts/run_*.py")):
         expdir = script.parents[1]
-        if not list(expdir.glob("results/**/*.json")):
+        if not has_completed_result(expdir):
             missing.append(expdir.name)
     return missing
 

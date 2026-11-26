@@ -29,7 +29,7 @@ def load_data():
 def main():
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
+    dtype = torch.float32  # fp32 required: bf16 coarsens rank-1 surgical edits (wave-1 finding)
     out = ROOT / "experiments/inverse_causal_patching/results"
     out.mkdir(parents=True, exist_ok=True)
     print(f"[Exp 27] Inverse Causal Patching on {device}", flush=True)
@@ -72,7 +72,7 @@ def main():
 
     results = []
     src = pos_rows[0]
-    tgt = neg_rows[-1]
+    tgt = pos_rows[-1]
     acts_src = capture_resid(sft, src["ids"])
     base_marg_tgt, tgt_ids = margin_at_pos(sft, tgt["prompt"])
     print(f"  patch pair: src margin={src['margin']:.2f} -> tgt margin={base_marg_tgt:.2f}", flush=True)

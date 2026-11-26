@@ -14,14 +14,14 @@ Last updated: 2026-11-26 10:00 UTC. This document is updated continuously as H10
 | 24 | `adaptive_k_proportional_edit` | crashed on device mismatch; rerun pending | No evidence yet. |
 | 25 | `gradfree_evolution_subspace` | result landed; operator/objective-invalid | Fitness rewards unsafe compliance unless hard-constrained. |
 | 26 | `entropy_weighted_fork_rl` | result landed; operator-invalid | RL arms start from always-call collapse. |
-| 27 | `inverse_causal_patching` | first JSON invalid; rerun pending | Identity patch artifact: all layer deltas are exactly zero. |
+| 27 | `inverse_causal_patching` | invalid JSON backed up; corrected script requeued | Identity patch artifact preserved under `results/backup_invalid_identity/`; rerun should use distinct source/target prompts. |
 | 28 | `crosslayer_head_mlp_synergy` | result landed; operator-invalid | Head-only preserves safety but does not improve exactness. |
 | 29 | `momentum_annealed_rl` | result landed; operator-invalid | No evidence of scaffold-to-RL handoff. |
 | 30 | `steering_oracle_guided_rl` | result landed; operator-invalid | No measurable steering benefit after collapsed initialization. |
 | 31 | `request_circuit_mapper` | result landed; invalid classifier | Only two pseudo-types, not real policy-code categories. |
 | 32 | `targeted_circuit_rl` | result landed; invalid downstream | Invalid atlas + broken operator stack. |
 | 33 | `dtype_edit_sensitivity` | result landed; hypothesis largely refuted | fp32 and bf16 both collapse; dtype is not root cause. |
-| 34 | `exp34_activation_vector_only_rl` | pending | Can activation-vector-only RL match weight-space RL while weights stay frozen? |
+| 34 | `exp34_activation_vector_only_rl` | retired/superseded | Folder absent after the activation-vector line was reworked into exp50; do not resurrect without provenance. |
 | 35 | `interference_canceling_edit` | result landed; operator-invalid | Cancellation partially restores exactness but not safety. |
 | 36 | `safety_vaccination_edit` | result landed; negative under broken operator | No vaccine dose response. |
 | 37 | `collision_priced_allocation` | result landed; negative under broken operator | Selection changes but behavior does not. |
@@ -43,6 +43,8 @@ Last updated: 2026-11-26 10:00 UTC. This document is updated continuously as H10
 | 58 | `exp58_attention_head_sparse_rl` | queued/running | Can sparse attention-head RL add routing without overwriting MLP surgery? |
 | 59 | `exp59_warm_gqa_slider_heads` | queued/running | Do architecture-matched warm GQA slider heads improve on Exp 42's random single-head insert? |
 | 60 | `exp60_benign_keyed_refusal_inverter` | queued/running | Can a benign-keyed neuron write negative refusal only in benign contexts? |
+| 61 | `exp61_keyed_zero_gqa_slider` | queued/running | Can exact-zero keyed GQA sliders preserve architecture neutrality while gaining control? |
+| 62 | `exp62_policy_preserving_gqa_slider` | queued/running | Can a policy-preserving GQA slider reduce false refusal without Exp 42's policy/exactness loss? |
 
 ## Measurement baseline and interpretation rules
 
@@ -244,7 +246,7 @@ Consequences:
 
 ### Experiment 27 — Inverse Causal Patching Localization — invalid first result, not gradeable
 
-**Input:** `experiments/inverse_causal_patching/results/causal_patching_summary.json`, CUDA, wall time **5.29s**.
+**Input:** invalid artifact now preserved at `experiments/inverse_causal_patching/results/backup_invalid_identity/causal_patching_summary_identity_alias_20261126.json`, CUDA, wall time **5.29s**.
 
 Every layer has `margin_after_patch = 3.125` and `delta = 0.0`, including layers 27–29. This is not evidence that no layer is causal. The result is an identity-patch artifact: `pos_rows[0]` is the minimum-margin prompt, and `neg_rows[-1]` is also the minimum-margin prompt because `neg_rows` is sorted in the opposite direction. The source and target are therefore the same row, so patching activations cannot change the margin.
 
@@ -252,7 +254,7 @@ Every layer has `margin_after_patch = 3.125` and `delta = 0.0`, including layers
 
 **Interpretation:** the all-zero table is internally consistent with source=target aliasing. The later hook-shape and fp32 fixes were necessary but insufficient; the source/target selection logic is the blocking bug.
 
-**Recommended follow-up:** rerun with the minimum-margin benign prompt as source and the maximum-refusal-margin benign prompt as target, then expand beyond one pair. A strong version should use at least 3 source/target pairs, report mean ± std layer restoration, and include a same-prompt identity control explicitly labeled as such.
+**Tracker action:** the invalid artifact has been moved aside rather than overwritten, and the script has been corrected back to fp32 plus distinct source/target selection (`pos_rows[0]` source, `pos_rows[-1]` target). The experiment is now missing a top-level result again, so the VM feeder can rerun it. A stronger version should still use at least 3 source/target pairs, report mean ± std layer restoration, and include a same-prompt identity control explicitly labeled as such.
 
 ### Experiment 20 — Random-Node Control Proof — wave-1 result is a dtype/control inversion, not a localization refutation
 

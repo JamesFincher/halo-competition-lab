@@ -3,16 +3,28 @@
 # Runs FOREVER on the VM — zero downtime by construction.
 cd ~/halo-competition-lab
 while true; do
-  git pull -q origin main 2>/dev/null || git checkout -q -- . 2>/dev/null; git pull -q origin main 2>/dev/null
+  if ! git pull -q origin main 2>/dev/null; then
+    echo "$(date): git pull failed; leaving repo untouched and skipping cycle"
+    sleep 120
+    continue
+  fi
   RUNNING=$(sudo docker ps --format '{{.Names}}' | grep -c '^wave\|^mega\|^autowave' || true)
   if [ "$RUNNING" -eq 0 ]; then
     # build queue of all experiments missing results
     python3 - <<'PY' 2>/dev/null
 import json, glob, os, re
 exps = []
+def has_completed_result(exp):
+    root = f"experiments/{exp}/results"
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if not (d.startswith("backup") or d in {"archive", "invalid"})]
+        if any(f.endswith(".json") for f in filenames):
+            return True
+    return False
+
 for s in sorted(glob.glob("experiments/*/scripts/run_*.py")):
     exp = s.split("/")[1]
-    if not glob.glob(f"experiments/{exp}/results/*.json"):
+    if not has_completed_result(exp):
         exps.append({"name": exp, "script": s})
 # prioritize explicit expNN experiments numerically, newest first; unnumbered names keep lexical fallback
 def priority_key(item):

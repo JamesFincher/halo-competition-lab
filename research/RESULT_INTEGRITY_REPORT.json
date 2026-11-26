@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T09:57:58+00:00",
+  "generated_at_utc": "2026-11-26T10:00:53+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -242,7 +242,7 @@
       "metric_paths": 4
     },
     {
-      "file": "experiments/inverse_causal_patching/results/causal_patching_summary.json",
+      "file": "experiments/inverse_causal_patching/results/backup_invalid_identity/causal_patching_summary_identity_alias_20261126.json",
       "bytes": 2667,
       "warnings": [
         {
@@ -503,6 +503,8 @@
     "exp59_warm_gqa_slider_heads",
     "exp60_benign_keyed_refusal_inverter",
     "exp61_keyed_zero_gqa_slider",
+    "exp62_policy_preserving_gqa_slider",
+    "inverse_causal_patching",
     "multi_seed_stability_sweep"
   ],
   "duplicate_experiment_numbers": {},
