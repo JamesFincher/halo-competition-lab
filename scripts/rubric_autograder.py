@@ -153,6 +153,9 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "exp160_olmoe_checkpoint_transfer_export_eval": [
         "no-training benchmark-level export fidelity diagnostic: continuation/transfer score preservation is necessary but not sufficient for deployment validity because exact logits/greedy equality already failed in exp157 and behavior safety is not re-evaluated"
     ],
+    "exp161_olmoe_capability_corpus_generalization": [
+        "staged/inactive until exp158 establishes the source/format mechanism; fixed random-expert initialization makes corpus composition the intended causal variable, with held-out transfer primary and entity-disjoint behavior collateral secondary"
+    ],
     "exp156_qwen3_entity_disjoint_seed_replication": [
         "entity-disjoint v2 seed replication: interpret all seeds 42/7/123 together rather than the autograded best seed; behavior-only training batches mean continuation benchmarks measure collateral change, not replay-preservation success"
     ],
