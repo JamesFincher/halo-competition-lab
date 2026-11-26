@@ -164,6 +164,7 @@ def frontier_result_status() -> str:
             result_state("exp152", "Exp152 Qwen3-4B pivot"),
             result_state("exp153", "Exp153 OLMoE stage-zero"),
             result_state("exp154", "Exp154 OLMoE expert adapters"),
+            result_state("exp155", "Exp155 OLMoE surface controls"),
         ]
     ) + "."
 
@@ -198,7 +199,7 @@ Last updated: {now} UTC by the results-analysis subagent. This document is regen
 
 - Canonical legacy behavior eval: **40 tasks**, 30 unsafe and 10 benign. Exact moves in 2.5 pp increments; one unsafe task is 3.33 pp and one benign task is 10 pp.
 - Canonical SFT baseline: **55.0% exact**, 77.5% action, 57.5% policy, **100% unsafe refusal**, **90% benign false refusal**.
-- New scaled heldout behavior evals use **n=120** and a different distribution; absolute rates must not be compared with n=40 without rebaselining.
+- New scaled heldout behavior evals use **n=120** and a different distribution; absolute rates must not be compared with n=40 without rebaselining. For scaled-model interventions, the autograder computes P gain against the same-model/same-run baseline when one is present rather than the canonical 135M SFT baseline.
 - Scores below use the autograder's rubric implementation. E reflects the full experiment wall clock, including sweeps/audits, not necessarily the marginal cost of deploying the final recipe.
 - A dagger (†) in the leaderboard means the row has one or more validity warnings; the exact warning is in the ledger below and in `research/AUTOGRADED_SCORES.json`.
 
@@ -238,9 +239,11 @@ Exp102 compared ordinary greedy decoding with probe-forced policy decoding. Ordi
 
 ### H. Large-model pivot — OLMoE stage-zero passed, interventions pending
 
-`research/LARGE_MODEL_FEASIBILITY.md` estimates Qwen3-4B LoRA experiments at roughly 15–30 minutes per arm and OLMoE stage-zero at 10–20 minutes after download on one H100. Current large-model artifacts: {result_state('exp152', 'Exp152 Qwen3-4B pivot')}; {result_state('exp153', 'Exp153 OLMoE stage-zero')}; {result_state('exp154', 'Exp154 OLMoE expert adapters')}.
+`research/LARGE_MODEL_FEASIBILITY.md` estimates Qwen3-4B LoRA experiments at roughly 15–30 minutes per arm and OLMoE stage-zero at 10–20 minutes after download on one H100. Current large-model artifacts: {result_state('exp152', 'Exp152 Qwen3-4B pivot')}; {result_state('exp153', 'Exp153 OLMoE stage-zero')}; {result_state('exp154', 'Exp154 OLMoE expert adapters')}; {result_state('exp155', 'Exp155 OLMoE surface controls')}.
 
 Exp153 stage-zero is favorable for the OLMoE branch, but its behavior numbers are a base-instruct starting point rather than a like-for-like comparison with the 135M SFT model. The model is **6.919B parameters**, 16 layers, 64 experts/layer, top-8/token. It evaluates in **249.09s** with only **18.77 GiB max reserved** on the H100. Cache consistency is exact: generated ids match cache-off generation and max single-forward logit diff is **0.0**, so token-local expert/output adapters should not repeat the slider cache artifact. Behavioral headroom is large: original40 is **25.0/96.7/100** (action 72.5%, policy 27.5%), while scaled120 is **15.8/83.3/55.0** (action 57.5%, policy 24.2%). Continuation capability is nonzero and much stronger than the 135M model on ARC/HellaSwag: MMLU sum/token/byte **17/22/20**, ARC-Easy **63/62/68**, HellaSwag **56/69/71** at n=100. Router profiling is the key positive signal: behavior answer-token routing is much more concentrated than capability routing (mean top-8 expert-frequency share **49.69% vs 23.74%**, versus **12.5%** for uniform selection across 64 experts; entropy **3.48 vs 4.01**), and top-10 expert overlap is only **1.31/10** per layer on average. That is direct evidence for partly separable expert subspaces and strongly motivates Exp154 expert adapters.
+
+Exp154 is now active and will compare three parameter-matched answer-only capability-training surfaces under frozen base/router weights: benchmark-selective experts at 8 experts/layer × rank 8, random experts at the same parameter count, and diffuse all-expert rank 1. Exp155 is queued behind it as the surface-control experiment: lowest-answer-token-routed experts (activation necessity control) and dense attention LoRA rank 12 exactly matched to **3,145,728** effective adapter parameters. This is the right falsification structure: selective experts must beat random, diffuse, inactive, and dense-attention controls before capability movement can be attributed to benchmark-selective MoE routing.
 
 The data-scale motivation is concrete: the legacy behavior corpus has only **160 train rows / 144 unique rows**, and `send_http` appears in only **2 rows**, while exact errors are dominated by tool/readout mistakes. The new scaled corpus has **1,600 train rows**, **800 counterfactual pairs**, **120 heldout rows**, zero schema errors, and zero counterfactual-pair violations; however it still shares **218 user-prompt 8-grams** across train/heldout, so it is compositional/template-disjoint rather than fully lexically disjoint. The scaled capability corpus has **5,280 rows** (MMLU 1,271, ARC-Easy 2,236, HellaSwag 1,773) in the Exp141 benchmark-direct format.
 

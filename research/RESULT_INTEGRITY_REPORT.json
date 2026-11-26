@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T19:38:58+00:00",
+  "generated_at_utc": "2026-11-26T19:44:33+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1526,6 +1526,8 @@
     "exp131_context_gated_dose_cancellation",
     "exp133_alpha_init_continuation_confirmation",
     "exp152_qwen3_behavioral_scale_pivot",
+    "exp154_olmoe_benchmark_selective_expert_adapters",
+    "exp155_olmoe_expert_surface_controls",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
