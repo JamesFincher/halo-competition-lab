@@ -1,0 +1,182 @@
+{
+  "contamination_method": "train contexts exact/hash and 13-gram compared against MMLU/ARC-Easy/HellaSwag plus ARC-Challenge/OpenBookQA/Winogrande/TruthfulQA evaluation contexts",
+  "counts": {
+    "full_rows": 4800,
+    "train_rows": 4320,
+    "train_source_counts": {
+      "commonsense_qa_train": 1080,
+      "dolly_closed_qa_train": 810,
+      "qasc_train": 1080,
+      "sciq_train": 1350
+    },
+    "validation_rows": 480,
+    "validation_source_counts": {
+      "commonsense_qa_train": 120,
+      "dolly_closed_qa_train": 90,
+      "qasc_train": 120,
+      "sciq_train": 150
+    }
+  },
+  "eval_reference": {
+    "arc_challenge": {
+      "exact_hashes": 1170,
+      "ngram_hashes": 13519,
+      "rows": 1172
+    },
+    "arc_easy": {
+      "exact_hashes": 2371,
+      "ngram_hashes": 20083,
+      "rows": 2376
+    },
+    "hellaswag": {
+      "exact_hashes": 10018,
+      "ngram_hashes": 283054,
+      "rows": 10042
+    },
+    "mmlu": {
+      "exact_hashes": 13857,
+      "ngram_hashes": 397968,
+      "rows": 14042
+    },
+    "openbookqa": {
+      "exact_hashes": 498,
+      "ngram_hashes": 1012,
+      "rows": 500
+    },
+    "truthfulqa_mc1": {
+      "exact_hashes": 817,
+      "ngram_hashes": 1272,
+      "rows": 817
+    },
+    "winogrande": {
+      "exact_hashes": 1267,
+      "ngram_hashes": 7051,
+      "rows": 1267
+    }
+  },
+  "file_sha256": {
+    "capability_corpus_general_v1.jsonl": "71077c0f23af6fb63cd37ad50d187f1614ccab4038245e0438b250df4d68f991",
+    "capability_train_general_v1.jsonl": "cf4a1931a06bf8ba231a8d6e2263a701c7fbe2016a0a2fc8ac1590abec842f56",
+    "capability_validation_general_v1.jsonl": "d9a5e7eeca3800667cd1715161d68a970a01c854da60c836b83c4ef0290d46dd"
+  },
+  "format": "benchmark-independent direct answer-only continuation",
+  "generator": "scripts/build_capability_general_corpus.py",
+  "ngram_n": 13,
+  "normalization": "lowercase, alphanumeric tokens, whitespace canonicalization",
+  "passed": true,
+  "seed": 42,
+  "sources": {
+    "commonsense_qa_train": {
+      "contamination_examples": [],
+      "dropped_duplicate": 1,
+      "dropped_exact_context_match": 0,
+      "dropped_ngram_overlap": 0,
+      "kept": 1200,
+      "kept_before_quota": 9740,
+      "loaded": 9741,
+      "matches_by_eval_benchmark": {},
+      "quota": 1200,
+      "unused_clean_pool": 8540
+    },
+    "dolly_closed_qa_train": {
+      "contamination_examples": [],
+      "dropped_duplicate": 3,
+      "dropped_exact_context_match": 0,
+      "dropped_ngram_overlap": 0,
+      "kept": 900,
+      "kept_before_quota": 1451,
+      "loaded": 1454,
+      "matches_by_eval_benchmark": {},
+      "quota": 900,
+      "unused_clean_pool": 551
+    },
+    "qasc_train": {
+      "contamination_examples": [
+        {
+          "context_prefix": "What happens when salt water is boiled?",
+          "dataset_id": "31LVTDXBL79FP0FF3C8TCLV8A6TLR5",
+          "exact_matches": [
+            "arc_easy"
+          ],
+          "ngram_matches": []
+        },
+        {
+          "context_prefix": "What can cause people to crash their car?",
+          "dataset_id": "3GA6AFUKOONLK2BN11SZ2VZLI333HQ",
+          "exact_matches": [
+            "openbookqa"
+          ],
+          "ngram_matches": []
+        },
+        {
+          "context_prefix": "What can cause people to crash their car?",
+          "dataset_id": "3HHRAGRYX84HRLMQMNOZDHZ8U4KO9J",
+          "exact_matches": [
+            "openbookqa"
+          ],
+          "ngram_matches": []
+        },
+        {
+          "context_prefix": "What happens when salt water is boiled?",
+          "dataset_id": "3KAKFY4PGU1LGXM77JAK2700KN23IJ",
+          "exact_matches": [
+            "arc_easy"
+          ],
+          "ngram_matches": []
+        },
+        {
+          "context_prefix": "Wind can cause?",
+          "dataset_id": "3R2UR8A0IAF7SH4OP3UDTKLQ3MGXOC",
+          "exact_matches": [
+            "openbookqa"
+          ],
+          "ngram_matches": []
+        }
+      ],
+      "dropped_duplicate": 132,
+      "dropped_exact_context_match": 5,
+      "dropped_ngram_overlap": 0,
+      "kept": 1200,
+      "kept_before_quota": 7997,
+      "loaded": 8134,
+      "matches_by_eval_benchmark": {
+        "arc_easy": 2,
+        "openbookqa": 3
+      },
+      "quota": 1200,
+      "unused_clean_pool": 6797
+    },
+    "sciq_train": {
+      "contamination_examples": [
+        {
+          "context_prefix": "What is the ph level for pure water?",
+          "dataset_id": "sciq_train_7965",
+          "exact_matches": [
+            "arc_challenge"
+          ],
+          "ngram_matches": []
+        },
+        {
+          "context_prefix": "What is at the center of our solar system?",
+          "dataset_id": "sciq_train_1486",
+          "exact_matches": [
+            "arc_easy"
+          ],
+          "ngram_matches": []
+        }
+      ],
+      "dropped_duplicate": 54,
+      "dropped_exact_context_match": 2,
+      "dropped_ngram_overlap": 0,
+      "kept": 1500,
+      "kept_before_quota": 11623,
+      "loaded": 11679,
+      "matches_by_eval_benchmark": {
+        "arc_challenge": 1,
+        "arc_easy": 1
+      },
+      "quota": 1500,
+      "unused_clean_pool": 10123
+    }
+  }
+}
