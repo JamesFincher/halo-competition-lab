@@ -171,6 +171,115 @@ def evaluate_lm_loss(model: torch.nn.Module, tokenizer, records: list[dict], dev
     return round(total_loss / max(total_tokens, 1), 6)
 
 
+def answer_span_start(text: str) -> int | None:
+    """Character start of the final answer/continuation payload in corpus text."""
+    starts = []
+    for marker in ("\nAnswer: ", "\nContinuation: "):
+        idx = text.rfind(marker)
+        if idx >= 0:
+            starts.append(idx + len(marker))
+    return max(starts) if starts else None
+
+
+def span_weighted_causal_lm_loss(
+    model: torch.nn.Module,
+    tokenizer,
+    texts: list[str],
+    device: torch.device,
+    context_weight: float,
+    answer_weight: float,
+    max_length: int = 384,
+) -> torch.Tensor:
+    """Causal LM loss with separate weights for context and final-answer tokens.
+
+    The answer span begins after the final `Answer: ` or `Continuation: ` marker.
+    Weights are aligned to target tokens before the usual next-token shift. If a
+    text lacks a marker, it falls back to uniform unit weighting rather than
+    disappearing from the batch.
+    """
+    enc = tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=max_length, return_offsets_mapping=True)
+    offsets = enc.pop("offset_mapping")
+    enc = enc.to(device)
+    token_weights = torch.zeros_like(enc["input_ids"], dtype=torch.float32)
+    for row, text in enumerate(texts):
+        answer_start = answer_span_start(text)
+        for pos, (start, end) in enumerate(offsets[row].tolist()):
+            if int(enc["attention_mask"][row, pos].item()) == 0:
+                continue
+            if answer_start is None:
+                token_weights[row, pos] = 1.0
+            else:
+                token_weights[row, pos] = answer_weight if end > answer_start else context_weight
+    labels = enc["input_ids"].clone()
+    labels[enc["attention_mask"] == 0] = -100
+    logits = model(input_ids=enc["input_ids"], attention_mask=enc["attention_mask"]).logits
+    shift_logits = logits[:, :-1, :].contiguous()
+    shift_labels = labels[:, 1:].contiguous()
+    shift_weights = token_weights[:, 1:].contiguous().to(device)
+    losses = F.cross_entropy(
+        shift_logits.view(-1, shift_logits.shape[-1]),
+        shift_labels.view(-1),
+        ignore_index=-100,
+        reduction="none",
+    )
+    valid = shift_labels.view(-1) != -100
+    weights = shift_weights.view(-1) * valid.to(shift_weights.dtype)
+    if float(weights.sum().item()) <= 0.0:
+        weights = valid.to(shift_weights.dtype)
+    return (losses * weights).sum() / weights.sum().clamp_min(1e-8)
+
+
+@torch.no_grad()
+def evaluate_span_weighted_lm_loss(
+    model: torch.nn.Module,
+    tokenizer,
+    records: list[dict],
+    device: torch.device,
+    context_weight: float,
+    answer_weight: float,
+    batch_size: int = 4,
+    max_length: int = 384,
+) -> float:
+    """Validation loss under the same context/answer token weighting."""
+    if not records:
+        return 0.0
+    model.eval()
+    total_loss = 0.0
+    total_weight = 0.0
+    for start in range(0, len(records), batch_size):
+        texts = [r["text"] for r in records[start : start + batch_size]]
+        enc = tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=max_length, return_offsets_mapping=True)
+        offsets = enc.pop("offset_mapping")
+        enc = enc.to(device)
+        token_weights = torch.zeros_like(enc["input_ids"], dtype=torch.float32)
+        for row, text in enumerate(texts):
+            answer_start = answer_span_start(text)
+            for pos, (tok_start, tok_end) in enumerate(offsets[row].tolist()):
+                if int(enc["attention_mask"][row, pos].item()) == 0:
+                    continue
+                if answer_start is None:
+                    token_weights[row, pos] = 1.0
+                else:
+                    token_weights[row, pos] = answer_weight if tok_end > answer_start else context_weight
+        labels = enc["input_ids"].clone()
+        labels[enc["attention_mask"] == 0] = -100
+        logits = model(input_ids=enc["input_ids"], attention_mask=enc["attention_mask"]).logits
+        shift_logits = logits[:, :-1, :].contiguous()
+        shift_labels = labels[:, 1:].contiguous()
+        shift_weights = token_weights[:, 1:].contiguous().to(device)
+        losses = F.cross_entropy(
+            shift_logits.view(-1, shift_logits.shape[-1]),
+            shift_labels.view(-1),
+            ignore_index=-100,
+            reduction="none",
+        )
+        valid = shift_labels.view(-1) != -100
+        weights = shift_weights.view(-1) * valid.to(shift_weights.dtype)
+        total_loss += float((losses * weights).sum().item())
+        total_weight += float(weights.sum().item())
+    return round(total_loss / max(total_weight, 1e-8), 6)
+
+
 def corpus_batch(records: list[dict], step: int, batch_size: int) -> list[dict]:
     if not records:
         raise ValueError("capability training corpus is empty")
