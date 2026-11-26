@@ -9,7 +9,7 @@ Validated local assets:
 - **Best current GPU behavioral result:** Exp 1 rerun `arm2_localized_grpo_only` reached **80% exact / 93.3% unsafe refusal / 0% benign-FR** with targeted top-8-layer r16 GRPO in 68s, beating its matched random-layer control (**60/100/50**). Treat deltas cautiously because the same-run baseline was **47.5/100/80** rather than the canonical **55/100/90**, and the artifact was overwrite-restored. In the same run, `arm1_surgical_edit_only`—top-2 contrastive MLP `down_proj` layers 29/28, top 32 columns, strength 0.5—reached **75/93.3/0** in 0.5s, while edit-then-targeted-RL collapsed into over-refusal (**37.5/100/100**).
 - **Architectural insert evidence is now mixed and sharper:** Exp 42 reduced benign false refusal **90%→30%** but exact compliance fell **55%→42.5%**. Slider-fork v1 single L27 head was much safer (**57.5/100/60**, exact +2.5, no unsafe loss), while 4-head banks, deep spreads, wide heads, memory heads, and full-bank wide variants collapsed to 0–15% exact and often 0% JSON validity. Naive edit+slider composition also hurt: Exp 43 stage1 edit **65/100/90** became stage2 combined **50/96.7/70**.
 - **RL/vector evidence:** localized/targeted GRPO is now a validated performance path, but unrestricted full-model LoRA RL collapsed unsafe refusal to 46.7%, and Exp 34 activation-vector-only RL was negative (**40/100/90** versus canonical baseline 55/100/90). The composition target is therefore not “more RL”: it is export-valid, targeted, curvature/geometry-preserving RL plus repair of the remaining 2/30 unsafe-refusal failures. Exps 50–67 and 80–86 already cover many direct vector/head/RL variants, so new hypotheses must add a mechanistic delta rather than restate them.
-- **Queue/result state at 11:20 UTC:** no experiment-result JSON has landed since the slider-fork harvest at 10:24 UTC despite 51 missing experiment scripts; the tracker reports a hard stall and newest-first starvation risk. H2/H4/H6/H7/H8/H9/H10/H12 now have queued implementations (exp122/124/123/120/125/121/101/102), so the hypothesizer should not duplicate them; the next useful work is sharper gates, controls, and post-result conditional designs.
+- **Queue/result state at 11:20 UTC:** no experiment-result JSON has landed since the slider-fork harvest at 10:24 UTC despite 51 missing experiment scripts; the tracker reports a hard stall and newest-first starvation risk. H2/H4/H6/H7/H8/H9/H10/H11/H12/H14 now have queued implementations (exp122/124/123/120/125/121/101/127/102/126), so the hypothesizer should not duplicate them; the next useful work is sharper gates, controls, and post-result conditional designs.
 - **Known dead ends:** unembedding-direction weight edits collapse into always-call behavior at all tested strengths; fp32 does not rescue them; degenerate collinear push-pull is a sign/strength artifact; hard nullspaces and binary masks are too destructive on a 135M model.
 
 Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 through 2026-11-25 in weight-space programming, activation steering, attention-head intervention, parameter-efficient RL, subspace repair, MoE/architecture expansion, plus frontier/lab blogs including MIT CSAIL weight-space programming and Anthropic feature-steering/introspection writeups. The 11:30 UTC incremental scan added deterministic Forward Weight-Space Programming/Protected FisherGate ([arXiv:2611.34612](https://arxiv.org/abs/2611.34612)) and gradient-free neuron programming ([arXiv:2611.33973](https://arxiv.org/abs/2611.33973)). The local `arxiv-mcp-server` is currently misconfigured (`uvx` entry point missing), so the scan used the official arXiv API and full HTML papers directly.
@@ -33,10 +33,10 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 8.0 | H16 — Norm-calibrated single-coordinate decision steering | sparse activation surgery | queued as exp67 |
 | 7.8 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | demoted: unkeyed multi-head banks collapse; exp61/66 test keying/composition and exp90–97/105/111 isolate optimization controls |
 | 7.7 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted/staged behind exp58–66 plus exp90–97 width/depth/head-count/seed/schedule controls |
-| 7.1 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | exploratory |
+| 7.1 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | queued as exp126 |
 | 7.0 | H17 — Prepare-for-truncation elastic low-rank deployment | compression/raw capability | exploratory |
 | 6.8 | H5 — Output-matched steering-vector compression | activation steering + RL initialization | demoted: vector-only RL was performance-negative |
-| 6.7 | H11 — Trajectory-aware budgeted decision-token steering | activation steering | demoted behind stronger weight-space/PEFT paths |
+| 6.7 | H11 — Trajectory-aware budgeted decision-token steering | activation steering | queued as exp127; still demoted behind stronger weight-space/PEFT paths |
 | 6.5 | H13 — Zero-init attention-latent feedback lane | raw-capability architectural insert | demoted: naive memory-head fork collapsed |
 
 
@@ -59,9 +59,9 @@ Unqueued but high-value after the gates:
 Hold or stage behind current queue:
 
 - **H1/H3:** attention-insert evidence is fragile. Slider-fork v1 single is mildly positive, but multi-head/wide/memory banks collapse and Exp 43 composition hurts exactness. Do not build larger banks until exp61/65/66 clarify keying/depth/composition and exp90–97/105/111 isolate width/depth/count/seed/optimization causally.
-- **H5/H11:** vector-only RL was negative; output-matched compression is still a distinct supervised hypothesis but no longer deserves near-term GPU time.
+- **H5:** vector-only RL was negative; output-matched compression is still a distinct supervised hypothesis but no longer deserves near-term GPU time. **H11 is already queued as exp127**, so do not duplicate it even though its priority remains low.
 - **H13:** naive memory-head v5 collapsed; treat feedback/memory inserts as high-risk exploration, not near-term capacity work.
-- **H14/H17:** useful second-wave probes, not the next GPU jobs.
+- **H14 is already queued as exp126**; **H17** remains a useful second-wave deployment-compression probe, not a next GPU job.
 
 
 ---
@@ -417,7 +417,7 @@ Expected: served-weight training preserves more benchmark gain after export than
 
 ## H11 — Trajectory-aware budgeted decision-token steering
 
-**Priority: 6.7/10** *(demoted: vector-only RL was negative and weight-space/PEFT paths are stronger; still distinct as a cheap inference-time control.)*
+**Priority: 6.7/10** *(queued as exp127; demoted because vector-only RL was negative and weight-space/PEFT paths are stronger, but still distinct as a cheap inference-time control.)*
 
 ### Novel idea
 
@@ -516,7 +516,7 @@ Expected: even a short zero-init adaptation produces neutral-to-warm benchmark m
 
 ## H14 — Spectral-sink calibrated post-SDPA microgates
 
-**Priority: 7.1/10** *(exploratory; no direct local evidence yet.)*
+**Priority: 7.1/10** *(queued as exp126; exploratory, with no direct local evidence yet.)*
 
 ### Novel idea
 
