@@ -283,7 +283,7 @@ def main():
     rng=random.Random(args.seed+1)
     random_sel={li:sorted(rng.sample(range(n_exp),min(args.top_experts_per_layer,n_exp))) for li in range(n_layers)}
     diffuse={li:list(range(n_exp)) for li in range(n_layers)}
-    behavior_eval=base_rl.load_rows(ROOT/"data/policy_eval_scaled.jsonl")
+    behavior_eval=base_rl.load_rows(ROOT/"data/policy_eval_scaled_v2.jsonl")
     baseline={
       "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True),
       "continuation_benchmark":run_continuation_benchmark(probe_model,tok,device,args.continuation_n),
