@@ -1,1 +1,8 @@
-{"exclusive_gpu":true,"estimated_peak_gb":32,"queue_priority":60,"reason":"Mechanism ablation follows completed exp154 and already queued surface/behavior controls"}
+{
+  "exclusive_gpu": true,
+  "estimated_peak_gb": 32,
+  "queue_priority": 60,
+  "reason": "Mechanism ablation follows completed exp154 and already queued surface/behavior controls",
+  "allow_parallel": true,
+  "parallel_notes": "Expert-adapter mechanism training is conservatively estimated at 32GB based on the completed exp154 profile; pairwise packing leaves >=20GB headroom when paired with a 28GB Qwen job."
+}

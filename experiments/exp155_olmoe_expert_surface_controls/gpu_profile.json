@@ -1,1 +1,8 @@
-{"exclusive_gpu":true,"estimated_peak_gb":34,"queue_priority":80,"reason":"OLMoE surface-control training depends on exp154 interpretation and must queue behind the parent expert-adapter comparison"}
+{
+  "exclusive_gpu": true,
+  "estimated_peak_gb": 34,
+  "queue_priority": 80,
+  "reason": "OLMoE surface-control training depends on exp154 interpretation and must queue behind the parent expert-adapter comparison",
+  "allow_parallel": true,
+  "parallel_notes": "Expert-adapter training is conservatively estimated at 34GB based on the completed exp154 32GB profile; pairwise packing leaves >=18GB headroom on the 80GB H100."
+}
