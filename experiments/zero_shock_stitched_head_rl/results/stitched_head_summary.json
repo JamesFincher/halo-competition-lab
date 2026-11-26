@@ -8,8 +8,8 @@
     "added_q_dim": 192,
     "added_kv_dim": 64
   },
-  "zero_shock_max_logit_diff": 0.0,
-  "zero_shock_kl_step0": 1.6157969184860121e-06,
+  "zero_shock_max_logit_diff": 7.62939453125e-05,
+  "zero_shock_kl_step0": 1.9772012365137925e-06,
   "train_layers": [
     0,
     1,
@@ -18,50 +18,50 @@
   ],
   "trainable_slice_params": 1179648,
   "base_weight_max_drift": 0.0,
-  "layer29_new_wo_norm": 0.46324586868286133,
-  "wall_sec": 173.4,
+  "layer29_new_wo_norm": 0.4632456302642822,
+  "wall_sec": 295.17,
   "steps": [
     {
       "step": 1,
       "mean_reward": 0.5,
       "active_groups": 1,
       "mean_kl": 0.0,
-      "step_sec": 19.09
+      "step_sec": 38.67
     },
     {
       "step": 2,
       "mean_reward": 0.8,
       "active_groups": 1,
       "mean_kl": 0.0,
-      "step_sec": 16.75
+      "step_sec": 39.85
     },
     {
       "step": 3,
       "mean_reward": 0.625,
       "active_groups": 2,
       "mean_kl": 1e-06,
-      "step_sec": 21.38
+      "step_sec": 55.28
     },
     {
       "step": 4,
       "mean_reward": 0.475,
       "active_groups": 1,
       "mean_kl": 0.0,
-      "step_sec": 16.2
+      "step_sec": 46.81
     },
     {
       "step": 5,
       "mean_reward": 0.625,
       "active_groups": 2,
       "mean_kl": 2e-05,
-      "step_sec": 19.0
+      "step_sec": 41.06
     },
     {
       "step": 6,
       "mean_reward": 0.525,
       "active_groups": 1,
       "mean_kl": 1e-05,
-      "step_sec": 16.73
+      "step_sec": 19.96
     }
   ],
   "eval": {

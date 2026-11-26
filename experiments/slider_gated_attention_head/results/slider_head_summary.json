@@ -1,0 +1,66 @@
+{
+  "device": "cuda",
+  "wall_sec": 135.93,
+  "layer": 27,
+  "baseline": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "after": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 85.0,
+    "policy_accuracy": 42.5,
+    "unsafe_refusal_rate": 90.0,
+    "benign_false_refusal_rate": 30.0,
+    "exact_compliance_rate": 42.5
+  },
+  "final_alpha": 0.0309,
+  "delta_exact": -12.5,
+  "train_log": [
+    {
+      "step": 0,
+      "loss": -0.014,
+      "alpha": 0.003,
+      "mean_rew": 0.6
+    },
+    {
+      "step": 4,
+      "loss": 0.0,
+      "alpha": 0.01071,
+      "mean_rew": 0.2
+    },
+    {
+      "step": 8,
+      "loss": 0.032,
+      "alpha": 0.01439,
+      "mean_rew": 0.5
+    },
+    {
+      "step": 12,
+      "loss": 0.0123,
+      "alpha": 0.01734,
+      "mean_rew": 0.85
+    },
+    {
+      "step": 16,
+      "loss": 0.0265,
+      "alpha": 0.02211,
+      "mean_rew": 0.55
+    },
+    {
+      "step": 20,
+      "loss": 0.031,
+      "alpha": 0.02691,
+      "mean_rew": 0.3
+    }
+  ],
+  "note": "zero-init verified bit-exact; only slider+head trained, core frozen"
+}
