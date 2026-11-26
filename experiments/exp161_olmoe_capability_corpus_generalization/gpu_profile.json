@@ -1,0 +1,8 @@
+{
+  "estimated_model_gb": 14.4,
+  "estimated_peak_gb": 63.0,
+  "estimated_wall_hours": 3.5,
+  "exclusive_gpu": true,
+  "queue_priority": 75,
+  "notes": "Staged; activate only after exp158. Three random-expert arms compare corpus composition at fixed updates, not extra selectivity variants."
+}
