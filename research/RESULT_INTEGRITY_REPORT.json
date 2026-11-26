@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T15:47:47+00:00",
+  "generated_at_utc": "2026-11-26T16:04:44+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1411,6 +1411,8 @@
     "exp133_alpha_init_continuation_confirmation",
     "exp149_h22_continuation_followup",
     "exp150_l20_cache_corrected_seed_replication",
+    "exp152_qwen3_behavioral_scale_pivot",
+    "exp153_olmoe_expert_stage_zero",
     "exp84_momentum_carryover_half_edit",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
