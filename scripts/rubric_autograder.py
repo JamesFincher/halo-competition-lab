@@ -46,6 +46,7 @@ SCORE_OVERRIDES: dict[str, dict[str, float]] = {
     "exp163_qwen3_behavior_data_scaling_curve": {"N": 7, "K": 9, "T": 7, "R": 6},
     "exp164_qwen3_capability_replay_dose_curve": {"N": 8, "K": 9, "T": 8, "R": 6},
     "exp165_qwen3_capability_replay_source_controls": {"N": 8, "K": 8, "T": 7, "R": 6},
+    "exp166_qwen3_mixed_batch_interleaving": {"N": 8, "K": 8, "T": 7, "R": 6},
     "exp154_olmoe_benchmark_selective_expert_adapters": {"N": 7, "K": 8, "T": 7, "R": 6},
 }
 
@@ -138,13 +139,16 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
     "exp163_qwen3_behavior_data_scaling_curve": [
-        "fixed-update scaling curve intentionally confounds unique-data count with repetition/epochs as an operating-point question; nested stratified complete-pair subsets control tool/policy composition, but single-seed noise remains"
+        "fixed-compute diversity-versus-repetition curve uses exposed unique-row counts 400/800/1600/2400 at 6/3/1.5/1 epochs; nested stratified complete-pair subsets control tool/policy composition, but single-seed noise remains and fixed-epoch scaling is separate"
     ],
     "exp164_qwen3_capability_replay_dose_curve": [
         "replay dose varies both capability exposure and behavior-data share at fixed total updates, which is the intended tradeoff curve; continuation gains on MMLU/ARC-Easy/HellaSwag remain partly in-domain, so use the held-out transfer battery for broad-capability interpretation"
     ],
     "exp165_qwen3_capability_replay_source_controls": [
         "staged conditional source-control diagnostic: behavior-only anchors and the shuffled wrong-answer arm are interpretive references rather than deployment candidates; behavior-only-225 matches behavior-step count but not total optimizer updates, and answer rotation preserves answer distribution while actively training incorrect context-answer pairings"
+    ],
+    "exp166_qwen3_mixed_batch_interleaving": [
+        "staged conditional interleaving diagnostic: at default 300 steps/batch8/replay-every4 the alternating and mixed arms consume exactly the same 1800 behavior plus 600 capability examples, so only temporal batch composition varies; non-default doses may not preserve exact matching"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
         "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"
@@ -300,6 +304,7 @@ EXPERIMENT_REFERENCE_LABELS: dict[str, set[str]] = {
     "exp144_sparse_edit_anchored_mlp_lora": {"vector_only_post_edit_lower_bound"},
     "exp102_closed_form_decision_readout": {"sft_manual_none", "validated_edit_manual_none", "sft_manual_majority", "validated_edit_manual_majority", "sft_manual_random", "validated_edit_manual_random"},
     "exp165_qwen3_capability_replay_source_controls": {"behavior_only_300_steps", "behavior_only_225_steps", "shuffled_benchmark_replay_every4"},
+    "exp166_qwen3_mixed_batch_interleaving": {"alternating_reference_every4"},
 }
 
 
