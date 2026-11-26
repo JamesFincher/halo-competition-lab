@@ -6,22 +6,29 @@ Last updated: 2026-11-26 08:50 UTC. This document is updated continuously as H10
 
 | Experiment | Folder | Status | Primary question |
 |---:|---|---|---|
-| 19 | `surgical_crosstalk_audit` | waiting for `crosstalk_summary.json` | Does hub-neuron protection reduce cross-behavior collateral while preserving target-behavior movement? |
-| 20 | `random_node_control_proof` | waiting for `random_control_summary.json` | Does matched-budget random editing falsify or validate DLA localization? |
-| 21 | `ig5_dla_closed_loop_rl` | waiting for `dla_disjoint_rl_summary.json` | Does DLA edit → re-anchored disjoint RL beat the 82.5% zero-grad edit ceiling? |
-| 22 | `multi_seed_stability_sweep` | waiting for `pareto_sweep_summary.json` | Where is the exact-compliance / safety / collateral optimum across K and strength? |
-| 23 | `dual_polarity_circuit_surgery` | waiting for `pushpull_summary.json` | Does suppress+amplify beat suppression-only at matched edit locality? |
-| 24 | `adaptive_k_proportional_edit` | waiting for `adaptive_k_summary.json` | Does salience-proportional strength reduce collateral versus uniform top-K? |
-| 25 | `gradfree_evolution_subspace` | waiting for `evolution_summary.json` | Can gradient-free search find a better surgical hyperparameter point without touching the test split? |
-| 26 | `entropy_weighted_fork_rl` | waiting for `entropy_grpo_summary.json` | Does entropy-weighted credit assignment improve post-edit RL over uniform advantage? |
-| 27 | `inverse_causal_patching` | waiting for `causal_patching_summary.json` | Do activation patches causally validate layers 29/28 as the minimal edit site? |
-| 28 | `crosslayer_head_mlp_synergy` | waiting for `synergy_summary.json` | Does coordinated attention-head + MLP surgery beat either mechanism alone? |
-| 29 | `momentum_annealed_rl` | waiting for `annealed_rl_summary.json` | Does annealing the surgical scaffold let RL own the behavior better than a fixed edit? |
-| 30 | `steering_oracle_guided_rl` | waiting for `steering_rl_summary.json` | Does steered exploration distill into better unsteered weights than plain post-edit RL? |
-| 31 | `request_circuit_mapper` | added in wave 2; waiting for `request_circuit_atlas.json` | Which layers/neurons carry each semantic request type, and which are type-exclusive? |
-| 32 | `targeted_circuit_rl` | added in wave 2; waiting for `circuit_rl_summary.json` | Does column-masked circuit-only RL preserve safety better than full-layer RL? |
-| 33 | `dtype_edit_sensitivity` | added in wave 2; waiting for `dtype_summary.json` | Does bf16 application corrupt rank-1 surgical edits relative to fp32? |
-| 34 | `exp34_activation_vector_only_rl` | added in wave 2; waiting for `activation_vector_rl_summary.json` | Can activation-vector-only RL match weight-space RL while weights stay frozen? |
+| 19 | `surgical_crosstalk_audit` | result landed; diagnostic, provisional | Hub protection barely decouples true/false refusal. |
+| 20 | `random_node_control_proof` | result landed; operator-invalid | DLA is causally potent but destructive under unembed-direction edit. |
+| 21 | `ig5_dla_closed_loop_rl` | result landed; operator-invalid | RL cannot recover a collapsed always-call reference. |
+| 22 | `multi_seed_stability_sweep` | log complete; summary JSON missing | bf16 dose-collapse visible in log; needs valid rerun/output. |
+| 23 | `dual_polarity_circuit_surgery` | result landed; mathematically degenerate | Apparent push-pull is a net sign/strength control. |
+| 24 | `adaptive_k_proportional_edit` | crashed on device mismatch; rerun pending | No evidence yet. |
+| 25 | `gradfree_evolution_subspace` | result landed; operator/objective-invalid | Fitness rewards unsafe compliance unless hard-constrained. |
+| 26 | `entropy_weighted_fork_rl` | result landed; operator-invalid | RL arms start from always-call collapse. |
+| 27 | `inverse_causal_patching` | first JSON invalid; rerun pending | Identity patch artifact: all layer deltas are exactly zero. |
+| 28 | `crosslayer_head_mlp_synergy` | result landed; operator-invalid | Head-only preserves safety but does not improve exactness. |
+| 29 | `momentum_annealed_rl` | result landed; operator-invalid | No evidence of scaffold-to-RL handoff. |
+| 30 | `steering_oracle_guided_rl` | result landed; operator-invalid | No measurable steering benefit after collapsed initialization. |
+| 31 | `request_circuit_mapper` | result landed; invalid classifier | Only two pseudo-types, not real policy-code categories. |
+| 32 | `targeted_circuit_rl` | result landed; invalid downstream | Invalid atlas + broken operator stack. |
+| 33 | `dtype_edit_sensitivity` | result landed; hypothesis largely refuted | fp32 and bf16 both collapse; dtype is not root cause. |
+| 34 | `exp34_activation_vector_only_rl` | pending | Can activation-vector-only RL match weight-space RL while weights stay frozen? |
+| 35 | `interference_canceling_edit` | result landed; operator-invalid | Cancellation partially restores exactness but not safety. |
+| 36 | `safety_vaccination_edit` | result landed; negative under broken operator | No vaccine dose response. |
+| 37 | `collision_priced_allocation` | result landed; negative under broken operator | Selection changes but behavior does not. |
+| 38 | `noncollinear_pushpull` | result landed; still degenerate | Reported direction cosine remains -1.0. |
+| 39 | `operator_sensitivity_showdown` | result landed; pivotal control | Unembed-direction edit is destructive; original operator not yet replicated. |
+| 40 | `fp32_master_edit_pipeline` | result landed; hypothesis refuted | fp32-master does not rescue the wrong operator. |
+| 41 | `original_operator_replication` | queued/running; decisive validation pending | Does the exact original contrastive-sniff + gated operator reproduce 80%+ exact on GPU? |
 
 ## Measurement baseline and interpretation rules
 
