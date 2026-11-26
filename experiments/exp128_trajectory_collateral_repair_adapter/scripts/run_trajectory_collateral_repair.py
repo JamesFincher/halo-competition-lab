@@ -13,7 +13,7 @@ arXiv:2611.33972-style closed-form low-label adaptation.
 """
 from __future__ import annotations
 
-import argparse, copy, json, os, sys, time
+import argparse, copy, os, sys, time
 from pathlib import Path
 import torch
 
@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
 sys.path.insert(0, str(ROOT / "scripts"))
+from serialization_utils import write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import apply_validated_rank1_edit, build_validated_rank1_subspaces  # noqa: E402
@@ -129,15 +130,6 @@ def trajectory_kl_and_restoration(model, orig, tokenizer, texts, device):
         _xe, ym = capture_pair(model, tokenizer, text, device)
         diff = (ym - yo).float(); mses.append(float((diff.norm() / (yo.norm() + 1e-8)).item()))
     return {"mean_teacher_kl_to_original": round(sum(kls) / len(kls), 7), "mean_relative_layer29_residual_error": round(sum(mses) / len(mses), 7)}
-
-
-def write_json(path, obj):
-    def convert(x):
-        if isinstance(x, torch.Tensor): return x.detach().cpu().tolist()
-        if isinstance(x, dict): return {str(k): convert(v) for k, v in x.items()}
-        if isinstance(x, (list, tuple)): return [convert(v) for v in x]
-        return x
-    path.write_text(json.dumps(convert(obj), indent=2), encoding="utf-8")
 
 
 def main():

@@ -35,6 +35,7 @@ TINY_VALUES = {
     "--n-per-class": "2",
     "--n-pairs": "2",
     "--bench-n": "2",
+    "--benchmark-n": "2",
     "--cap-items-per-source": "2",
     "--probe-rows": "4",
     "--population": "2",
