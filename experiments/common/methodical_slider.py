@@ -238,3 +238,97 @@ def probe_layers_geometry(hf_model, tokenizer, rows: list[dict], device: torch.d
     if device.type == "cuda":
         torch.cuda.empty_cache()
     return out
+
+
+class IndependentLayerSliderBank(nn.Module):
+    """Plain slider heads distributed across layers, each with its own alpha."""
+
+    def __init__(self, dim: int, head_dim: int, layers: list[int]):
+        super().__init__()
+        self.layers = list(layers)
+        self.layer_heads = nn.ModuleDict({str(li): PlainSliderHead(dim, head_dim) for li in self.layers})
+
+    def alphas(self) -> dict[int, float]:
+        return {li: float(self.layer_heads[str(li)].alpha.detach().item()) for li in self.layers}
+
+
+def install_independent_layer_bank(model: torch.nn.Module, bank: IndependentLayerSliderBank) -> list[object]:
+    handles = []
+    for li in bank.layers:
+        handles.append(install_plain_slider(model, li, bank.layer_heads[str(li)]))
+    return handles
+
+
+def train_independent_layer_bank(
+    model: torch.nn.Module,
+    tokenizer,
+    rows: list[dict],
+    device: torch.device,
+    bank: IndependentLayerSliderBank,
+    steps: int = 32,
+    group_size: int = 4,
+    lr: float = 3e-3,
+    max_new_tokens: int = 48,
+    alpha_clip: float | None = None,
+) -> tuple[list[object], list[dict]]:
+    """Fork-style joint multi-layer head training with optional post-step alpha clamp."""
+    handles = install_independent_layer_bank(model, bank)
+    for p in model.parameters():
+        p.requires_grad_(False)
+    opt = torch.optim.AdamW(bank.parameters(), lr=lr)
+    log: list[dict] = []
+    for step in range(steps):
+        step_t0 = time.perf_counter()
+        row = rows[step % len(rows)]
+        ids = tokenizer(base_rl.build_prompt(tokenizer, row["messages"]), return_tensors="pt", truncation=True, max_length=256).to(device)
+        prompt_len = int(ids["input_ids"].shape[1])
+        model.eval()
+        bank.eval()
+        with torch.no_grad():
+            gen = model.generate(
+                **ids,
+                max_new_tokens=max_new_tokens,
+                do_sample=True,
+                temperature=0.9,
+                top_p=0.95,
+                num_return_sequences=group_size,
+                pad_token_id=tokenizer.eos_token_id,
+            )
+        rewards = []
+        for gi in range(group_size):
+            text = tokenizer.decode(gen[gi][prompt_len:], skip_special_tokens=True)
+            rew, _ = base_rl.score_completion(text, row["target"])
+            rewards.append(float(rew))
+        rew_t = torch.tensor(rewards, device=device, dtype=torch.float32)
+        adv = rew_t - rew_t.mean()
+        model.train()
+        bank.train()
+        loss = torch.zeros((), device=device)
+        for gi in range(group_size):
+            lp = base_rl.completion_logprobs(model, gen[gi].unsqueeze(0), prompt_len)
+            loss = loss - adv[gi] * lp
+        loss = loss / group_size
+        opt.zero_grad(set_to_none=True)
+        loss.backward()
+        grad_norm = float(torch.nn.utils.clip_grad_norm_(bank.parameters(), 1.0).item())
+        opt.step()
+        if alpha_clip is not None:
+            with torch.no_grad():
+                for head in bank.layer_heads.values():
+                    head.alpha.clamp_(-alpha_clip, alpha_clip)
+        alphas = {str(k): round(v, 6) for k, v in bank.alphas().items()}
+        rec = {
+            "step": step,
+            "mean_reward": round(float(rew_t.mean().item()), 4),
+            "reward_std": round(float(rew_t.std(unbiased=False).item()), 4),
+            "alphas": alphas,
+            "alpha_min": round(min(bank.alphas().values()), 6),
+            "alpha_max": round(max(bank.alphas().values()), 6),
+            "loss": round(float(loss.detach().item()), 5),
+            "grad_norm": round(grad_norm, 5),
+            "step_wall_sec": round(time.perf_counter() - step_t0, 3),
+        }
+        log.append(rec)
+        if step % 8 == 0 or step == steps - 1:
+            print(f"    step {step:02d}: rew={rec['mean_reward']:.2f} alphas={alphas} grad={grad_norm:.3f}", flush=True)
+    return handles, log
