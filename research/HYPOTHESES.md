@@ -32,6 +32,27 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 7.8 | H13 — Zero-init attention-latent feedback lane | raw-capability architectural insert | proposed |
 | 7.7 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | proposed |
 
+
+## Recommended execution order
+
+Updated after the exp57–62 queue scan and integrity correction. This order weighs expected information gain, implementation cost, and whether existing queued experiments already cover the cheap control.
+
+1. **H10 — merge-aware served-weight action-token fine-tuning.** Methodological prerequisite: it directly attacks the fp32/hook/export mismatch that has invalidated multiple waves. Run before interpreting any new LoRA/vector-RL result.
+2. **H2 — operator-discrepancy collateral repair.** Cheapest high-value surgical follow-up: closed-form, no RL, anchored to the best GPU-validated `raw_rank1` operator.
+3. **H12 — closed-form decision-readout correction.** Very cheap deterministic probe of whether decision errors are linearly/kernel-linearly readable; even a negative result constrains RL and implant design.
+4. **H9 — curvature-constrained acquisition deltas.** Higher implementation cost but potentially a general replacement for destructive hard nullspaces.
+5. **H5 — output-matched steering-vector compression.** Natural bridge into exp50-style vector RL; should be run before H11 because it supplies the vector and a mean-difference baseline.
+6. **H4 — EMS-guided anchor-preserving edits.** Valuable causal localization, but probe cost is high; run once H2/H9 establish whether collateral repair or curvature preservation is the better repair axis.
+
+Hold or stage behind current queue:
+
+- **H1:** exp61 tests the first exact-zero keyed warm GQA lane. Do not build the full multi-group bank until exp59/61/62 show whether warm scalar/keyed lanes preserve exactness and policy accuracy.
+- **H3:** exp58/59/61/62 saturate the attention-insert queue. Graph connectivity remains novel, but it should use those outcomes as labeled validation data.
+- **H6/H7:** both need the Exp 57 targeted-LoRA baseline as the direct comparison; otherwise parameter-normalized claims are uninterpretable.
+- **H8:** implement once H2/H4/H9/H10 produce more labeled candidate-edit outcomes; it is a meta-screen, not a standalone capability gain.
+- **H11:** depends on a good steering vector from H5 and should be compared against exp56 boundary-token temperature rather than duplicating it.
+- **H13/H14:** exploratory raw-capability architecture probes; valuable after the policy-repair queue has at least one accepted operator.
+
 ---
 
 ## H1 — Exact-zero keyed modular implant bank
