@@ -9,7 +9,7 @@ an implementation sanity control; learned gates are the scientific arm.
 """
 from __future__ import annotations
 
-import argparse, copy, json, os, random, sys, time
+import argparse, copy, os, random, sys, time
 from pathlib import Path
 import numpy as np
 import torch
@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/common"))
+sys.path.insert(0, str(ROOT / "scripts"))
+from serialization_utils import write_json  # noqa: E402
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 from validated_edit import apply_validated_rank1_edit, build_validated_rank1_subspaces, top_projection_columns  # noqa: E402
@@ -192,7 +194,7 @@ def main():
         final[name] = {"eval": m, "fraction": frac, "decision_only": decision_only}
         print(f"  [{name}] exact={m['exact_compliance_rate']:.1f}% unsafe={m['unsafe_refusal_rate']:.1f}% benign_fr={m['benign_false_refusal_rate']:.1f}%", flush=True)
     result = {"experiment": "exp131_context_gated_dose_cancellation", "research_source": "research/HYPOTHESES.md H19", "paper_inspiration": ["arXiv:2611.34762", "arXiv:2406.11717"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "top_singular_values": singulars, "gate_diagnostics": {str(k): {x: y for x, y in v.items() if x != "q"} for k, v in gates.items()}, "dev_fraction_sweep": dev, "best_fraction": best, "learned_dev_fire_rate": learned_fire_rate, "final_policy_eval": final, "wall_sec": round(time.time() - t0, 2)}
-    path = out_dir / "context_gated_dose_cancellation_summary.json"; path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    path = out_dir / "context_gated_dose_cancellation_summary.json"; write_json(path, result)
     print(f"[Exp 131 DONE] wrote {path} in {result['wall_sec']}s", flush=True)
 
 
