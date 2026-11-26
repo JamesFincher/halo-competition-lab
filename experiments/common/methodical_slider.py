@@ -17,22 +17,39 @@ import run_micro_targeted_rl as base_rl  # noqa: E402
 class PlainSliderHead(nn.Module):
     """Exact causal single-head slider shape used by slider_head_fork v1."""
 
-    def __init__(self, dim: int, head_dim: int = 64):
+    def __init__(self, dim: int, head_dim: int = 64, include_alpha: bool = True):
         super().__init__()
         self.head_dim = head_dim
         self.q = nn.Linear(dim, head_dim, bias=False)
         self.k = nn.Linear(dim, head_dim, bias=False)
         self.v = nn.Linear(dim, head_dim, bias=False)
         self.o = nn.Linear(head_dim, dim, bias=False)
-        self.alpha = nn.Parameter(torch.zeros(1))
+        if include_alpha:
+            self.alpha = nn.Parameter(torch.zeros(1))
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def attention_delta(self, x: torch.Tensor) -> torch.Tensor:
         B, T, D = x.shape
         q, k, v = self.q(x), self.k(x), self.v(x)
         scores = q @ k.transpose(-1, -2) / (self.head_dim ** 0.5)
         mask = torch.triu(torch.full((T, T), -1e9, device=x.device, dtype=scores.dtype), diagonal=1)
         att = torch.softmax(scores + mask, dim=-1)
-        return x + self.alpha * self.o(att @ v)
+        return self.o(att @ v)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return x + self.alpha * self.attention_delta(x)
+
+
+class SharedAlphaSliderBank(nn.Module):
+    """N parallel plain heads at one layer behind one shared exact-zero alpha."""
+
+    def __init__(self, dim: int, head_dim: int, count: int):
+        super().__init__()
+        self.heads = nn.ModuleList([PlainSliderHead(dim, head_dim, include_alpha=False) for _ in range(count)])
+        self.alpha = nn.Parameter(torch.zeros(1))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        delta = sum(head.attention_delta(x) for head in self.heads)
+        return x + self.alpha * delta
 
 
 def install_plain_slider(model: torch.nn.Module, layer: int, head: PlainSliderHead):
@@ -177,3 +194,47 @@ def head_parameter_count(head: nn.Module) -> int:
 
 def probe_layer27_geometry(hf_model, tokenizer, rows: list[dict], device: torch.device) -> dict:
     return probe_layer_geometry(hf_model, tokenizer, rows, device, layer=27)
+
+
+def probe_layers_geometry(hf_model, tokenizer, rows: list[dict], device: torch.device, layers: list[int]) -> dict:
+    """TransformerLens probe of multiple layers using one wrapped model and one cache pass per row."""
+    from tlens_utils import cache_text, load_hooked_hf_model, residual_hook_name
+
+    tl = load_hooked_hf_model(hf_model, tokenizer, device, torch.float32)
+    resid = {li: {"call_tool": [], "refuse": []} for li in layers}
+    entropies = {li: [] for li in layers}
+    with torch.no_grad():
+        for row in rows:
+            text = base_rl.build_prompt(tokenizer, row["messages"])
+            _tokens, _logits, cache = cache_text(tl, text)
+            for li in layers:
+                h = cache[residual_hook_name(li, "post")][0, -1, :].detach().float().cpu()
+                resid[li][row["target"]["action"]].append(h)
+                try:
+                    pat = cache[f"blocks.{li}.attn.hook_pattern"].detach().float()
+                except Exception:
+                    pat = None
+                if pat is not None:
+                    entropies[li].append(float((-(pat.clamp_min(1e-12) * pat.clamp_min(1e-12).log()).sum(dim=-1).mean()).cpu()))
+    out = {}
+    for li in layers:
+        rec = {}
+        if resid[li]["call_tool"] and resid[li]["refuse"]:
+            xb = torch.stack(resid[li]["call_tool"])
+            xu = torch.stack(resid[li]["refuse"])
+            mb, mu = xb.mean(0), xu.mean(0)
+            rec["call_tool_final_resid_norm_mean"] = round(float(xb.norm(dim=-1).mean()), 5)
+            rec["refuse_final_resid_norm_mean"] = round(float(xu.norm(dim=-1).mean()), 5)
+            rec["benign_unsafe_mean_cosine"] = round(float(torch.nn.functional.cosine_similarity(mb, mu, dim=0)), 5)
+            x = torch.cat([xb, xu], 0)
+            x = x - x.mean(dim=0, keepdim=True)
+            sv = torch.linalg.svdvals(x)
+            p = (sv ** 2) / max(float((sv ** 2).sum()), 1e-12)
+            rec["resid_effective_rank"] = round(float(torch.exp(-(p.clamp_min(1e-12) * p.clamp_min(1e-12).log()).sum())), 4)
+        if entropies[li]:
+            rec["attention_entropy_mean"] = round(sum(entropies[li]) / len(entropies[li]), 5)
+        out[str(li)] = rec
+    del tl
+    if device.type == "cuda":
+        torch.cuda.empty_cache()
+    return out
