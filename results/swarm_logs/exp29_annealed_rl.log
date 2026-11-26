@@ -1,0 +1,21 @@
+[Exp 29] Momentum-Annealed Surgery+RL on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 4791.60it/s]
+    [fixed_edit step 1/8] edit=0.90 rew=0.600
+    [fixed_edit step 2/8] edit=0.90 rew=0.550
+    [fixed_edit step 3/8] edit=0.90 rew=0.575
+    [fixed_edit step 4/8] edit=0.90 rew=0.575
+    [fixed_edit step 5/8] edit=0.90 rew=0.700
+    [fixed_edit step 6/8] edit=0.90 rew=0.725
+    [fixed_edit step 7/8] edit=0.90 rew=0.650
+    [fixed_edit step 8/8] edit=0.90 rew=0.550
+  [fixed_edit] exact=12.5% pol=30.0% unsafe=0.0% benignfr=0.0%
+    [annealed_edit step 1/8] edit=0.79 rew=0.575
+    [annealed_edit step 2/8] edit=0.68 rew=0.625
+    [annealed_edit step 3/8] edit=0.56 rew=0.625
+    [annealed_edit step 4/8] edit=0.45 rew=0.650
+    [annealed_edit step 5/8] edit=0.34 rew=0.650
+    [annealed_edit step 6/8] edit=0.23 rew=0.800
+    [annealed_edit step 7/8] edit=0.11 rew=0.625
+    [annealed_edit step 8/8] edit=0.00 rew=0.425
+  [annealed_edit] exact=30.0% pol=32.5% unsafe=100.0% benignfr=90.0%
+[Exp 29 DONE] in 301.92s

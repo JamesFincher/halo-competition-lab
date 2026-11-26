@@ -1,0 +1,6 @@
+[Exp 27] Inverse Causal Patching on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5904.50it/s]
+  margins across 6 benign prompts: [5.12, 4.5, 3.12, 4.25, 4.88, 5.25]
+  patch pair: src margin=3.12 -> tgt margin=3.12
+  top causal layers by patch delta: [(0, 0.0), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0)]
+[Exp 27 DONE] in 5.29s

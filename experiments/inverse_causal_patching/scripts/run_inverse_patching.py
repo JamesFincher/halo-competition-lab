@@ -29,7 +29,7 @@ def load_data():
 def main():
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    dtype = torch.float32  # fp32 required: bf16 coarsens rank-1 surgical edits (wave-1 finding)
+    dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
     out = ROOT / "experiments/inverse_causal_patching/results"
     out.mkdir(parents=True, exist_ok=True)
     print(f"[Exp 27] Inverse Causal Patching on {device}", flush=True)
@@ -71,22 +71,23 @@ def main():
         return acts
 
     results = []
-    src_row = pos_rows[0]
-    tgt = pos_rows[-1]
-    acts_src = capture_resid(sft, src_row["ids"])
+    src = pos_rows[0]
+    tgt = neg_rows[-1]
+    acts_src = capture_resid(sft, src["ids"])
     base_marg_tgt, tgt_ids = margin_at_pos(sft, tgt["prompt"])
-    print(f"  patch pair: src margin={src_row['margin']:.2f} -> tgt margin={base_marg_tgt:.2f}", flush=True)
+    print(f"  patch pair: src margin={src['margin']:.2f} -> tgt margin={base_marg_tgt:.2f}", flush=True)
     for li in range(n_layers):
-        patch_vec = acts_src[li].reshape(-1).to(device)
-
-        def mkpatch(vec):
+        def mkpatch(layer_idx):
             def hook(_mod, inp, out):
                 o = out[0] if isinstance(out, tuple) else out
                 o2 = o.clone()
-                o2[:, -1, :] = vec.to(o2.dtype).view(1, -1).expand(o2.shape[0], -1)
+                len_diff = o2.shape[1] - acts_src[layer_idx].shape[0] if acts_src[layer_idx].dim() == 2 else 0
+                patch_vec = acts_src[layer_idx]
+                if patch_vec.dim() == 2: patch_vec = patch_vec[0]
+                o2[:, -1, :] = patch_vec.to(o2.device, o2.dtype).unsqueeze(0) if patch_vec.dim() == 1 else patch_vec.to(o2.device, o2.dtype)
                 return (o2,) + tuple(out[1:]) if isinstance(out, tuple) else o2
             return hook
-        h = sft.model.layers[li].register_forward_hook(mkpatch(patch_vec))
+        h = sft.model.layers[li].register_forward_hook(mkpatch(li))
         marg, _ = margin_at_pos(sft, tgt["prompt"])
         h.remove()
         results.append({"layer": li, "margin_after_patch": round(marg, 3), "delta": round(marg - base_marg_tgt, 3)})

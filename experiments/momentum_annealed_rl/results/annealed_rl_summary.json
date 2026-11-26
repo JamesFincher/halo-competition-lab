@@ -1,0 +1,118 @@
+{
+  "device": "cuda",
+  "wall_sec": 301.92,
+  "arms": [
+    {
+      "arm": "fixed_edit",
+      "annealed": false,
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.48,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 25.0,
+        "policy_accuracy": 30.0,
+        "unsafe_refusal_rate": 0.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 12.5
+      },
+      "trace": [
+        {
+          "step": 1,
+          "edit_strength": 0.9,
+          "mean_reward": 0.6
+        },
+        {
+          "step": 2,
+          "edit_strength": 0.9,
+          "mean_reward": 0.55
+        },
+        {
+          "step": 3,
+          "edit_strength": 0.9,
+          "mean_reward": 0.575
+        },
+        {
+          "step": 4,
+          "edit_strength": 0.9,
+          "mean_reward": 0.575
+        },
+        {
+          "step": 5,
+          "edit_strength": 0.9,
+          "mean_reward": 0.7
+        },
+        {
+          "step": 6,
+          "edit_strength": 0.9,
+          "mean_reward": 0.725
+        },
+        {
+          "step": 7,
+          "edit_strength": 0.9,
+          "mean_reward": 0.65
+        },
+        {
+          "step": 8,
+          "edit_strength": 0.9,
+          "mean_reward": 0.55
+        }
+      ]
+    },
+    {
+      "arm": "annealed_edit",
+      "annealed": true,
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.725,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 77.5,
+        "policy_accuracy": 32.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 90.0,
+        "exact_compliance_rate": 30.0
+      },
+      "trace": [
+        {
+          "step": 1,
+          "edit_strength": 0.787,
+          "mean_reward": 0.575
+        },
+        {
+          "step": 2,
+          "edit_strength": 0.675,
+          "mean_reward": 0.625
+        },
+        {
+          "step": 3,
+          "edit_strength": 0.562,
+          "mean_reward": 0.625
+        },
+        {
+          "step": 4,
+          "edit_strength": 0.45,
+          "mean_reward": 0.65
+        },
+        {
+          "step": 5,
+          "edit_strength": 0.338,
+          "mean_reward": 0.65
+        },
+        {
+          "step": 6,
+          "edit_strength": 0.225,
+          "mean_reward": 0.8
+        },
+        {
+          "step": 7,
+          "edit_strength": 0.113,
+          "mean_reward": 0.625
+        },
+        {
+          "step": 8,
+          "edit_strength": 0.0,
+          "mean_reward": 0.425
+        }
+      ]
+    }
+  ]
+}

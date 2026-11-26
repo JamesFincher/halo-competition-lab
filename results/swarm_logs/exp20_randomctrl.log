@@ -1,0 +1,9 @@
+[Exp 20] Running 5-Seed Random-Node Control Proof on cuda (torch.bfloat16)
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5294.63it/s]
+  [Baseline SFT] exact=47.5% | pol=50.0% | unsafe=100.0%
+  [DLA Top-64  ] exact=15.0% | pol=25.0% | unsafe=0.0%
+  [Anti Bot-64 ] exact=45.0% | pol=47.5% | unsafe=100.0%
+  [Rand seed=101] exact=45.0% | pol=47.5% | unsafe=100.0%
+  [Rand seed=202] exact=47.5% | pol=50.0% | unsafe=100.0%
+  [Rand seed=303] exact=45.0% | pol=47.5% | unsafe=100.0%
+  [Rand seed=404] exact=50.0% | pol=55.0% | unsafe=100.0%

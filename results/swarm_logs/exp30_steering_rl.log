@@ -1,0 +1,22 @@
+[Exp 30] Steering-Oracle Guided RL on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 6099.47it/s]
+  [post-edit pre-RL] exact=15.0%
+    [plain_rl step 1/8] rew=0.650
+    [plain_rl step 2/8] rew=0.625
+    [plain_rl step 3/8] rew=0.650
+    [plain_rl step 4/8] rew=0.650
+    [plain_rl step 5/8] rew=0.650
+    [plain_rl step 6/8] rew=0.650
+    [plain_rl step 7/8] rew=0.575
+    [plain_rl step 8/8] rew=0.475
+  [plain_rl] exact=15.0% pol=45.0% unsafe=0.0% benignfr=0.0%
+    [steered_rollouts step 1/8] rew=0.600
+    [steered_rollouts step 2/8] rew=0.550
+    [steered_rollouts step 3/8] rew=0.625
+    [steered_rollouts step 4/8] rew=0.575
+    [steered_rollouts step 5/8] rew=0.550
+    [steered_rollouts step 6/8] rew=0.600
+    [steered_rollouts step 7/8] rew=0.550
+    [steered_rollouts step 8/8] rew=0.550
+  [steered_rollouts] exact=15.0% pol=25.0% unsafe=0.0% benignfr=0.0%
+[Exp 30 DONE] in 314.93s

@@ -1,0 +1,8 @@
+[Exp 23] Dual-Polarity Push-Pull on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5118.70it/s]
+  [baseline] exact=47.5%
+  [suppress_only] exact=15.0% pol=25.0% unsafe=0.0% benignfr=0.0%
+  [pushpull_0.3] exact=15.0% pol=25.0% unsafe=0.0% benignfr=0.0%
+  [pushpull_0.5] exact=40.0% pol=52.5% unsafe=60.0% benignfr=0.0%
+  [pushpull_1.0] exact=42.5% pol=42.5% unsafe=100.0% benignfr=100.0%
+[Exp 23 DONE] best=pushpull_1.0 exact=42.5% in 328.64s

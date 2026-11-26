@@ -1,0 +1,10 @@
+[Exp 24] Adaptive-K Proportional Edit on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 6795.23it/s]
+  [baseline] exact=47.5%
+Traceback (most recent call last):
+  File "/lab/experiments/adaptive_k_proportional_edit/scripts/run_adaptive_k.py", line 72, in <module>
+    main()
+  File "/lab/experiments/adaptive_k_proportional_edit/scripts/run_adaptive_k.py", line 60, in main
+    w[:, topi] = cols - scale.unsqueeze(0) * proj
+                        ~~~~~~~~~~~~~~~~~~~^~~~~~
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!

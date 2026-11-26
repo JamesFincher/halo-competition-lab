@@ -1,0 +1,55 @@
+{
+  "total_wall_sec": 21.0,
+  "experiments": {
+    "exp20_randomctrl": {
+      "rc": 1,
+      "wall": 15.0
+    },
+    "exp21_dla_disjrl": {
+      "rc": 1,
+      "wall": 15.0
+    },
+    "exp22_pareto": {
+      "rc": 1,
+      "wall": 15.0
+    },
+    "exp25_evolution": {
+      "rc": 1,
+      "wall": 15.0
+    },
+    "exp26_entropy_rl": {
+      "rc": 1,
+      "wall": 15.0
+    },
+    "exp27_invpatch": {
+      "rc": 1,
+      "wall": 15.0
+    },
+    "exp28_synergy": {
+      "rc": 1,
+      "wall": 15.0
+    },
+    "exp19_crosstalk": {
+      "rc": 1,
+      "wall": 18.0
+    },
+    "exp23_pushpull": {
+      "rc": 1,
+      "wall": 18.0
+    },
+    "exp24_adaptivek": {
+      "rc": 1,
+      "wall": 18.0
+    },
+    "exp29_annealed_rl": {
+      "rc": 1,
+      "wall": 18.0
+    },
+    "exp30_steering_rl": {
+      "rc": 1,
+      "wall": 18.0
+    }
+  },
+  "gpu_log": "/lab/results/swarm_gpu_log.csv",
+  "n_experiments": 12
+}

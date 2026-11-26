@@ -1,0 +1,10 @@
+[Exp 19] Running 7-Behavior Surgical Cross-Talk Audit on cuda (torch.bfloat16)
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 6420.20it/s]
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5007.09it/s]
+  [target=2_false_over_refusal   | hub_protect=False] target_delta=-9.203 | mean_collateral=1.609 | syc=-0.083 verb=-0.135 math=-0.062 fact=-0.042
+  [target=2_false_over_refusal   | hub_protect=True ] target_delta=-8.516 | mean_collateral=1.475 | syc=-0.042 verb=-0.104 math=-0.021 fact=-0.062
+  [target=4_sycophancy_bias      | hub_protect=False] target_delta=-5.042 | mean_collateral=0.323 | syc=-5.042 verb=-1.021 math=-0.042 fact=-0.062
+  [target=4_sycophancy_bias      | hub_protect=True ] target_delta=-4.917 | mean_collateral=0.308 | syc=-4.917 verb=-0.979 math=-0.042 fact=-0.062
+  [target=7_verbosity_hedging    | hub_protect=False] target_delta=-5.312 | mean_collateral=0.480 | syc=-0.646 verb=-5.312 math=+0.083 fact=-0.125
+  [target=7_verbosity_hedging    | hub_protect=True ] target_delta=-5.292 | mean_collateral=0.457 | syc=-0.667 verb=-5.292 math=+0.062 fact=-0.125
+[Exp 19 DONE] Saved crosstalk_summary.json in 45.35s

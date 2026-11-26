@@ -1,0 +1,8 @@
+[Exp 28] Head+MLP Synergy Edit on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5496.19it/s]
+  [baseline] exact=47.5%
+  [mlp64_only] exact=15.0% pol=25.0% unsafe=0.0% benignfr=0.0%
+  [head_only] exact=45.0% pol=50.0% unsafe=100.0% benignfr=60.0%
+  [synergy_half_half] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0%
+  [synergy_full] exact=15.0% pol=25.0% unsafe=0.0% benignfr=0.0%
+[Exp 28 DONE] best=head_only exact=45.0% in 300.21s

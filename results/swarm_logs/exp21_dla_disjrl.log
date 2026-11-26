@@ -1,0 +1,23 @@
+[Exp 21] Running DLA Surgical Edit -> Re-Anchored Disjoint RL on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 4624.69it/s]
+  [DLA st=0.65 edit-only] exact=15.0% | pol=25.0% | unsafe=0.0% | benign_fr=0.0%
+    [RL step 1/8] rew=0.600 | kl=0.00000 | gnorm=0.100
+    [RL step 2/8] rew=0.500 | kl=0.00381 | gnorm=0.314
+    [RL step 3/8] rew=0.700 | kl=0.00494 | gnorm=0.225
+    [RL step 4/8] rew=0.575 | kl=0.00720 | gnorm=0.227
+    [RL step 5/8] rew=0.575 | kl=0.00522 | gnorm=0.067
+    [RL step 6/8] rew=0.600 | kl=0.00592 | gnorm=0.155
+    [RL step 7/8] rew=0.600 | kl=0.00546 | gnorm=0.038
+    [RL step 8/8] rew=0.550 | kl=0.00873 | gnorm=0.087
+  [DLA st=0.65 + DisjRL ] exact=15.0% | pol=27.5% | unsafe=0.0% | benign_fr=0.0%
+  [DLA st=0.8 edit-only] exact=15.0% | pol=25.0% | unsafe=0.0% | benign_fr=0.0%
+    [RL step 1/8] rew=0.525 | kl=0.00000 | gnorm=0.180
+    [RL step 2/8] rew=0.400 | kl=0.00940 | gnorm=0.122
+    [RL step 3/8] rew=0.550 | kl=0.01404 | gnorm=0.184
+    [RL step 4/8] rew=0.600 | kl=0.00894 | gnorm=0.216
+    [RL step 5/8] rew=0.650 | kl=0.00644 | gnorm=0.064
+    [RL step 6/8] rew=0.600 | kl=0.00543 | gnorm=0.072
+    [RL step 7/8] rew=0.600 | kl=0.00751 | gnorm=0.113
+    [RL step 8/8] rew=0.550 | kl=0.00153 | gnorm=0.172
+  [DLA st=0.8 + DisjRL ] exact=15.0% | pol=27.5% | unsafe=0.0% | benign_fr=0.0%
+[Exp 21 DONE] Saved dla_disjoint_rl_summary.json in 343.1s

@@ -1,0 +1,22 @@
+[Exp 26] Entropy-Weighted Fork GRPO on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 6746.48it/s]
+  [post-edit pre-RL] exact=15.0%
+    [uniform_adv step 1/8] loss=0.0084
+    [uniform_adv step 2/8] loss=0.0040
+    [uniform_adv step 3/8] loss=0.0174
+    [uniform_adv step 4/8] loss=0.0050
+    [uniform_adv step 5/8] loss=0.0105
+    [uniform_adv step 6/8] loss=-0.0061
+    [uniform_adv step 7/8] loss=0.0142
+    [uniform_adv step 8/8] loss=-0.0107
+  [uniform_adv] exact=7.5% pol=22.5% unsafe=0.0%
+    [entropy_weighted step 1/8] loss=-1.9109
+    [entropy_weighted step 2/8] loss=0.3216
+    [entropy_weighted step 3/8] loss=-0.9988
+    [entropy_weighted step 4/8] loss=3.2107
+    [entropy_weighted step 5/8] loss=0.6445
+    [entropy_weighted step 6/8] loss=-0.1851
+    [entropy_weighted step 7/8] loss=0.0744
+    [entropy_weighted step 8/8] loss=-0.6927
+  [entropy_weighted] exact=10.0% pol=22.5% unsafe=0.0%
+[Exp 26 DONE] in 298.0s

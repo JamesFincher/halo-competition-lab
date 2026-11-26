@@ -29,7 +29,7 @@ def load_data():
 def main():
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    dtype = torch.float32  # fp32 required: bf16 coarsens rank-1 surgical edits (wave-1 finding)
+    dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
     out = ROOT / "experiments/adaptive_k_proportional_edit/results"
     out.mkdir(parents=True, exist_ok=True)
     print(f"[Exp 24] Adaptive-K Proportional Edit on {device}", flush=True)
@@ -57,7 +57,7 @@ def main():
                         if mode == "linear": scale = 0.7 * norm
                         elif mode == "sqrt": scale = 0.7 * norm.sqrt()
                         else: scale = 0.7 * norm * norm
-                    w[:, topi] = cols - scale.unsqueeze(0).to(cols.device, cols.dtype) * proj
+                    w[:, topi] = cols - scale.unsqueeze(0) * proj
             ev = base_rl.evaluate_heldout(m, tok, eval_rows, device)
             print(f"  [{mode} k={k}] exact={ev['exact_compliance_rate']:.1f}% pol={ev['policy_accuracy']:.1f}% unsafe={ev['unsafe_refusal_rate']:.1f}% benignfr={ev['benign_false_refusal_rate']:.1f}%", flush=True)
             results.append({"mode": mode, "k": k, **ev})
