@@ -6,13 +6,12 @@ Last updated: 2026-11-26 by the hypothesizer agent.
 
 Validated local assets:
 
-- **Best validated surgical operator is now ultra-sparse:** exp129 strength 0.9 with 16 columns/layer reaches **80% exact / 93.3% unsafe refusal / 0% benign-FR**; exp130 columns16 independently reproduces **80/93.3/0**, and even columns8 reaches 77.5/93.3/0. This supersedes the 32-column operating point and makes the remaining 2/30 unsafe-refusal loss the central repair target. Benchmarks are unchanged on the coarse legacy scorer, so capability claims remain open.
-- **Best validated transfer recipe is post-edit complementary MLP-only LoRA:** exp57 reaches **75/90/0** by freezing the canonical edit, anchoring to the post-edit model, and training only complementary MLP LoRA at layers 24–27; exp100 independently favors targeted complementary MLP-only LoRA over all-proj or partial full fine-tuning. This recipe has not yet been combined with the stronger ultra-sparse edit — that is the largest immediate composition gap.
-- **Vector evidence is context-dependent:** exp80 vector-only complementary-layer RL remains strong (**80/93.3/10**), and exp86 oscillating vector RL reaches 72.5–75/93.3/0, but exp100 shows vector-only transfer is weak after the surgical edit (**47.5/66.7/0**) and exp50 post-edit disjoint vectors do not beat the edit anchor. Vector gains are real in some regimes, but not a universal substitute for input-dependent weight adaptation.
-- **Attention-insert evidence weakened further:** exp65 insertion after L27 reaches **65/93.3/0**, but exp61 exact-zero keyed warm GQA collapses (**10/90/20**), exp59 warm GQA is harmful, exp66 edit+warm-slider composition collapses, and exp93 seed fragility remains unresolved. Freeze-then-merge is promising but attention insertion is behind sparse surgery + complementary MLP LoRA until seed replication and the creative blending controls land.
-- **Capability-objective evidence is mixed:** exp132 `hybrid_capability_primary` reaches **72.5/93.3/0** and coarse MMLU/ARC move up slightly, but normalized continuation MMLU/HellaSwag decline; `capability_only` reduces validation loss without a clean benchmark win. exp139–141 are queued to disentangle cache artifacts, answer focus, and benchmark format before raw-capability claims are made.
-- **Deployment-aware training caution:** exp101 export serialization is internally consistent, but merge-aware served-weight action-token training underperforms badly (**42.5/100/0** versus post-edit anchor 65/90/0). Export validity is necessary but not sufficient; H10 is demoted and H21 must rely on teacher/KL distillation rather than rounding alone.
-- **Queue/result state at 14:10 UTC:** H22 is now queued as exp144. exp134–138 results are negative for architectural blending relative to the sparse static edit; exp136 sparse H19 shows oracle cancellation can restore unsafe refusal to 100% but costs exactness, while the learned gate underperforms edit-only. exp139–148 queue capability-transfer/inversion diagnostics.
+- **Pivot-lens convergence:** four independent adversarial/interp/training/scale analyses conclude that the binding constraints are now **data scale and model scale**, not additional 135M method cleverness. Exact errors are dominated by tool-choice/readout errors; the behavior corpus is tiny and tool-starved (144 unique rows, send_http only 2 rows); capability-transfer falsification is consistent with data starvation plus representational crowding at 135M.
+- **Validated 135M champion:** ultra-sparse surgery reproducibly reaches **80/93.3/0**, and H22 sparse-edit + post-edit MLP LoRA reaches **82.5/93.3/0 in all three seeds** with exported-artifact consistency. However random-layer LoRA matches the targeted arm, so H22 is a strong baseline/package, not evidence for layer-specific transfer or a broken ceiling.
+- **Capability transfer at 135M is falsified for tested inserted-head objectives:** cache-corrected full-text, answer-focused, benchmark-format, contrastive-choice, budget-scaling, and additive-union variants improve validation loss but not continuation-benchmark transfer, while behavior often degrades. Legacy benchmark movement is length/artifact-biased and must not be used as capability evidence.
+- **Attention-insert interpretation reset:** pre-fix slider conclusions were KV-cache-confounded. Cache-corrected L20 width64 reaches **72.5/90/0** in one seed, so attention insertion is not dead, but scale-pivot evidence now favors MoE activated-expert interventions over inserted dense heads for capability work.
+- **Repair geometry is still useful but not dominant:** exp87 shows stable false-refusal/ambiguity directions but no causal behavioral steering; exp136 oracle cancellation trades exactness for unsafe-refusal recovery. These are 135M behavioral refinements, not ceiling-breaking mechanisms.
+- **Orchestrated pivot queue:** corpus foundry, Qwen3-4B behavioral track, and OLMoE expert track are commissioned. Hypotheses that scale data/model class dominate; most 135M capability-transfer and architecture-complexity hypotheses are demoted or frozen.
 - **Known dead ends:** unembedding-direction weight edits collapse into always-call behavior at all tested strengths; fp32 does not rescue them; degenerate collinear push-pull is a sign/strength artifact; hard nullspaces and binary masks are too destructive on a 135M model.
 
 Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 through 2026-11-25 in weight-space programming, activation steering, attention-head intervention, parameter-efficient RL, subspace repair, MoE/architecture expansion, plus frontier/lab blogs including MIT CSAIL weight-space programming and Anthropic feature-steering/introspection writeups. The 11:30 UTC incremental scan added deterministic Forward Weight-Space Programming/Protected FisherGate ([arXiv:2611.34612](https://arxiv.org/abs/2611.34612)) and gradient-free neuron programming ([arXiv:2611.33973](https://arxiv.org/abs/2611.33973)). The local `arxiv-mcp-server` is currently misconfigured (`uvx` entry point missing), so the scan used the official arXiv API and full HTML papers directly.
@@ -21,62 +20,64 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 
 | Priority | Hypothesis | Main type | Status |
 |---:|---|---|---|
-| 9.7 | H22 — Ultra-sparse edit anchored complementary MLP-only LoRA | surgical edit + targeted PEFT composition | queued as exp144; highest-priority result to read next |
-| 9.4 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | queued as exp87; now the key gate because exp136 shows cancellation works but learned context separation is insufficient |
-| 9.3 | H2 — Composite operator-discrepancy collateral repair | closed-form trajectory repair | queued as exp128 after upstream output-space projection fix; increasingly important because H19 oracle repair costs exactness |
-| 9.1 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | queued as exp121; more important because auxiliary training often damages the anchor |
-| 8.9 | H19 — Context-gated rank-one surgical dose cancellation | input-conditioned surgical repair | exp136 mixed: oracle validates the safety/exactness tradeoff, learned gate underperforms edit-only |
-| 8.8 | H21 — Exportable consolidation of complementary steering-vector RL | vector-to-weight distillation + deployment-exact PEFT | revised downward after exp101: teacher/KL distillation matters, rounding alone does not |
-| 8.7 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | queued as exp123; strengthened by complementary MLP-only LoRA validation |
-| 8.6 | H18 — Protected FisherGate decision-readout edit | closed-form weight-space programming | unqueued; staged behind exp102 |
-| 8.5 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT + attention heads | queued as exp120; must beat exp57/100's simpler MLP-only comparator |
-| 8.4 | H20 — Kolpona-style accept/reject failure-habit neuron ladder | gradient-free neuron programming | unqueued; supported indirectly by ultra-sparse dose evidence |
-| 8.3 | H12 — Closed-form decision-readout correction | gradient-free readout surgery | queued as exp102 |
-| 8.2 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | queued as exp124 |
-| 8.1 | H8 — Displacement-probe edit auditor and reference chooser | cheap pre-GPU screening diagnostic | queued as exp125 |
-| 7.2 | H5 — Output-matched steering-vector compression | activation steering + RL initialization | mixed: vector RL can work pre-edit, but post-edit vector transfer is weak |
-| 7.1 | H11 — Trajectory-aware budgeted decision-token steering | activation steering | queued as exp127; mixed evidence, still distinct as inference-time control |
-| 7.1 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | queued as exp126 |
-| 7.0 | H17 — Prepare-for-truncation elastic low-rank deployment | compression/raw capability | exploratory |
-| 6.2 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | demoted further: exp134–138 blending/cascade/gate variants do not beat the sparse static edit |
-| 6.2 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted further: insertion depth exists, but blending/cascade/gate results do not beat simpler sparse surgery |
-| 6.1 | H13 — Zero-init attention-latent feedback lane | raw-capability architectural insert | demoted: attention composition and seed fragility remain unresolved |
-| 5.8 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | exp101 negative as implemented; keep only as an export-control component, not a default training method |
-| 5.4 | H16 — Norm-calibrated single-coordinate decision steering | sparse activation surgery | exp67 negative at tested doses; no positive operating point |
+| 9.8 | H23 — Counterfactual tool-balanced corpus scaling | data-scale pivot + tool-readout repair | new top hypothesis; directly attacks the 144-row/tool-starved data bottleneck |
+| 9.6 | H24 — Qwen3-4B scale-pivot behavioral replication | model-scale pivot + plain LoRA | new; tests representational-crowding ceiling with the expanded corpus |
+| 9.4 | H25 — OLMoE activated-expert adapter surgery | MoE expert specialization + scale pivot | new; preferred manipulation surface for competition-scale models |
+| 8.9 | H22 — Ultra-sparse edit anchored complementary MLP-only LoRA | 135M champion baseline | exp144 positive/replicated at 82.5/93.3/0, but random-layer control matches and ceiling remains |
+| 8.6 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance geometry | exp87 mixed: stable directions exist, steering does not move behavior |
+| 8.5 | H2 — Composite operator-discrepancy collateral repair | closed-form trajectory repair | queued as exp128; useful 135M refinement, not ceiling-breaking |
+| 8.3 | H18 — Protected FisherGate decision-readout edit | closed-form readout surgery | readout bottleneck is validated conceptually, but data/model scale come first |
+| 8.1 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | queued as exp121; 135M refinement |
+| 8.0 | H12 — Closed-form decision-readout correction | gradient-free readout surgery | queued as exp102; important diagnostic for tool-readout bottleneck |
+| 7.9 | H6 — Input-adaptive Kronecker lanes | parameter-efficient surgical adaptation | queued as exp123; must justify complexity after random-layer H22 control |
+| 7.8 | H19 — Context-gated rank-one dose cancellation | input-conditioned surgical repair | exp136 mixed; oracle works, learned gate weak |
+| 7.7 | H20 — Kolpona-style neuron ladder | gradient-free neuron programming | exp103 suppression negative; only paired closed-form writes remain interesting |
+| 7.6 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT | queued as exp120; 135M refinement |
+| 7.5 | H4 — EMS-guided anchor-preserving edits | causal localization + surgical edit | queued as exp124; 135M refinement |
+| 7.4 | H8 — Displacement-probe edit auditor | cheap pre-screen diagnostic | queued as exp125; useful across scale pivots if model-agnostic |
+| 7.0 | H21 — Exportable vector-to-weight consolidation | activation-vector distillation | diminished: vector transfer weak post-edit and scale pivot dominates |
+| 6.4 | H5 — Output-matched steering-vector compression | activation steering | 135M refinement only |
+| 6.3 | H11 — Budgeted decision-token steering | activation steering | queued as exp127; low ceiling-relevance |
+| 5.8 | H14 — Spectral-sink microgates | attention-head modification | queued as exp126; behind MoE expert pivot |
+| 5.4 | H1 — Exact-zero keyed modular implant bank | dense-head insert + RL | demoted: dense inserted-head capability transfer falsified at 135M; cache-corrected heads only behavioral |
+| 5.2 | H3 — Functional-connectivity-guided head insertion | attention-head modification | demoted: architecture cleverness loses to scale/data constraints |
+| 5.0 | H17 — Elastic low-rank deployment | compression/raw capability | deprioritized until scale pivot establishes real capability transfer |
+| 4.8 | H10 — Merge-aware served-weight training | deployment-exact PEFT | exp101 negative; export harness only |
+| 4.7 | H13 — Zero-init attention-latent feedback lane | architectural insert | frozen behind MoE/scale pivot |
+| 4.5 | H16 — Single-coordinate decision steering | sparse activation surgery | exp67 negative |
 
 
 ## Recommended execution order
 
-Updated after the 13:10 UTC harvest (exp50–67, exp99–101, exp129/130/132). The central result is that two independently validated positives have not yet been combined: ultra-sparse surgery (**80/93.3/0**) and post-edit complementary MLP-only LoRA (**75/90/0** on the weaker canonical edit).
+Updated after the four pivot-lens analyses and the exp139–147/H22 harvest. The ranking rule has changed: **data scale and model scale dominate 135M method cleverness**. The 135M stack remains a baseline and safety-testbed, not the main capability frontier.
 
-1. **Read exp144/H22 first.** It is now queued and is the highest-value composition: exp129/130's 16-columns/layer strength-0.9 sparse edit plus exp57/100's freeze-edit → post-edit KL anchor → complementary MLP-only LoRA recipe.
-2. **Repair context separation, not cancellation algebra.** exp136 shows oracle cancellation restores unsafe refusal but costs exactness, while the learned gate underperforms edit-only. exp87/H15 and better false-vs-true gate features are now the bottleneck before more H19 dose cancellation.
-3. **Run/reinterpret H2 at the correct dose.** exp128 has the upstream output-space projection fix, but its canonical top64/0.9 substrate is no longer the best operator. Use it first as a methodological test, then repeat at 16 columns/layer if the mechanism is positive.
-4. **Use exp57/100 as the PEFT comparator.** exp120/H7, exp121/H9, and exp123/H6 must beat or explain the simpler complementary MLP-only LoRA recipe; otherwise they are complexity without benefit.
-5. **Decision-readout branch remains gated:** exp102/H12 before H18. Do not confuse H16's negative single-coordinate result with readout failure; exp67 tested a raw coordinate actuator, not a trained readout.
-6. **Raw capability is unresolved.** Read exp139/140/141 before making any capability-objective claim. Exp132's hybrid arm is behaviorally strong, but normalized continuation metrics contradict the coarse benchmark improvement.
-7. **Attention blending is exploratory, not central.** exp134/135/137/138 can proceed as creative probes, but exp61/66/93 mean keyed/warm/composite attention inserts should not displace H22/H19/H2.
+1. **Build the data foundation first:** implement H23's counterfactual tool-balanced corpus and scaled capability/replay corpus. Measure action/tool/policy error decomposition, especially send_http and rare-tool coverage, before evaluating any new method.
+2. **Scale the model class:** use H24 to test Qwen3-4B + plain LoRA on the same expanded data. If Qwen3-4B exceeds the 82.5% ceiling while 135M does not, representational crowding is confirmed as the binding constraint.
+3. **Pivot surgical insertion to MoE experts:** use H25 to test OLMoE activated-expert adapters. This directly serves the competition path toward gpt-oss-20b-class models and replaces dense inserted-head expansion as the preferred architectural surface.
+4. **Use H22/exp144 as the 135M champion baseline.** It is replicated, export-consistent, and zero-variance, but random-layer control matches it; do not treat complement-layer specificity or the 82.5% ceiling as solved.
+5. **Finish already queued 135M diagnostics selectively:** exp102/H12 is valuable because it tests readout/tool-decision structure; exp128/H2, exp120/121/123, and exp124/125 are second-tier refinements. Do not let them delay corpus/Qwen/OLMoE tracks.
+6. **Cache-corrected attention work is behavioral-only for now.** L20 width64 is a valid behavioral actuator, but capability transfer through inserted dense heads is falsified at 135M. Any further attention work must either serve behavioral control or move to MoE experts.
+7. **Do not add more 135M capability-transfer variants.** Full-text, answer-focused, benchmark-format, contrastive-choice, budget-scaling, and additive-union variants have all failed continuation transfer. New capability hypotheses must change data scale, model scale, or manipulation surface.
 
 Unqueued but high-value after the gates:
 
-- **H22** is the immediate top implementation gap.
-- **H18** follows exp102.
-- **H20** follows exp103/124 and sparse replication.
-- **H21** remains important only as teacher/KL vector consolidation; exp101 shows merge-aware rounding alone is not a solution.
+- **H23/H24/H25** are the only immediate high-priority unqueued directions.
+- **H18** remains useful if exp102 confirms linear decision readability, especially as a tool-readout repair.
+- **H8** is worth preserving only if the auditor is model-agnostic and can transfer to Qwen/OLMoE.
 
-Hold or stage behind current queue:
+Frozen or sharply demoted:
 
-- **H1/H3/H13:** attention inserts are scientifically interesting but empirically fragile. Require seed replication and a positive creative-blend result before more large banks.
-- **H10:** demoted after exp101. Use exact export measurement as a required evaluation harness, not as the mechanism.
-- **H16:** falsified at tested doses; only revisit after a nonlinear/readout-based alternative exists.
-- **H5/H11:** vector methods are context-dependent: strong pre-edit in exp80/86, weak post-edit in exp50/100. Do not rerun vector RL without a new mechanistic delta.
+- **H1/H3/H13/H14:** dense inserted-head architecture expansion at 135M is no longer a capability path.
+- **H5/H11/H21:** vector/activation steering is a behavioral control refinement, not a ceiling-breaking direction.
+- **H10/H16:** negative as implemented.
+- **H17:** deployment compression is premature until a real capability gain exists.
 
 
 ---
 
 ## H1 — Exact-zero keyed modular implant bank
 
-**Priority: 6.2/10** *(demoted after exp134–138: routed width mixtures, capability/behavior blending, cross-layer cascades, and subtractive gates do not beat the ultra-sparse static edit; attention banks are exploratory rather than central.)*
+**Priority: 5.4/10** *(demoted after exp134–138: routed width mixtures, capability/behavior blending, cross-layer cascades, and subtractive gates do not beat the ultra-sparse static edit; attention banks are exploratory rather than central.)*
 
 ### Novel idea
 
@@ -118,7 +119,7 @@ Expected: exact compliance above the edit-only operating point while preserving 
 
 ## H2 — Composite operator-discrepancy collateral repair adapter
 
-**Priority: 9.2/10** *(composite branch queued as exp128 after the upstream output-space projection fix; module-local rank-one discrepancy remains algebraically degenerate, so interpret it through downstream trajectory discrepancy and repeat at sparse dose if positive.)*
+**Priority: 8.5/10** *(composite branch queued as exp128 after the upstream output-space projection fix; module-local rank-one discrepancy remains algebraically degenerate, so interpret it through downstream trajectory discrepancy and repeat at sparse dose if positive.)*
 
 ### Novel idea
 
@@ -153,7 +154,7 @@ Expected: composite discrepancy is multi-directional even though module-local di
 
 ## H3 — Functional-connectivity-guided head insertion
 
-**Priority: 6.2/10** *(demoted: exp65/91 support L27 as the best insertion site, but exp134–138 show architectural routing/blending does not yet beat simpler sparse surgery.)*
+**Priority: 5.2/10** *(demoted: exp65/91 support L27 as the best insertion site, but exp134–138 show architectural routing/blending does not yet beat simpler sparse surgery.)*
 
 ### Novel idea
 
@@ -188,7 +189,7 @@ Expected: graph-selected heads beat random and activation-magnitude controls by 
 
 ## H4 — EMS-guided anchor-preserving subspace edits
 
-**Priority: 8.2/10** *(queued as exp124; probe cost remains high, so interpret it after the cheaper H2/H15 geometry evidence.)*
+**Priority: 7.5/10** *(queued as exp124; probe cost remains high, so interpret it after the cheaper H2/H15 geometry evidence.)*
 
 ### Novel idea
 
@@ -227,7 +228,7 @@ Expected: EMS-aware edits exceed the 65–67.5% exact-compliance operator platea
 
 ## H5 — Output-matched steering-vector compression as RL initialization
 
-**Priority: 7.2/10** *(mixed after exp50/100: pre-edit vector RL can be strong, but post-edit vector transfer is weak and does not beat the surgical anchor; compression remains a complement to H21, not a default mechanism.)*
+**Priority: 6.4/10** *(mixed after exp50/100: pre-edit vector RL can be strong, but post-edit vector transfer is weak and does not beat the surgical anchor; compression remains a complement to H21, not a default mechanism.)*
 
 ### Novel idea
 
@@ -268,7 +269,7 @@ Expected: output-matched vectors recover at least 50–70% of the surgical edit'
 
 ## H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits
 
-**Priority: 8.7/10** *(queued as exp123; strengthened because complementary MLP-only LoRA is now a validated transfer path, but it must beat that simpler comparator.)*
+**Priority: 7.9/10** *(queued as exp123; strengthened because complementary MLP-only LoRA is now a validated transfer path, but it must beat that simpler comparator.)*
 
 ### Novel idea
 
@@ -299,7 +300,7 @@ Expected: input-gated Kronecker lanes match or beat LoRA using substantially few
 
 ## H7 — Drift-triggered orthogonal rotation lanes
 
-**Priority: 8.5/10** *(queued as exp120; rotation-only lanes remain attractive but must beat or explain the simpler exp57/100 complementary MLP-only LoRA comparator.)*
+**Priority: 7.6/10** *(queued as exp120; rotation-only lanes remain attractive but must beat or explain the simpler exp57/100 complementary MLP-only LoRA comparator.)*
 
 ### Novel idea
 
@@ -330,7 +331,7 @@ Expected: drift-triggered rotations preserve general capability better than addi
 
 ## H8 — Displacement-probe edit auditor and reference chooser
 
-**Priority: 8.1/10** *(queued as exp125; the second harvest added clean positive and catastrophic-collapse labels that make a cheap pre-screen more valuable.)*
+**Priority: 7.4/10** *(queued as exp125; the second harvest added clean positive and catastrophic-collapse labels that make a cheap pre-screen more valuable.)*
 
 ### Novel idea
 
@@ -366,7 +367,7 @@ Expected: displacement/Gram features separate destructive always-call edits and 
 
 ## H9 — Curvature-constrained acquisition deltas
 
-**Priority: 9.1/10** *(queued as exp121; targeted RL works but auxiliary training often damages the surgical anchor, so preservation-aware curvature is directly relevant rather than exploratory.)*
+**Priority: 8.1/10** *(queued as exp121; targeted RL works but auxiliary training often damages the surgical anchor, so preservation-aware curvature is directly relevant rather than exploratory.)*
 
 ### Novel idea
 
@@ -397,7 +398,7 @@ Expected: low-curvature deltas achieve a better acquisition-retention frontier t
 
 ## H10 — Merge-aware served-weight action-token fine-tuning
 
-**Priority: 5.8/10** *(exp101 negative as implemented: export serialization is consistent, but served-weight merge-aware training underperforms the anchor; keep exact export measurement while dropping merge-aware rounding as a default mechanism.)*
+**Priority: 4.8/10** *(exp101 negative as implemented: export serialization is consistent, but served-weight merge-aware training underperforms the anchor; keep exact export measurement while dropping merge-aware rounding as a default mechanism.)*
 
 ### Novel idea
 
@@ -428,7 +429,7 @@ Expected: served-weight training preserves more benchmark gain after export than
 
 ## H11 — Trajectory-aware budgeted decision-token steering
 
-**Priority: 7.1/10** *(queued as exp127; mixed because pre-edit vector RL works but post-edit vector transfer is weak, so inference-time budgeted steering must prove a separate control benefit.)*
+**Priority: 6.3/10** *(queued as exp127; mixed because pre-edit vector RL works but post-edit vector transfer is weak, so inference-time budgeted steering must prove a separate control benefit.)*
 
 ### Novel idea
 
@@ -466,7 +467,7 @@ Expected: trajectory-aware decision-token steering achieves most of always-on st
 
 ## H12 — Closed-form decision-readout correction
 
-**Priority: 8.3/10** *(queued as exp102; H18 is the follow-on weight-folded version if this probe succeeds.)*
+**Priority: 8.0/10** *(queued as exp102; H18 is the follow-on weight-folded version if this probe succeeds.)*
 
 ### Novel idea
 
@@ -497,7 +498,7 @@ Expected: closed-form readouts show high train/dev decision accuracy and produce
 
 ## H13 — Zero-init attention-latent feedback lane
 
-**Priority: 6.1/10** *(demoted further: memory-head collapse plus exp61/66 attention-composition failures and unresolved seed fragility make feedback lanes a distant exploratory branch.)*
+**Priority: 4.7/10** *(demoted further: memory-head collapse plus exp61/66 attention-composition failures and unresolved seed fragility make feedback lanes a distant exploratory branch.)*
 
 ### Novel idea
 
@@ -527,7 +528,7 @@ Expected: even a short zero-init adaptation produces neutral-to-warm benchmark m
 
 ## H14 — Spectral-sink calibrated post-SDPA microgates
 
-**Priority: 7.1/10** *(queued as exp126; exploratory, with no direct local evidence yet.)*
+**Priority: 5.8/10** *(queued as exp126; exploratory, with no direct local evidence yet.)*
 
 ### Novel idea
 
@@ -563,7 +564,7 @@ Expected: sink-aligned selective gates increase effective rank and yield neutral
 
 ## H15 — Multi-perspective abstention-direction factorization
 
-**Priority: 9.2/10** *(queued as exp87; both the best surgical and best localized-RL arms land at 93.3% unsafe refusal, making selective false-vs-true refusal geometry the central measurement.)*
+**Priority: 8.6/10** *(queued as exp87; both the best surgical and best localized-RL arms land at 93.3% unsafe refusal, making selective false-vs-true refusal geometry the central measurement.)*
 
 ### Novel idea
 
@@ -597,7 +598,7 @@ Expected: at least one middle/late layer shows high benign-versus-harmful geomet
 
 ## H16 — Norm-calibrated single-coordinate decision steering
 
-**Priority: 5.4/10** *(exp67 negative at tested doses: aligned/opposite/random single-coordinate steering has no positive operating point and high dose collapses; treat as falsified unless a nonlinear/readout actuator replaces the raw coordinate.)*
+**Priority: 4.5/10** *(exp67 negative at tested doses: aligned/opposite/random single-coordinate steering has no positive operating point and high dose collapses; treat as falsified unless a nonlinear/readout actuator replaces the raw coordinate.)*
 
 ### Novel idea
 
@@ -627,7 +628,7 @@ Expected: at least one sparse coordinate produces a monotone behavioral effect a
 
 ## H17 — Prepare-for-truncation elastic low-rank deployment
 
-**Priority: 7.0/10** *(exploratory deployment-compression work; behind policy-repair validation.)*
+**Priority: 5.0/10** *(exploratory deployment-compression work; behind policy-repair validation.)*
 
 ### Novel idea
 
@@ -657,7 +658,7 @@ Expected: prepared checkpoints retain more benchmark and policy performance than
 
 ## H18 — Protected FisherGate decision-readout edit
 
-**Priority: 8.6/10** *(high potential but staged behind exp102 because it should only be implemented if decision errors are linearly/kernel-linearly readable.)*
+**Priority: 8.3/10** *(high potential but staged behind exp102 because it should only be implemented if decision errors are linearly/kernel-linearly readable.)*
 
 ### Novel idea
 
@@ -692,7 +693,7 @@ Expected: a protected closed-form readout edit produces at least +5 pp exact or 
 
 ## H19 — Context-gated rank-one surgical dose cancellation
 
-**Priority: 8.9/10** *(exp136 sparse result is mixed: oracle cancellation restores unsafe refusal to 100% but costs 15 pp exactness, while the learned gate reaches only 75/93.3/0 versus edit-only 80/93.3/0; the algebra is validated but context separation is not yet good enough.)*
+**Priority: 7.8/10** *(exp136 sparse result is mixed: oracle cancellation restores unsafe refusal to 100% but costs 15 pp exactness, while the learned gate reaches only 75/93.3/0 versus edit-only 80/93.3/0; the algebra is validated but context separation is not yet good enough.)*
 
 ### Novel idea
 
@@ -725,7 +726,7 @@ Expected: oracle cancellation reproduces unedited-model unsafe refusal as an imp
 
 ## H20 — Kolpona-style accept/reject failure-habit neuron ladder
 
-**Priority: 8.4/10** *(staged behind exp103/124 because it should add sequential closed-form writes and paired acceptance, not duplicate simple suppression dose response; ultra-sparse dose evidence indirectly supports neuron-level precision.)*
+**Priority: 7.7/10** *(staged behind exp103/124 because it should add sequential closed-form writes and paired acceptance, not duplicate simple suppression dose response; ultra-sparse dose evidence indirectly supports neuron-level precision.)*
 
 ### Novel idea
 
@@ -757,7 +758,7 @@ Expected: a small accepted ladder improves exact compliance or benchmark tempera
 
 ## H21 — Exportable consolidation of complementary steering-vector RL
 
-**Priority: 8.8/10** *(revised after exp101: hook-bound vector-RL behavior still needs exportable consolidation, but rounding/merge-aware training alone is insufficient; teacher/KL distillation is the active hypothesis.)*
+**Priority: 7.0/10** *(revised after exp101: hook-bound vector-RL behavior still needs exportable consolidation, but rounding/merge-aware training alone is insufficient; teacher/KL distillation is the active hypothesis.)*
 
 ### Novel idea
 
@@ -794,9 +795,107 @@ Expected: the exported student recovers at least 60–70% of the hook teacher's 
 
 ---
 
+## H23 — Counterfactual tool-balanced corpus scaling
+
+**Priority: 9.8/10** *(new top hypothesis from the pivot-lens convergence: exactness is limited by tool-readout/data starvation before model method cleverness.)*
+
+### Novel idea
+
+Build a large counterfactual behavior corpus in which near-identical prompts differ only in the correct action, tool, or policy decision, with explicit balanced coverage of rare tools such as `send_http`, and pair it with a much larger capability/replay corpus. The goal is not merely “more data”; it is decision-boundary data that forces the model to distinguish tool classes and policy codes rather than memorize dominant schema completions.
+
+### Why it should work mechanistically
+
+Reward decomposition shows exact-compliance errors are primarily tool errors, while the current corpus has only 144 unique rows and extreme tool imbalance (`send_http` appears in only 2 rows). A 135M model can memorize schema and dominant tools without learning the decision boundary. Counterfactual pairs create high mutual-information training signal at the exact token positions where the readout bottleneck occurs, while replay reduces catastrophic tradeoffs.
+
+### Concrete experiment design
+
+1. Construct a 1,600-row counterfactual behavior corpus: paired or triplet prompts that differ minimally but require different action/tool/policy outputs; balance every tool and policy code, with adversarial near-misses and fresh dev/test splits.
+2. Construct a 5,280-row capability+KL-replay corpus spanning MMLU/ARC/HellaSwag-style continuations, general instruction text, and behavior-preserving replay; keep contamination-controlled validation/test separation.
+3. Train matched 135M baselines with the existing champion recipe and plain LoRA, varying only corpus scale/composition. Measure exact compliance decomposed into action, tool, policy, JSON, unsafe refusal, benign false refusal, rare-tool accuracy, and continuation benchmarks.
+4. Use the same corpus in H24/Qwen3-4B. Compare data-scaled 135M versus data-scaled 4B to separate data starvation from representational crowding.
+5. Falsification controls: same-size random corpus, shuffled counterfactual labels, replay-only, rare-tool-oversampled-only, and held-out paraphrase/generalization splits.
+
+### Expected outcome and falsification criterion
+
+Expected: rare-tool accuracy and exact compliance improve before any method change; if data scale is truly binding, 135M should move beyond the 82.5% ceiling or reduce tool-decomposition errors materially. If 135M remains capped while Qwen3-4B improves on identical data, representational crowding is confirmed. Falsified if counterfactual balancing does not improve rare-tool/generalization metrics in either model class.
+
+### Citation
+
+- Local pivot-lens synthesis: adversarial/interp/training/scale analyses converge on data scale and tool-readout starvation as binding constraints.
+- Local `research/DISCOVERY_STATE.md`: convergent 80–82.5% ceiling across independent method families; capability-transfer falsification at 135M.
+- Local exp102/H12 diagnostic queue: tests linear decision-readout structure relevant to tool errors.
+
+---
+
+## H24 — Qwen3-4B scale-pivot behavioral replication
+
+**Priority: 9.6/10** *(new scale-pivot hypothesis: tests whether representational crowding at 135M is the ceiling mechanism.)*
+
+### Novel idea
+
+Repeat the Halo behavioral learning problem on Qwen3-4B using the expanded counterfactual corpus and simple plain LoRA rather than elaborate surgical mechanisms. The surgical stack should be treated as a baseline comparator, not the first-line method. If 4B reaches ≥90% exact while preserving unsafe refusal, the 135M ceiling is primarily a capacity/representation constraint.
+
+### Why it should work mechanistically
+
+The same 80–82.5% ceiling appears across sparse surgery, targeted RL, vector RL, and H22, implying a shared model/eval constraint rather than a method-specific failure. A larger dense model has more readout capacity for rare tools and less interference between behavior and capability objectives. Plain LoRA is the correct first test because it isolates scale/data effects without confounding them with architectural cleverness.
+
+### Concrete experiment design
+
+1. Fine-tune Qwen3-4B-Instruct on the H23 counterfactual corpus using plain LoRA, with KL replay/general-text preservation.
+2. Compare: 135M same-data LoRA, Qwen3-4B same-data LoRA, Qwen3-4B original 144-row corpus, Qwen3-4B zero-shot/few-shot, and the 135M H22 champion.
+3. Measure exact compliance, unsafe refusal, benign false refusal, action/tool/policy decomposition, rare-tool accuracy, continuation MMLU/ARC-Easy/HellaSwag, export consistency, training wall time, and seed variance.
+4. If plain LoRA succeeds, test whether the validated sparse residual-direction operator transfers as a second-stage refinement rather than a necessity.
+5. Include data ablations: counterfactual pairs removed, rare tools removed, replay removed, and capability corpus removed.
+
+### Expected outcome and falsification criterion
+
+Expected: Qwen3-4B + expanded corpus exceeds the 82.5% ceiling, ideally ≥90% exact with unsafe refusal ≥93.3% and benign false refusal ≤10%, while 135M remains capped or improves less. Falsified if Qwen3-4B shows the same ceiling/tool-error profile on identical data or if gains are confined to memorized rows rather than fresh counterfactual/paraphrase splits.
+
+### Citation
+
+- [Qwen3 Technical Report](https://arxiv.org/abs/2505.09388): larger open dense model class for the scale-pivot comparator.
+- Local pivot-lens adversarial analysis: proposes Qwen3-4B + 1,600-row counterfactual corpus + plain LoRA as the ≥90% path.
+- Local exp144/H22: strongest replicated 135M baseline but ceiling remains 82.5%.
+
+---
+
+## H25 — OLMoE activated-expert adapter surgery
+
+**Priority: 9.4/10** *(new MoE scale-pivot hypothesis: the manipulation surface should be activated experts, not inserted dense heads.)*
+
+### Novel idea
+
+Use OLMoE-1B-7B as the first competition-relevant MoE testbed and adapt only the experts actually activated by behavior/capability prompts. Instead of inserting dense heads, train or surgically edit low-rank adapters inside top-routed experts while freezing the router and non-selected experts. This directly tests expert specialization as the scalable manipulation surface for gpt-oss-20b-class models.
+
+### Why it should work mechanistically
+
+MoE models already partition computation into conditional expert subnetworks, so behavior- or capability-specific adaptation can be localized without adding foreign dense heads to a crowded residual stream. Activated experts are causally used by the target prompts, while inactive experts provide natural protection against collateral damage. This aligns with the lab's validated sparse-edit principle but moves it to an architecturally native sparse substrate.
+
+### Concrete experiment design
+
+1. Profile OLMoE expert routing on behavior train/dev prompts, rare-tool counterfactuals, and capability benchmark prompts. Rank experts by activation frequency, load balancing, and class conditional selectivity.
+2. Train low-rank adapters only in top behavior-activated experts, with router frozen and all non-expert weights frozen.
+3. Arms: top behavior experts, top capability experts, union/intersection expert sets, random activated experts, random inactive experts, dense LoRA control, inserted dense-head control if feasible, and no-edit baseline.
+4. Compare frozen-router versus gently trainable router only after frozen-router baseline; routing changes are a separate causal variable.
+5. Measure exact/unsafe/benign-FR, tool-decomposition errors, continuation benchmark transfer, routing entropy/expert load, cross-seed stability, exported-artifact integrity, and general-capability KL.
+6. If successful, repeat the expert-selection rule on a larger gpt-oss-class MoE rather than inventing a new method.
+
+### Expected outcome and falsification criterion
+
+Expected: activated-expert adapters produce larger behavioral or capability movement than random/inactive-expert controls at lower collateral, and expert selectivity predicts which prompts improve. Falsified if expert identity does not matter, dense LoRA dominates at matched parameter count, or routing/behavior improvements do not transfer to fresh counterfactual or benchmark splits.
+
+### Citation
+
+- [OLMoE: Open Mixture-of-Experts Language Models](https://arxiv.org/abs/2409.02060): open MoE testbed with activated-expert structure.
+- Local pivot-lens scale analysis: recommends MoE activated experts as the manipulation surface for competition-scale models.
+- Local exp129/130/144: sparsity and conditional computation are the validated local principles, now moved to architecturally native MoE experts.
+
+
+---
+
 ## H22 — Ultra-sparse edit anchored complementary MLP-only LoRA
 
-**Priority: 9.7/10** *(queued as exp144; highest-priority composition because both parents are independently validated, but the combination has not yet been tested.)*
+**Priority: 8.9/10** *(queued as exp144; highest-priority composition because both parents are independently validated, but the combination has not yet been tested.)*
 
 ### Novel idea
 
