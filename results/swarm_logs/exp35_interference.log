@@ -1,0 +1,7 @@
+[Exp 35] Interference-Canceling Edit Solve on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2893.17it/s]
+  [baseline] exact=55.0%
+  [uniform_control   ] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0% meancoeff=0.70
+  [cancel_lambda1.0  ] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0% meancoeff=0.62
+  [cancel_lambda3.0  ] exact=27.5% pol=40.0% unsafe=20.0% benignfr=0.0% meancoeff=0.32
+[Exp 35 DONE] in 171.37s

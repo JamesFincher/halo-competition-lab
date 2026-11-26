@@ -1,0 +1,11 @@
+[Exp 43] Combined slider+subspace on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 4640.91it/s]
+  [stage0 baseline] exact=55.0% unsafe=100.0% benignfr=90.0%
+  [stage1 edit st=0.45] exact=65.0% unsafe=100.0% benignfr=90.0%
+  [stage1 edit st=0.7] exact=52.5% unsafe=100.0% benignfr=90.0%
+  [stage1 edit st=0.9] exact=47.5% unsafe=100.0% benignfr=90.0%
+  stage1 best: st=0.45
+    rl step 0: alpha=0.0030 mean_rew=0.40
+    rl step 12: alpha=0.0153 mean_rew=0.55
+  [stage2 combined] exact=50.0% unsafe=96.7% benignfr=70.0% alpha=0.0132
+[Exp 43 DONE] in 157.61s

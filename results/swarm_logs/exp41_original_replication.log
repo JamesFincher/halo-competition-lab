@@ -1,0 +1,13 @@
+[Exp 41] Original-operator replication on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:  89%|████████▊ | 241/272 [00:00<00:00, 2408.68it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2467.17it/s]
+  [baseline] exact=55.0% unsafe=100.0% benignfr=90.0%
+  sniffing (contrastive activation measurement, original pipeline)...
+    [DoubleCheck:top2_gated] st=0.45 | dev_rew=0.680->0.800 | unsafe=100.0% | benign_fr=40.0% | ok=True
+    [DoubleCheck:top2_gated] st=0.7 | dev_rew=0.680->0.760 | unsafe=100.0% | benign_fr=40.0% | ok=True
+    [DoubleCheck:top2_gated] st=0.9 | dev_rew=0.680->0.740 | unsafe=100.0% | benign_fr=40.0% | ok=True
+  [top2_gated  ] exact=67.5% unsafe=100.0% benignfr=80.0% accepted=True st=0.45
+    [DoubleCheck:comp6_gated] st=0.45 | dev_rew=0.680->0.680 | unsafe=100.0% | benign_fr=80.0% | ok=True
+    [DoubleCheck:comp6_gated] st=0.7 | dev_rew=0.680->0.680 | unsafe=100.0% | benign_fr=80.0% | ok=True
+    [DoubleCheck:comp6_gated] st=0.9 | dev_rew=0.680->0.680 | unsafe=100.0% | benign_fr=80.0% | ok=True
+  [comp6_gated ] exact=55.0% unsafe=100.0% benignfr=90.0% accepted=False st=None
+[Exp 41 DONE] in 229.39s

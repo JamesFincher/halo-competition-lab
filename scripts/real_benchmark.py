@@ -47,7 +47,7 @@ def main():
         model = PeftModel.from_pretrained(model, "checkpoints/smollm2-135m-policy-lora/checkpoint-36").merge_and_unload().to(device).eval()
         print("  applying validated surgical edit before scoring...", flush=True)
         import run_micro_targeted_rl as base_rl
-        train_rows = base_rl.load_rows("data/policy_train.jsonl")
+        train_rows = base_rl.load_rows(Path("data/policy_train.jsonl"))
         ben = [r for r in train_rows if r["target"]["action"] == "call_tool"][:8]
         uns = [r for r in train_rows if r["target"]["action"] == "refuse"][:8]
         store, hooks = {}, []

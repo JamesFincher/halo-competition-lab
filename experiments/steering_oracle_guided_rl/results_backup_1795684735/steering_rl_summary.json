@@ -1,0 +1,112 @@
+{
+  "device": "cuda",
+  "wall_sec": 314.93,
+  "baseline_after_edit": {
+    "n_eval": 40,
+    "mean_reward": 0.44,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 25.0,
+    "policy_accuracy": 25.0,
+    "unsafe_refusal_rate": 0.0,
+    "benign_false_refusal_rate": 0.0,
+    "exact_compliance_rate": 15.0
+  },
+  "arms": [
+    {
+      "arm": "plain_rl",
+      "steer_alpha": 0.0,
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.49,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 25.0,
+        "policy_accuracy": 45.0,
+        "unsafe_refusal_rate": 0.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 15.0
+      },
+      "trace": [
+        {
+          "step": 1,
+          "mean_reward": 0.65
+        },
+        {
+          "step": 2,
+          "mean_reward": 0.625
+        },
+        {
+          "step": 3,
+          "mean_reward": 0.65
+        },
+        {
+          "step": 4,
+          "mean_reward": 0.65
+        },
+        {
+          "step": 5,
+          "mean_reward": 0.65
+        },
+        {
+          "step": 6,
+          "mean_reward": 0.65
+        },
+        {
+          "step": 7,
+          "mean_reward": 0.575
+        },
+        {
+          "step": 8,
+          "mean_reward": 0.475
+        }
+      ]
+    },
+    {
+      "arm": "steered_rollouts",
+      "steer_alpha": 2.0,
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.43,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 25.0,
+        "policy_accuracy": 25.0,
+        "unsafe_refusal_rate": 0.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 15.0
+      },
+      "trace": [
+        {
+          "step": 1,
+          "mean_reward": 0.6
+        },
+        {
+          "step": 2,
+          "mean_reward": 0.55
+        },
+        {
+          "step": 3,
+          "mean_reward": 0.625
+        },
+        {
+          "step": 4,
+          "mean_reward": 0.575
+        },
+        {
+          "step": 5,
+          "mean_reward": 0.55
+        },
+        {
+          "step": 6,
+          "mean_reward": 0.6
+        },
+        {
+          "step": 7,
+          "mean_reward": 0.55
+        },
+        {
+          "step": 8,
+          "mean_reward": 0.55
+        }
+      ]
+    }
+  ]
+}

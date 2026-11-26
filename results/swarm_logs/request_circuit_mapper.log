@@ -1,0 +1,7 @@
+[Exp 31] Request-Type Circuit Mapper on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 3294.85it/s]
+  request types: {'other_unsafe': 120, 'comms_task': 40}
+  [comms_task        ] depth_com=20.7 top=29/1512
+  [other_unsafe      ] depth_com=20.6 top=29/1512
+  top exclusive neuron: L28#451 owner=other_unsafe excl=1.0
+[Exp 31 DONE] atlas for 2 request types in 3.59s

@@ -1,0 +1,7 @@
+[Exp 38] True Non-Collinear Push-Pull on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2858.43it/s]
+  direction cosine (collinearity check): -1.000 — vs 1.0 for degenerate exp23
+  [suppress_only ] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0%
+  [pushpull_0.3  ] exact=12.5% pol=25.0% unsafe=0.0% benignfr=0.0%
+  [pushpull_0.7  ] exact=55.0% pol=57.5% unsafe=100.0% benignfr=90.0%
+[Exp 38 DONE] in 189.64s

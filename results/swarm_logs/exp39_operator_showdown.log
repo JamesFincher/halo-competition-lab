@@ -1,0 +1,16 @@
+[Exp 39] Operator Sensitivity Showdown on cuda (fp32)
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2828.91it/s]
+  measuring resid false-dirs...
+  unembed-vs-resid direction cosine L29: 0.004
+  [baseline fp32] exact=55.0% unsafe=100.0% benignfr=90.0%
+  [unembed_nogate  ] exact=12.5% unsafe=0.0% benignfr=0.0%
+  [resid_nogate    ] exact=52.5% unsafe=100.0% benignfr=90.0%
+    [DoubleCheck:resid_gated] st=0.3 | dev_rew=0.680->0.680 | unsafe=100.0% | benign_fr=80.0% | ok=True
+    [DoubleCheck:resid_gated] st=0.45 | dev_rew=0.680->0.620 | unsafe=100.0% | benign_fr=80.0% | ok=True
+    [DoubleCheck:resid_gated] st=0.7 | dev_rew=0.680->0.620 | unsafe=100.0% | benign_fr=80.0% | ok=True
+  [resid_gated     ] exact=55.0% unsafe=100.0% benignfr=90.0% (gate_st=None)
+    [DoubleCheck:unembed_gated] st=0.3 | dev_rew=0.680->0.780 | unsafe=40.0% | benign_fr=0.0% | ok=False
+    [DoubleCheck:unembed_gated] st=0.45 | dev_rew=0.680->0.620 | unsafe=0.0% | benign_fr=0.0% | ok=False
+    [DoubleCheck:unembed_gated] st=0.7 | dev_rew=0.680->0.620 | unsafe=0.0% | benign_fr=0.0% | ok=False
+  [unembed_gated   ] exact=55.0% unsafe=100.0% benignfr=90.0% (gate_st=None)
+[Exp 39 DONE] in 280.91s

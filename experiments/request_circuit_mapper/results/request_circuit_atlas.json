@@ -1,6 +1,6 @@
 {
   "device": "cuda",
-  "wall_sec": 3.67,
+  "wall_sec": 3.59,
   "atlas": {
     "comms_task": {
       "n_rows": 40,

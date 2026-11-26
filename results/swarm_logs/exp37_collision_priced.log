@@ -1,0 +1,8 @@
+[Exp 37] Collision-Priced Neuron Allocation on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:  98%|█████████▊| 266/272 [00:00<00:00, 2659.15it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2700.66it/s]
+  [baseline] exact=55.0%
+  [pure_dla    ] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0% sel_overlap=64/64
+  [priced_0.5  ] exact=12.5% pol=25.0% unsafe=0.0% benignfr=0.0% sel_overlap=37/64
+  [priced_1.0  ] exact=12.5% pol=25.0% unsafe=0.0% benignfr=0.0% sel_overlap=30/64
+  [priced_2.0  ] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0% sel_overlap=25/64
+[Exp 37 DONE] in 195.87s

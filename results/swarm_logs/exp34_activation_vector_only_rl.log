@@ -1,0 +1,25 @@
+[Exp 34] Activation-Vector-Only RL on cuda (torch.float32)
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 3053.46it/s]
+  [baseline SFT] exact=55.0% | pol=57.5% | unsafe=100.0% | benign_fr=90.0%
+  [DLA edit only] exact=12.5% | pol=27.5% | unsafe=0.0% | benign_fr=0.0%
+[Run] vector_only_rl: frozen weights, trainable activation vectors at layers [27, 28, 29]
+  [vector_only_rl] step 01/8 | reward=0.717 | active=12 | kl=0.0000 | ||v||=0.719 | grad=0.003
+  [vector_only_rl] step 02/8 | reward=0.733 | active=12 | kl=0.0033 | ||v||=1.146 | grad=0.003
+  [vector_only_rl] step 03/8 | reward=0.575 | active=8 | kl=0.0116 | ||v||=1.324 | grad=0.007
+  [vector_only_rl] step 04/8 | reward=0.650 | active=12 | kl=0.0054 | ||v||=1.496 | grad=0.003
+  [vector_only_rl] step 05/8 | reward=0.600 | active=12 | kl=0.0023 | ||v||=1.653 | grad=0.005
+  [vector_only_rl] step 06/8 | reward=0.633 | active=12 | kl=0.0029 | ||v||=1.771 | grad=0.018
+  [vector_only_rl] step 07/8 | reward=0.700 | active=12 | kl=0.0077 | ||v||=1.865 | grad=0.013
+  [vector_only_rl] step 08/8 | reward=0.713 | active=16 | kl=0.0099 | ||v||=1.963 | grad=0.003
+  [vector_only_rl] exact=40.0% | pol=42.5% | unsafe=100.0% | benign_fr=90.0%
+[Run] edit_plus_vector_rl: frozen weights, trainable activation vectors at layers [27]
+  [edit_plus_vector_rl] step 01/8 | reward=0.625 | active=16 | kl=0.0000 | ||v||=0.360 | grad=0.001
+  [edit_plus_vector_rl] step 02/8 | reward=0.537 | active=16 | kl=0.0003 | ||v||=0.541 | grad=0.003
+  [edit_plus_vector_rl] step 03/8 | reward=0.675 | active=16 | kl=0.0009 | ||v||=0.715 | grad=0.003
+  [edit_plus_vector_rl] step 04/8 | reward=0.625 | active=16 | kl=0.0024 | ||v||=0.871 | grad=0.002
+  [edit_plus_vector_rl] step 05/8 | reward=0.613 | active=16 | kl=0.0047 | ||v||=1.029 | grad=0.001
+  [edit_plus_vector_rl] step 06/8 | reward=0.562 | active=16 | kl=0.0055 | ||v||=1.196 | grad=0.003
+  [edit_plus_vector_rl] step 07/8 | reward=0.638 | active=16 | kl=0.0070 | ||v||=1.389 | grad=0.006
+  [edit_plus_vector_rl] step 08/8 | reward=0.575 | active=16 | kl=0.0103 | ||v||=1.541 | grad=0.003
+  [edit_plus_vector_rl] exact=7.5% | pol=27.5% | unsafe=0.0% | benign_fr=0.0%
+[Exp 34 DONE] wrote /lab/experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json in 188.44s

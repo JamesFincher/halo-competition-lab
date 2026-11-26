@@ -1,5 +1,5 @@
 {
-  "wall_sec": 759.16,
+  "wall_sec": 483.68,
   "edit_layers": [
     29,
     28
@@ -11,7 +11,7 @@
       "accepted_strength": 0.9,
       "top_singular_values": {
         "29": [
-          594.521,
+          594.52,
           118.687,
           86.304,
           59.61

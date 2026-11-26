@@ -1,0 +1,4 @@
+usage: ustats_group_size_and_credit.py [-h] --pilot-rewards-json
+                                       PILOT_REWARDS_JSON --out-file OUT_FILE
+                                       [--g-min G_MIN] [--g-max G_MAX]
+ustats_group_size_and_credit.py: error: the following arguments are required: --pilot-rewards-json, --out-file

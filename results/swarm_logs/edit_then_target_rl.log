@@ -1,0 +1,57 @@
+[Setup] Loading HuggingFaceTB/SmolLM2-135M-Instruct + merging Halo SFT adapter /lab/checkpoints/smollm2-135m-policy-lora/checkpoint-36 on cuda...
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5528.85it/s]
+[Eval 0] Evaluating starting Halo SFT checkpoint on 40 unseen tasks...
+  Starting SFT: {'n_eval': 40, 'mean_reward': 0.775, 'json_valid_rate': 100.0, 'action_accuracy': 80.0, 'policy_accuracy': 50.0, 'unsafe_refusal_rate': 100.0, 'benign_false_refusal_rate': 80.0, 'exact_compliance_rate': 47.5}
+[Stage 1] Running Contrastive + LS-LoRA + 1-Shot Fisher localization...
+  Localized top-8/30 layers: [0, 1, 11, 20, 24, 27, 28, 29]
+  Random control 8/30 layers: [2, 5, 6, 9, 10, 14, 21, 25]
+  [Arm 1] Surgical pre-edit: {'edit_layers': [29, 28], 'edited_weights': 36864, 'edited_fraction_pct': 0.02741, 'strength': 0.5}
+  Arm 1 (Surgical Edit Only) eval: {'n_eval': 40, 'mean_reward': 0.92, 'json_valid_rate': 100.0, 'action_accuracy': 95.0, 'policy_accuracy': 85.0, 'unsafe_refusal_rate': 93.3, 'benign_false_refusal_rate': 0.0, 'exact_compliance_rate': 75.0}
+
+[Run] arm0_full_lora_grpo (r=8)...
+/usr/local/lib/python3.12/dist-packages/peft/tuners/tuners_utils.py:285: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+  [arm0_full_lora_grpo] step 01/8 | reward=0.575 | active_grp=1/2 | kl=0.0000 | grad=0.148 | 13.4s
+  [arm0_full_lora_grpo] step 02/8 | reward=0.725 | active_grp=2/2 | kl=0.0037 | grad=0.174 | 14.5s
+  [arm0_full_lora_grpo] step 03/8 | reward=0.800 | active_grp=2/2 | kl=0.0042 | grad=0.168 | 14.4s
+  [arm0_full_lora_grpo] step 04/8 | reward=0.750 | active_grp=2/2 | kl=0.0111 | grad=0.202 | 13.3s
+  [arm0_full_lora_grpo] step 05/8 | reward=0.575 | active_grp=2/2 | kl=0.0120 | grad=0.165 | 13.7s
+  [arm0_full_lora_grpo] step 06/8 | reward=0.700 | active_grp=2/2 | kl=0.0102 | grad=0.194 | 13.6s
+  [arm0_full_lora_grpo] step 07/8 | reward=0.800 | active_grp=2/2 | kl=0.0194 | grad=0.186 | 14.0s
+  [arm0_full_lora_grpo] step 08/8 | reward=0.850 | active_grp=2/2 | kl=0.0230 | grad=0.149 | 13.6s
+  [arm0_full_lora_grpo] Held-out 40-task eval: {'n_eval': 40, 'mean_reward': 0.665, 'json_valid_rate': 100.0, 'action_accuracy': 60.0, 'policy_accuracy': 55.0, 'unsafe_refusal_rate': 46.7, 'benign_false_refusal_rate': 0.0, 'exact_compliance_rate': 47.5}
+
+[Run] arm2_localized_grpo_only (r=16)...
+  [arm2_localized_grpo_only] step 01/8 | reward=0.575 | active_grp=1/2 | kl=0.0000 | grad=0.120 | 8.3s
+  [arm2_localized_grpo_only] step 02/8 | reward=0.725 | active_grp=2/2 | kl=0.0023 | grad=0.134 | 8.4s
+  [arm2_localized_grpo_only] step 03/8 | reward=0.900 | active_grp=1/2 | kl=0.0072 | grad=0.099 | 8.3s
+  [arm2_localized_grpo_only] step 04/8 | reward=0.600 | active_grp=2/2 | kl=0.0095 | grad=0.157 | 9.2s
+  [arm2_localized_grpo_only] step 05/8 | reward=0.575 | active_grp=2/2 | kl=0.0099 | grad=0.171 | 8.4s
+  [arm2_localized_grpo_only] step 06/8 | reward=0.700 | active_grp=2/2 | kl=0.0127 | grad=0.159 | 8.4s
+  [arm2_localized_grpo_only] step 07/8 | reward=0.650 | active_grp=2/2 | kl=0.0145 | grad=0.154 | 8.6s
+  [arm2_localized_grpo_only] step 08/8 | reward=0.825 | active_grp=1/2 | kl=0.0053 | grad=0.118 | 8.4s
+  [arm2_localized_grpo_only] Held-out 40-task eval: {'n_eval': 40, 'mean_reward': 0.93, 'json_valid_rate': 100.0, 'action_accuracy': 95.0, 'policy_accuracy': 87.5, 'unsafe_refusal_rate': 93.3, 'benign_false_refusal_rate': 0.0, 'exact_compliance_rate': 80.0}
+
+[Run] arm3_edit_then_target_grpo (r=16)...
+  [arm3_edit_then_target_grpo] step 01/8 | reward=0.475 | active_grp=1/2 | kl=0.0120 | grad=0.105 | 8.4s
+  [arm3_edit_then_target_grpo] step 02/8 | reward=0.575 | active_grp=2/2 | kl=0.0075 | grad=0.150 | 9.2s
+  [arm3_edit_then_target_grpo] step 03/8 | reward=0.950 | active_grp=1/2 | kl=0.0098 | grad=0.141 | 8.2s
+  [arm3_edit_then_target_grpo] step 04/8 | reward=0.575 | active_grp=2/2 | kl=0.0089 | grad=0.174 | 8.8s
+  [arm3_edit_then_target_grpo] step 05/8 | reward=0.350 | active_grp=2/2 | kl=0.0119 | grad=0.186 | 9.2s
+  [arm3_edit_then_target_grpo] step 06/8 | reward=0.700 | active_grp=2/2 | kl=0.0206 | grad=0.197 | 8.3s
+  [arm3_edit_then_target_grpo] step 07/8 | reward=0.575 | active_grp=2/2 | kl=0.0145 | grad=0.138 | 8.4s
+  [arm3_edit_then_target_grpo] step 08/8 | reward=0.550 | active_grp=1/2 | kl=0.0179 | grad=0.126 | 8.9s
+  [arm3_edit_then_target_grpo] Held-out 40-task eval: {'n_eval': 40, 'mean_reward': 0.725, 'json_valid_rate': 100.0, 'action_accuracy': 75.0, 'policy_accuracy': 37.5, 'unsafe_refusal_rate': 100.0, 'benign_false_refusal_rate': 100.0, 'exact_compliance_rate': 37.5}
+
+[Run] arm4_random_layer_control (r=16)...
+  [arm4_random_layer_control] step 01/8 | reward=0.575 | active_grp=1/2 | kl=0.0000 | grad=0.098 | 8.5s
+  [arm4_random_layer_control] step 02/8 | reward=0.525 | active_grp=2/2 | kl=0.0038 | grad=0.136 | 9.1s
+  [arm4_random_layer_control] step 03/8 | reward=0.850 | active_grp=1/2 | kl=0.0054 | grad=0.090 | 8.4s
+  [arm4_random_layer_control] step 04/8 | reward=0.850 | active_grp=1/2 | kl=0.0093 | grad=0.091 | 8.3s
+  [arm4_random_layer_control] step 05/8 | reward=0.775 | active_grp=1/2 | kl=0.0067 | grad=0.086 | 8.2s
+  [arm4_random_layer_control] step 06/8 | reward=0.575 | active_grp=1/2 | kl=0.0140 | grad=0.107 | 8.5s
+  [arm4_random_layer_control] step 07/8 | reward=0.600 | active_grp=2/2 | kl=0.0174 | grad=0.116 | 8.8s
+  [arm4_random_layer_control] step 08/8 | reward=0.675 | active_grp=1/2 | kl=0.0144 | grad=0.099 | 8.1s
+  [arm4_random_layer_control] Held-out 40-task eval: {'n_eval': 40, 'mean_reward': 0.845, 'json_valid_rate': 100.0, 'action_accuracy': 87.5, 'policy_accuracy': 65.0, 'unsafe_refusal_rate': 100.0, 'benign_false_refusal_rate': 50.0, 'exact_compliance_rate': 60.0}
+
+[DONE] Wrote /lab/experiments/edit_then_target_rl/results/micro_rl/micro_rl_summary.json and /lab/experiments/edit_then_target_rl/results/micro_rl/MICRO_RL_REPORT.md

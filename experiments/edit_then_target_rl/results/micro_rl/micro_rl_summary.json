@@ -1,21 +1,21 @@
 {
   "config": {
     "base_model": "HuggingFaceTB/SmolLM2-135M-Instruct",
-    "sft_adapter": "/home/ubuntu/halo-competition-lab/checkpoints/smollm2-135m-policy-lora/checkpoint-36",
-    "steps": 6,
+    "sft_adapter": "/lab/checkpoints/smollm2-135m-policy-lora/checkpoint-36",
+    "steps": 8,
     "group_size": 4,
     "lr": 0.0003,
     "beta": 0.02,
     "seed": 42
   },
-  "device": "cpu",
+  "device": "cuda",
   "localization": {
     "top_8_layers": [
       0,
       1,
       11,
-      19,
       20,
+      24,
       27,
       28,
       29
@@ -27,7 +27,7 @@
       9,
       10,
       14,
-      22,
+      21,
       25
     ],
     "top_2_contrastive_edit_layers": [
@@ -46,38 +46,38 @@
     "top_5_ranked_layers": [
       {
         "layer": 29,
-        "combined": 0.6768,
-        "contrastive_l2": 172.0105,
-        "ls_lora": 0.4704,
-        "fisher_snip": 0.00016426
+        "combined": 0.6815,
+        "contrastive_l2": 172.87195,
+        "ls_lora": 0.47122,
+        "fisher_snip": 0.00016286
       },
       {
         "layer": 0,
         "combined": 0.6,
-        "contrastive_l2": 7.98349,
+        "contrastive_l2": 7.97876,
         "ls_lora": 0.96939,
-        "fisher_snip": 0.00022354
+        "fisher_snip": 0.00021955
       },
       {
         "layer": 27,
-        "combined": 0.3159,
-        "contrastive_l2": 113.77634,
-        "ls_lora": 0.0465,
-        "fisher_snip": 0.00012904
+        "combined": 0.3161,
+        "contrastive_l2": 113.64468,
+        "ls_lora": 0.04636,
+        "fisher_snip": 0.00012778
       },
       {
         "layer": 28,
-        "combined": 0.3076,
-        "contrastive_l2": 121.70992,
-        "ls_lora": 0.05283,
-        "fisher_snip": 0.00012114
+        "combined": 0.3063,
+        "contrastive_l2": 121.55418,
+        "ls_lora": 0.05264,
+        "fisher_snip": 0.0001197
       },
       {
         "layer": 1,
-        "combined": 0.2998,
-        "contrastive_l2": 10.37238,
-        "ls_lora": 0.16672,
-        "fisher_snip": 0.00018642
+        "combined": 0.2982,
+        "contrastive_l2": 10.37107,
+        "ls_lora": 0.16674,
+        "fisher_snip": 0.00018288
       }
     ]
   },
@@ -92,11 +92,11 @@
         "n_eval": 40,
         "mean_reward": 0.775,
         "json_valid_rate": 100.0,
-        "action_accuracy": 77.5,
-        "policy_accuracy": 57.5,
+        "action_accuracy": 80.0,
+        "policy_accuracy": 50.0,
         "unsafe_refusal_rate": 100.0,
-        "benign_false_refusal_rate": 90.0,
-        "exact_compliance_rate": 55.0
+        "benign_false_refusal_rate": 80.0,
+        "exact_compliance_rate": 47.5
       }
     },
     "arm1_surgical_edit_only": {
@@ -107,184 +107,165 @@
       },
       "eval": {
         "n_eval": 40,
-        "mean_reward": 0.88,
+        "mean_reward": 0.92,
         "json_valid_rate": 100.0,
-        "action_accuracy": 87.5,
-        "policy_accuracy": 82.5,
-        "unsafe_refusal_rate": 96.7,
-        "benign_false_refusal_rate": 40.0,
-        "exact_compliance_rate": 77.5
+        "action_accuracy": 95.0,
+        "policy_accuracy": 85.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 75.0
       }
     },
     "arm0_full_lora_grpo": {
       "train_stats": {
         "trainable_params": 2442240,
         "trainable_pct": 1.783,
-        "total_wall_sec": 123.3,
-        "mean_step_sec": 20.55,
+        "total_wall_sec": 110.5,
+        "mean_step_sec": 13.81,
         "reward_curve": [
-          0.75,
-          0.625,
-          0.8,
-          0.675,
           0.575,
-          0.725
+          0.725,
+          0.8,
+          0.75,
+          0.575,
+          0.7,
+          0.8,
+          0.85
         ],
         "kl_curve": [
           0.0,
-          0.01456,
-          0.01012,
-          0.02152,
-          0.02549,
-          0.03941
+          0.00372,
+          0.00418,
+          0.01108,
+          0.01202,
+          0.01019,
+          0.01941,
+          0.02295
         ]
       },
       "eval": {
         "n_eval": 40,
-        "mean_reward": 0.805,
-        "json_valid_rate": 97.5,
-        "action_accuracy": 90.0,
-        "policy_accuracy": 50.0,
-        "unsafe_refusal_rate": 86.7,
+        "mean_reward": 0.665,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 60.0,
+        "policy_accuracy": 55.0,
+        "unsafe_refusal_rate": 46.7,
         "benign_false_refusal_rate": 0.0,
-        "exact_compliance_rate": 27.5
+        "exact_compliance_rate": 47.5
       }
     },
     "arm2_localized_grpo_only": {
       "train_stats": {
         "trainable_params": 1302528,
         "trainable_pct": 0.959,
-        "total_wall_sec": 104.9,
-        "mean_step_sec": 17.48,
+        "total_wall_sec": 68.0,
+        "mean_step_sec": 8.49,
         "reward_curve": [
           0.575,
-          0.625,
-          0.95,
-          0.65,
+          0.725,
+          0.9,
+          0.6,
           0.575,
-          0.75
+          0.7,
+          0.65,
+          0.825
         ],
         "kl_curve": [
           0.0,
-          0.00973,
-          0.00071,
-          0.01218,
-          0.0105,
-          0.01646
+          0.00226,
+          0.0072,
+          0.00955,
+          0.00992,
+          0.01266,
+          0.01453,
+          0.00525
         ]
       },
       "eval": {
         "n_eval": 40,
-        "mean_reward": 0.865,
-        "json_valid_rate": 97.5,
-        "action_accuracy": 92.5,
-        "policy_accuracy": 72.5,
-        "unsafe_refusal_rate": 90.0,
+        "mean_reward": 0.93,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 95.0,
+        "policy_accuracy": 87.5,
+        "unsafe_refusal_rate": 93.3,
         "benign_false_refusal_rate": 0.0,
-        "exact_compliance_rate": 55.0
+        "exact_compliance_rate": 80.0
       }
     },
     "arm3_edit_then_target_grpo": {
       "train_stats": {
         "trainable_params": 1302528,
         "trainable_pct": 0.959,
-        "total_wall_sec": 131.3,
-        "mean_step_sec": 21.89,
+        "total_wall_sec": 69.4,
+        "mean_step_sec": 8.67,
         "reward_curve": [
-          0.65,
-          0.75,
-          0.775,
-          0.6,
-          0.525,
-          0.675
+          0.475,
+          0.575,
+          0.95,
+          0.575,
+          0.35,
+          0.7,
+          0.575,
+          0.55
         ],
         "kl_curve": [
-          0.01154,
-          0.01518,
-          0.02978,
-          0.04194,
-          0.03587,
-          0.05295
+          0.01196,
+          0.00745,
+          0.00977,
+          0.00891,
+          0.01187,
+          0.0206,
+          0.01447,
+          0.01794
         ]
       },
       "eval": {
         "n_eval": 40,
-        "mean_reward": 0.64,
-        "json_valid_rate": 97.5,
-        "action_accuracy": 52.5,
-        "policy_accuracy": 45.0,
-        "unsafe_refusal_rate": 36.7,
-        "benign_false_refusal_rate": 0.0,
-        "exact_compliance_rate": 20.0
+        "mean_reward": 0.725,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 75.0,
+        "policy_accuracy": 37.5,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 100.0,
+        "exact_compliance_rate": 37.5
       }
     },
     "arm4_random_layer_control": {
       "train_stats": {
         "trainable_params": 1302528,
         "trainable_pct": 0.959,
-        "total_wall_sec": 80.1,
-        "mean_step_sec": 13.35,
+        "total_wall_sec": 67.8,
+        "mean_step_sec": 8.48,
         "reward_curve": [
           0.575,
-          0.65,
-          0.95,
-          0.65,
-          0.675,
-          0.65
+          0.525,
+          0.85,
+          0.85,
+          0.775,
+          0.575,
+          0.6,
+          0.675
         ],
         "kl_curve": [
           0.0,
-          0.00656,
-          0.00045,
-          0.01553,
-          0.01968,
-          0.01234
+          0.00378,
+          0.00537,
+          0.00928,
+          0.00671,
+          0.01398,
+          0.0174,
+          0.0144
         ]
       },
       "eval": {
         "n_eval": 40,
-        "mean_reward": 0.905,
+        "mean_reward": 0.845,
         "json_valid_rate": 100.0,
-        "action_accuracy": 97.5,
-        "policy_accuracy": 70.0,
+        "action_accuracy": 87.5,
+        "policy_accuracy": 65.0,
         "unsafe_refusal_rate": 100.0,
-        "benign_false_refusal_rate": 10.0,
+        "benign_false_refusal_rate": 50.0,
         "exact_compliance_rate": 60.0
-      }
-    },
-    "arm3b_edit_then_target_fixed": {
-      "fix_notes": "Anchored KL ref_model=edited_model, 4x lower Stage-2 lr=7.5e-5, excluded already-edited layers [28,29] -> complementary layers [0,1,11,19,20,27]",
-      "train_stats": {
-        "trainable_params": 976896,
-        "trainable_pct": 0.721,
-        "total_wall_sec": 92.2,
-        "mean_step_sec": 15.36,
-        "reward_curve": [
-          0.55,
-          0.625,
-          0.825,
-          0.7,
-          0.675,
-          0.625
-        ],
-        "kl_curve": [
-          0.0,
-          0.00158,
-          0.00054,
-          0.00166,
-          0.00162,
-          0.00231
-        ]
-      },
-      "eval": {
-        "n_eval": 40,
-        "mean_reward": 0.92,
-        "json_valid_rate": 100.0,
-        "action_accuracy": 95.0,
-        "policy_accuracy": 90.0,
-        "unsafe_refusal_rate": 93.3,
-        "benign_false_refusal_rate": 0.0,
-        "exact_compliance_rate": 72.5
       }
     }
   }

@@ -1,0 +1,8 @@
+[Exp 34] fp32-Master Edit Pipeline on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2759.05it/s]
+  [a fp32/fp32      ] exact=12.5% unsafe=0.0% benignfr=0.0%
+  [b fp32edit->bf16 ] exact=15.0% unsafe=0.0% benignfr=0.0%
+  [c stochastic bf16] exact=15.0% unsafe=0.0% benignfr=0.0%
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 7580.96it/s]
+  [d direct bf16    ] exact=15.0% unsafe=0.0% benignfr=0.0%
+[Exp 34 DONE] in 173.36s

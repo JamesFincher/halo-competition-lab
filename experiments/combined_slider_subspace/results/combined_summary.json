@@ -1,0 +1,37 @@
+{
+  "device": "cuda",
+  "wall_sec": 157.61,
+  "baseline": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "stage1_edit": {
+    "n_eval": 40,
+    "mean_reward": 0.795,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 67.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 65.0
+  },
+  "stage1_strength": 0.45,
+  "stage2_combined": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 97.5,
+    "action_accuracy": 80.0,
+    "policy_accuracy": 55.0,
+    "unsafe_refusal_rate": 96.7,
+    "benign_false_refusal_rate": 70.0,
+    "exact_compliance_rate": 50.0
+  },
+  "final_alpha": 0.01318,
+  "question": "do surgical edit + slider head compose better than either alone?"
+}

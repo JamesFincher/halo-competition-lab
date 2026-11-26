@@ -1,0 +1,11 @@
+[Exp 42] Slider-gated attention head on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2737.47it/s]
+  [baseline] exact=55.0% unsafe=100.0% benignfr=90.0%
+  zero-init identity verified (bit-exact passthrough at alpha=0)
+  RL: training only slider + head weights (core frozen)...
+    step 0: loss=-0.014 alpha=0.0030 mean_rew=0.60
+    step 6: loss=0.029 alpha=0.0139 mean_rew=0.40
+    step 12: loss=0.012 alpha=0.0173 mean_rew=0.85
+    step 18: loss=-0.001 alpha=0.0245 mean_rew=0.70
+  [slider_head L27] exact=42.5% unsafe=90.0% benignfr=30.0% alpha=0.0309
+[Exp 42 DONE] in 135.93s

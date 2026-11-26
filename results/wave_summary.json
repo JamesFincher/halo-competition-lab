@@ -1,0 +1,26 @@
+{
+  "wave": "scripts/auto_queue.json",
+  "total_wall_sec": 579.0,
+  "experiments": {
+    "request_circuit_mapper": {
+      "rc": 0,
+      "wall": 15.0
+    },
+    "adaptive_k_proportional_edit": {
+      "rc": 1,
+      "wall": 51.0
+    },
+    "exp34_activation_vector_only_rl": {
+      "rc": 0,
+      "wall": 201.0
+    },
+    "multi_seed_stability_sweep": {
+      "rc": 0,
+      "wall": 573.0
+    },
+    "edit_then_target_rl": {
+      "rc": 0,
+      "wall": 576.0
+    }
+  }
+}

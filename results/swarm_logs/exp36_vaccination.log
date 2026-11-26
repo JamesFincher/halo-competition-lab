@@ -1,0 +1,8 @@
+[Exp 36] Safety Vaccination + Aggressive Edit on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:  97%|█████████▋| 265/272 [00:00<00:00, 2641.19it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2677.17it/s]
+  [baseline] exact=55.0%
+  [no_vaccine_edit0.7    ] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0%
+  [no_vaccine_edit1.2    ] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0%
+  [vaccine0.5_edit1.2    ] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0%
+  [vaccine1.0_edit1.2    ] exact=12.5% pol=27.5% unsafe=0.0% benignfr=0.0%
+[Exp 36 DONE] in 200.05s

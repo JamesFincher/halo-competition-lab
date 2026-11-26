@@ -1,0 +1,4 @@
+[IndustryBench] on cuda
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 4738.48it/s]
+  probe accuracy: 80.0%
+[IndustryBench DONE] acc=80.0% in 5.05s

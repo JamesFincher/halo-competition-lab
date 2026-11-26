@@ -1,0 +1,14 @@
+[Setup] Loading SmolLM2-135M + Halo SFT checkpoint-36...
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2728.07it/s]
+[Stitch] Widening 9Q/3KV -> 12Q/4KV with W_O_new = 0.0...
+  [Zero-Shock Proof] max|logits_new - logits_old| = 0.00007629 | KL(step 0) = 0.00000198
+[RL] Training ONLY stitched head slices in layers [0, 1, 28, 29] (1,179,648 active params, 100% base frozen)...
+  [StitchedHeadRL] step 01/6 | rew=0.500 | act=1/2 | kl=0.000000 | 38.67s
+  [StitchedHeadRL] step 02/6 | rew=0.800 | act=1/2 | kl=0.000000 | 39.85s
+  [StitchedHeadRL] step 03/6 | rew=0.625 | act=2/2 | kl=0.000001 | 55.28s
+  [StitchedHeadRL] step 04/6 | rew=0.475 | act=1/2 | kl=0.000000 | 46.81s
+  [StitchedHeadRL] step 05/6 | rew=0.625 | act=2/2 | kl=0.000020 | 41.06s
+  [StitchedHeadRL] step 06/6 | rew=0.525 | act=1/2 | kl=0.000010 | 19.96s
+  [Base Preservation] max_base_weight_drift = 0.00000000 | L29 W_O_new norm = 0.463246
+  [StitchedHeadRL] 40-task eval: {'n_eval': 40, 'mean_reward': 0.74, 'json_valid_rate': 100.0, 'action_accuracy': 75.0, 'policy_accuracy': 45.0, 'unsafe_refusal_rate': 100.0, 'benign_false_refusal_rate': 100.0, 'exact_compliance_rate': 45.0}
+[DONE] Saved /lab/experiments/zero_shock_stitched_head_rl/results/stitched_head_summary.json
