@@ -8,7 +8,7 @@ Validated local assets:
 
 - **Best surgical operator:** measured residual/pass-vs-failure subspace edits, not unembedding-logit directions. Exp 16 `raw_rank1` reached **65% exact / 90% unsafe refusal / 0% benign false refusal**; Exp 41's faithful contrastive+dev-gated operator reached **67.5% exact / 100% unsafe / 80% benign-FR** but did not reproduce the older 80% CPU-era result.
 - **Best architectural insert:** Exp 42's zero-init slider-gated attention head was exactly identical at initialization and reduced benign false refusal **90%→30%** at \(\alpha\approx0.031\), but exact compliance fell **55%→42.5%** and policy accuracy fell **57.5%→42.5%**.
-- **Best composition target:** combine subtractive residual-subspace edits, additive zero-damage inserts, and tiny vector/head-only RL. Exps 50–56 already cover vector-only RL, decision-anchor alignment, PGS directions, internal advantage sculpting, activation-cap scaffolding, policy-hint internalization, and boundary-token temperature, so those are not duplicated here.
+- **Best composition target:** combine subtractive residual-subspace edits, additive zero-damage inserts, and tiny vector/head-only RL. Exps 50–56 already cover vector-only RL, decision-anchor alignment, PGS directions, internal advantage sculpting, activation-cap scaffolding, policy-hint internalization, boundary-token temperature, and Halo-native targeted LoRA transfer, so those are not duplicated here.
 - **Known dead ends:** unembedding-direction weight edits collapse into always-call behavior at all tested strengths; fp32 does not rescue them; degenerate collinear push-pull is a sign/strength artifact; hard nullspaces and binary masks are too destructive on a 135M model.
 
 Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 through 2026-11-25 in weight-space programming, activation steering, attention-head intervention, parameter-efficient RL, subspace repair, MoE/architecture expansion, plus frontier/lab blogs including MIT CSAIL weight-space programming and Anthropic feature-steering/introspection writeups. The local `arxiv-mcp-server` is currently misconfigured (`uvx` entry point missing), so the scan used the official arXiv API and full HTML papers directly.
@@ -22,6 +22,9 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 8.9 | H3 — Functional-connectivity-guided head insertion | attention-head modification | proposed |
 | 8.7 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | proposed |
 | 8.5 | H5 — Output-matched steering-vector compression | activation steering + RL initialization | proposed |
+| 8.3 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | proposed |
+| 8.2 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT + attention heads | proposed |
+| 7.9 | H8 — Displacement-probe edit auditor and reference chooser | cheap pre-GPU screening diagnostic | proposed |
 
 ---
 
@@ -220,6 +223,103 @@ Expected: output-matched vectors recover at least 50–70% of the surgical edit'
 
 ---
 
+## H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits
+
+**Priority: 8.3/10**
+
+### Novel idea
+
+Replace or augment Exp 57's conventional LoRA lanes with a **Kronecker-factored, input-gated adapter**: freeze a random dense matrix \(A\), train a much smaller factor \(M(x)=B_1\operatorname{diag}(g(x))B_2\), and let one shared gate choose the effective adapter rank per input in discrete lattice steps. Unlike a scalar slider, this changes the *rank/capacity* of the update rather than merely scaling a fixed direction.
+
+### Why it should work mechanistically
+
+The policy-router task appears to mix easy schema reconstruction with harder action/tool/policy-code decisions. Fixed-rank LoRA either over-allocates capacity to easy tokens or under-allocates it to hard decision states. Kronecker multiplication amplifies trainable rank without trainable parameters, while the input gate can allocate high rank only where residual-stream evidence predicts a hard decision. This is a surgical complement to validated edits rather than another destructive full-weight update.
+
+### Concrete experiment design
+
+1. Use the same post-edit anchored setup as Exp 57 so results are directly comparable.
+2. Adapt complementary layers 24–27, separately testing attention `q/o` lanes, MLP `up/down` lanes, and both.
+3. Before training, compute the paper's cheap adaptivity diagnostic from a few hundred labeled examples: compare within-class and cross-class gate responses for correct allow, false refusal, true refusal, wrong tool, and malformed JSON. Abort or use constant gates if adaptivity is predicted unnecessary.
+4. Train small \(B_1,B_2\) and a shared residual-to-gate network; freeze \(A\) and all base weights. Compare matched-parameter LoRA r8/r16, KiRA constant-gate, KiRA input-gated, and a random-gate negative control.
+5. Measure standard 40-task metrics, pass@4, exact trainable parameter count, gate rank distribution by behavior, KL to post-edit anchor, real-benchmark temperature, and whether constant gates can be folded into \(B_1\) at deployment.
+
+### Expected outcome and falsification criterion
+
+Expected: input-gated Kronecker lanes match or beat LoRA using substantially fewer trainable parameters, with gains concentrated in hard decision rows rather than schema rows. Falsified if the pre-training adaptivity diagnostic disagrees with measured benefit, input gating does not beat constant/random gates, or parameter-normalized performance is not better than Exp 57 LoRA.
+
+### Citation
+
+- [arXiv:2611.33236 — *Input-Gated Kronecker-Factored Adaptation for Parameter-Efficient Transfer*](https://arxiv.org/abs/2611.33236): frozen random Kronecker matrix multiplies trainable rank, input gate adjusts rank in discrete steps, 8.7–9.7× fewer trainable parameters than LoRA across six benchmarks.
+- Local Exp 57 targeted post-edit LoRA transfer design.
+
+---
+
+## H7 — Drift-triggered orthogonal rotation lanes
+
+**Priority: 8.2/10**
+
+### Novel idea
+
+Train **rotation-only lanes** \(W(I+S)\), with skew-symmetric \(S\), in complementary attention/MLP matrices, restoring exact orthogonality only when measured drift crosses tolerance \(\tau\). This redirects existing computation while preserving spectral scale, instead of adding rank or deleting subspaces.
+
+### Why it should work mechanistically
+
+Halo's hard structural edits fail because the 135M model has little redundant capacity: deletion/scaling damages capability. Orthogonal transformations preserve norms and singular values, so they are a natural low-collateral way to rotate false-refusal features into useful compliance/tool-routing representations. Drift-triggered restoration gives exact constraint enforcement when needed without paying the cost of re-orthogonalizing every step.
+
+### Concrete experiment design
+
+1. Start from the validated raw-rank1 post-edit checkpoint and anchor KL to it, as in Exp 57.
+2. Apply trainable orthogonal lanes to complementary layers 24–27, with separate arms for attention `q/k/v/o`, MLP `up/down`, and both; use block-diagonal or subspace parameterizations sized to SmolLM2's 576-dimensional residual/64-dimensional heads.
+3. Train with 8–24 GRPO steps. After each update compute \(\|S\|_2\); polar-restore only when \(\|S\|_2\ge\tau\) for \(\tau\in\{0.03,0.10,0.30\}\).
+4. Compare no-restoration, restore-every-step, drift-triggered restoration, matched-rank LoRA from Exp 57, and random skew-symmetric initialization controls.
+5. Measure standard policy metrics, real-benchmark temperature, KL to post-edit anchor, singular-value drift of edited matrices, number/timing of restorations, wall-clock overhead, and per-head attention-map changes.
+
+### Expected outcome and falsification criterion
+
+Expected: drift-triggered rotations preserve general capability better than additive LoRA at similar exact-compliance gains, especially on attention lanes. Falsified if rotations cannot move policy behavior before saturating KL, if restoration does not reduce benchmark/singular-value collateral, or if drift triggering is not faster than restore-every-step at matched accuracy.
+
+### Citation
+
+- [arXiv:2611.33589 — *Drift-Triggered Restoration for Orthogonal Fine-Tuning*](https://arxiv.org/abs/2611.33589): first-order skew update plus drift-triggered polar restoration; defect of \(I+S\) is exactly \(\|S\|_2^2\), block-diagonal version exceeded LoRA by \(1.98\pm0.39\) GLUE points while reducing prior orthogonal-finetuning overhead.
+- Local evidence that hard structural edits are destructive but attention-head-only interventions are safe.
+
+---
+
+## H8 — Displacement-probe edit auditor and reference chooser
+
+**Priority: 7.9/10**
+
+### Novel idea
+
+Build a cheap weight/activation-displacement probe that predicts whether a candidate edit is likely to help before spending GPU rollout time. For each candidate checkpoint, measure probe responses and second-order Gram-feature displacement relative to several references—unedited Halo SFT, raw base, validated edit, and failed destructive edits—then train a tiny tabular predictor on the lab's historical experiment archive.
+
+### Why it should work mechanistically
+
+The lab repeatedly lost GPU time to operators that looked plausible by DLA/weight geometry but were behaviorally destructive. Displacement, not raw weights or activation magnitude, is the causal object introduced by fine-tuning/editing. Gram responses are sensitive to feature changes induced by training, and reference choice is part of the measurement; a learned shared subtraction can remove common architecture scale and expose edit-specific displacement.
+
+### Concrete experiment design
+
+1. Assemble a historical dataset from existing experiments: each row is an edit/RL configuration plus outcome labels for exact compliance, unsafe refusal, benign false refusal, policy accuracy, KL/destruction proxies, and benchmark temperature where available.
+2. For each archived or regenerated candidate, compute compact features:
+   - weight displacement norms/cosines by layer and module;
+   - responses to a fixed set of random and behavior-derived probe inputs;
+   - layer-wise Gram-matrix displacement on a small mixed calibration set;
+   - displacement relative to multiple references, plus learned shared subtraction fitted on training folds only.
+3. Train a small cross-validated predictor/ranker to forecast outcome class: accepted, unsafe-compliance collapse, benign-refusal collapse, no-op, or mixed. Evaluate leave-one-experiment-family-out to avoid leakage.
+4. Use the auditor prospectively to rank H1/H2/H4 variants before GPU rollout; compare against simple norms, cosine-to-unembedding, DLA score, and random ranking.
+5. Measure ranking quality by top-1/top-3 hit rate, Spearman correlation with exact-compliance gain, false-negative rate on accepted edits, calibration, and GPU minutes saved per accepted candidate.
+
+### Expected outcome and falsification criterion
+
+Expected: displacement/Gram features separate destructive always-call edits and no-op edits from accepted surgical operators better than raw weight norms or DLA visibility, enabling a cheap pre-screen. Falsified if leave-one-family-out prediction is near chance, the auditor rejects the known good Exp 16/41 family, or simple scalar norms perform as well.
+
+### Citation
+
+- [arXiv:2611.33998 — *Refined Displacement Probes for Weight-Space Learning*](https://arxiv.org/abs/2611.33998): probing displacement rather than raw weights, second-order Gram responses, reference-as-design-choice/shared subtraction, state-of-the-art Model Jungle results with 3.61× fewer metanetwork parameters.
+- Local failures of DLA/unembedding proxies and repeated operator-validity lessons in Exps 17/39/41.
+
+---
+
 ## Near-term research backlog for later batches
 
-Candidates not yet written as full hypotheses: KiRA-style input-gated high-rank adapters ([arXiv:2611.33236](https://arxiv.org/abs/2611.33236)); drift-triggered exact orthogonal lane training ([arXiv:2611.33589](https://arxiv.org/abs/2611.33589)); agent-written closed-form readouts on frozen encoders ([arXiv:2611.33972](https://arxiv.org/abs/2611.33972)); displacement probing as a edit/reference-selection diagnostic ([arXiv:2611.33998](https://arxiv.org/abs/2611.33998)); tool-free LLM quantization-error cancellation ([arXiv:2611.33031](https://arxiv.org/abs/2611.33031)); mixture-of-loops KV memory as a longer-horizon architecture insert ([arXiv:2611.34923](https://arxiv.org/abs/2611.34923)).
+Candidates not yet written as full hypotheses: agent-written closed-form readouts on frozen encoders ([arXiv:2611.33972](https://arxiv.org/abs/2611.33972)); tool-free LLM quantization-error cancellation ([arXiv:2611.33031](https://arxiv.org/abs/2611.33031)); mixture-of-loops KV memory as a longer-horizon architecture insert ([arXiv:2611.34923](https://arxiv.org/abs/2611.34923)).
