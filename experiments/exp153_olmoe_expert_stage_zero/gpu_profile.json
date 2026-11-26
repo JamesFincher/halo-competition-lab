@@ -1,0 +1,1 @@
+{"exclusive_gpu": true, "estimated_peak_gb": 20, "reason": "OLMoE-1B-7B stage-zero loads the full 6.9B bf16 model and should measure memory without 135M wave contention"}

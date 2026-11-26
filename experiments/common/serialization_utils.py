@@ -105,6 +105,9 @@ def dumps_safe(obj: Any, **kwargs) -> str:
 
 
 def write_json(path: str | Path, obj: Any) -> None:
+    """Atomically write defensive JSON so preemption cannot leave a half-written artifact."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(dumps_safe(obj, indent=2), encoding="utf-8")
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(dumps_safe(obj, indent=2), encoding="utf-8")
+    tmp.replace(path)
