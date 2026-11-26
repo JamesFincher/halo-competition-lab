@@ -43,6 +43,20 @@ LAYER = 27
 HEAD_DIM = 64
 
 
+class AdditiveDualHead(nn.Module):
+    """Unweighted union control: both trained head deltas are applied at full strength."""
+
+    def __init__(self, capability_head: PlainSliderHead, behavior_head: PlainSliderHead):
+        super().__init__()
+        self.capability_head = capability_head
+        self.behavior_head = behavior_head
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        cap_delta = self.capability_head(x) - x
+        behavior_delta = self.behavior_head(x) - x
+        return x + cap_delta + behavior_delta
+
+
 class DualHeadBlend(nn.Module):
     """Parallel composition of two trained slider heads behind one scalar mixture."""
 
@@ -215,7 +229,7 @@ def main() -> None:
 
     results = {
         "experiment": "exp135_capability_behavior_head_blend",
-        "controlled_variable": "composition stage only within one architecture family: separately trained capability head, separately trained behavior head, fixed equal blend, learned-scalar blend",
+        "controlled_variable": "composition stage only within one architecture family: separately trained capability head, separately trained behavior head, full-strength additive union, fixed equal blend, learned-scalar blend",
         "scientific_question": "Are capability-trained and behavior-trained slider-head functions additive/blendable in the residual stream, or do they interfere?",
         "fixed_conditions": {
             "layer": LAYER,
@@ -321,6 +335,18 @@ def main() -> None:
         "zero_init_identity_max_diff": behavior_identity,
         "trace": behavior_trace,
     }
+
+    print("[Stage] additive_union_control: frozen heads, both deltas at full strength", flush=True)
+    additive = AdditiveDualHead(capability_head, behavior_head).to(device)
+    additive_handle = install_layer_module(sft, LAYER, additive)
+    additive_state = measure_state("additive_union_control", sft, tokenizer, eval_rows, corpus["validation"], device, args.bench_n, args.continuation_n, args.batch_size)
+    additive_handle.remove()
+    results["stages"]["additive_union_control"] = {
+        **add_deltas(additive_state),
+        "capability_weight": 1.0,
+        "behavior_weight": 1.0,
+    }
+    del additive
 
     print("[Stage] initial_equal_blend: frozen heads, coefficient fixed at 0.5", flush=True)
     blend = DualHeadBlend(capability_head, behavior_head).to(device)
