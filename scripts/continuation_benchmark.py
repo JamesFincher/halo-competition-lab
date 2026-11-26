@@ -91,6 +91,48 @@ def continuation_logprobs_batch(model, tok, device, context: str, choices: list[
     return out
 
 
+@torch.no_grad()
+def score_mc_continuation_fast(model, tok, device, items, max_length: int = 384, batch_size: int = 16) -> dict:
+    """Flatten independent item/choice rows into larger right-padded causal batches."""
+    flat = []
+    for item_index, q in enumerate(items):
+        prefix_len = len(tok(q["context"], add_special_tokens=False)["input_ids"])
+        for choice in q["choices"]:
+            ids = tok(q["context"] + " " + choice, truncation=True, max_length=max_length, add_special_tokens=False)["input_ids"]
+            flat.append({"item_index": item_index, "choice": choice, "ids": ids, "prefix_len": prefix_len})
+    pad_id = tok.pad_token_id if tok.pad_token_id is not None else tok.eos_token_id
+    scored_rows = []
+    for start in range(0, len(flat), batch_size):
+        chunk = flat[start:start + batch_size]
+        width = max(len(x["ids"]) for x in chunk)
+        input_ids = torch.tensor([x["ids"] + [pad_id] * (width - len(x["ids"])) for x in chunk], device=device)
+        attention_mask = torch.tensor([[1] * len(x["ids"]) + [0] * (width - len(x["ids"])) for x in chunk], device=device)
+        logits = model(input_ids=input_ids, attention_mask=attention_mask).logits[:, :-1, :]
+        targets = input_ids[:, 1:]
+        log_probs = torch.log_softmax(logits, dim=-1).gather(-1, targets.unsqueeze(-1)).squeeze(-1)
+        for row, x in enumerate(chunk):
+            full_len = len(x["ids"]); prefix_len = x["prefix_len"]
+            if full_len <= prefix_len or prefix_len < 1:
+                lp = {"sum": -1e18, "token_mean": -1e18, "byte_mean": -1e18, "n_tokens": 0}
+            else:
+                comp = log_probs[row, max(prefix_len - 1, 0):full_len - 1]
+                total = float(comp.sum().item()); n_tokens = int(comp.numel()); n_bytes = max(len(x["choice"].encode("utf-8")), 1)
+                lp = {"sum": total, "token_mean": total / max(n_tokens, 1), "byte_mean": total / n_bytes, "n_tokens": n_tokens}
+            scored_rows.append((x["item_index"], x["choice"], lp))
+    by_item = [[] for _ in items]
+    for item_index, choice, lp in scored_rows:
+        by_item[item_index].append((choice, lp))
+    correct_sum = correct_token = correct_byte = 0; details = []; rows = []
+    for index, (q, scored) in enumerate(zip(items, by_item)):
+        best_sum = max(scored, key=lambda x: x[1]["sum"])[0]; best_token = max(scored, key=lambda x: x[1]["token_mean"])[0]; best_byte = max(scored, key=lambda x: x[1]["byte_mean"])[0]
+        cs = best_sum == q["answer"]; ct = best_token == q["answer"]; cb = best_byte == q["answer"]
+        correct_sum += int(cs); correct_token += int(ct); correct_byte += int(cb)
+        rows.append({"index": index, "answer": q["answer"], "best_sum": best_sum, "best_token": best_token, "best_byte": best_byte, "correct_sum": bool(cs), "correct_token": bool(ct), "correct_byte": bool(cb)})
+        details.append({"index": index, "context": q["context"][:160], "answer": q["answer"], "best_sum": best_sum, "best_token": best_token, "best_byte": best_byte})
+    n = max(len(items), 1)
+    return {"sum_acc": round(100.0 * correct_sum / n, 2), "token_norm_acc": round(100.0 * correct_token / n, 2), "byte_norm_acc": round(100.0 * correct_byte / n, 2), "sum_acc_wilson95": wilson95(correct_sum, len(items)), "token_norm_acc_wilson95": wilson95(correct_token, len(items)), "byte_norm_acc_wilson95": wilson95(correct_byte, len(items)), "n": len(items), "subset_method": "deterministic_random_subset_seed_20261126", "scoring_batch_size": batch_size, "rows": rows, "details": details}
+
+
 def wilson95(successes: int, total: int) -> list[float]:
     if total <= 0:
         return [0.0, 0.0]
@@ -103,7 +145,7 @@ def wilson95(successes: int, total: int) -> list[float]:
 
 
 @torch.no_grad()
-def score_mc_continuation(model, tok, device, items) -> dict:
+def score_mc_continuation_legacy(model, tok, device, items) -> dict:
     correct_sum = correct_token = correct_byte = 0
     details = []
     rows = []
@@ -143,6 +185,10 @@ def score_mc_continuation(model, tok, device, items) -> dict:
         "rows": rows,
         "details": details,
     }
+
+
+def score_mc_continuation(model, tok, device, items) -> dict:
+    return score_mc_continuation_fast(model, tok, device, items)
 
 
 def run_continuation_benchmark(model, tok, device, n: int = 100, include_details: bool = False, include_rows: bool = False) -> dict:
