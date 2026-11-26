@@ -1,0 +1,7 @@
+{"experiments": [
+  {"name": "exp24_adaptivek_fixed", "script": "experiments/adaptive_k_proportional_edit/scripts/run_adaptive_k.py"},
+  {"name": "exp27_invpatch_fixed", "script": "experiments/inverse_causal_patching/scripts/run_inverse_patching.py"},
+  {"name": "exp31_circuit_mapper", "script": "experiments/request_circuit_mapper/scripts/run_circuit_mapper.py"},
+  {"name": "exp32_circuit_rl", "script": "experiments/targeted_circuit_rl/scripts/run_circuit_rl.py"},
+  {"name": "exp33_dtype_control", "script": "experiments/dtype_edit_sensitivity/scripts/run_dtype_control.py"}
+]}
