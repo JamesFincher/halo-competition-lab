@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T13:10:47+00:00",
+  "generated_at_utc": "2026-11-26T13:31:53+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -611,6 +611,70 @@
         }
       ],
       "metric_paths": 9
+    },
+    {
+      "file": "experiments/exp91_single_slider_depth_ablation/results/single_slider_depth_ablation_summary.json",
+      "bytes": 43235,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms/layer_16/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/layer_20/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/layer_20/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/layer_24/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/layer_24/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/layer_24/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/layer_24/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/layer_27/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/layer_27/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "exact_baseline_copy_or_noop",
+          "path": "/arms/layer_29/behavior_eval"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms/layer_29/behavior_delta_vs_baseline",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/arms/layer_29/behavior_delta_vs_baseline"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms/layer_29/behavior_delta_vs_baseline"
+        }
+      ],
+      "metric_paths": 11
     },
     {
       "file": "experiments/exp92_shared_alpha_head_count_ablation/results/shared_alpha_head_count_ablation_summary.json",
@@ -1400,10 +1464,14 @@
     "exp138_subtractive_frozen_head_gate",
     "exp139_cache_corrected_capability_objective",
     "exp140_answer_focused_capability_objective",
+    "exp141_benchmark_format_capability",
+    "exp142_capability_training_budget_response",
+    "exp143_contrastive_choice_capability",
+    "exp144_sparse_edit_anchored_mlp_lora",
+    "exp145_inversion_logit_diagnostic",
     "exp82_rank1_rl_trajectory_extrapolation",
     "exp84_momentum_carryover_half_edit",
     "exp87_multiperspective_abstention_factorization",
-    "exp91_single_slider_depth_ablation",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
@@ -1464,10 +1532,6 @@
     {
       "file": "experiments/zero_shock_stitched_head_rl/results/stitched_head_summary.json",
       "commit": "dfbec20fba4b3875f8e54be4c026635cbae19ad3 2026-11-26T09:29:44Z Harvest mega-wave results: exp41 replication, exp42 slider head, whitened subspace, stitched head"
-    },
-    {
-      "file": "experiments/inverse_causal_patching/results/causal_patching_summary.json",
-      "commit": "01f32cf51838fb9c44c494ed2eacf9a402e642dc 2026-11-26T09:05:15Z Add Exp 39: operator sensitivity showdown (replication-integrity control)"
     }
   ],
   "semantic_validity_notes": {

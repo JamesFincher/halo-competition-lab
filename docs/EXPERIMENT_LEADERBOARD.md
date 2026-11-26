@@ -1,6 +1,6 @@
 # Experiment Leaderboard — Quality-Controlled Rubric Grades
 
-Last updated: **2026-11-26 13:12 UTC** by the tracker/post-processor.
+Last updated: **2026-11-26 13:33 UTC** by the tracker/post-processor.
 
 Composite = `0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R` (see `research/RUBRIC.md`). Machine-generated scores and the integrity scan are in `research/AUTOGRADED_SCORES.json` and `research/RESULT_INTEGRITY_REPORT.json`.
 
@@ -44,6 +44,7 @@ The top CPU-era probe row is still not exactly GPU-replicated. The 12:59 sparse-
 | **132 / `hybrid_capability_primary`** | **72.5 (+17.5)** | **93.3 (-6.7)** | **0 (-90)** | coarse MMLU 26→30, ARC 38→40; normalized continuation MMLU/HellaSwag decline; capability val loss 3.0886→3.0336 | First capability-objective slider result with strong behavior, but capability evidence is mixed, not a clean benchmark win. |
 | 132 `capability_only` | 67.5 | 100.0 | 80 | capability val loss improves to 2.8203; coarse ARC +2 but normalized MMLU falls | Capability signal moves validation loss while staying safe, but weakly affects behavior. |
 | 132 `behavior_only` | 12.5 | 3.3 | 0 | coarse MMLU rises to 40 despite behavioral collapse | Destructive and internally inconsistent; do not interpret MMLU increase as capability gain. |
+| 91 `layer_27` | 60.0 | 100.0 | 50 | unchanged benchmarks | Confirms L27 as safest useful slider depth; L20 collapses behavior despite misleading benchmark increases. |
 
 
 ## Critical replication correction
@@ -139,4 +140,4 @@ Rows below are sorted by raw composite score, **not by scientific trustworthines
 - **No NaN/Inf values and no invalid JSON objects** were detected in committed result scans.
 - **Exp67 telemetry gap:** `exp67_single_coordinate_decision_steering/results/step_metrics.jsonl` is empty even though the final summary is complete; treat optimizer-trace conclusions as unavailable for that experiment.
 - **Diagnostic-only result:** `benchmark_failure_tree` is complete as a benchmark diagnostic (38.3% accuracy, suppression delta 0.0 pp) but has no behavioral intervention metrics and is not leaderboard-graded.
-- Known missing/queued experiments remain tracked in `research/RESULT_INTEGRITY_REPORT.json`; exp102/103/105/111/120–128/131/133–140 are queues, not completed negative results.
+- Known missing/queued experiments remain tracked in `research/RESULT_INTEGRITY_REPORT.json`; exp102/103/105/111/120–128/131/133–145 are queues, not completed negative results.
