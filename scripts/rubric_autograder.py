@@ -40,6 +40,9 @@ SCORE_OVERRIDES: dict[str, dict[str, float]] = {
     "slider_head_fork": {"N": 10, "K": 10, "T": 9, "R": 5},
     "zero_shock_stitched_head_rl": {"N": 9, "K": 6, "T": 8, "R": 5},
     "combined_slider_subspace": {"N": 8, "K": 10, "T": 8, "R": 5},
+    "exp144_sparse_edit_anchored_mlp_lora": {"N": 7, "K": 8, "T": 7, "R": 7},
+    "exp149_h22_continuation_followup": {"N": 4, "K": 8, "T": 7, "R": 7},
+    "exp150_l20_cache_corrected_seed_replication": {"N": 3, "K": 8, "T": 6, "R": 1},
 }
 
 CONTROL_TOKENS = (
@@ -123,6 +126,12 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     ],
     "exp85_evolution_strategies_32d_surgical_subspace": [
         "fixed-dose and random-search references are excluded as controls; ES dev selection did not beat the fixed-dose reference, so the strong final eval may be selection noise despite n=40"
+    ],
+    "exp149_h22_continuation_followup": [
+        "continuation follow-up strengthens H22: exported artifacts preserve 82.5/93.3/0 across seeds 7/42/123 with zero legacy benchmark delta and at most a 2-point byte-normalized HellaSwag continuation delta; random-layer MLP control still ties behavior, so layer specificity remains unproven"
+    ],
+    "exp150_l20_cache_corrected_seed_replication": [
+        "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
     "exp93_v1_seed_replication": [
         "seed replication is not robust: only seed 42 reproduces the positive v1 operating point; seeds 7 and 123 are exactness-negative"
@@ -381,6 +390,10 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
     if isinstance(d.get("seeded_h22_runs"), dict):
         for label, run in d["seeded_h22_runs"].items():
             add_candidate(candidates, f"h22_seed{label}", run, f"/seeded_h22_runs/{label}")
+
+    if isinstance(d.get("seeds"), dict):
+        for label, run in d["seeds"].items():
+            add_candidate(candidates, f"seed{label}", run, f"/seeds/{label}")
 
     if isinstance(d.get("controls"), dict):
         for label, control in d["controls"].items():

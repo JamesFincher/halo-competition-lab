@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T17:37:39+00:00",
+  "generated_at_utc": "2026-11-26T19:38:58+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -456,6 +456,118 @@
       "bytes": 18161,
       "warnings": [],
       "metric_paths": 0
+    },
+    {
+      "file": "experiments/exp149_h22_continuation_followup/results/h22_continuation_followup_summary.json",
+      "bytes": 102451,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/seeded_h22_runs/7/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/seeded_h22_runs/7/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/seeded_h22_runs/7/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/seeded_h22_runs/42/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/seeded_h22_runs/42/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/seeded_h22_runs/42/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/seeded_h22_runs/123/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/seeded_h22_runs/123/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/seeded_h22_runs/123/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/controls/lora_only_no_edit_control/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/controls/lora_only_no_edit_control/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/controls/random_layer_mlp_control/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/controls/random_layer_mlp_control/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/controls/random_layer_mlp_control/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/controls/edited_layer_inclusion_negative_control/exported_behavior_delta_vs_canonical",
+          "n_eval": 0
+        },
+        {
+          "type": "zero_json_valid",
+          "path": "/controls/edited_layer_inclusion_negative_control/exported_behavior_delta_vs_canonical"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/controls/edited_layer_inclusion_negative_control/exported_behavior_delta_vs_canonical"
+        }
+      ],
+      "metric_paths": 21
+    },
+    {
+      "file": "experiments/exp150_l20_cache_corrected_seed_replication/results/l20_cache_corrected_seed_replication_summary.json",
+      "bytes": 32908,
+      "warnings": [
+        {
+          "type": "zero_json_valid",
+          "path": "/seeds/7/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/seeds/7/behavior_eval"
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/seeds/123/behavior_eval"
+        }
+      ],
+      "metric_paths": 8
+    },
+    {
+      "file": "experiments/exp153_olmoe_expert_stage_zero/results/olmoe_stage_zero_summary.json",
+      "bytes": 33915,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/behavior_eval/scaled120",
+          "n_eval": 120
+        }
+      ],
+      "metric_paths": 2
     },
     {
       "file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
@@ -1413,10 +1525,7 @@
     "exp128_trajectory_collateral_repair_adapter",
     "exp131_context_gated_dose_cancellation",
     "exp133_alpha_init_continuation_confirmation",
-    "exp149_h22_continuation_followup",
-    "exp150_l20_cache_corrected_seed_replication",
     "exp152_qwen3_behavioral_scale_pivot",
-    "exp153_olmoe_expert_stage_zero",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
@@ -1539,6 +1648,12 @@
     ],
     "exp85_evolution_strategies_32d_surgical_subspace": [
       "fixed-dose and random-search references are excluded as controls; ES dev selection did not beat the fixed-dose reference, so the strong final eval may be selection noise despite n=40"
+    ],
+    "exp149_h22_continuation_followup": [
+      "continuation follow-up strengthens H22: exported artifacts preserve 82.5/93.3/0 across seeds 7/42/123 with zero legacy benchmark delta and at most a 2-point byte-normalized HellaSwag continuation delta; random-layer MLP control still ties behavior, so layer specificity remains unproven"
+    ],
+    "exp150_l20_cache_corrected_seed_replication": [
+      "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
     "exp52_pgs_credit_direction": [
       "DLA/unembed reference is excluded from technique scoring because it is not the PGS mechanism under test; PGS directions are nearly anti-aligned with DLA and perform near baseline or over-refusal"

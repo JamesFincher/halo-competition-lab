@@ -16,6 +16,8 @@ NON_TECHNIQUE_DIAGNOSTICS = {
     "exp145_inversion_logit_diagnostic",
     "exp146_cache_mode_inversion_diagnostic",
     "exp148_legacy_scorer_flattening_audit",
+    "exp150_l20_cache_corrected_seed_replication",
+    "exp153_olmoe_expert_stage_zero",
 }
 
 
@@ -177,11 +179,12 @@ Last updated: {now} UTC by the results-analysis subagent. This document is regen
 ### What is now established
 
 1. **Behavioral control at 135M is essentially solved, but only to a ceiling.** The canonical ultra-sparse output-side residual-subspace edit — layers 29/28, 16 columns per layer, strength 0.9 — reaches **80.0% exact / 93.3% unsafe refusal / 0% benign false refusal**, with **95.0% action** and **95.0% policy** accuracy. Exp129 and Exp130 independently hit the same configuration.
-2. **The current best exact-compliance package is H22.** Ultra-sparse edit + post-edit KL-anchored complementary MLP-only LoRA reaches **82.5% / 93.3% / 0% in all three seeds (7/42/123)**, with exported merged artifacts matching the adapter eval. However, the random-layer MLP control also reaches **82.5%**, so the +2.5 pp over sparse edit is generic post-edit adaptation, not evidence of layer-specific repair; it is also only one task at n=40.
-3. **Exp102 shows the true bottleneck is readout/decoding, not representation.** Hidden-state probes achieve 100% crossfit accuracy for action and tool, and forcing the probe-selected `policy_code` yields **95.0% exact / 100% unsafe / 0% benign-FR**. This is not a deployable weight-level intervention, but it proves the correct decision is internally represented while greedy generation fails to read it out.
-4. **The 80–82.5% ceiling is method-independent so far.** Sparse edits, GRPO/RL variants, vector RL, and H22 all cluster near the same ceiling. This points to data/model/eval saturation rather than a single-method failure.
-5. **Capability transfer at 135M is falsified for inserted-head objectives tested so far.** Cache-corrected full-text, answer-focused, answer-only, benchmark-format, contrastive-choice, and budget-scaled variants improve validation loss but produce no continuation-benchmark transfer; more capability training actively damages behavior (exact falls from **37.5% at 32 steps** to **20.0% at 512 steps** in Exp142).
-6. **The field has pivoted to data/model scale.** The next decisive experiments are Exp152 Qwen3-4B behavioral scale pivot, Exp153 OLMoE stage-zero profiling, and Exp154 OLMoE expert adapters. Current frontier artifacts: {frontier_result_status()}
+2. **The current best exact-compliance package is H22.** Ultra-sparse edit + post-edit KL-anchored complementary MLP-only LoRA reaches **82.5% / 93.3% / 0% in all three seeds (7/42/123)**, with exported merged artifacts matching the adapter eval. Exp149 strengthens the package: legacy benchmark deltas are exactly zero in every seed, and continuation deltas are zero except byte-normalized HellaSwag **-2.0 pp** in seeds 7/123 (one item at n=50). However, the random-layer MLP control also reaches **82.5%**, so the +2.5 pp over sparse edit is generic post-edit adaptation, not evidence of layer-specific repair; it is also only one task at n=40.
+3. **Cache-corrected attention insertion is not seed-robust.** Exp150 replicated the seed-42 L20 width-64 result exactly (**72.5/90/0**), but seed 7 collapses to **0/0/0 with 0% JSON validity** and seed 123 collapses to **5/0/0**. The pre-fix cache artifact was real, but fixing it does not make the training procedure reliable.
+4. **Exp102 shows the true bottleneck is readout/decoding, not representation.** Hidden-state probes achieve 100% crossfit accuracy for action and tool, and forcing the probe-selected `policy_code` yields **95.0% exact / 100% unsafe / 0% benign-FR**. This is not a deployable weight-level intervention, but it proves the correct decision is internally represented while greedy generation fails to read it out.
+5. **The 80–82.5% ceiling is method-independent so far.** Sparse edits, GRPO/RL variants, vector RL, and H22 all cluster near the same ceiling. This points to data/model/eval saturation rather than a single-method failure.
+6. **Capability transfer at 135M is falsified for inserted-head objectives tested so far.** Cache-corrected full-text, answer-focused, answer-only, benchmark-format, contrastive-choice, and budget-scaled variants improve validation loss but produce no continuation-benchmark transfer; more capability training actively damages behavior (exact falls from **37.5% at 32 steps** to **20.0% at 512 steps** in Exp142).
+7. **The field has pivoted to data/model scale.** Exp153 OLMoE stage-zero is now complete and passes the feasibility gates; Exp152 Qwen3-4B and Exp154 OLMoE adapters remain the next interventional tests. Current frontier artifacts: {frontier_result_status()}
 
 ### Critical validity corrections
 
@@ -209,15 +212,17 @@ Exp85 evolution strategies reached **82.5/93.3/0** with only 32 total edited coo
 
 ### B. Post-edit adaptation — useful but generic
 
-Exp57 targeted Halo-native LoRA reached **75.0/90/0** for complementary MLP-only r16. Exp100 shows targeted MLP-only LoRA at **67.5/90/0**, while partial full fine-tuning is worse and vector-only adaptation is much worse. Exp144/H22 is stronger (**82.5/93.3/0** in every seed), but the random-layer MLP control ties it. Therefore post-edit adaptation is currently a useful generic regularizer/repair stage, not validated layer-specific mechanistic repair.
+Exp57 targeted Halo-native LoRA reached **75.0/90/0** for complementary MLP-only r16. Exp100 shows targeted MLP-only LoRA at **67.5/90/0**, while partial full fine-tuning is worse and vector-only adaptation is much worse. Exp144/H22 is stronger (**82.5/93.3/0** in every seed), and Exp149 now shows the exported artifact is capability-safe within measurement resolution: zero legacy MMLU/ARC/HellaSwag delta in all seeds and continuation deltas mostly zero, with only byte-normalized HellaSwag **-2.0 pp** in seeds 7/123. The adaptation itself is small: **405,504 trainable parameters (0.301%)**, 8 grouped steps, **62.0–94.5s per seed**, and maximum step KL only **0.00207**. The random-layer MLP control still ties behavior. Therefore post-edit adaptation is a useful generic regularizer/repair stage with no observed continuation cost, not validated layer-specific mechanistic repair.
 
 ### C. RL and scaffolding — still unreliable
 
 Exp80's RL-only arm reaches **80.0/93.3/10**, close to the sparse edit but with nonzero benign false refusal. Yet many edit-then-RL arms collapse or fail to preserve gains. The consistent pattern is that RL can adapt behavior but does not reliably break the ceiling and often damages the refusal/compliance balance. RL should be treated as a baseline adaptation method, not the mechanism most likely to solve readout.
 
-### D. Attention insertion — alive only after cache correction
+### D. Attention insertion — cache artifact corrected, seed replication failed
 
-The original Exp42 scalar slider head was exactness-negative (**42.5/90/30**, alpha 0.0309). Exp96 showed sequential freeze-then-merge training beating joint multi-head training (**70/90/0** versus collapse). The cache artifact then invalidated pre-fix mechanistic interpretations. Cache-corrected Exp145/146 show L20 width64 at **72.5/90/0**, while L27 remains poor (**45/100/100**). Replication status: {result_state('exp150', 'Exp150 L20 seed replication')}; {result_state('exp151', 'Exp151 depth re-ablation')}. Until they land, attention insertion is promising but not validated.
+The original Exp42 scalar slider head was exactness-negative (**42.5/90/30**, alpha 0.0309). Exp96 showed sequential freeze-then-merge training beating joint multi-head training (**70/90/0** versus collapse). The cache artifact then invalidated pre-fix mechanistic interpretations. Cache-corrected Exp145/146 show L20 width64 at **72.5/90/0**, while L27 remains poor (**45/100/100**).
+
+Exp150 is the decisive seed test under fixed conditions (layer 20, width 64, 32 steps, grouped REINFORCE, no KL/BC, cache disabled for reward generation/eval). Its cache-off same-run baseline is already slightly regime-shifted at **52.5/93.3/90** with 95% JSON validity, so absolute values are not directly canonical. Seed 42 exactly reproduces the reference **72.5/90/0** with final alpha **-0.01483**. Seed 7 collapses to **0/0/0**, JSON validity **0%**, final alpha **+0.010525**, and mean reward **0.0 for the last 8 steps** — a malformed-generation failure mode. Seed 123 collapses to **5.0/0/0** despite late training rewards around 0.6, with final alpha **-0.034252** — a distinct safety-collapse failure mode. Thus the positive L20 result is real but fragile: tiny seed-dependent alpha trajectories can move between a beneficial negative-alpha operating point, positive-alpha invalidation, and larger-negative-alpha safety collapse. {result_state('exp151', 'Exp151 depth re-ablation')}. Attention insertion should not be deployment-ranked unless stabilization/constraint mechanisms make the seed distribution robust.
 
 ### E. Capability transfer — falsified at 135M
 
@@ -231,9 +236,11 @@ Routed width mixture (**25/96.7/100**), capability×behavior blend (**40/100/90*
 
 Exp102 compared ordinary greedy decoding with probe-forced policy decoding. Ordinary SFT is **55/100/90**. Its local “validated edit” arm is **65/90/0**, but this is not the canonical 16-columns/layer champion: the file edits **64 selected neurons per layer** at layers 29/28 (**73,728 weights**, 0.05481%) versus the canonical **16 per layer** (**18,432 weights**). Probe-forced policy decoding is **95/100/0** for both models. Majority and random forced-policy controls are catastrophic, so the result is not an artifact of forcing tokens per se. The implication is that the model often internally represents correct action/tool/policy decisions but fails to emit them through greedy readout. This reframes the next research question: weight-level methods may be hitting a decoder/readout ceiling rather than a representation ceiling, and Exp102 should not be read as a replication failure of the canonical sparse edit.
 
-### H. Large-model pivot
+### H. Large-model pivot — OLMoE stage-zero passed, interventions pending
 
-`research/LARGE_MODEL_FEASIBILITY.md` estimates Qwen3-4B LoRA experiments at roughly 15–30 minutes per arm and OLMoE stage-zero at 10–20 minutes after download on one H100. Current large-model artifacts: {result_state('exp152', 'Exp152 Qwen3-4B pivot')}; {result_state('exp153', 'Exp153 OLMoE stage-zero')}; {result_state('exp154', 'Exp154 OLMoE expert adapters')}. These experiments test whether the 135M ceiling and capability-transfer falsification are small-model/data artifacts rather than universal constraints.
+`research/LARGE_MODEL_FEASIBILITY.md` estimates Qwen3-4B LoRA experiments at roughly 15–30 minutes per arm and OLMoE stage-zero at 10–20 minutes after download on one H100. Current large-model artifacts: {result_state('exp152', 'Exp152 Qwen3-4B pivot')}; {result_state('exp153', 'Exp153 OLMoE stage-zero')}; {result_state('exp154', 'Exp154 OLMoE expert adapters')}.
+
+Exp153 stage-zero is favorable for the OLMoE branch, but its behavior numbers are a base-instruct starting point rather than a like-for-like comparison with the 135M SFT model. The model is **6.919B parameters**, 16 layers, 64 experts/layer, top-8/token. It evaluates in **249.09s** with only **18.77 GiB max reserved** on the H100. Cache consistency is exact: generated ids match cache-off generation and max single-forward logit diff is **0.0**, so token-local expert/output adapters should not repeat the slider cache artifact. Behavioral headroom is large: original40 is **25.0/96.7/100** (action 72.5%, policy 27.5%), while scaled120 is **15.8/83.3/55.0** (action 57.5%, policy 24.2%). Continuation capability is nonzero and much stronger than the 135M model on ARC/HellaSwag: MMLU sum/token/byte **17/22/20**, ARC-Easy **63/62/68**, HellaSwag **56/69/71** at n=100. Router profiling is the key positive signal: behavior answer-token routing is much more concentrated than capability routing (mean top-8 expert-frequency share **49.69% vs 23.74%**, versus **12.5%** for uniform selection across 64 experts; entropy **3.48 vs 4.01**), and top-10 expert overlap is only **1.31/10** per layer on average. That is direct evidence for partly separable expert subspaces and strongly motivates Exp154 expert adapters.
 
 The data-scale motivation is concrete: the legacy behavior corpus has only **160 train rows / 144 unique rows**, and `send_http` appears in only **2 rows**, while exact errors are dominated by tool/readout mistakes. The new scaled corpus has **1,600 train rows**, **800 counterfactual pairs**, **120 heldout rows**, zero schema errors, and zero counterfactual-pair violations; however it still shares **218 user-prompt 8-grams** across train/heldout, so it is compositional/template-disjoint rather than fully lexically disjoint. The scaled capability corpus has **5,280 rows** (MMLU 1,271, ARC-Easy 2,236, HellaSwag 1,773) in the Exp141 benchmark-direct format.
 
@@ -254,6 +261,7 @@ These completed experiments do not expose a standard intervention metric schema,
 | 27 | `inverse_causal_patching` | every layer delta exactly **0.0** in the original artifact | Invalid identity-patch artifact. No causal evidence; rerun still missing. |
 | 31 | `request_circuit_mapper` | only `comms_task` n=40 and `other_unsafe` n=120; depth COM **20.74 vs 20.61**; same top three neurons L29N1512/L29N427/L29N1123 | Invalid as a request-type atlas because the keyword classifier does not match the dataset. Use ground-truth policy codes. |
 | 148 | `legacy_scorer_flattening_audit` | uniform-logit scale-0 control produces near-baseline legacy scores; correct answer is uniquely longest only **25.0%** of MMLU diagnostic rows | Valid measurement audit. Legacy benchmark deltas are length/flattening artifacts and must not be used as capability evidence. |
+| 153 | `olmoe_expert_stage_zero` | original40 **25.0/96.7/100**; scaled120 **15.8/83.3/55.0**; continuation MMLU/ARC/HellaSwag sum **17/63/56**; cache diff exactly **0.0**; max reserved **18.77 GiB** | Valid stage-zero diagnostic. OLMoE is feasible and cache-consistent; behavior headroom is large. Routing is partly separable: mean behavior-vs-capability top-10 expert overlap only **1.31/10**. |
 | — | `benchmark_failure_tree` | failure-tree accuracy **38.3%** (23 right / 37 wrong), suppression accuracy unchanged at **38.3%**, delta **0.0 pp** | Negative/nonstandard diagnostic. The measured failure direction did not improve benchmark failure prediction. |
 
 ## Missing or pending result JSONs
@@ -279,8 +287,8 @@ Baseline: SFT micro-model = **55.0% exact** / 40 unseen tasks, **100% unsafe ref
 | Recipe | Behavioral result | Validation status | Main caveat |
 |---|---|---|---|
 | Ultra-sparse output-side residual-subspace projection, L29/28, 16 columns/layer, strength 0.9 | **80.0% exact / 93.3% unsafe / 0% benign-FR** | Reproduced by Exp129 strength response and Exp130 column-count response | Exact Exp17 DLA/IG provenance remains unreplicated on GPU; recipe is validated as an operator family, not as the original experiment |
-| H22 sparse edit + post-edit anchored complementary MLP-only LoRA | **82.5% / 93.3% / 0% in seeds 7/42/123** | Exported merged artifact matches adapter eval in all three seeds | Random-layer MLP control also reaches 82.5%, and +2.5 pp is only one n=40 task |
-| Cache-corrected L20 width-64 inserted attention head | **72.5% / 90.0% / 0%** | Single cache-corrected seed/diagnostic | Exp150/151 seed replication and depth re-ablation are still pending |
+| H22 sparse edit + post-edit anchored complementary MLP-only LoRA | **82.5% / 93.3% / 0% in seeds 7/42/123** | Exported artifact matches adapter eval; Exp149 shows zero legacy benchmark delta and near-zero continuation delta | Random-layer MLP control also reaches 82.5%, and +2.5 pp is only one n=40 task |
+| Cache-corrected L20 width-64 inserted attention head | seed42 only: **72.5% / 90.0% / 0%** | **Failed seed replication** | Exp150 seed7 collapses to **0/0/0** with 0% JSON validity; seed123 collapses to **5/0/0** |
 | Probe-forced policy readout (Exp102) | **95.0% / 100% / 0%** | Diagnostic upper bound; majority/random forced controls fail | Inference-time scaffold, not a weight-level intervention |
 
 ## Rubric composite ranking (raw autograder)
@@ -292,7 +300,7 @@ Baseline: SFT micro-model = **55.0% exact** / 40 unseen tasks, **100% unsafe ref
 ## Deployment-relevant interpretation
 
 1. **Best validated zero-grad recipe:** ultra-sparse output-side residual-subspace projection, layers 29/28, 16 columns/layer, strength 0.9 — **80.0/93.3/0**, reproduced through Exp129/Exp130. Its full sweep wall time makes E look poor, but the final edit itself is cheap once hyperparameters are fixed.
-2. **Best exact-compliance package:** H22 sparse edit + post-edit anchored MLP-only LoRA — **82.5/93.3/0 in all three seeds**, exported-artifact consistent. The gain over the sparse edit is only one eval task and is matched by random-layer control, so use it as a strong package, not as proof of layer-specific transfer.
+2. **Best exact-compliance package:** H22 sparse edit + post-edit anchored MLP-only LoRA — **82.5/93.3/0 in all three seeds**, exported-artifact consistent, with Exp149 continuation deltas mostly zero. The gain over the sparse edit is only one eval task and is matched by random-layer control, so use it as a strong package, not as proof of layer-specific transfer.
 3. **Best cheap historical probe:** Exp17 IG-5 remains composite-efficient (**82.5/90/0**, probe time 4.72s), but it permits one more unsafe non-refusal than the modern sparse recipe and is not yet exactly replicated under the current GPU pipeline.
 4. **Exp102 is not ranked** because it is an inference-time forced-decoding diagnostic, not a weight-level intervention. Its **95/100/0** result is an upper-bound/readout-bottleneck proof, not a deployable model artifact.
 
@@ -302,6 +310,8 @@ Baseline: SFT micro-model = **55.0% exact** / 40 unseen tasks, **100% unsafe ref
 |---:|---|---|---|
 | 102 | Probe-forced policy readout | **95.0% exact / 100% unsafe / 0% benign-FR** | Hidden states contain correct decisions; greedy readout is a bottleneck. Not a ranked intervention. |
 | 146 | Cache-mode inversion control | L20 legacy cache **0/0/0**, cache-corrected **72.5/90/0** | Pre-fix slider conclusions are generation artifacts. |
+| 150 | Cache-corrected L20 seed replication | seed42 **72.5/90/0**, seed7 **0/0/0**, seed123 **5/0/0** | Positive L20 behavior is seed-fragile; attention insertion is not validated. |
+| 153 | OLMoE stage-zero | original40 **25/96.7/100**, scaled120 **15.8/83.3/55**, cache diff **0.0** | Feasible scale pivot with large behavior headroom and separable expert routing. |
 | 19 | Cross-talk/hub-protection audit | true/false refusal co-movement ratio ≈1.0 | Refusal circuits are entangled; hub protection alone does not decouple them. |
 | 27 | Inverse causal patching | all layer deltas 0.0 | Identity-patch artifact; no causal evidence. |
 | 31 | Request-type circuit mapper | only pseudo-types `comms_task`/`other_unsafe` | Invalid keyword classifier; atlas must use policy codes. |
@@ -313,7 +323,8 @@ Baseline: SFT micro-model = **55.0% exact** / 40 unseen tasks, **100% unsafe ref
 2. **Safety-preserving compliance repair is partly solved but capped.** The best interventions remove benign false refusal while retaining 93.3% unsafe refusal, but exact compliance plateaus at 80–82.5%.
 3. **Representation is not the bottleneck at 135M.** Probe-forced decoding reaches 95/100/0; ordinary generation does not.
 4. **Capability transfer is falsified at 135M for tested inserted-head objectives.** Continuation-token transfer is zero even when validation loss improves.
-5. **The frontier is now scale + readout.** Watch Exp152–154 for data/model scale and any follow-up that converts Exp102's hidden-state correctness into weight-level greedy decoding.
+5. **Attention insertion is not currently robust.** The cache artifact was real, but Exp150 shows the corrected L20 procedure is seed-fragile rather than deployment-ready.
+6. **The frontier is now scale + readout.** OLMoE stage-zero passes feasibility/cache/routing gates; watch Exp154 expert adapters, Exp152 Qwen3-4B, and any follow-up that converts Exp102's hidden-state correctness into weight-level greedy decoding.
 """
 
 
