@@ -37,6 +37,20 @@ def main():
                 lf.close()
                 status[name] = {"rc": rc, "wall": round(time.time() - t0, 1)}
                 print(f"[WAVE] {name} finished rc={rc} at +{status[name]['wall']}s", flush=True)
+                if rc != 0:
+                    # Preserve crash evidence without creating a .json file that the
+                    # queue scanner would mistake for a completed experiment result.
+                    log_path = logdir / f"{name}.log"
+                    crash_dir = ROOT / "experiments" / name / "results" / "crashes"
+                    try:
+                        crash_dir.mkdir(parents=True, exist_ok=True)
+                        lines = log_path.read_text(errors="replace").splitlines() if log_path.exists() else []
+                        tail = "\n".join(lines[-200:])
+                        (crash_dir / "last_crash.log").write_text(
+                            f"experiment={name}\nrc={rc}\nwall_sec={status[name]['wall']}\nlog={log_path}\n\n{tail}\n"
+                        )
+                    except Exception as exc:
+                        print(f"[WAVE] crash artifact write failed for {name}: {type(exc).__name__}: {exc}", flush=True)
                 del procs[name]
         time.sleep(3)
     gpu_mon.terminate()

@@ -1,1 +1,6 @@
-{"exclusive_gpu":true,"estimated_peak_gb":48,"queue_priority":85,"reason":"No-training export diagnosis should precede further expert-adapter interpretation because servable-weight validity is unresolved"}
+{
+  "exclusive_gpu": true,
+  "estimated_peak_gb": 48,
+  "queue_priority": 87,
+  "reason": "Requeued immediately behind exp163 after the first launch produced no durable per-experiment log; export-precision diagnosis gates deployability claims"
+}
