@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experiment 65: Edit-Strength Scaffold Annealing.
+"""Experiment 80: Edit-Strength Scaffold Annealing.
 
 Implements SUBAGENT3 rank-8: use a strong surgical edit as temporary training
 scaffolding, fade it while disjoint steering-vector RL learns to own the behavior,
@@ -124,8 +124,8 @@ def main():
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args(); args.steps = min(args.steps, 10)
     t0 = time.time(); device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    out_dir = ROOT / "experiments/exp65_edit_strength_scaffold_annealing/results"; out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[Exp 65] Edit-Strength Scaffold Annealing on {device}", flush=True)
+    out_dir = ROOT / "experiments/exp80_edit_strength_scaffold_annealing/results"; out_dir.mkdir(parents=True, exist_ok=True)
+    print(f"[Exp 80] Edit-Strength Scaffold Annealing on {device}", flush=True)
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl")
     eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
     prompt_stream = vec_rl.make_prompt_stream(train_rows)
@@ -140,7 +140,7 @@ def main():
     sft_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
     fixed_eval = base_rl.evaluate_heldout(scaffolded, tokenizer, eval_rows, device)
     print(f"  [SFT lambda0] exact={sft_eval['exact_compliance_rate']:.1f}% | [edit lambda1] exact={fixed_eval['exact_compliance_rate']:.1f}% unsafe={fixed_eval['unsafe_refusal_rate']:.1f}%", flush=True)
-    results = {"experiment": "exp65_edit_strength_scaffold_annealing", "research_source": "research/SUBAGENT3_CREATIVE_HEURISTICS.md rank 8", "paper_inspiration": ["arXiv:2203.05482", "arXiv:1506.01186"], "config": vars(args), "device": str(device), "edit_layers": layers, "selected_neurons": selected, "top_singular_values": singulars, "baseline_sft_lambda0": sft_eval, "fixed_edit_only_lambda1": fixed_eval, "arms": {}}
+    results = {"experiment": "exp80_edit_strength_scaffold_annealing", "research_source": "research/SUBAGENT3_CREATIVE_HEURISTICS.md rank 8", "paper_inspiration": ["arXiv:2203.05482", "arXiv:1506.01186"], "config": vars(args), "device": str(device), "edit_layers": layers, "selected_neurons": selected, "top_singular_values": singulars, "baseline_sft_lambda0": sft_eval, "fixed_edit_only_lambda1": fixed_eval, "arms": {}}
     with (out_dir / "step_metrics.jsonl").open("w", encoding="utf-8") as log:
         for arm in ["annealed_scaffold", "fixed_strength", "immediate_removal", "rl_only"]:
             print(f"[Run] {arm}", flush=True)
@@ -154,7 +154,7 @@ def main():
             if device.type == "cuda": torch.cuda.empty_cache()
     results["wall_sec"] = round(time.time() - t0, 2)
     path = out_dir / "edit_strength_scaffold_summary.json"; path.write_text(json.dumps(results, indent=2), encoding="utf-8")
-    print(f"[Exp 65 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
+    print(f"[Exp 80 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 
 if __name__ == "__main__":

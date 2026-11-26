@@ -1,4 +1,4 @@
-# Experiment 65 — Edit-Strength Scaffold Annealing
+# Experiment 80 — Edit-Strength Scaffold Annealing
 
 **Research inspiration:** `research/SUBAGENT3_CREATIVE_HEURISTICS.md` rank **8** + **arXiv:2203.05482** (endpoint averaging/model soups) and **arXiv:1506.01186** (cyclic intensity schedules).
 
@@ -20,7 +20,7 @@ A strong surgical edit can serve as training wheels rather than a permanent mech
 ## Run
 
 ```bash
-python3 experiments/exp65_edit_strength_scaffold_annealing/scripts/run_edit_strength_scaffold.py
+python3 experiments/exp80_edit_strength_scaffold_annealing/scripts/run_edit_strength_scaffold.py
 ```
 
 ## Output
