@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T19:48:59+00:00",
+  "generated_at_utc": "2026-11-26T19:54:20+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1542,6 +1542,7 @@
     "exp152_qwen3_behavioral_scale_pivot",
     "exp154_olmoe_benchmark_selective_expert_adapters",
     "exp155_olmoe_expert_surface_controls",
+    "exp156_qwen3_entity_disjoint_seed_replication",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
@@ -1682,6 +1683,9 @@
     ],
     "exp155_olmoe_expert_surface_controls": [
       "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; control comparisons remain internally valid, but absolute heldout transfer is not entity-disjoint evidence"
+    ],
+    "exp156_qwen3_entity_disjoint_seed_replication": [
+      "entity-disjoint v2 seed replication: interpret all seeds 42/7/123 together rather than the autograded best seed; behavior-only training batches mean continuation benchmarks measure collateral change, not replay-preservation success"
     ],
     "exp52_pgs_credit_direction": [
       "DLA/unembed reference is excluded from technique scoring because it is not the PGS mechanism under test; PGS directions are nearly anti-aligned with DLA and perform near baseline or over-refusal"

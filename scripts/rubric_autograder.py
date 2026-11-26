@@ -145,6 +145,9 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     "exp155_olmoe_expert_surface_controls": [
         "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; control comparisons remain internally valid, but absolute heldout transfer is not entity-disjoint evidence"
     ],
+    "exp156_qwen3_entity_disjoint_seed_replication": [
+        "entity-disjoint v2 seed replication: interpret all seeds 42/7/123 together rather than the autograded best seed; behavior-only training batches mean continuation benchmarks measure collateral change, not replay-preservation success"
+    ],
     "exp93_v1_seed_replication": [
         "seed replication is not robust: only seed 42 reproduces the positive v1 operating point; seeds 7 and 123 are exactness-negative"
     ],
@@ -337,6 +340,7 @@ PRIMARY_EVAL_KEYS = (
     "nonexportable_session_control_eval",
     "behavior_eval",
     "behavior_scaled120",
+    "evaluation",
 )
 
 
@@ -492,23 +496,40 @@ def extract_candidates(d: dict[str, Any]) -> list[dict[str, Any]]:
     return list(dedup.values())
 
 
+def eval_from_candidate_object(obj: Any) -> dict[str, Any] | None:
+    candidates: list[dict[str, Any]] = []
+    add_candidate(candidates, "candidate", obj, "/candidate")
+    return candidates[0]["eval"] if candidates else None
+
+
 def baseline_eval_for(data: dict[str, Any], ev: dict[str, Any]) -> dict[str, Any] | None:
     base = data.get("baseline") or data.get("baseline_sft")
-    if not isinstance(base, dict):
-        return None
-    n_eval = ev.get("n_eval")
-    preferred: list[str] = []
-    if n_eval == 120:
-        preferred.extend(["behavior_scaled120", "scaled120"])
-    if n_eval == 40:
-        preferred.extend(["behavior_eval", "original40"])
-    preferred.extend(["behavior_eval", "behavior_scaled120", "eval"])
-    for key in preferred:
-        candidate = base.get(key)
-        if isinstance(candidate, dict) and "exact_compliance_rate" in candidate:
-            return candidate
-    if "exact_compliance_rate" in base:
-        return base
+    if isinstance(base, dict):
+        n_eval = ev.get("n_eval")
+        preferred: list[str] = []
+        if n_eval == 120:
+            preferred.extend(["behavior_scaled120", "scaled120"])
+        if n_eval == 40:
+            preferred.extend(["behavior_eval", "original40"])
+        preferred.extend(["behavior_eval", "behavior_scaled120", "eval"])
+        for key in preferred:
+            candidate = base.get(key)
+            if isinstance(candidate, dict) and "exact_compliance_rate" in candidate:
+                return candidate
+        if "exact_compliance_rate" in base:
+            return base
+
+    arms = data.get("arms")
+    arm_items: list[tuple[str, Any]] = []
+    if isinstance(arms, list):
+        arm_items = [(str(arm.get("arm") or arm.get("mode") or arm.get("name") or f"arm{i}"), arm) for i, arm in enumerate(arms) if isinstance(arm, dict)]
+    elif isinstance(arms, dict):
+        arm_items = [(str(label), arm) for label, arm in arms.items()]
+    for label, arm in arm_items:
+        if is_control_or_baseline(label):
+            candidate = eval_from_candidate_object(arm)
+            if isinstance(candidate, dict) and "exact_compliance_rate" in candidate:
+                return candidate
     return None
 
 

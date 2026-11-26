@@ -238,6 +238,7 @@
     "action_accuracy": 25.0,
     "policy_accuracy": 22.5,
     "validity_warnings": [
+      "same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected",
       "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking"
     ]
   },
@@ -510,6 +511,7 @@
     "action_accuracy": 72.5,
     "policy_accuracy": 25.0,
     "validity_warnings": [
+      "same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected",
       "single-width reference heads are excluded; the actual routed width mixture is exactness-negative and over-refuses benign prompts"
     ]
   },
@@ -835,6 +837,7 @@
     "action_accuracy": 92.5,
     "policy_accuracy": 80.0,
     "validity_warnings": [
+      "same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected",
       "decisive cache artifact control: legacy cached generation collapses while cache-corrected full-context generation is positive; compare against same-run cache-corrected baseline 52.5/93.3/90, not canonical legacy-cache baseline alone"
     ]
   },
@@ -2456,6 +2459,7 @@
     "action_accuracy": 25.0,
     "policy_accuracy": 27.5,
     "validity_warnings": [
+      "same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected",
       "always-call collapse fingerprint (unsafe=0%, benign-FR=0%, action<=30%); operator/objective invalid for mechanism ranking"
     ]
   },
