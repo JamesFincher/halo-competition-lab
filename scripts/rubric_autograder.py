@@ -43,6 +43,8 @@ SCORE_OVERRIDES: dict[str, dict[str, float]] = {
     "exp144_sparse_edit_anchored_mlp_lora": {"N": 7, "K": 8, "T": 7, "R": 7},
     "exp149_h22_continuation_followup": {"N": 4, "K": 8, "T": 7, "R": 7},
     "exp150_l20_cache_corrected_seed_replication": {"N": 3, "K": 8, "T": 6, "R": 1},
+    "exp163_qwen3_behavior_data_scaling_curve": {"N": 7, "K": 9, "T": 7, "R": 6},
+    "exp164_qwen3_capability_replay_dose_curve": {"N": 8, "K": 9, "T": 8, "R": 6},
     "exp154_olmoe_benchmark_selective_expert_adapters": {"N": 7, "K": 8, "T": 7, "R": 6},
 }
 
@@ -133,6 +135,12 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
     ],
     "exp150_l20_cache_corrected_seed_replication": [
         "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
+    ],
+    "exp163_qwen3_behavior_data_scaling_curve": [
+        "fixed-update scaling curve intentionally confounds unique-data count with repetition/epochs as an operating-point question; nested stratified complete-pair subsets control tool/policy composition, but single-seed noise remains"
+    ],
+    "exp164_qwen3_capability_replay_dose_curve": [
+        "replay dose varies both capability exposure and behavior-data share at fixed total updates, which is the intended tradeoff curve; continuation gains on MMLU/ARC-Easy/HellaSwag remain partly in-domain, so use the held-out transfer battery for broad-capability interpretation"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
         "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"
@@ -710,6 +718,7 @@ def dataset_quality_checks() -> dict[str, Any]:
     for key, report_name, train_name, eval_name in [
         ("scaled_behavior_corpus", "behavior_corpus_report.json", "policy_train_scaled.jsonl", "policy_eval_scaled.jsonl"),
         ("scaled_behavior_corpus_v2", "behavior_corpus_report_v2.json", "policy_train_scaled_v2.jsonl", "policy_eval_scaled_v2.jsonl"),
+        ("scaled_behavior_corpus_v3", "behavior_corpus_report_v3.json", "policy_train_scaled_v3_3200.jsonl", "policy_eval_scaled_v3.jsonl"),
     ]:
         scan = scan_behavior_corpus(ROOT / "data" / report_name, ROOT / "data" / train_name, ROOT / "data" / eval_name)
         if scan is not None:

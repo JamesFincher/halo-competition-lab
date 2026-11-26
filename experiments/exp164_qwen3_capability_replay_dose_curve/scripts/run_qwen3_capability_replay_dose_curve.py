@@ -86,7 +86,7 @@ def main():
   rec={'arm':'baseline_zero_shot','replay_every':None,'measurement':measure(model,tok,eval_rows,device,args.max_new_tokens,continuation_n),'memory':memory_stats(device),'wall_sec':round(time.time()-arm_t0,2),'smoke_test':smoke()}
   append(rec);print(f'  baseline exact={rec["measurement"]["behavior_scaled120"]["exact_compliance_rate"]}%',flush=True);del model
   if device.type=='cuda':torch.cuda.empty_cache()
- rng=random.Random(args.seed);rng.shuffle(capability_rows)
+ rng=random.Random(args.seed);rng.shuffle(behavior_rows);rng.shuffle(capability_rows)
  for replay_every in REPLAY_EVERY:
   arm=(f'replay_every_{replay_every}' if replay_every else 'replay_0_behavior_only')
   if arm in finished:continue

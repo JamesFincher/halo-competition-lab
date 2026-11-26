@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 21:33 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
+Last updated: 2026-11-26 21:40 UTC by the results-analysis subagent. This document is regenerated from `research/AUTOGRADED_SCORES.json` plus manual synthesis; do not treat older per-wave interpretations as current when this synthesis contradicts them.
 
 ## Executive synthesis — current validated state
 
@@ -203,7 +203,7 @@ These completed experiments do not expose a standard intervention metric schema,
 
 ## Missing or pending result JSONs
 
-Integrity scan: **110 files**, **217 warnings**. Missing-result experiment directories currently reported: `exp120_drift_triggered_orthogonal_lanes`, `exp121_curvature_constrained_delta_rl`, `exp122_operator_discrepancy_rank_audit`, `exp123_input_gated_kronecker_lanes`, `exp124_ems_anchor_preserving_subspace_edit`, `exp125_displacement_probe_edit_auditor`, `exp127_budgeted_decision_token_steering`, `exp128_trajectory_collateral_repair_adapter`, `exp131_context_gated_dose_cancellation`, `exp133_alpha_init_continuation_confirmation`, `exp155_olmoe_expert_surface_controls`, `exp156_qwen3_entity_disjoint_seed_replication`, `exp158_olmoe_capability_data_mechanism`, `exp159_olmoe_export_precision_diagnosis`, `exp160_olmoe_checkpoint_transfer_export_eval`, `exp97_independent_alpha_init_scale`, `inverse_causal_patching`.
+Integrity scan: **110 files**, **217 warnings**. Missing-result experiment directories currently reported: `exp120_drift_triggered_orthogonal_lanes`, `exp121_curvature_constrained_delta_rl`, `exp122_operator_discrepancy_rank_audit`, `exp123_input_gated_kronecker_lanes`, `exp124_ems_anchor_preserving_subspace_edit`, `exp125_displacement_probe_edit_auditor`, `exp127_budgeted_decision_token_steering`, `exp128_trajectory_collateral_repair_adapter`, `exp131_context_gated_dose_cancellation`, `exp133_alpha_init_continuation_confirmation`, `exp155_olmoe_expert_surface_controls`, `exp156_qwen3_entity_disjoint_seed_replication`, `exp158_olmoe_capability_data_mechanism`, `exp159_olmoe_export_precision_diagnosis`, `exp160_olmoe_checkpoint_transfer_export_eval`, `exp163_qwen3_behavior_data_scaling_curve`, `exp164_qwen3_capability_replay_dose_curve`, `exp97_independent_alpha_init_scale`, `inverse_causal_patching`.
 
 ## Historical wave-1/2/3 caveat
 

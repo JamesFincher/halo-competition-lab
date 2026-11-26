@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T21:33:13+00:00",
+  "generated_at_utc": "2026-11-26T21:40:24+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1678,6 +1678,19 @@
         "scaled heldout n=120 is a different distribution/size from canonical legacy n=40; do not compare absolute rates across versions without rebaselining"
       ]
     },
+    "scaled_behavior_corpus_v3": {
+      "train_rows": 3200,
+      "heldout_rows": 120,
+      "pair_count": 1600,
+      "counterfactual_pair_violations": 0,
+      "schema_errors": 0,
+      "template_disjoint": true,
+      "entity_disjoint": true,
+      "shared_user_prompt_8grams": 0,
+      "warnings": [
+        "scaled heldout n=120 is a different distribution/size from canonical legacy n=40; do not compare absolute rates across versions without rebaselining"
+      ]
+    },
     "scaled_capability_corpus": {
       "rows": 5280,
       "target_total": 5280,
@@ -1717,6 +1730,8 @@
     "exp158_olmoe_capability_data_mechanism",
     "exp159_olmoe_export_precision_diagnosis",
     "exp160_olmoe_checkpoint_transfer_export_eval",
+    "exp163_qwen3_behavior_data_scaling_curve",
+    "exp164_qwen3_capability_replay_dose_curve",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
@@ -1832,6 +1847,12 @@
     ],
     "exp150_l20_cache_corrected_seed_replication": [
       "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
+    ],
+    "exp163_qwen3_behavior_data_scaling_curve": [
+      "fixed-update scaling curve intentionally confounds unique-data count with repetition/epochs as an operating-point question; nested stratified complete-pair subsets control tool/policy composition, but single-seed noise remains"
+    ],
+    "exp164_qwen3_capability_replay_dose_curve": [
+      "replay dose varies both capability exposure and behavior-data share at fixed total updates, which is the intended tradeoff curve; continuation gains on MMLU/ARC-Easy/HellaSwag remain partly in-domain, so use the held-out transfer battery for broad-capability interpretation"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
       "primary behavior_scaled120 surface is entity-disjoint corpus v2; compare arms against the same-file zero-shot baseline and do not mix absolute rates across surfaces; this is a single-seed result pending Exp156 replication, H22 width/dose is uncontrolled at 64 columns, and replay capability gains are in-domain MMLU/ARC/HellaSwag continuation measurements"
