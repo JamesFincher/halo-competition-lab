@@ -20,6 +20,7 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 9.1 | H1 — Exact-zero keyed modular implant bank | surgical insert + attention head + RL | partially scoped by exp59/61; multi-group MLP+head bank remains untested |
 | 9.3 | H2 — Operator-discrepancy collateral repair adapter | closed-form subspace repair | proposed |
 | 8.9 | H3 — Functional-connectivity-guided head insertion | attention-head modification | partially scoped by exp58/59; graph-selected connectivity remains untested |
+| 8.9 | H15 — Multi-perspective abstention-direction factorization | refusal/compliance subspace geometry | proposed |
 | 8.8 | H9 — Curvature-constrained acquisition deltas | preservation-aware surgical learning | proposed |
 | 8.7 | H4 — EMS-guided anchor-preserving subspace edits | causal neuron localization + surgical edit | proposed |
 | 8.6 | H10 — Merge-aware served-weight action-token fine-tuning | deployment-exact PEFT | proposed |
@@ -27,10 +28,12 @@ Research scan for this batch: arXiv cs.CL/cs.LG papers submitted 2026-11-19 thro
 | 8.4 | H12 — Closed-form decision-readout correction | gradient-free readout surgery | proposed |
 | 8.3 | H6 — Input-adaptive Kronecker lanes for complementary attention/MLP edits | parameter-efficient surgical adaptation | proposed |
 | 8.2 | H7 — Drift-triggered orthogonal rotation lanes | rotation-only PEFT + attention heads | proposed |
+| 8.1 | H16 — Norm-calibrated single-coordinate decision steering | sparse activation surgery | proposed |
 | 8.0 | H11 — Trajectory-aware budgeted decision-token steering | activation steering | proposed |
 | 7.9 | H8 — Displacement-probe edit auditor and reference chooser | cheap pre-GPU screening diagnostic | proposed |
 | 7.8 | H13 — Zero-init attention-latent feedback lane | raw-capability architectural insert | proposed |
 | 7.7 | H14 — Spectral-sink calibrated post-SDPA microgates | attention-head modification | proposed |
+| 7.4 | H17 — Prepare-for-truncation elastic low-rank deployment | compression/raw capability | proposed |
 
 
 ## Recommended execution order
@@ -542,8 +545,103 @@ Expected: sink-aligned selective gates increase effective rank and yield neutral
 
 - [arXiv:2611.20403 — *Attention Sinks as Spectral Spikes: A Mechanism Analysis of Gated Attention*](https://arxiv.org/abs/2611.20403): post-SDPA gating suppresses sink-induced spectral structure, reduces sink-subspace alignment/outlier mass, increases effective rank, and attenuates first-token value-gradient amplification.
 
+
+---
+
+## H15 — Multi-perspective abstention-direction factorization
+
+**Priority: 8.9/10**
+
+### Novel idea
+
+Measure separate abstention directions for distinct refusal causes using minimal counterfactual pairs, then factorize or orthogonalize them before editing. Halo currently treats “false refusal” and “true unsafe refusal” as two broad activation clouds; this hypothesis tests whether query ambiguity, knowledge/policy limits, and harmfulness occupy partially separable geometric directions whose overlap explains collateral.
+
+### Why it should work mechanistically
+
+The lab's core bottleneck is entanglement: edits that remove benign over-refusal also weaken true unsafe refusal. Fresh evidence suggests abstention is not one monolithic direction: different abstention perspectives have asymmetric cross-effects, different cosine overlaps, and middle-layer Fisher separation. If Halo's benign/unsafe pairs are constructed as controlled counterfactuals, layerwise geometry can identify where separation is real rather than assumed by a hand-built nullspace.
+
+### Concrete experiment design
+
+1. Construct three train/dev counterfactual families with minimal lexical/structural changes:
+   - benign correct-allow versus benign false-refusal;
+   - harmful true-refusal versus harmless counterpart;
+   - known/valid policy-tool decision versus unknown/invalid or ambiguous counterpart.
+2. Teacher-force positive/negative completions and compute layerwise mean-difference abstention directions, cosine overlap, cross-perspective transfer, and Fisher discriminant ratio.
+3. Select layers where the target benign/unsafe separation has high FDR but harmfulness overlap is low. Compare raw mean directions, orthogonalized directions, whitened subspaces, and single-direction controls.
+4. Intervene first by activation steering, then convert the best geometry into a surgical residual-subspace edit. Compare against Exp 16 `raw_rank1`, Exp 41 false-node operator, and random direction controls.
+5. Measure standard policy metrics, per-family abstention rates, cross-perspective leakage, layerwise FDR/cosine stability across folds, real-benchmark temperature, and dose-response before selecting any accepted edit.
+
+### Expected outcome and falsification criterion
+
+Expected: at least one middle/late layer shows high benign-versus-harmful geometric separability, enabling an edit that lowers benign false refusal without the usual unsafe-refusal cost. Falsified if directions are nearly collinear across all layers, cross-perspective effects are symmetric and unavoidable, high FDR does not predict intervention selectivity, or orthogonalization performs no better than the existing whitened subspace.
+
+### Citation
+
+- [arXiv:2611.20441 — *Abstention Direction in Large Language Models: Mechanistic Interpretability of Abstention Across Query Ambiguity, Knowledge Limits, and Safety Alignment*](https://arxiv.org/abs/2611.20441): counterfactual-pair abstention directions, asymmetric cross-perspective effects, layerwise cosine overlap, and Fisher separation peaking in middle layers.
+- Local Exp 19 crosstalk audit showing false/true refusal movement coupled near ratio 1.0.
+
+---
+
+## H16 — Norm-calibrated single-coordinate decision steering
+
+**Priority: 8.1/10**
+
+### Novel idea
+
+Use contrastive correct-versus-wrong completions to search for a **single MLP coordinate** whose activation can be shifted by a calibrated dose at decision tokens. Normalize the dose by both the layer's median residual norm and the corresponding down-projection column norm, then test signed hot/cold control rather than distributing noise across a full vector.
+
+### Why it should work mechanistically
+
+A sparse coordinate is easier to audit and less likely to entangle unrelated features than a dense steering vector. Because the neuron's residual contribution is its down-projection column, norm calibration makes doses comparable across layers and prevents accidental massive activations. If one or a few coordinates act as decision keys, this gives a minimal positive control for H1's keyed implants and H4's EMS edits.
+
+### Concrete experiment design
+
+1. Teacher-force correct and incorrect action/tool/policy-code completions at layers 24–29 and record down-projection-input activations.
+2. Rank neurons by normalized contrastive difference, stability across prompt folds, and low correlation with hub/unsafe-refusal coordinates. Include same-layer random and DLA/EMS-selected controls.
+3. Apply dose \(\Delta a_n=d\,m_L/\lVert W_{\rm down}[:,n]\rVert_2\) only at decision tokens, sweeping sign and magnitude. Compare all-token versus decision-token application and positive/negative schedules.
+4. Use the best coordinate as (a) a training-free steering control, (b) a target for a keyed implant in H1, and (c) a validation target for EMS-positive/negative interpretation in H4.
+5. Measure exact compliance, unsafe refusal, benign false refusal, schema malformation, dose-response monotonicity, specificity on paraphrases, real-benchmark temperature, and output-collapse threshold.
+
+### Expected outcome and falsification criterion
+
+Expected: at least one sparse coordinate produces a monotone behavioral effect at doses below output collapse, with decision-token gating reducing collateral relative to all-token steering. Falsified if no coordinate beats random controls, effects are non-monotonic or fold-unstable, or behavioral changes are explained by generic incoherence rather than decision-specific control.
+
+### Citation
+
+- [arXiv:2611.29578 — *Single-Coordinate Activation Steering for Controllable Social Stance in Language Models*](https://arxiv.org/abs/2611.29578): one-coordinate MLP intervention calibrated by median residual norm and down-projection column norm, contrastive neuron search, signed hot/cold schedules, and random-control comparisons.
+
+---
+
+## H17 — Prepare-for-truncation elastic low-rank deployment
+
+**Priority: 7.4/10**
+
+### Novel idea
+
+Train the final Halo checkpoint **through a low-rank view** so one prepared model can be SVD-truncated to multiple deployment budgets without separate fine-tuning. This is a raw-capability/deployment hypothesis: preserve policy behavior and benchmark quality while reducing inference memory/compute.
+
+### Why it should work mechanistically
+
+Post hoc SVD compression damages directions that training never needed to make compressible. Preparing the model against activation-aware fixed bases aligns useful computation with truncatable subspaces and makes updates learned at one compression ratio transfer to neighboring ratios. The result is a better quality-versus-memory frontier than compressing after all post-training is finished.
+
+### Concrete experiment design
+
+1. Start from the best accepted post-edit/RL checkpoint once available; also test unedited Halo SFT as a control.
+2. Estimate activation-aware preparation bases from mixed general-text and policy calibration data. Prepare at a middle ratio such as \(\rho=0.6\) using student-to-teacher KL from the original checkpoint.
+3. Without further fine-tuning, compress to ratios \(r\in\{0.8,0.6,0.4\}\) using the same decomposition. Compare post hoc SVD, budget-specific fine-tuning, random bases, CE-only preparation, and KL+CE preparation.
+4. Measure MMLU/ARC/HellaSwag temperature, policy exact/unsafe/benign-FR, JSON schema validity, latency/memory, spectral-energy retention, and cross-ratio transfer.
+5. Test interaction with H10: exported compressed artifacts must be evaluated after exact merge/reload, not merely in the training process.
+
+### Expected outcome and falsification criterion
+
+Expected: prepared checkpoints retain more benchmark and policy performance than post hoc compression at 0.8/0.6 ratios, with graceful degradation at 0.4. Falsified if preparation does not beat post hoc SVD, gains vanish after exact export/reload, or compression ratios useful for deployment destroy strict JSON policy behavior regardless of preparation.
+
+### Citation
+
+- [arXiv:2611.34667 — *Learning to Be Truncated: Preparing LLM Checkpoints for SVD Compression*](https://arxiv.org/abs/2611.34667): one prepared LLaMA-7B checkpoint improved quality across multiple compression ratios and compression operators without budget-specific fine-tuning; preparation used fixed activation-derived bases and KL distillation.
+
 ---
 
 ## Near-term research backlog for later batches
 
-Candidates not yet written as full hypotheses: agent-written closed-form readouts on frozen encoders ([arXiv:2611.33972](https://arxiv.org/abs/2611.33972)); tool-free LLM quantization-error cancellation ([arXiv:2611.33031](https://arxiv.org/abs/2611.33031)); mixture-of-loops KV memory as a longer-horizon architecture insert ([arXiv:2611.34923](https://arxiv.org/abs/2611.34923)).
+Candidates for later batches: tool-free LLM quantization-error cancellation ([arXiv:2611.33031](https://arxiv.org/abs/2611.33031)); mixture-of-loops KV memory as a longer-horizon architecture insert ([arXiv:2611.34923](https://arxiv.org/abs/2611.34923)); hierarchical graph metanetworks as a stronger H8 auditor backbone ([arXiv:2611.34726](https://arxiv.org/abs/2611.34726)).
