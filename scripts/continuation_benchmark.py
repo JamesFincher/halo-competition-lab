@@ -105,3 +105,69 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
         res["hellaswag"] = {"error": f"{type(exc).__name__}: {exc}"}
         print(f"  continuation HellaSwag failed: {str(exc)[:80]}", flush=True)
     return res
+
+def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: bool = False) -> dict:
+    """Score held-out transfer benchmarks whose train splits are absent from the capability corpus.
+
+    These are still continuation-scored rather than generation benchmarks. They test
+    whether benchmark-specific training generalizes beyond MMLU/ARC-Easy/HellaSwag
+    in-domain formats instead of merely measuring train-split distribution adaptation.
+    """
+    if os.environ.get("HALO_SMOKE_TEST") == "1":
+        n = min(n, 2)
+    from datasets import load_dataset
+
+    res = {}
+
+    def finish(name: str, items):
+        out = score_mc_continuation(model, tok, device, items)
+        if not include_details:
+            out.pop("details", None)
+        res[name] = out
+        print(f"  transfer {name} sum/token/byte: {out['sum_acc']}/{out['token_norm_acc']}/{out['byte_norm_acc']}%", flush=True)
+
+    try:
+        rows = load_dataset("allenai/ai2_arc", "ARC-Challenge", split=f"test[:{n}]")
+        items = []
+        for r in rows:
+            choices = list(r["choices"]["text"])
+            labels = list(r["choices"]["label"])
+            items.append({"context": r["question"], "choices": choices, "answer": choices[labels.index(r["answerKey"])]})
+        finish("arc_challenge", items)
+    except Exception as exc:
+        res["arc_challenge"] = {"error": f"{type(exc).__name__}: {exc}"}
+        print(f"  transfer ARC-Challenge failed: {str(exc)[:80]}", flush=True)
+    try:
+        rows = load_dataset("allenai/openbookqa", "main", split=f"test[:{n}]")
+        items = []
+        for r in rows:
+            choices = list(r["choices"]["text"])
+            labels = list(r["choices"]["label"])
+            items.append({"context": r["question_stem"], "choices": choices, "answer": choices[labels.index(r["answerKey"])]})
+        finish("openbookqa", items)
+    except Exception as exc:
+        res["openbookqa"] = {"error": f"{type(exc).__name__}: {exc}"}
+        print(f"  transfer OpenBookQA failed: {str(exc)[:80]}", flush=True)
+    try:
+        rows = load_dataset("allenai/winogrande", "winogrande_xl", split=f"validation[:{n}]")
+        items = [
+            {"context": r["sentence"], "choices": [r["option1"], r["option2"]], "answer": r["option1"] if str(r["answer"]) == "1" else r["option2"]}
+            for r in rows
+        ]
+        finish("winogrande", items)
+    except Exception as exc:
+        res["winogrande"] = {"error": f"{type(exc).__name__}: {exc}"}
+        print(f"  transfer Winogrande failed: {str(exc)[:80]}", flush=True)
+    try:
+        rows = load_dataset("truthfulqa/truthful_qa", "multiple_choice", split=f"validation[:{n}]")
+        items = []
+        for r in rows:
+            choices = list(r["mc1_targets"]["choices"])
+            labels = list(r["mc1_targets"]["labels"])
+            items.append({"context": r["question"], "choices": choices, "answer": choices[labels.index(1)]})
+        finish("truthfulqa_mc1", items)
+    except Exception as exc:
+        res["truthfulqa_mc1"] = {"error": f"{type(exc).__name__}: {exc}"}
+        print(f"  transfer TruthfulQA MC1 failed: {str(exc)[:80]}", flush=True)
+    return res
+

@@ -28,7 +28,7 @@ sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
-from scripts.continuation_benchmark import run_continuation_benchmark  # noqa: E402
+from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
 MODEL_NAME = "allenai/OLMoE-1B-7B-0125-Instruct"
 EXP_DIR = ROOT / "experiments/exp158_olmoe_capability_data_mechanism"
@@ -287,6 +287,7 @@ def main():
     baseline={
       "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True),
       "continuation_benchmark":run_continuation_benchmark(probe_model,tok,device,args.continuation_n),
+      "transfer_benchmark":run_transfer_benchmark(probe_model,tok,device,args.continuation_n // 2),
       "cache_consistency":cache_consistency(probe_model,tok,device),
     }
     del probe_model
@@ -332,8 +333,9 @@ def main():
       train_info["training_source"]=source; train_info["training_rows"]=len(train_rows)
       behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True)
       continuation=run_continuation_benchmark(model,tok,device,args.continuation_n)
+      transfer=run_transfer_benchmark(model,tok,device,args.continuation_n // 2)
       cache=cache_consistency(model,tok,device)
-      rec={"arm":arm,"selections":selections if smoke() else {str(k):v for k,v in selections.items()},"rank_per_selected_expert":rank,"parameter_matching":"selective/random use top_n*rank; diffuse uses num_experts*1 so total adapter parameters match when top_n*rank=num_experts","train_info":train_info,"behavior_scaled120":behavior,"continuation_benchmark":continuation,"baseline":baseline,"cache_consistency_after_training":cache,"wall_sec":round(time.time()-arm_t0,2),"smoke_test":smoke()}
+      rec={"arm":arm,"selections":selections if smoke() else {str(k):v for k,v in selections.items()},"rank_per_selected_expert":rank,"parameter_matching":"selective/random use top_n*rank; diffuse uses num_experts*1 so total adapter parameters match when top_n*rank=num_experts","train_info":train_info,"behavior_scaled120":behavior,"continuation_benchmark":continuation,"transfer_benchmark":transfer,"baseline":baseline,"cache_consistency_after_training":cache,"wall_sec":round(time.time()-arm_t0,2),"smoke_test":smoke()}
       append_arm(rec)
       del model,bank
       if device.type=="cuda": torch.cuda.empty_cache()
