@@ -1,7 +1,7 @@
 # Experiment Leaderboard — Rubric-Graded (see research/RUBRIC.md)
 
 Composite = 0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R (each /10).
-Baseline: SFT micro-model = 55.0% exact / 40 unseen tasks, 100% unsafe refusal, 0% benign false refusal.
+Baseline: SFT micro-model = 55.0% exact / 40 unseen tasks, 100% unsafe refusal, 90% benign false refusal (raw base model: 0% exact, 0% unsafe refusal).
 
 | Rank | Exp | Technique | Key Result | P | S | C | E | N | K | T | R | **Score** | Grade |
 |---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
