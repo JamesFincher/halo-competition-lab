@@ -70,31 +70,60 @@ def continuation_logprobs_batch(model, tok, device, context: str, choices: list[
     return out
 
 
+def wilson95(successes: int, total: int) -> list[float]:
+    if total <= 0:
+        return [0.0, 0.0]
+    z = 1.959963984540054
+    phat = successes / total
+    denom = 1.0 + z * z / total
+    center = (phat + z * z / (2 * total)) / denom
+    margin = z * ((phat * (1 - phat) + z * z / (4 * total)) / total) ** 0.5 / denom
+    return [round(100.0 * max(0.0, center - margin), 2), round(100.0 * min(1.0, center + margin), 2)]
+
+
 @torch.no_grad()
 def score_mc_continuation(model, tok, device, items) -> dict:
     correct_sum = correct_token = correct_byte = 0
     details = []
-    for q in items:
+    rows = []
+    for index, q in enumerate(items):
         choice_lps = continuation_logprobs_batch(model, tok, device, q["context"], q["choices"])
         scored = list(zip(q["choices"], choice_lps))
         best_sum = max(scored, key=lambda x: x[1]["sum"])[0]
         best_token = max(scored, key=lambda x: x[1]["token_mean"])[0]
         best_byte = max(scored, key=lambda x: x[1]["byte_mean"])[0]
-        correct_sum += int(best_sum == q["answer"])
-        correct_token += int(best_token == q["answer"])
-        correct_byte += int(best_byte == q["answer"])
-        details.append({"context": q["context"][:160], "answer": q["answer"], "best_sum": best_sum, "best_token": best_token, "best_byte": best_byte})
+        is_correct_sum = best_sum == q["answer"]
+        is_correct_token = best_token == q["answer"]
+        is_correct_byte = best_byte == q["answer"]
+        correct_sum += int(is_correct_sum)
+        correct_token += int(is_correct_token)
+        correct_byte += int(is_correct_byte)
+        rows.append({
+            "index": index,
+            "answer": q["answer"],
+            "best_sum": best_sum,
+            "best_token": best_token,
+            "best_byte": best_byte,
+            "correct_sum": bool(is_correct_sum),
+            "correct_token": bool(is_correct_token),
+            "correct_byte": bool(is_correct_byte),
+        })
+        details.append({"index": index, "context": q["context"][:160], "answer": q["answer"], "best_sum": best_sum, "best_token": best_token, "best_byte": best_byte})
     n = max(len(items), 1)
     return {
         "sum_acc": round(100.0 * correct_sum / n, 2),
         "token_norm_acc": round(100.0 * correct_token / n, 2),
         "byte_norm_acc": round(100.0 * correct_byte / n, 2),
+        "sum_acc_wilson95": wilson95(correct_sum, len(items)),
+        "token_norm_acc_wilson95": wilson95(correct_token, len(items)),
+        "byte_norm_acc_wilson95": wilson95(correct_byte, len(items)),
         "n": len(items),
+        "rows": rows,
         "details": details,
     }
 
 
-def run_continuation_benchmark(model, tok, device, n: int = 100, include_details: bool = False) -> dict:
+def run_continuation_benchmark(model, tok, device, n: int = 100, include_details: bool = False, include_rows: bool = False) -> dict:
     """Score an already-loaded causal LM by answer-continuation likelihood only."""
     if os.environ.get("HALO_SMOKE_TEST") == "1":
         n = min(n, 2)
@@ -107,6 +136,8 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
         out = score_mc_continuation(model, tok, device, items)
         if not include_details:
             out.pop("details", None)
+        if not include_rows:
+            out.pop("rows", None)
         res["mmlu"] = out
         print(f"  continuation MMLU sum/token/byte: {out['sum_acc']}/{out['token_norm_acc']}/{out['byte_norm_acc']}%", flush=True)
     except Exception as exc:
@@ -122,6 +153,8 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
         out = score_mc_continuation(model, tok, device, items)
         if not include_details:
             out.pop("details", None)
+        if not include_rows:
+            out.pop("rows", None)
         res["arc_easy"] = out
         print(f"  continuation ARC-Easy sum/token/byte: {out['sum_acc']}/{out['token_norm_acc']}/{out['byte_norm_acc']}%", flush=True)
     except Exception as exc:
@@ -133,6 +166,8 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
         out = score_mc_continuation(model, tok, device, items)
         if not include_details:
             out.pop("details", None)
+        if not include_rows:
+            out.pop("rows", None)
         res["hellaswag"] = out
         print(f"  continuation HellaSwag sum/token/byte: {out['sum_acc']}/{out['token_norm_acc']}/{out['byte_norm_acc']}%", flush=True)
     except Exception as exc:
@@ -140,7 +175,7 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
         print(f"  continuation HellaSwag failed: {str(exc)[:80]}", flush=True)
     return res
 
-def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: bool = False) -> dict:
+def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: bool = False, include_rows: bool = False) -> dict:
     """Score held-out transfer benchmarks whose train splits are absent from the capability corpus.
 
     These are still continuation-scored rather than generation benchmarks. They test
@@ -157,6 +192,8 @@ def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: boo
         out = score_mc_continuation(model, tok, device, items)
         if not include_details:
             out.pop("details", None)
+        if not include_rows:
+            out.pop("rows", None)
         res[name] = out
         print(f"  transfer {name} sum/token/byte: {out['sum_acc']}/{out['token_norm_acc']}/{out['byte_norm_acc']}%", flush=True)
 

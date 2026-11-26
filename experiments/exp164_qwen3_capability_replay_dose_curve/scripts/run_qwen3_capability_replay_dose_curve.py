@@ -18,7 +18,7 @@ sys.path.insert(0,str(ROOT/'experiments/edit_then_target_rl/scripts'))
 sys.path.insert(0,str(ROOT))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
-from experiments.common.behavior_stats import comparisons_against_reference  # noqa: E402
+from experiments.common.behavior_stats import benchmark_comparisons_against_reference, comparisons_against_reference  # noqa: E402
 from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
 def load_exp152():
@@ -62,7 +62,7 @@ def nested_complete_pair_subset(rows:list[dict],n_rows:int)->list[dict]:
  return out
 
 def measure(model,tok,eval_rows,device,max_new_tokens,continuation_n):
- return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4,include_rows=True),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n),'transfer_benchmark':run_transfer_benchmark(model,tok,device,max(continuation_n//2,1))}
+ return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4,include_rows=True),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n,include_rows=True),'transfer_benchmark':run_transfer_benchmark(model,tok,device,max(continuation_n//2,1),include_rows=True)}
 
 def memory_stats(device):
  if device.type!='cuda':return {'device':'cpu'}
@@ -107,7 +107,7 @@ def main():
   del model
   if device.type=='cuda':torch.cuda.empty_cache()
  arms=[json.loads(x) for x in ARM_JSONL.read_text().splitlines() if x.strip()] if ARM_JSONL.exists() else []
- write_json(RESULTS_DIR/'qwen3_capability_replay_dose_summary.json',{'experiment':'exp164_qwen3_capability_replay_dose_curve','model':exp152.MODEL_NAME,'question':'What is the behavior-compliance versus capability-transfer tradeoff as deterministic capability replay varies from 0 to 50% of fixed-budget LoRA steps?','arms':arms,'behavior_row_statistics':{'versus_baseline_zero_shot':comparisons_against_reference(arms,'baseline_zero_shot'),'versus_replay_0_behavior_only':comparisons_against_reference(arms,'replay_0_behavior_only')},'wall_sec':round(time.time()-t0,2),'smoke_test':smoke()})
+ write_json(RESULTS_DIR/'qwen3_capability_replay_dose_summary.json',{'experiment':'exp164_qwen3_capability_replay_dose_curve','model':exp152.MODEL_NAME,'question':'What is the behavior-compliance versus capability-transfer tradeoff as deterministic capability replay varies from 0 to 50% of fixed-budget LoRA steps?','arms':arms,'behavior_row_statistics':{'versus_baseline_zero_shot':comparisons_against_reference(arms,'baseline_zero_shot'),'versus_replay_0_behavior_only':comparisons_against_reference(arms,'replay_0_behavior_only')},'capability_row_statistics':{'continuation_versus_baseline_zero_shot':benchmark_comparisons_against_reference(arms,'baseline_zero_shot','continuation_benchmark'),'continuation_versus_replay_0_behavior_only':benchmark_comparisons_against_reference(arms,'replay_0_behavior_only','continuation_benchmark'),'transfer_versus_baseline_zero_shot':benchmark_comparisons_against_reference(arms,'baseline_zero_shot','transfer_benchmark'),'transfer_versus_replay_0_behavior_only':benchmark_comparisons_against_reference(arms,'replay_0_behavior_only','transfer_benchmark')},'wall_sec':round(time.time()-t0,2),'smoke_test':smoke()})
  if smoke():shutil.rmtree(ckpt_base,ignore_errors=True)
  print(f'[DONE] exp164 arms={len(arms)} wall={round(time.time()-t0,2)}s',flush=True)
 if __name__=='__main__':main()

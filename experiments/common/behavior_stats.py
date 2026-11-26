@@ -7,7 +7,7 @@ import random
 from typing import Iterable
 
 
-BINARY_METRICS = ("exact", "json_valid", "action_ok", "policy_ok")
+BINARY_METRICS = ("exact", "json_valid", "action_ok", "policy_ok", "correct_sum", "correct_token", "correct_byte")
 
 
 def require_matched_rows(rows_a: list[dict], rows_b: list[dict]) -> None:
@@ -18,6 +18,8 @@ def require_matched_rows(rows_a: list[dict], rows_b: list[dict]) -> None:
             raise ValueError(f"row order mismatch at position {i}")
         if a.get("target_action") != b.get("target_action") or a.get("target_tool") != b.get("target_tool"):
             raise ValueError(f"matched eval rows diverge at position {i}")
+        if "answer" in a and "answer" in b and a.get("answer") != b.get("answer"):
+            raise ValueError(f"matched benchmark rows diverge at position {i}")
 
 
 def binary_values(rows: Iterable[dict], metric: str) -> list[int]:
@@ -115,4 +117,41 @@ def comparisons_against_reference(
             out[name]["direction"] = f"{reference_arm}_minus_{name}"
         except ValueError as exc:
             out[name] = {"error": str(exc)}
+    return out
+
+
+def benchmark_comparisons_against_reference(
+    arms: list[dict],
+    reference_arm: str,
+    benchmark_key: str = "continuation_benchmark",
+    metric: str = "correct_sum",
+) -> dict:
+    """Compare nested continuation-benchmark row outcomes against one reference arm.
+
+    Returns dataset -> arm -> paired statistics. Missing/error datasets are omitted;
+    schema mismatches are preserved as per-arm error records.
+    """
+    by_arm = {arm.get("arm"): arm for arm in arms}
+    reference = by_arm.get(reference_arm, {}).get("measurement", {}).get(benchmark_key, {})
+    out: dict = {}
+    for dataset, ref_out in reference.items():
+        ref_rows = ref_out.get("rows") if isinstance(ref_out, dict) else None
+        if not ref_rows:
+            continue
+        dataset_out = {}
+        for arm in arms:
+            name = arm.get("arm")
+            if name == reference_arm:
+                continue
+            candidate = arm.get("measurement", {}).get(benchmark_key, {}).get(dataset, {})
+            rows = candidate.get("rows") if isinstance(candidate, dict) else None
+            if not rows:
+                continue
+            try:
+                dataset_out[name] = compare_behavior_rows(ref_rows, rows, metric=metric)
+                dataset_out[name]["direction"] = f"{reference_arm}_minus_{name}"
+            except ValueError as exc:
+                dataset_out[name] = {"error": str(exc)}
+        if dataset_out:
+            out[dataset] = dataset_out
     return out

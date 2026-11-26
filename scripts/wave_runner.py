@@ -26,7 +26,7 @@ def main():
     procs = {}
     for name, script in exps:
         lf = open(logdir / f"{name}.log", "w")
-        p = subprocess.Popen([sys.executable, str(ROOT / script)], stdout=lf, stderr=subprocess.STDOUT, cwd=str(ROOT))
+        p = subprocess.Popen([sys.executable, "-u", str(ROOT / script)], stdout=lf, stderr=subprocess.STDOUT, cwd=str(ROOT))
         procs[name] = (p, lf)
         print(f"[WAVE] launched {name} pid={p.pid}", flush=True)
     status = {}
