@@ -29,6 +29,7 @@ BAD_PATTERNS = [
 
 TINY_VALUES = {
     "--steps": "1",
+    "--gate-steps": "1",
     "--rl-steps": "1",
     "--group-size": "2",
     "--per-class": "1",
