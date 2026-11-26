@@ -1,0 +1,1 @@
+{"exclusive_gpu":true,"estimated_peak_gb":48,"queue_priority":85,"reason":"No-training export diagnosis should precede further expert-adapter interpretation because servable-weight validity is unresolved"}
