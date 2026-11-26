@@ -20,6 +20,8 @@ import sys
 import time
 from pathlib import Path
 
+import transformers
+
 import torch
 import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer, OlmoeConfig, OlmoeForCausalLM
@@ -125,7 +127,9 @@ def cache_consistency(model, tokenizer, device) -> dict:
     enc = tokenizer(prompt, return_tensors="pt").to(device)
     ids_c = model.generate(**enc, max_new_tokens=8, do_sample=False, pad_token_id=tokenizer.eos_token_id, use_cache=True)
     ids_u = model.generate(**enc, max_new_tokens=8, do_sample=False, pad_token_id=tokenizer.eos_token_id, use_cache=False)
-    return {"generated_ids_equal": bool(torch.equal(ids_c.cpu(), ids_u.cpu())), "claim": "expert output adapters are token-local weight-like operations, so cached generation is valid"}
+    logits_c = model(**enc, use_cache=True).logits
+    logits_u = model(**enc, use_cache=False).logits
+    return {"generated_ids_equal": bool(torch.equal(ids_c.cpu(), ids_u.cpu())), "single_forward_max_abs_logit_diff": round(float((logits_c - logits_u).abs().max().item()), 8), "claim": "expert output adapters are token-local weight-like operations, so cached generation is valid"}
 
 
 @torch.no_grad()
@@ -236,7 +240,7 @@ def train_bank(model, bank, tokenizer, rows, device, steps, batch_size, max_len,
     if steps > 0:
         save_adapter_checkpoint(bank, opt, steps, final_ckpt)
     model.config.use_cache=True; model.eval(); bank.eval()
-    return {"steps":steps,"resumed_from_step":start_step,"checkpointed":True,"train_wall_sec":round(time.time()-t0,2),"train_log_tail":log[-8:],"trainable_adapter_params":sum(p.numel() for p in bank.parameters() if p.requires_grad)}
+    return {"steps":steps,"resumed_from_step":start_step,"checkpointed":True,"train_wall_sec":round(time.time()-t0,2),"train_log_tail":log[-8:],"allocated_adapter_params":sum(p.numel() for p in bank.parameters() if p.requires_grad),"effective_selected_adapter_params":sum((bank.rank * bank.a.shape[-1] + bank.b.shape[-2] * bank.rank) * len(bank.selections[li]) for li in range(bank.n_layers))}
 
 
 def completed_arms():
@@ -271,7 +275,7 @@ def main():
     args=ap.parse_args()
     random.seed(args.seed); torch.manual_seed(args.seed)
     t0=time.time(); device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"[Exp154 staged] OLMoE expert adapters on {device}",flush=True)
+    print(f"[Exp154] OLMoE expert adapters on {device}; transformers={transformers.__version__} torch={torch.__version__}",flush=True)
     tok=load_tokenizer(); probe_model=load_model(tok,device); probe_model.eval()
     cap_train=jsonl_rows(ROOT/"data/capability_train_scaled.jsonl")
     cap_val=jsonl_rows(ROOT/"data/capability_validation_scaled.jsonl")
