@@ -285,9 +285,9 @@ def main():
     diffuse={li:list(range(n_exp)) for li in range(n_layers)}
     behavior_eval=base_rl.load_rows(ROOT/"data/policy_eval_scaled_v2.jsonl")
     baseline={
-      "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4),
-      "continuation_benchmark":run_continuation_benchmark(probe_model,tok,device,args.continuation_n),
-      "transfer_benchmark":run_transfer_benchmark(probe_model,tok,device,args.continuation_n // 2),
+      "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4,include_rows=True),
+      "continuation_benchmark":run_continuation_benchmark(probe_model,tok,device,args.continuation_n,include_rows=True),
+      "transfer_benchmark":run_transfer_benchmark(probe_model,tok,device,args.continuation_n,include_rows=True),
       "cache_consistency":cache_consistency(probe_model,tok,device),
     }
     del probe_model
@@ -331,9 +331,9 @@ def main():
         train_rows=train_rows[:min(source_counts.values())]
       train_info=train_bank(model,bank,tok,train_rows,device,args.steps,args.batch_size,args.max_len,args.lr,ckpt_base / arm,args.checkpoint_interval)
       train_info["training_source"]=source; train_info["training_rows"]=len(train_rows)
-      behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4)
-      continuation=run_continuation_benchmark(model,tok,device,args.continuation_n)
-      transfer=run_transfer_benchmark(model,tok,device,args.continuation_n // 2)
+      behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4,include_rows=True)
+      continuation=run_continuation_benchmark(model,tok,device,args.continuation_n,include_rows=True)
+      transfer=run_transfer_benchmark(model,tok,device,args.continuation_n,include_rows=True)
       cache=cache_consistency(model,tok,device)
       rec={"arm":arm,"selections":selections if smoke() else {str(k):v for k,v in selections.items()},"rank_per_selected_expert":rank,"parameter_matching":"selective/random use top_n*rank; diffuse uses num_experts*1 so total adapter parameters match when top_n*rank=num_experts","train_info":train_info,"behavior_scaled120":behavior,"continuation_benchmark":continuation,"transfer_benchmark":transfer,"baseline":baseline,"cache_consistency_after_training":cache,"wall_sec":round(time.time()-arm_t0,2),"smoke_test":smoke()}
       append_arm(rec)

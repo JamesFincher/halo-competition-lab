@@ -78,8 +78,8 @@ def finished_arms() -> set[str]:
 
 def evaluate_suite(model, tok, device, continuation_n: int) -> dict:
     return {
-        "continuation_benchmark": run_continuation_benchmark(model, tok, device, continuation_n),
-        "transfer_benchmark": run_transfer_benchmark(model, tok, device, max(continuation_n // 2, 1)),
+        "continuation_benchmark": run_continuation_benchmark(model, tok, device, continuation_n, include_rows=True),
+        "transfer_benchmark": run_transfer_benchmark(model, tok, device, continuation_n, include_rows=True),
     }
 
 
