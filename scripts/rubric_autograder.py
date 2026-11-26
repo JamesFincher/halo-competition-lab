@@ -140,23 +140,23 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ],
     "exp163_qwen3_behavior_data_scaling_curve": [
-        "current script does not retain row-level behavior outcomes or write paired McNemar/bootstrap statistics, so exactness differences are rate/Wilson-level unless instrumentation is patched before launch",
+        "current script does not retain row-level behavior or benchmark outcomes or write paired McNemar/bootstrap statistics, so exactness/capability differences are rate/Wilson-level unless instrumentation is patched before launch; script defaults are continuation n=50 and transfer n=25 rather than the matched n=100 used by exp156/164-167",
         "fixed-compute diversity-versus-repetition curve uses exposed unique-row counts 400/800/1600/2400 at 6/3/1.5/1 epochs; nested stratified complete-pair subsets control tool/policy composition, but single-seed noise remains and fixed-epoch scaling is separate"
     ],
     "exp164_qwen3_capability_replay_dose_curve": [
-        "continuation/transfer surfaces use fixed random subsets shared across arms; compare absolute capability rates within this experiment, not against first-n dataset-order artifacts such as exp152",
+        "continuation/transfer surfaces use fixed random script-default n=100 subsets shared across arms; compare absolute capability rates within the same subset-and-n regime, not against first-n dataset-order artifacts such as exp152",
         "replay dose varies both capability exposure and behavior-data share at fixed total updates, which is the intended tradeoff curve; continuation gains on MMLU/ARC-Easy/HellaSwag remain partly in-domain, so use the held-out transfer battery for broad-capability interpretation"
     ],
     "exp165_qwen3_capability_replay_source_controls": [
-        "continuation/transfer surfaces use fixed random subsets shared across arms; compare absolute capability rates within this experiment, not against first-n dataset-order artifacts",
+        "continuation/transfer surfaces use fixed random script-default n=100 subsets shared across arms; compare absolute capability rates within the same subset-and-n regime, not against first-n dataset-order artifacts",
         "staged conditional source-control diagnostic: behavior-only anchors and the shuffled wrong-answer arm are interpretive references rather than deployment candidates; behavior-only-225 matches behavior-step count but not total optimizer updates, and answer rotation preserves answer distribution while actively training incorrect context-answer pairings"
     ],
     "exp166_qwen3_mixed_batch_interleaving": [
-        "continuation/transfer surfaces use fixed random subsets shared across arms; compare absolute capability rates within this experiment, not against first-n dataset-order artifacts",
+        "continuation/transfer surfaces use fixed random script-default n=100 subsets shared across arms; compare absolute capability rates within the same subset-and-n regime, not against first-n dataset-order artifacts",
         "staged conditional interleaving diagnostic: at default 300 steps/batch8/replay-every4 the alternating and mixed arms consume exactly the same 1800 behavior plus 600 capability examples, so only temporal batch composition varies; non-default doses may not preserve exact matching"
     ],
     "exp167_qwen3_behavior_fixed_epoch_scaling": [
-        "continuation/transfer surfaces use fixed random subsets shared across arms; compare absolute capability rates within this experiment, not against first-n dataset-order artifacts",
+        "continuation/transfer surfaces use fixed random script-default n=100 subsets shared across arms; compare absolute capability rates within the same subset-and-n regime, not against first-n dataset-order artifacts",
         "fixed-epoch scaling deliberately increases optimizer steps/compute with row count, so cross-row comparisons measure data-plus-compute scaling rather than pure data diversity; warmup/cosine proportions are matched, and comparison with exp163 is needed to separate repetition from compute"
     ],
     "exp152_qwen3_behavioral_scale_pivot": [
@@ -190,7 +190,7 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "staged/inactive until exp158 establishes the source/format mechanism; fixed random-expert initialization makes corpus composition the intended causal variable, with held-out transfer primary and entity-disjoint behavior collateral secondary"
     ],
     "exp156_qwen3_entity_disjoint_seed_replication": [
-        "behavior rows support paired seed comparisons, while continuation/transfer rows use fixed random subsets; absolute capability rates are not comparable with Exp152 first-n dataset-order measurements",
+        "behavior rows support paired seed comparisons, while continuation/transfer rows use fixed random script-default n=100 subsets; absolute capability rates are not comparable with Exp152 first-n dataset-order measurements or different-n subsets",
         "entity-disjoint v2 seed replication: interpret all seeds 42/7/123 together rather than the autograded best seed; behavior-only training batches mean continuation benchmarks measure collateral change, not replay-preservation success"
     ],
     "exp93_v1_seed_replication": [
