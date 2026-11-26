@@ -27,9 +27,11 @@ from transformers import AutoTokenizer
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/random_node_control_proof/scripts"))
+sys.path.insert(0, str(ROOT / "experiments/common"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_random_control_proof as rnd_mod  # noqa: E402
+from validated_edit import apply_validated_rank1_edit  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 
 PROBE_LAYERS = [20, 28, 29]
@@ -201,12 +203,12 @@ def main() -> None:
     eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
     sft, tokenizer = vec_rl.load_sft(device, dtype)
     scores, u_dla = rnd_mod.compute_dla_scores(sft, tokenizer, train_rows, device)
-    selected = {li: torch.topk(scores[li], k=64).indices.tolist() for li in vec_rl.EDIT_LAYERS}
 
     edited = copy.deepcopy(sft)
-    rnd_mod.apply_neuron_subset_edit(edited, selected, u_dla, strength=args.strength)
+    edit_info = apply_validated_rank1_edit(edited, tokenizer, train_rows, device, edit_layers=vec_rl.EDIT_LAYERS, top_columns=64, strength=args.strength)
+    selected = edit_info["selected_neurons"]
     edit_eval = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device)
-    print(f"  [DLA reference edit] exact={edit_eval['exact_compliance_rate']:.1f}% unsafe={edit_eval['unsafe_refusal_rate']:.1f}% benign_fr={edit_eval['benign_false_refusal_rate']:.1f}%", flush=True)
+    print(f"  [validated anchor edit] exact={edit_eval['exact_compliance_rate']:.1f}% unsafe={edit_eval['unsafe_refusal_rate']:.1f}% benign_fr={edit_eval['benign_false_refusal_rate']:.1f}%", flush=True)
 
     print("[Stage 1] Selecting high-variance boundary prompts from training data...", flush=True)
     boundary_rows = choose_boundary_prompts(edited, tokenizer, train_rows, device, args.seed, args.per_class)
@@ -250,7 +252,8 @@ def main() -> None:
         "device": str(device),
         "wall_sec": round(time.time() - t0, 2),
         "selected_neurons": selected,
-        "dla_reference_eval": edit_eval,
+        "validated_edit_operator": edit_info,
+        "validated_anchor_eval": edit_eval,
         "pgs_meta": pgs_meta,
         "direction_cosines": cosines,
         "causal_edit_arms": arms,

@@ -33,8 +33,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/random_node_control_proof/scripts"))
+sys.path.insert(0, str(ROOT / "experiments/common"))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_random_control_proof as rnd_mod  # noqa: E402
+from validated_edit import apply_validated_rank1_edit  # noqa: E402
 
 EDIT_LAYERS = [29, 28]
 DISJOINT_LAYERS = [0, 1, 24, 25, 26, 27]
@@ -226,13 +228,12 @@ def main() -> None:
         flush=True,
     )
 
-    dla_scores, u_refusal = rnd_mod.compute_dla_scores(sft, tokenizer, train_rows, device)
-    selected = {li: torch.topk(dla_scores[li], k=64).indices.tolist() for li in EDIT_LAYERS}
     edited = copy.deepcopy(sft)
-    rnd_mod.apply_neuron_subset_edit(edited, selected, u_refusal, strength=0.90)
+    edit_info = apply_validated_rank1_edit(edited, tokenizer, train_rows, device, edit_layers=EDIT_LAYERS, top_columns=64, strength=0.90)
+    selected = edit_info["selected_neurons"]
     edited_eval = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device)
     print(
-        f"  [anchored DLA edit] exact={edited_eval['exact_compliance_rate']:.1f}% | pol={edited_eval['policy_accuracy']:.1f}% | "
+        f"  [anchored validated edit] exact={edited_eval['exact_compliance_rate']:.1f}% | pol={edited_eval['policy_accuracy']:.1f}% | "
         f"unsafe={edited_eval['unsafe_refusal_rate']:.1f}% | benign_fr={edited_eval['benign_false_refusal_rate']:.1f}%",
         flush=True,
     )
@@ -257,6 +258,7 @@ def main() -> None:
         "disjoint_layers": DISJOINT_LAYERS,
         "random_layers": random_layers,
         "selected_neurons": selected,
+        "validated_edit_operator": edit_info,
         "baseline_sft": sft_eval,
         "anchored_edit_only": edited_eval,
         "arms": {},

@@ -24,10 +24,12 @@ import torch
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/random_node_control_proof/scripts"))
+sys.path.insert(0, str(ROOT / "experiments/common"))
 sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/scripts"))
 sys.path.insert(0, str(ROOT / "experiments/exp53_dual_sided_advantage_sculpting/scripts"))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_random_control_proof as rnd_mod  # noqa: E402
+from validated_edit import apply_validated_rank1_edit  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
 import run_dual_sided_advantage_rl as sculpt  # noqa: E402
 
@@ -237,16 +239,15 @@ def main() -> None:
     eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
     prompt_stream = vec_rl.make_prompt_stream(train_rows)
     sft, tokenizer = vec_rl.load_sft(device, dtype)
-    scores, u = rnd_mod.compute_dla_scores(sft, tokenizer, train_rows, device)
-    selected = {li: torch.topk(scores[li], k=64).indices.tolist() for li in vec_rl.EDIT_LAYERS}
     edited = copy.deepcopy(sft)
-    rnd_mod.apply_neuron_subset_edit(edited, selected, u, strength=0.90)
+    edit_info = apply_validated_rank1_edit(edited, tokenizer, train_rows, device, edit_layers=vec_rl.EDIT_LAYERS, top_columns=64, strength=0.90)
+    selected = edit_info["selected_neurons"]
     ref_model = copy.deepcopy(edited).to(device).eval()
     vec_rl.freeze_weights(ref_model)
 
     sft_eval = base_rl.evaluate_heldout(sft, tokenizer, eval_rows, device)
     edit_eval = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device)
-    print(f"  [SFT] exact={sft_eval['exact_compliance_rate']:.1f}% | [DLA] exact={edit_eval['exact_compliance_rate']:.1f}% unsafe={edit_eval['unsafe_refusal_rate']:.1f}%", flush=True)
+    print(f"  [SFT] exact={sft_eval['exact_compliance_rate']:.1f}% | [validated edit] exact={edit_eval['exact_compliance_rate']:.1f}% unsafe={edit_eval['unsafe_refusal_rate']:.1f}%", flush=True)
 
     action_ids = set(tokenizer.encode(x, add_special_tokens=False)[:1] for x in ("call", "ref"))
     print("[Stage 1] Calibrating layer-28/29 false-refusal caps from benign-allow activations...", flush=True)
@@ -264,6 +265,7 @@ def main() -> None:
         "config": vars(args),
         "device": str(device),
         "selected_neurons": selected,
+        "validated_edit_operator": edit_info,
         "caps": {str(k): {kk: vv for kk, vv in cap.items() if kk != "vec"} for k, cap in caps.items()},
         "baseline_sft": sft_eval,
         "anchored_edit_only_cap_off": edit_eval,
