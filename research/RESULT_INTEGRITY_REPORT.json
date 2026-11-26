@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T16:04:44+00:00",
+  "generated_at_utc": "2026-11-26T16:10:51+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -1396,7 +1396,6 @@
     }
   },
   "missing_result_experiments": [
-    "adaptive_k_proportional_edit",
     "exp111_alpha_norm_penalty_bank",
     "exp120_drift_triggered_orthogonal_lanes",
     "exp121_curvature_constrained_delta_rl",
@@ -1404,7 +1403,6 @@
     "exp123_input_gated_kronecker_lanes",
     "exp124_ems_anchor_preserving_subspace_edit",
     "exp125_displacement_probe_edit_auditor",
-    "exp126_spectral_sink_microgates",
     "exp127_budgeted_decision_token_steering",
     "exp128_trajectory_collateral_repair_adapter",
     "exp131_context_gated_dose_cancellation",
@@ -1413,7 +1411,6 @@
     "exp150_l20_cache_corrected_seed_replication",
     "exp152_qwen3_behavioral_scale_pivot",
     "exp153_olmoe_expert_stage_zero",
-    "exp84_momentum_carryover_half_edit",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
