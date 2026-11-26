@@ -26,18 +26,35 @@ Baseline: SFT micro-model = 55.0% exact / 40 unseen tasks, 100% unsafe refusal, 
 
 ## Wave-1 direct-bf16 autograder output — confounded, not ranked
 
-These rows use the same rubric table format, but they are **not canonical technique grades**. They measure the accidental direct-CUDA-bf16 regime documented in `docs/EXPERIMENT_ANALYSIS.md`: the unedited baseline itself falls to 47.5% exact, and DLA rank-1 edits often collapse into always-call behavior (0% unsafe refusal). Do not interpret these as dead ends until fp32-master reruns land.
+These rows use the same rubric table format, but they are **not canonical technique grades**. They measure the replication-broken unembedding-direction operator documented in `docs/EXPERIMENT_ANALYSIS.md`: edits often collapse into always-call behavior (0% unsafe refusal). Do not interpret these as dead ends until the original-operator replication lands. Scores cap surgical precision at C=1 when unsafe refusal falls below 50%, because zero benign false refusal in an always-call model is not precision.
 
 | Rank | Exp | Technique | Key Result | P | S | C | E | N | K | T | R | **Score** | Grade |
 |---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | — | **28** | Head+MLP synergy, direct bf16 | best arm `head_only`: 45.0% exact, 100% unsafe, 60% benign FR; all MLP arms collapse | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
 | — | **23** | Push-pull, direct bf16 + degenerate directions | best arm `pushpull_1.0`: 42.5% exact, 100% unsafe, 100% benign FR; implementation is net-sign control, not true push-pull | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
 | — | **29** | Momentum-annealed surgery+RL, direct bf16 | best arm `annealed_edit`: 30.0% exact, 100% unsafe, 90% benign FR; reward collapses when edit reaches zero | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
-| — | **25** | Gradient-free evolution, direct bf16 | heldout-test half split: 50.0% exact but only 42.9% unsafe; fitness does not hard-constrain safety | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
-| — | **26** | Entropy-weighted GRPO, direct bf16 | best composite tie shown as `uniform_adv`: 7.5% exact, 0% unsafe; post-edit start already collapsed | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
-| — | **21** | DLA edit → disjoint RL, direct bf16 | post-edit checkpoint starts collapsed; RL remains at 15.0% exact / 0% unsafe | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
-| — | **20** | DLA vs random control, direct bf16 | DLA exact 15.0% / unsafe 0%; random mean 47.5±2.5% / unsafe 100% — dtype inversion, not localization refutation | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
-| — | **30** | Steering-oracle RL, direct bf16 | plain RL and steered rollouts both end at 15.0% exact / 0% unsafe after collapsed initialization | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
+| — | **25** | Gradient-free evolution, direct bf16 | heldout-test half split: 50.0% exact but only 42.9% unsafe; fitness does not hard-constrain safety | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
+| — | **26** | Entropy-weighted GRPO, direct bf16 | best composite tie shown as `uniform_adv`: 7.5% exact, 0% unsafe; post-edit start already collapsed | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
+| — | **21** | DLA edit → disjoint RL, direct bf16 | post-edit checkpoint starts collapsed; RL remains at 15.0% exact / 0% unsafe | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
+| — | **20** | DLA vs random control, direct bf16 | DLA exact 15.0% / unsafe 0%; random mean 47.5±2.5% / unsafe 100% — operator inversion, not localization refutation | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
+| — | **30** | Steering-oracle RL, direct bf16 | plain RL and steered rollouts both end at 15.0% exact / 0% unsafe after collapsed initialization | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
+
+## Wave-2/3 operator-invalid autograder output — diagnostic only, not ranked
+
+These results are more controlled than wave 1 because the fp32 baseline is healthy, but they mostly evaluate the wrong edit operator. The key positive control is still missing: the original 80% exact surgical edit has not yet been replicated.
+
+| Rank | Exp | Technique | Key Result | P | S | C | E | N | K | T | R | **Score** | Grade |
+|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| — | **38** | Non-collinear push-pull | `pushpull_0.7` returns exactly to baseline 55.0% exact / 100% unsafe because directions cancel; recorded cosine still -1.0 | 0 | 10 | 1 | 6 | 7 | 8 | 7 | 5 | **4.85** | **D** |
+| — | **39** | Operator sensitivity showdown | unembed fixed edit collapses to 12.5% exact / 0% unsafe; resid fixed edit is safe but inactive at 52.5% exact; gates reject edits | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
+| — | **35** | Interference-canceling solve | best raw arm still collapses; lambda3 reaches 27.5% exact but only 20% unsafe — no safe optimum | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
+| — | **37** | Collision-priced allocation | overlap reduced 64→25 neurons, yet all arms remain 12.5% exact / 0% unsafe | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
+| — | **33** | Dtype sensitivity | fp32 12.5% exact vs bf16 15.0%, both 0% unsafe; dtype not root cause | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
+| — | **40** | fp32-master pipeline | fp32 edit + fp32 eval still collapses to 12.5% exact / 0% unsafe | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
+| — | **32** | Targeted circuit RL | downstream of invalid atlas; circuit columns remain 12.5% exact / 0% unsafe | 0 | 2 | 1 | 6 | 7 | 8 | 7 | 5 | **3.25** | **D** |
+| — | **36** | Safety vaccination | vaccine strengths 0.5/1.0 do not change collapse: 12.5% exact / 0% unsafe | 0 | 2 | 1 | 4 | 7 | 8 | 7 | 5 | **3.05** | **D** |
+
+Exp 31 is not autograded because it is a diagnostic atlas with no intervention eval. It is currently invalid as a request-type atlas: the text classifier produced only two pseudo-types (`comms_task` n=40 and `other_unsafe` n=120) instead of the dataset's real policy-code categories.
 
 ## Pending grading (running on H100 swarm)
-Exps 22, 24, 27, and 31–38 are pending or awaiting valid reruns. Exp 22 completed its bf16 sweep in the log but failed before writing `pareto_sweep_summary.json`; Exp 24 crashed on a device mismatch; Exp 27's first JSON was invalid (identity patch) and has been fixed for rerun. Exp 19 is provisionally graded as diagnostic pending fp32 confirmation.
+Exps 22, 24, 27, 34/35/41 replication-wave entries, and wave-5 techniques are pending or awaiting valid reruns. Exp 22 completed its bf16 sweep in the log but failed before writing `pareto_sweep_summary.json`; Exp 24 crashed on a device mismatch; Exp 27's first JSON was invalid (identity patch) and has been fixed for rerun. Exp 19 is provisionally graded as diagnostic pending original-operator confirmation.

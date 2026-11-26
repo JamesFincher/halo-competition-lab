@@ -194,6 +194,8 @@ Consequences:
 3. The accidental wave-1 result is still scientifically important: edit implementation precision is a first-order competition variable. Exps 33/34 (dtype sensitivity and fp32-master edit → bf16 cast) are now gating experiments for every surgical technique.
 4. Any future leaderboard entry should state whether the edit was direct-bf16, fp32-master, or fp32-eval. Mixing these regimes in one ranking would be misleading.
 
+**Correction after Exps 33/39/40 (supersedes the provisional dtype-centered interpretation above):** fp32 is not the root cause. In Exp 40 even fp32 edit + fp32 eval collapses to **12.5% exact / 0% unsafe**, and Exp 33's fp32-vs-bf16 max weight deltas are nearly identical (**0.065996** vs **0.066406**). Exp 39 identifies the stronger replication divergence: swarm edits project along the unembedding logit direction, while the original successful edits used measured residual false-refusal directions plus double-check strength gating. The unembedding direction and measured residual direction are almost orthogonal at layer 29 (**cosine 0.0039**). The correct current gate is therefore **operator replication**, not dtype alone.
+
 ## Result log
 
 ### Experiment 19 — Surgical Cross-Talk & Hub Protection Audit — preliminary diagnostic landed
@@ -350,7 +352,112 @@ Post-edit pre-RL baseline: exact **15.0%**, unsafe **0%**. Plain RL finishes at 
 ### Cross-result update after wave 1
 
 1. The largest confirmed mechanistic constraint is **true/false refusal entanglement**. DLA can find refusal-circuit neurons, but the shared circuit makes safety-preserving suppression hard.
-2. The largest confirmed engineering constraint is **edit numerical regime**. Direct bf16 rank-1 editing produces an always-call collapse that random matched-budget edits do not produce; fp32-master editing is now the gate for all surgical interventions.
+2. The largest engineering constraint is **operator fidelity**. Direct unembedding-direction rank-1 projection produces an always-call collapse that random matched-budget edits do not produce; dtype was a plausible initial explanation but is now ruled out as the root cause by Exps 33/40.
 3. The most important experimental-design lesson is that RL and search need **hard safety gates**. KL anchoring can preserve a catastrophic checkpoint, and unconstrained fitness can reward unsafe compliance.
 4. Exp 23 should be superseded by Exp 38; Exp 27 must be rerun after its source/target fix; Exp 22 needs a successful summary write plus fp32 rerun.
 5. The most promising wave-1 observation outside the dtype failure is head-only editing in Exp 28: unsafe refusal stayed 100% and benign false refusal fell 80%→60%, though exact compliance did not improve.
+
+### Experiment 31 — Request-Type Circuit Mapper — invalid as a request-type atlas due classifier mismatch
+
+**Input:** `request_circuit_atlas.json`, CUDA, wall **3.67s**.
+
+The atlas is not a six-type request map. Its only keys are `comms_task` (**40 rows**) and `other_unsafe` (**120 rows**). The keyword classifier does not match the actual policy-router dataset: there are no weather/calculate/math/bomb/weapon/exploit/drug keywords in `policy_train.jsonl`, while the real safety categories are labels such as `SECRET_EXFIL`, `PROMPT_INJECTION`, and `DESTRUCTIVE_OP`. Thus every benign row fell into `comms_task` and every unsafe row fell into `other_unsafe`.
+
+Quantitatively, the two pseudo-types have nearly identical depth centers of mass (**20.74** vs **20.61**) and identical top-three neurons: L29N1512, L29N427, L29N1123. The apparent exclusive neurons are artifacts of small-sample hash ranking rather than validated type-specific circuits.
+
+**Hypothesis verdict:** refuted as implemented. It did measure a coarse benign-vs-unsafe activation difference, but not request-type-specific circuits.
+
+**Follow-up:** classify by ground-truth `target.policy_code` and `target.action`, not free-text keywords. The correct atlas categories should include benign calls plus `SECRET_EXFIL`, `PROMPT_INJECTION`, `DESTRUCTIVE_OP`, and other actual policy codes. Until fixed, Exp 32 has no valid type-specific target map.
+
+### Experiment 32 — Targeted Circuit RL — downstream of invalid atlas and collapsed operator
+
+**Input:** `circuit_rl_summary.json`, CUDA, wall **149.4s**.
+
+Post-edit baseline is already collapsed: exact **12.5%**, unsafe **0%**, benign-FR **0%**. After 8 RL steps, circuit-column RL remains exact **12.5% / unsafe 0%**; full-layer control is exact **10.0% / unsafe 0%**. The trace means little because both arms begin in the always-call regime.
+
+**Hypothesis verdict:** no verdict. Two independent invalidities stack: the atlas pseudo-types are wrong, and the edit operator is the replication-broken unembed-direction operator.
+
+**Follow-up:** rerun only after (1) ground-truth policy-code atlas and (2) Exp 41-validated original surgical operator. The comparison should also freeze exact column sets rather than whole layers if circuit specificity is the claim.
+
+### Experiment 33 — Dtype Edit Sensitivity — dtype difference is real but tiny, not causal
+
+**Input:** `dtype_summary.json`, CUDA, wall **125.54s**.
+
+fp32 edit: exact **12.5%**, policy **27.5%**, unsafe **0%**, max weight delta **0.065996**. bf16 edit: exact **15.0%**, policy **25.0%**, unsafe **0%**, max weight delta **0.066406**. Both collapse. The 2.5-point exact gap is one task on 40 rows.
+
+**Hypothesis verdict:** refuted in its strong form. bf16 rounding perturbs the edit, but it does not explain the wave-1 collapse.
+
+**Implication:** fp32-master application may still be good engineering hygiene, but it is not the mechanism that made the original edits surgical. Exp 33 should be retired as a primary explanation and kept as a small robustness control.
+
+### Experiment 35 — Interference-Canceling Edit — partial mitigation but no safe optimum
+
+**Input:** `interference_summary.json`, CUDA, wall **171.37s**.
+
+Baseline fp32 is healthy: **55.0% exact / 100% unsafe / 90% benign-FR**. Uniform control collapses to **12.5% exact / 0% unsafe**. Interference cancellation at lambda 1.0 remains collapsed (**12.5% exact / 0% unsafe**). At lambda 3.0 exact rises to **27.5%** and unsafe to **20.0%**, with policy **40.0%** and benign-FR **0%**. Mean coefficient falls from **0.7** to **0.623** at lambda 1 and **0.32** at lambda 3.
+
+**Hypothesis verdict:** weak positive evidence for interference cancellation as a direction, negative evidence for the tested objective. Cancellation reduces destructive weight movement, but the recovered behavior is mostly unsafe compliance, not selective benign compliance.
+
+**Follow-up:** combine the interference solve with the correct residual false-direction operator and impose a hard unsafe-refusal constraint. Report coefficient magnitude and safety together; reducing mean coefficient is only useful if it does not merely weaken the safety circuit.
+
+### Experiment 36 — Safety Vaccination Edit — no protection under tested doses
+
+**Input:** `vaccination_summary.json`, CUDA, wall **200.05s**.
+
+Baseline **55.0% exact / 100% unsafe / 90% benign-FR**. Every arm collapses to **12.5% exact / 0% unsafe / 0% benign-FR**: edit strengths 0.7 and 1.2 without vaccine, and vaccine strengths 0.5 and 1.0 at edit strength 1.2.
+
+**Hypothesis verdict:** negative for the tested implementation. Vaccination does not measurably protect the unsafe-refusal behavior against this edit.
+
+**Interpretation:** because the edit direction itself is replication-broken, this may be protection against the wrong perturbation. However, the total absence of dose response still suggests the vaccine vector is either too weak, misdirected, or not aligned with the causal safety direction.
+
+**Follow-up:** validate the vaccine direction by causal patching before combining it with an edit. Then rerun with the Exp 41 operator and report dose-response at finer strength intervals.
+
+### Experiment 37 — Collision-Priced Neuron Allocation — selection changes substantially, behavior does not
+
+**Input:** `collision_priced_summary.json`, CUDA, wall **195.87s**.
+
+Baseline **55.0% exact / 100% unsafe / 90% benign-FR**. Pure DLA overlaps the baseline selection by **64/64** neurons and collapses to **12.5% exact / 0% unsafe**. Penalty 0.5 reduces overlap to **37**, penalty 1.0 to **30**, and penalty 2.0 to **25**, yet all priced arms still collapse to **12.5% exact / 0% unsafe**.
+
+**Hypothesis verdict:** negative under the current operator. Collision pricing is doing something real at the selection level, but the selected alternatives are not behaviorally safer.
+
+**Implication:** overlap with the original DLA set is not itself the causal collision metric. The algorithm needs a behavioral collision estimate (true-refusal margin cost per neuron) rather than a proxy penalty.
+
+### Experiment 38 — Non-Collinear Push-Pull — still not non-collinear in the relevant sense
+
+**Input:** `noncollinear_pushpull_summary.json`, CUDA, wall **189.64s**.
+
+The script tries to fix Exp 23 by using a full-token `call_tool`-vs-`refuse` unembedding direction for amplification, but the recorded direction cosine is **-1.0** in every arm. Thus this run still does not establish a non-collinear pair. The arm metrics reflect sign/dose artifacts: suppress-only **12.5% exact / 0% unsafe**, pushpull 0.3 **12.5% / 0%**, and pushpull 0.7 returns exactly to baseline **55.0% exact / 100% unsafe / 90% benign-FR** because the opposing terms cancel.
+
+**Hypothesis verdict:** no verdict. Like Exp 23, the implementation is degenerate.
+
+**Follow-up:** construct independent directions explicitly: for example, use the unembed refusal direction for suppression and a measured benign-compliance residual direction for amplification, then enforce/report `abs(cosine) < 0.3` before running evals.
+
+### Experiment 39 — Operator Sensitivity Showdown — pivotal negative control
+
+**Input:** `operator_showdown_summary.json`, CUDA fp32, wall **280.91s**.
+
+Baseline fp32: **55.0% exact / 100% unsafe / 90% benign-FR**. The unembedding-direction fixed-strength swarm operator collapses to **12.5% exact / 0% unsafe / 0% benign-FR**. A fixed-strength residual-direction edit does **not** collapse but also does not improve: **52.5% exact / 100% unsafe / 90% benign-FR**. Both gated arms finish exactly at baseline (**55.0 / 100 / 90**), indicating the double-check gate rejected all candidate strengths rather than accepting a beneficial edit. The direction cosine between unembedding direction and measured residual direction is **0.0039**.
+
+**Hypothesis verdict:** confirmed that operator mismatch is a first-order replication variable; not yet confirmed that the original operator is reproducible on CUDA fp32.
+
+**Interpretation:** this is the most important result since the wave began. The unembedding logit direction is a scoring/probe direction, not necessarily a safe weight-edit direction. Treating it as the edit direction destroys safety. However, the measured-resid implementation in Exp 39 is itself approximate (a variance direction, not the original pass/fail mean difference), and the gate rejects edits, so Exp 39 does not yet explain the original 80% result.
+
+**Follow-up:** Exp 41 is now the decisive experiment: exact original direction construction, exact original neuron scoring, exact double-check gate, and same random seeds/data ordering. If it fails, the original 80% result must be treated as non-replicated until proven otherwise.
+
+### Experiment 40 — fp32-Master Edit Pipeline — fp32 does not rescue wrong operator
+
+**Input:** `fp32_pipeline_summary.json`, CUDA, wall **173.36s**.
+
+All four arms collapse: fp32 edit + fp32 eval **12.5% exact / 0% unsafe**; fp32 edit then bf16 cast **15.0% / 0%**; stochastic bf16 cast **15.0% / 0%**; direct bf16 edit **15.0% / 0%**.
+
+**Hypothesis verdict:** refuted. fp32-master application and cast do not preserve surgical precision because the collapse is caused primarily by the edit operator/direction, not rounding.
+
+**Implication:** fp32-master editing is still a sensible implementation standard, but it is not a differentiating technique. Future technique comparisons can use one consistent precision pipeline and focus on direction, selection, gating, and constraints.
+
+### Wave-2/3 cross-result synthesis
+
+1. **The dtype hypothesis is dead as the primary explanation.** fp32 eval still collapses and fp32/bf16 deltas are nearly identical.
+2. **The operator hypothesis is alive and central.** Unembedding-direction projection is destructive; measured residual directions do not collapse but are not yet beneficial.
+3. **The original 80% result is not yet replicated.** Exp 39's gate accepted no edit; Exp 41 must establish reproducibility before interpreting downstream combinations.
+4. **No wave-3 protection/allocation technique overcame the broken base edit.** Interference cancellation partially restores exactness but sacrifices safety; vaccination and collision pricing have no behavioral benefit; noncollinear push-pull remains degenerate.
+5. **Atlas quality is now a blocking dependency.** Exp 31 must use ground-truth policy codes before circuit-specific RL or vaccination can be interpreted.
+6. **The next valid leaderboard entries should be gated on Exp 41.** Until then, all wave-1/2/3 intervention comparisons are operator-failure measurements, not mechanism rankings.
