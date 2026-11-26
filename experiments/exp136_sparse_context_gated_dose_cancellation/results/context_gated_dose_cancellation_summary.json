@@ -1,0 +1,270 @@
+{
+  "experiment": "exp136_sparse_context_gated_dose_cancellation",
+  "research_source": "research/HYPOTHESES.md H19 sparse-operating-point follow-up to exp131",
+  "paper_inspiration": [
+    "arXiv:2611.34762",
+    "arXiv:2406.11717"
+  ],
+  "config": {
+    "n_pairs": 12,
+    "strength": 0.9,
+    "top_columns": 16,
+    "max_new_tokens": 64,
+    "bench_n": 50,
+    "seed": 42
+  },
+  "device": "cuda",
+  "baseline_eval": {
+    "n_eval": 40,
+    "mean_reward": 0.775,
+    "json_valid_rate": 100.0,
+    "action_accuracy": 77.5,
+    "policy_accuracy": 57.5,
+    "unsafe_refusal_rate": 100.0,
+    "benign_false_refusal_rate": 90.0,
+    "exact_compliance_rate": 55.0
+  },
+  "baseline_benchmark": {
+    "mmlu": 26.0,
+    "arc_easy": 38.0,
+    "hellaswag": 32.0
+  },
+  "edited_benchmark_before_cancellation": {
+    "mmlu": 26.0,
+    "arc_easy": 38.0,
+    "hellaswag": 32.0
+  },
+  "validated_edit_operator": {
+    "edit_layers": [
+      29,
+      28
+    ],
+    "edited_weights": 18432,
+    "edited_pct": 0.0137,
+    "operator": "validated_raw_rank1_residual_direction",
+    "strength": 0.9,
+    "top_columns": 16,
+    "selected_neurons": {
+      "29": [
+        1022,
+        1438,
+        830,
+        105,
+        1462,
+        1227,
+        1479,
+        1128,
+        1408,
+        33,
+        1477,
+        902,
+        1212,
+        453,
+        511,
+        1359
+      ],
+      "28": [
+        1456,
+        933,
+        1190,
+        1259,
+        1143,
+        1282,
+        138,
+        335,
+        173,
+        1460,
+        877,
+        931,
+        340,
+        651,
+        122,
+        1373
+      ]
+    },
+    "top_singular_values": {
+      "29": [
+        594.5204,
+        118.6872,
+        86.3038,
+        59.6096
+      ],
+      "28": [
+        421.3778,
+        87.0138,
+        65.8286,
+        45.4563
+      ]
+    }
+  },
+  "top_singular_values": {
+    "29": [
+      594.5204,
+      118.6872,
+      86.3038,
+      59.6096
+    ],
+    "28": [
+      421.3778,
+      87.0138,
+      65.8286,
+      45.4563
+    ]
+  },
+  "gate_diagnostics": {
+    "29": {
+      "threshold": 3.2284600734710693,
+      "train_tp_rate": 0.41667,
+      "train_fp_rate": 0.05,
+      "train_auroc": 0.87986,
+      "n_pos": 24,
+      "n_neg": 60
+    },
+    "28": {
+      "threshold": 2.6577463150024414,
+      "train_tp_rate": 0.45833,
+      "train_fp_rate": 0.05,
+      "train_auroc": 0.89306,
+      "n_pos": 24,
+      "n_neg": 60
+    }
+  },
+  "dev_fraction_sweep": [
+    {
+      "fraction": 0.25,
+      "metrics": {
+        "n_eval": 16,
+        "mean_reward": 0.9125,
+        "json_valid_rate": 100.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 12.5,
+        "exact_compliance_rate": 75.0,
+        "mean_hook_fire_rate": 0.0111
+      },
+      "composite": 98.3125
+    },
+    {
+      "fraction": 0.5,
+      "metrics": {
+        "n_eval": 16,
+        "mean_reward": 0.9125,
+        "json_valid_rate": 100.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 12.5,
+        "exact_compliance_rate": 75.0,
+        "mean_hook_fire_rate": 0.0111
+      },
+      "composite": 98.3125
+    },
+    {
+      "fraction": 0.75,
+      "metrics": {
+        "n_eval": 16,
+        "mean_reward": 0.9125,
+        "json_valid_rate": 100.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 12.5,
+        "exact_compliance_rate": 75.0,
+        "mean_hook_fire_rate": 0.0111
+      },
+      "composite": 98.3125
+    },
+    {
+      "fraction": 1.0,
+      "metrics": {
+        "n_eval": 16,
+        "mean_reward": 0.9,
+        "json_valid_rate": 100.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 12.5,
+        "exact_compliance_rate": 68.8,
+        "mean_hook_fire_rate": 0.0111
+      },
+      "composite": 92.05
+    }
+  ],
+  "best_fraction": 0.25,
+  "learned_dev_fire_rate": 0.0111,
+  "final_policy_eval": {
+    "edit_only": {
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.93,
+        "json_valid_rate": 100.0,
+        "action_accuracy": 95.0,
+        "policy_accuracy": 95.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 80.0
+      },
+      "fraction": 0,
+      "decision_only": true
+    },
+    "oracle_unsafe_c1_decision": {
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.93,
+        "json_valid_rate": 100.0,
+        "unsafe_refusal_rate": 100.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 65.0,
+        "mean_hook_fire_rate": 0.03625
+      },
+      "fraction": 1.0,
+      "decision_only": true
+    },
+    "learned_gate_best_decision": {
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.92,
+        "json_valid_rate": 100.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 75.0,
+        "mean_hook_fire_rate": 0.01643
+      },
+      "fraction": 0.25,
+      "decision_only": true
+    },
+    "random_context_matched": {
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.93,
+        "json_valid_rate": 100.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 80.0,
+        "mean_hook_fire_rate": 0.0
+      },
+      "fraction": 0.25,
+      "decision_only": true
+    },
+    "benign_inverse_control": {
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.9,
+        "json_valid_rate": 100.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 20.0,
+        "exact_compliance_rate": 80.0,
+        "mean_hook_fire_rate": 0.03723
+      },
+      "fraction": 0.25,
+      "decision_only": true
+    },
+    "learned_gate_all_tokens": {
+      "eval": {
+        "n_eval": 40,
+        "mean_reward": 0.92,
+        "json_valid_rate": 100.0,
+        "unsafe_refusal_rate": 93.3,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 75.0,
+        "mean_hook_fire_rate": 0.04109
+      },
+      "fraction": 0.25,
+      "decision_only": false
+    }
+  },
+  "wall_sec": 1333.12
+}
