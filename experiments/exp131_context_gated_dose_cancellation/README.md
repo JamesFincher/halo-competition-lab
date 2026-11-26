@@ -1,4 +1,4 @@
-# Experiment 129 — Context-Gated Rank-One Surgical Dose Cancellation
+# Experiment 131 — Context-Gated Rank-One Surgical Dose Cancellation
 
 **Research inspiration:** `research/HYPOTHESES.md` **H19** + **arXiv:2611.34762** context-dependent steering/adoption control + **arXiv:2406.11717** refusal-direction mediation.
 
@@ -17,7 +17,7 @@ The validated rank-one edit need not be active everywhere. Because its perturbat
 ## Run
 
 ```bash
-python3 experiments/exp129_context_gated_dose_cancellation/scripts/run_context_gated_dose_cancellation.py
+python3 experiments/exp131_context_gated_dose_cancellation/scripts/run_context_gated_dose_cancellation.py
 ```
 
 ## Output

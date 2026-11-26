@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experiment 129: Context-Gated Rank-One Surgical Dose Cancellation.
+"""Experiment 131: Context-Gated Rank-One Surgical Dose Cancellation.
 
 Implements HYPOTHESES H19. The validated rank-one edit is algebraically
 Delta W x=-s u(p^T x). This experiment reconstructs p exactly per edited
@@ -162,8 +162,8 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--n-pairs", type=int, default=12); ap.add_argument("--strength", type=float, default=.9); ap.add_argument("--top-columns", type=int, default=64); ap.add_argument("--max-new-tokens", type=int, default=64); ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args(); t0 = time.time(); device = torch.device("cuda" if torch.cuda.is_available() else "cpu"); smoke = os.environ.get("HALO_SMOKE_TEST") == "1"
     if smoke: args.max_new_tokens = 8
-    out_dir = ROOT / "experiments/exp129_context_gated_dose_cancellation/results"; out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[Exp 129] Context-Gated Rank-One Dose Cancellation on {device}", flush=True)
+    out_dir = ROOT / "experiments/exp131_context_gated_dose_cancellation/results"; out_dir.mkdir(parents=True, exist_ok=True)
+    print(f"[Exp 131] Context-Gated Rank-One Dose Cancellation on {device}", flush=True)
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl"); eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
     if smoke: eval_rows = eval_rows[:2]
     benign = [r for r in train_rows if r["target"]["action"] == "call_tool"]; unsafe = [r for r in train_rows if r["target"]["action"] == "refuse"]
@@ -190,9 +190,9 @@ def main():
         m = base_rl.evaluate_heldout(edited, tokenizer, eval_rows, device) if mode == "none" else eval_arm(edited, tokenizer, eval_rows, device, mode, frac, vecs, gates, args.strength, args.max_new_tokens, decision_only, args.seed + 100)
         final[name] = {"eval": m, "fraction": frac, "decision_only": decision_only}
         print(f"  [{name}] exact={m['exact_compliance_rate']:.1f}% unsafe={m['unsafe_refusal_rate']:.1f}% benign_fr={m['benign_false_refusal_rate']:.1f}%", flush=True)
-    result = {"experiment": "exp129_context_gated_dose_cancellation", "research_source": "research/HYPOTHESES.md H19", "paper_inspiration": ["arXiv:2611.34762", "arXiv:2406.11717"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "top_singular_values": singulars, "gate_diagnostics": {str(k): {x: y for x, y in v.items() if x != "q"} for k, v in gates.items()}, "dev_fraction_sweep": dev, "best_fraction": best, "final_policy_eval": final, "wall_sec": round(time.time() - t0, 2)}
+    result = {"experiment": "exp131_context_gated_dose_cancellation", "research_source": "research/HYPOTHESES.md H19", "paper_inspiration": ["arXiv:2611.34762", "arXiv:2406.11717"], "config": vars(args), "device": str(device), "validated_edit_operator": edit_info, "top_singular_values": singulars, "gate_diagnostics": {str(k): {x: y for x, y in v.items() if x != "q"} for k, v in gates.items()}, "dev_fraction_sweep": dev, "best_fraction": best, "final_policy_eval": final, "wall_sec": round(time.time() - t0, 2)}
     path = out_dir / "context_gated_dose_cancellation_summary.json"; path.write_text(json.dumps(result, indent=2), encoding="utf-8")
-    print(f"[Exp 129 DONE] wrote {path} in {result['wall_sec']}s", flush=True)
+    print(f"[Exp 131 DONE] wrote {path} in {result['wall_sec']}s", flush=True)
 
 
 if __name__ == "__main__": main()
