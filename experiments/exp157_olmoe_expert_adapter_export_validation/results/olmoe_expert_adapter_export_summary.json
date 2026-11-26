@@ -1,0 +1,179 @@
+{
+  "experiment": "exp157_olmoe_expert_adapter_export_validation",
+  "model": "allenai/OLMoE-1B-7B-0125-Instruct",
+  "question": "Can exp154 expert adapters be exported exactly into merged expert down_proj weights without a behavior/generation gap?",
+  "dependency": "exp154 final_adapter.pt checkpoints in the shared VM checkout; this experiment performs no training",
+  "missing_dependency_arms": [],
+  "arms": [
+    {
+      "arm": "benchmark_selective_rank8",
+      "checkpoint_step": 240,
+      "dependency_checkpoint": "experiments/exp154_olmoe_benchmark_selective_expert_adapters/checkpoints/benchmark_selective_rank8/final_adapter.pt",
+      "export_exactness": {
+        "greedy_generation_ids_equal": false,
+        "greedy_generation_rows_equal": "12/20",
+        "interpretation": "near-zero differences are floating-point reordering; exact ids on greedy canaries indicate no behavioral export gap",
+        "max_abs_logit_diff": 3.09765625,
+        "mean_abs_logit_diff": 0.1126277372
+      },
+      "memory": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "max_allocated_gb": 14.04,
+        "max_reserved_gb": 14.22
+      },
+      "merge_info": {
+        "max_delta_frobenius_norm": 21.556568,
+        "merge_formula": "down_proj[expert] += B @ A * alpha/rank; external bank then zeroed",
+        "merged_weight_entries": 268435456
+      },
+      "merged_behavior_canary": {
+        "action_accuracy": 20.0,
+        "benign_false_refusal_rate": 33.3,
+        "exact_compliance_rate": 15.0,
+        "json_valid_rate": 40.0,
+        "mean_reward": 0.24,
+        "n_eval": 20,
+        "policy_accuracy": 20.0,
+        "unsafe_refusal_rate": 36.4
+      },
+      "merged_continuation_canary": {
+        "arc_easy": {
+          "byte_norm_acc": 65.0,
+          "n": 20,
+          "sum_acc": 80.0,
+          "token_norm_acc": 65.0
+        },
+        "hellaswag": {
+          "byte_norm_acc": 50.0,
+          "n": 20,
+          "sum_acc": 40.0,
+          "token_norm_acc": 45.0
+        },
+        "mmlu": {
+          "byte_norm_acc": 25.0,
+          "n": 20,
+          "sum_acc": 15.0,
+          "token_norm_acc": 25.0
+        }
+      },
+      "rank": 8,
+      "selection_count": 128,
+      "smoke_test": false,
+      "wall_sec": 209.66
+    },
+    {
+      "arm": "random_expert_parameter_matched",
+      "checkpoint_step": 240,
+      "dependency_checkpoint": "experiments/exp154_olmoe_benchmark_selective_expert_adapters/checkpoints/random_expert_parameter_matched/final_adapter.pt",
+      "export_exactness": {
+        "greedy_generation_ids_equal": false,
+        "greedy_generation_rows_equal": "7/20",
+        "interpretation": "near-zero differences are floating-point reordering; exact ids on greedy canaries indicate no behavioral export gap",
+        "max_abs_logit_diff": 10.8984375,
+        "mean_abs_logit_diff": 0.0891470164
+      },
+      "memory": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "max_allocated_gb": 14.04,
+        "max_reserved_gb": 14.22
+      },
+      "merge_info": {
+        "max_delta_frobenius_norm": 24.261513,
+        "merge_formula": "down_proj[expert] += B @ A * alpha/rank; external bank then zeroed",
+        "merged_weight_entries": 268435456
+      },
+      "merged_behavior_canary": {
+        "action_accuracy": 15.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 0.0,
+        "json_valid_rate": 40.0,
+        "mean_reward": 0.17,
+        "n_eval": 20,
+        "policy_accuracy": 10.0,
+        "unsafe_refusal_rate": 0.0
+      },
+      "merged_continuation_canary": {
+        "arc_easy": {
+          "byte_norm_acc": 70.0,
+          "n": 20,
+          "sum_acc": 75.0,
+          "token_norm_acc": 60.0
+        },
+        "hellaswag": {
+          "byte_norm_acc": 55.0,
+          "n": 20,
+          "sum_acc": 45.0,
+          "token_norm_acc": 40.0
+        },
+        "mmlu": {
+          "byte_norm_acc": 20.0,
+          "n": 20,
+          "sum_acc": 15.0,
+          "token_norm_acc": 20.0
+        }
+      },
+      "rank": 8,
+      "selection_count": 128,
+      "smoke_test": false,
+      "wall_sec": 184.93
+    },
+    {
+      "arm": "diffuse_all_experts_rank1_parameter_matched",
+      "checkpoint_step": 240,
+      "dependency_checkpoint": "experiments/exp154_olmoe_benchmark_selective_expert_adapters/checkpoints/diffuse_all_experts_rank1_parameter_matched/final_adapter.pt",
+      "export_exactness": {
+        "greedy_generation_ids_equal": false,
+        "greedy_generation_rows_equal": "1/20",
+        "interpretation": "near-zero differences are floating-point reordering; exact ids on greedy canaries indicate no behavioral export gap",
+        "max_abs_logit_diff": 7.890625,
+        "mean_abs_logit_diff": 0.228855446
+      },
+      "memory": {
+        "device": "NVIDIA H100 80GB HBM3",
+        "max_allocated_gb": 26.93,
+        "max_reserved_gb": 27.05
+      },
+      "merge_info": {
+        "max_delta_frobenius_norm": 45.92691,
+        "merge_formula": "down_proj[expert] += B @ A * alpha/rank; external bank then zeroed",
+        "merged_weight_entries": 2147483648
+      },
+      "merged_behavior_canary": {
+        "action_accuracy": 5.0,
+        "benign_false_refusal_rate": 0.0,
+        "exact_compliance_rate": 0.0,
+        "json_valid_rate": 10.0,
+        "mean_reward": 0.05,
+        "n_eval": 20,
+        "policy_accuracy": 5.0,
+        "unsafe_refusal_rate": 0.0
+      },
+      "merged_continuation_canary": {
+        "arc_easy": {
+          "byte_norm_acc": 45.0,
+          "n": 20,
+          "sum_acc": 65.0,
+          "token_norm_acc": 65.0
+        },
+        "hellaswag": {
+          "byte_norm_acc": 35.0,
+          "n": 20,
+          "sum_acc": 40.0,
+          "token_norm_acc": 30.0
+        },
+        "mmlu": {
+          "byte_norm_acc": 5.0,
+          "n": 20,
+          "sum_acc": 5.0,
+          "token_norm_acc": 10.0
+        }
+      },
+      "rank": 1,
+      "selection_count": 1024,
+      "smoke_test": false,
+      "wall_sec": 190.01
+    }
+  ],
+  "wall_sec": 585.36,
+  "smoke_test": false
+}
