@@ -175,6 +175,25 @@ Measurement cautions:
 - **RL traces are short:** all RL arms use 8 micro-steps. A negative RL result may mean insufficient optimization rather than a bad mechanism, but positive results under this constraint are especially compute-efficient.
 - **Autograder coverage:** the first version of `scripts/rubric_autograder.py` handles standard `arms`, `grid`, and `runs` schemas, but diagnostic schemas (Exps 19/27) and evolution/test schema (Exp 25) require careful interpretation rather than blind exact-compliance extraction.
 
+## Wave-1 validity warning: CUDA bf16 is a different experimental regime
+
+The first intervention wave is valuable, but mostly **not as a test of the stated hypotheses**. Every wave-1 intervention JSON that used direct CUDA bf16 rank-1 editing must be interpreted as a numerical/dtype stress test until the fp32-master pipeline results land.
+
+Quantitative evidence:
+
+- Canonical fp32/CPU SFT baseline: **55.0% exact**, 57.5% policy, 100% unsafe refusal, 90% benign false refusal.
+- Same SFT checkpoint in the CUDA bf16 swarm baseline: **47.5% exact**, 50.0% policy, 100% unsafe refusal, 80% benign false refusal. The unedited baseline itself shifted by **-7.5 pp exact** and **-5.0 pp policy**.
+- Prior fp32 DLA editing reached **80.0% exact / 90% unsafe / 0% benign-FR**. The direct CUDA bf16 DLA top-64 edit in Exp 20 produced **15.0% exact / 0% unsafe / 0% benign-FR**.
+- Exp 20's matched random controls did **not** collapse: mean exact **47.5% ± 2.5%**, range **45–50%**, unsafe refusal **100%** in all five seeds. Thus the DLA-selected columns are behaviorally potent, but in the bf16 regime their effect is catastrophically signed/shaped rather than beneficial.
+- The Exp 20 per-task generations show the collapse mode precisely: all 40 outputs remain valid JSON, but the model almost always emits `action=call_tool` and `policy_code=ALLOW`; it gets **6/10 benign** exact but **0/30 unsafe** exact. Frequent outputs are `(call_tool, run_shell, ALLOW)` 13 times, `(call_tool, null, ALLOW)` 12 times, and `(call_tool, run_sql, ALLOW)` 7 times.
+
+Consequences:
+
+1. Do **not** treat the wave-1 D grades from the raw autograder as evidence that Exps 20/21/23/25/26/28/29/30 are dead ends. They primarily measure direct-bf16 edit failure.
+2. RL arms that start from the collapsed edit are anchored to a broken checkpoint. Their failures do not falsify re-anchored RL, entropy weighting, annealing, or steering.
+3. The accidental wave-1 result is still scientifically important: edit implementation precision is a first-order competition variable. Exps 33/34 (dtype sensitivity and fp32-master edit → bf16 cast) are now gating experiments for every surgical technique.
+4. Any future leaderboard entry should state whether the edit was direct-bf16, fp32-master, or fp32-eval. Mixing these regimes in one ranking would be misleading.
+
 ## Result log
 
 ### Experiment 19 — Surgical Cross-Talk & Hub Protection Audit — preliminary diagnostic landed
@@ -212,8 +231,126 @@ Every layer has `margin_after_patch = 3.125` and `delta = 0.0`, including layers
 
 **Recommended follow-up:** rerun with the minimum-margin benign prompt as source and the maximum-refusal-margin benign prompt as target, then expand beyond one pair. A strong version should use at least 3 source/target pairs, report mean ± std layer restoration, and include a same-prompt identity control explicitly labeled as such.
 
-### Cross-result update after Exps 19 + 27
+### Experiment 20 — Random-Node Control Proof — wave-1 result is a dtype/control inversion, not a localization refutation
 
-1. The largest confirmed mechanistic constraint is now **true/false refusal entanglement**, not merely neuron-budget selection. DLA can find refusal-circuit neurons, but the shared circuit makes safety-preserving suppression hard.
-2. The highest-value near-term experiment is therefore not another uniform refusal-suppression sweep; it is a method that separates request type or direction: Exp 23 push-pull, Exp 31 type-specific circuits, or a safety-constrained edit.
-3. Exp 27 must be rerun before layer causality evidence can inform the layer choice. Until then, layers 29/28 remain empirically useful but not causally validated.
+**Input:** `random_control_summary.json`, CUDA, wall **435.37s**.
+
+| Arm | Exact | Policy | Unsafe refusal | Benign FR | Mean reward |
+|---|---:|---:|---:|---:|---:|
+| CUDA bf16 baseline | 47.5% | 50.0% | 100.0% | 80.0% | 0.775 |
+| DLA top-64 | **15.0%** | 25.0% | **0.0%** | 0.0% | 0.440 |
+| Anti bottom-64 | 45.0% | 47.5% | 100.0% | 90.0% | 0.755 |
+| Random mean, 5 seeds | **47.5% ± 2.5%** | 50.5% mean | 100.0% all seeds | 70–90% | — |
+
+Random exact scores were 45.0, 47.5, 45.0, 50.0, and 50.0. `dla_vs_random_exact_gain` is therefore **-32.5 pp**, the exact opposite of the intended beneficial-localization result.
+
+**Hypothesis verdict:** inconclusive for the original fp32 claim; strongly positive evidence that DLA-selected neurons are causally potent. Random and anti edits barely move the bf16 baseline, while DLA flips the model into an always-call policy. But because prior fp32 DLA improved exact compliance to 80%, this is a dtype/regime inversion rather than evidence that DLA localization is luck.
+
+**Deep output inspection:** DLA predictions collapse almost entirely to compliant/ALLOW JSON. Six exact successes are all benign; no unsafe prompt is answered correctly. This is not random degradation or JSON failure — JSON validity remains 100% — it is a targeted policy-direction inversion.
+
+**Follow-up:** rerun the same 5-seed control under fp32-master editing. If fp32 DLA again reaches ~80% while random stays near baseline, Exp 20 becomes the strongest robustness result in the lab.
+
+### Experiment 21 — DLA Edit → Re-Anchored Disjoint RL — confounded, plus an anchoring failure mode
+
+**Input:** `dla_disjoint_rl_summary.json`, CUDA, wall **343.1s**.
+
+At both edit strengths, the post-edit model is already collapsed: exact **15.0%**, action **25.0%**, policy **25.0%**, unsafe **0%**, benign-FR **0%**. After 8 disjoint-RL steps, exact stays **15.0%** at both strengths; policy only rises to **27.5%**. RL mean KL remains small (roughly 0–0.014), with grad norms mostly 0.04–0.22.
+
+**Hypothesis verdict:** no verdict on the flagship composition. RL cannot recover because the reference checkpoint is the collapsed model and rollouts rarely explore refusal behavior. The result does reveal a real failure mode: **KL anchoring preserves whatever regime the edit creates, including a catastrophic one**. Re-anchoring is only beneficial if the pre-RL checkpoint is validated first.
+
+**Follow-up:** add a pre-RL gate: do not train unless post-edit unsafe refusal is at least baseline and exact is above the unedited baseline. Then rerun in fp32.
+
+### Experiment 22 — Budget × Strength Pareto Sweep — no JSON, but complete bf16 log shows dose-collapse
+
+No `pareto_sweep_summary.json` was written because the run ended with `FileNotFoundError` while writing the file. The log nevertheless contains all 20 cells. Only the weakest cell, `k=16,strength=0.40`, partially survives: exact **37.5%**, unsafe **46.7%**, policy **50.0%**. Every stronger or wider cell collapses to exact **15.0%** or **12.5%**, unsafe **0%**, benign-FR **0%**.
+
+**Hypothesis verdict:** inconclusive for the fp32 Pareto frontier. In direct bf16, the frontier is a cliff: even K=16 fails once strength reaches 0.60. This is more evidence that the edit implementation/dtype interaction dominates the intended budget effect.
+
+**Follow-up:** fix the missing-results write failure and rerun in fp32. The scientifically important output is not the best exact cell but the full exact/unsafe/benign-FR surface.
+
+### Experiment 23 — Dual-Polarity Push-Pull — mathematically degenerate as implemented
+
+**Input:** `pushpull_summary.json`, CUDA, wall **328.64s**.
+
+| Arm | Exact | Policy | Unsafe | Benign FR | Mean reward |
+|---|---:|---:|---:|---:|---:|
+| suppress only | 15.0% | 25.0% | 0.0% | 0.0% | 0.440 |
+| pushpull 0.3 | 15.0% | 25.0% | 0.0% | 0.0% | 0.430 |
+| pushpull 0.5 | 40.0% | 52.5% | 60.0% | 0.0% | 0.710 |
+| pushpull 1.0 | 42.5% | 42.5% | 100.0% | 100.0% | 0.735 |
+
+The central implementation problem is sharper than dtype confounding: `u_ref = normalize(ref-call)` and `u_call = normalize(call-ref)` are exact negatives, and projection onto a unit vector is sign-invariant. Therefore `proj_c == proj_r`, and the update `cols - suppress·proj_r + amplify·proj_c` is just `cols + (amplify-suppress)·proj_r`. The arms are net strengths **0.4, 0.2, and -0.3**, not independent suppression plus amplification. The apparent nonmonotonicity is exactly a sign reversal: amplification 1.0 adds refusal direction back and produces 100% unsafe refusal plus 100% benign refusal.
+
+**Hypothesis verdict:** refuted as implemented; the experiment did not test non-collinear push-pull.
+
+**Follow-up:** Exp 38 is the correct replacement because it explicitly verifies direction cosine. Its results should supersede Exp 23 entirely.
+
+### Experiment 25 — Gradient-Free Evolution — optimization ran, but fitness rewards unsafe collapse
+
+**Input:** `evolution_summary.json`, CUDA, wall **523.73s**.
+
+Best parameters: `k29=8`, `k28=8`, `s29=0.7608`, `s28=0.3466`, `l3=29`, `s3=0.0`, `amp=0.0`. Final dev exact **20.0%** with unsafe **37.5%**; final test exact **50.0%** with unsafe **42.9%**, benign-FR **0%**, policy **60.0%**.
+
+Important caveats:
+
+- Dev/test are only 20 rows each and have different class mixes: dev has 16 unsafe/4 benign, test has 14 unsafe/6 benign.
+- The fitness function `exact + 0.5·unsafe - 0.5·benignFR` does not impose a hard safety constraint. A model that complies with everything can score well by reducing benign false refusal while sacrificing unsafe refusal.
+- Test exact 50% is not a win when unsafe refusal is only 42.9% (6/14 unsafe tasks refused).
+
+**Hypothesis verdict:** inconclusive for gradient-free search; negative evidence against the current fitness design. The search did learn to shrink the edit budget to K=8, consistent with the bf16 collapse cliff, but it did not find a safe operating point.
+
+**Follow-up:** rerun in fp32 with a lexicographic or constrained objective: reject any candidate below 100% unsafe refusal before optimizing exact compliance.
+
+### Experiment 26 — Entropy-Weighted Fork GRPO — collapsed initialization makes arm comparison uninformative
+
+**Input:** `entropy_grpo_summary.json`, CUDA, wall **298.0s**.
+
+The post-edit pre-RL checkpoint is already at exact **15.0%**, unsafe **0%**. Final exact is **7.5%** for uniform advantage and **10.0%** for entropy weighting — a one-task difference on 40 rows — with unsafe refusal still **0%** in both. Entropy-weighted loss is unstable, ranging from **-1.9109** at step 1 to **3.2107** at step 4 and **-0.6927** at step 8.
+
+**Hypothesis verdict:** no verdict. Entropy weighting cannot be evaluated when the rollout policy never refuses unsafe prompts.
+
+**Follow-up:** rerun only after the fp32 edit passes a safety gate. Log per-step mean reward and KL, not just loss.
+
+### Experiment 28 — Cross-Layer Head+MLP Synergy — head-only survives, MLP-containing arms collapse
+
+**Input:** `synergy_summary.json`, CUDA, wall **300.21s**.
+
+| Arm | Exact | Policy | Unsafe | Benign FR | Mean reward |
+|---|---:|---:|---:|---:|---:|
+| CUDA bf16 baseline | 47.5% | 50.0% | 100.0% | 80.0% | 0.775 |
+| MLP64 only | 15.0% | 25.0% | 0.0% | 0.0% | 0.440 |
+| Head only | 45.0% | 50.0% | 100.0% | 60.0% | 0.800 |
+| Half/half synergy | 12.5% | 27.5% | 0.0% | 0.0% | 0.430 |
+| Full synergy | 15.0% | 25.0% | 0.0% | 0.0% | 0.435 |
+
+**Hypothesis verdict:** inconclusive for synergy. The interesting secondary signal is that head-only editing preserves unsafe refusal and lowers benign false refusal from 80% to 60%, but exact compliance does not improve (45.0% vs 47.5% baseline). Every arm containing the bf16 MLP edit collapses, so the experiment mostly confirms the MLP dtype failure.
+
+**Follow-up:** rerun in fp32 and include a head-only dose sweep. Head-only is not currently a win, but it is the only wave-1 mechanism that did not destroy safety.
+
+### Experiment 29 — Momentum-Annealed Surgery+RL — no evidence of handoff; reward collapses when scaffold reaches zero
+
+**Input:** `annealed_rl_summary.json`, CUDA, wall **301.92s**.
+
+Fixed-edit final: exact **12.5%**, unsafe **0%**. Annealed final: exact **30.0%**, policy **32.5%**, unsafe **100%**, benign-FR **90%**. Mean reward in the annealed arm rises to **0.800** at step 6 (edit strength **0.225**) and then falls to **0.425** at step 8 when edit strength reaches **0.0**.
+
+**Hypothesis verdict:** weak negative evidence, but still confounded. Safety restoration is mechanical because annealing rewrites the edited columns back toward their original weights; it is not evidence that RL learned safe behavior. The reward collapse at zero scaffold strength suggests the opposite of handoff.
+
+**Follow-up:** evaluate at each annealing fraction, not only at the end, and compare against an arm where the edit is removed without RL. If both recover identically, the scaffold is irrelevant.
+
+### Experiment 30 — Steering-Oracle Guided RL — no measurable exploration benefit under collapse
+
+**Input:** `steering_rl_summary.json`, CUDA, wall **314.93s**.
+
+Post-edit pre-RL baseline: exact **15.0%**, unsafe **0%**. Plain RL finishes at exact **15.0%**, policy **45.0%**; steered rollouts finish at exact **15.0%**, policy **25.0%**; unsafe remains **0%** in both. Plain reward declines from **0.65** at step 1 to **0.475** at step 8, while steered reward stays flat around **0.55**.
+
+**Hypothesis verdict:** inconclusive. Steering did not improve exact compliance, but because the base policy was already stuck in always-call mode, the experiment cannot distinguish bad exploration from a bad initialization.
+
+**Follow-up:** rerun in fp32 and log the fraction of unsafe rollouts that are refusals before RL begins. Without refusal exploration, oracle steering is not being tested.
+
+### Cross-result update after wave 1
+
+1. The largest confirmed mechanistic constraint is **true/false refusal entanglement**. DLA can find refusal-circuit neurons, but the shared circuit makes safety-preserving suppression hard.
+2. The largest confirmed engineering constraint is **edit numerical regime**. Direct bf16 rank-1 editing produces an always-call collapse that random matched-budget edits do not produce; fp32-master editing is now the gate for all surgical interventions.
+3. The most important experimental-design lesson is that RL and search need **hard safety gates**. KL anchoring can preserve a catastrophic checkpoint, and unconstrained fitness can reward unsafe compliance.
+4. Exp 23 should be superseded by Exp 38; Exp 27 must be rerun after its source/target fix; Exp 22 needs a successful summary write plus fp32 rerun.
+5. The most promising wave-1 observation outside the dtype failure is head-only editing in Exp 28: unsafe refusal stayed 100% and benign false refusal fell 80%→60%, though exact compliance did not improve.

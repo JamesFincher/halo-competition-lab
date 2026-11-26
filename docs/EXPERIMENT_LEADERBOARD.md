@@ -24,5 +24,20 @@ Baseline: SFT micro-model = 55.0% exact / 40 unseen tasks, 100% unsafe refusal, 
 4. **RL alone is cost-inefficient** (Exp 11 E=5) — but it is the only path past the ~82.5% edit ceiling, so its composability (K=10) keeps it A-tier.
 5. **Safety-preserving compliance repair is now the central bottleneck** — future S-tier entries need >80% exact without the current 100%→90% unsafe-refusal drop.
 
+## Wave-1 direct-bf16 autograder output — confounded, not ranked
+
+These rows use the same rubric table format, but they are **not canonical technique grades**. They measure the accidental direct-CUDA-bf16 regime documented in `docs/EXPERIMENT_ANALYSIS.md`: the unedited baseline itself falls to 47.5% exact, and DLA rank-1 edits often collapse into always-call behavior (0% unsafe refusal). Do not interpret these as dead ends until fp32-master reruns land.
+
+| Rank | Exp | Technique | Key Result | P | S | C | E | N | K | T | R | **Score** | Grade |
+|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| — | **28** | Head+MLP synergy, direct bf16 | best arm `head_only`: 45.0% exact, 100% unsafe, 60% benign FR; all MLP arms collapse | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
+| — | **23** | Push-pull, direct bf16 + degenerate directions | best arm `pushpull_1.0`: 42.5% exact, 100% unsafe, 100% benign FR; implementation is net-sign control, not true push-pull | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
+| — | **29** | Momentum-annealed surgery+RL, direct bf16 | best arm `annealed_edit`: 30.0% exact, 100% unsafe, 90% benign FR; reward collapses when edit reaches zero | 0 | 10 | 1 | 4 | 7 | 8 | 7 | 5 | **4.65** | **D** |
+| — | **25** | Gradient-free evolution, direct bf16 | heldout-test half split: 50.0% exact but only 42.9% unsafe; fitness does not hard-constrain safety | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
+| — | **26** | Entropy-weighted GRPO, direct bf16 | best composite tie shown as `uniform_adv`: 7.5% exact, 0% unsafe; post-edit start already collapsed | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
+| — | **21** | DLA edit → disjoint RL, direct bf16 | post-edit checkpoint starts collapsed; RL remains at 15.0% exact / 0% unsafe | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
+| — | **20** | DLA vs random control, direct bf16 | DLA exact 15.0% / unsafe 0%; random mean 47.5±2.5% / unsafe 100% — dtype inversion, not localization refutation | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
+| — | **30** | Steering-oracle RL, direct bf16 | plain RL and steered rollouts both end at 15.0% exact / 0% unsafe after collapsed initialization | 0 | 2 | 10 | 4 | 7 | 8 | 7 | 5 | **4.40** | **D** |
+
 ## Pending grading (running on H100 swarm)
-Exps 20–26 and 28–34 remain pending. Exp 19 is provisionally graded as diagnostic pending fp32 confirmation. Exp 27's first JSON was invalid (identity patch: source and target were the same prompt) and is awaiting rerun before grading.
+Exps 22, 24, 27, and 31–38 are pending or awaiting valid reruns. Exp 22 completed its bf16 sweep in the log but failed before writing `pareto_sweep_summary.json`; Exp 24 crashed on a device mismatch; Exp 27's first JSON was invalid (identity patch) and has been fixed for rerun. Exp 19 is provisionally graded as diagnostic pending fp32 confirmation.
