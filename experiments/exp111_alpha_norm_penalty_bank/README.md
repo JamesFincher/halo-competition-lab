@@ -1,4 +1,4 @@
-# Experiment 104 — Alpha Norm-Penalty Ablation for the v2 Bank
+# Experiment 111 — Alpha Norm-Penalty Ablation for the v2 Bank
 
 **Question:** Does explicitly penalizing independent-alpha magnitude prevent destructive negative drift and multi-layer bank collapse?
 
@@ -17,7 +17,7 @@ Only alpha L2 penalty coefficient varies: 0, 0.1, 1.0. No hard alpha clamp is ap
 ## Run
 
 ```bash
-python3 experiments/exp104_alpha_norm_penalty_bank/scripts/run_alpha_penalty_ablation.py
+python3 experiments/exp111_alpha_norm_penalty_bank/scripts/run_alpha_penalty_ablation.py
 ```
 
 ## Output

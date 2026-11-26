@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experiment 104: Alpha L2 norm-penalty ablation for the collapsing v2 multi-layer bank.
+"""Experiment 111: Alpha L2 norm-penalty ablation for the collapsing v2 multi-layer bank.
 
 Fork v2/v3/v6 collapsed with negative alpha drift. This experiment fixes the v2
 architecture and varies only the L2 penalty coefficient applied to independent alphas.
@@ -44,9 +44,9 @@ def main() -> None:
 
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    out_dir = ROOT / "experiments/exp104_alpha_norm_penalty_bank/results"
+    out_dir = ROOT / "experiments/exp111_alpha_norm_penalty_bank/results"
     out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[Exp 104] Alpha norm-penalty ablation for v2 bank on {device}", flush=True)
+    print(f"[Exp 111] Alpha norm-penalty ablation for v2 bank on {device}", flush=True)
 
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl")
     eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
@@ -67,7 +67,7 @@ def main() -> None:
         print(f"  [TransformerLens probe failed; continuing] {tl_probe['error']}", flush=True)
 
     results = {
-        "experiment": "exp104_alpha_norm_penalty_bank",
+        "experiment": "exp111_alpha_norm_penalty_bank",
         "controlled_variable": "independent-alpha L2 penalty coefficient only (0/0.1/1.0)",
         "fixed_conditions": {
             "layers": LAYERS,
@@ -121,7 +121,7 @@ def main() -> None:
     results["wall_sec"] = round(time.time() - t0, 2)
     path = out_dir / "alpha_norm_penalty_bank_summary.json"
     path.write_text(json.dumps(results, indent=2), encoding="utf-8")
-    print(f"[Exp 104 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
+    print(f"[Exp 111 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 
 if __name__ == "__main__":
