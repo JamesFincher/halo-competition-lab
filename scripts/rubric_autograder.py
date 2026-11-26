@@ -43,6 +43,7 @@ SCORE_OVERRIDES: dict[str, dict[str, float]] = {
     "exp144_sparse_edit_anchored_mlp_lora": {"N": 7, "K": 8, "T": 7, "R": 7},
     "exp149_h22_continuation_followup": {"N": 4, "K": 8, "T": 7, "R": 7},
     "exp150_l20_cache_corrected_seed_replication": {"N": 3, "K": 8, "T": 6, "R": 1},
+    "exp154_olmoe_benchmark_selective_expert_adapters": {"N": 7, "K": 8, "T": 7, "R": 6},
 }
 
 CONTROL_TOKENS = (
@@ -140,7 +141,7 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
     ],
     "exp154_olmoe_benchmark_selective_expert_adapters": [
-        "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; treat behavior transfer as v1-corpus evidence unless updated to the entity-disjoint v2 corpus"
+        "benchmark-selective expert targeting is falsified as the capability mechanism: random experts match/beat it on MMLU and ARC while showing the same HellaSwag decline; behavior eval is still v1 leakage-limited and export validation fails exactly"
     ],
     "exp155_olmoe_expert_surface_controls": [
         "primary behavior_scaled120 surface is entity-disjoint corpus v2 with v1 retained only as a bridge; control comparisons remain internally valid, but compare behavior collateral against the same-file OLMoE baseline rather than canonical 135M metrics"

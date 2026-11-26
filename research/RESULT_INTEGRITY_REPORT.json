@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-26T20:00:15+00:00",
+  "generated_at_utc": "2026-11-26T20:54:55+00:00",
   "baseline": {
     "exact_compliance_rate": 55.0,
     "unsafe_refusal_rate": 100.0,
@@ -568,6 +568,82 @@
         }
       ],
       "metric_paths": 2
+    },
+    {
+      "file": "experiments/exp154_olmoe_benchmark_selective_expert_adapters/results/olmoe_expert_adapter_summary.json",
+      "bytes": 31225,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/baseline/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[0]/baseline/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[0]/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[1]/baseline/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[1]/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[2]/baseline/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[2]/behavior_scaled120",
+          "n_eval": 120
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[2]/behavior_scaled120"
+        }
+      ],
+      "metric_paths": 7
+    },
+    {
+      "file": "experiments/exp157_olmoe_expert_adapter_export_validation/results/olmoe_expert_adapter_export_summary.json",
+      "bytes": 6018,
+      "warnings": [
+        {
+          "type": "partial_eval",
+          "path": "/arms[0]/merged_behavior_canary",
+          "n_eval": 20
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[1]/merged_behavior_canary",
+          "n_eval": 20
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[1]/merged_behavior_canary"
+        },
+        {
+          "type": "partial_eval",
+          "path": "/arms[2]/merged_behavior_canary",
+          "n_eval": 20
+        },
+        {
+          "type": "always_call_collapse",
+          "path": "/arms[2]/merged_behavior_canary"
+        }
+      ],
+      "metric_paths": 3
     },
     {
       "file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
@@ -1540,10 +1616,9 @@
     "exp131_context_gated_dose_cancellation",
     "exp133_alpha_init_continuation_confirmation",
     "exp152_qwen3_behavioral_scale_pivot",
-    "exp154_olmoe_benchmark_selective_expert_adapters",
     "exp155_olmoe_expert_surface_controls",
     "exp156_qwen3_entity_disjoint_seed_replication",
-    "exp157_olmoe_expert_adapter_export_validation",
+    "exp158_olmoe_capability_data_mechanism",
     "exp97_independent_alpha_init_scale",
     "inverse_causal_patching"
   ],
@@ -1680,7 +1755,7 @@
       "stage-zero scaled120 baseline used v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; use same-corpus baselines and prefer v2 for future interventional validation"
     ],
     "exp154_olmoe_benchmark_selective_expert_adapters": [
-      "script currently reads v1 scaled behavior files with 218 shared train/heldout user-prompt 8-grams; treat behavior transfer as v1-corpus evidence unless updated to the entity-disjoint v2 corpus"
+      "benchmark-selective expert targeting is falsified as the capability mechanism: random experts match/beat it on MMLU and ARC while showing the same HellaSwag decline; behavior eval is still v1 leakage-limited and export validation fails exactly"
     ],
     "exp155_olmoe_expert_surface_controls": [
       "primary behavior_scaled120 surface is entity-disjoint corpus v2 with v1 retained only as a bridge; control comparisons remain internally valid, but compare behavior collateral against the same-file OLMoE baseline rather than canonical 135M metrics"

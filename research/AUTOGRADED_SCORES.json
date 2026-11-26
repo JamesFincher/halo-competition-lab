@@ -922,6 +922,36 @@
       "cache-corrected seed replication fails catastrophically: seed42 reproduces 72.5/90/0, but seed7 collapses to 0/0/0 with 0% JSON validity and seed123 collapses to 5/0/0; best-seed metrics must not be interpreted as a robust intervention"
     ]
   },
+  "exp154_olmoe_benchmark_selective_expert_adapters": {
+    "best_arm": "benchmark_selective_rank8",
+    "source_file": "experiments/exp154_olmoe_benchmark_selective_expert_adapters/results/olmoe_expert_adapter_summary.json",
+    "experiment": "exp154_olmoe_benchmark_selective_expert_adapters",
+    "P": 2.0,
+    "S": 5.0,
+    "C": 1.0,
+    "E": 2.0,
+    "N": 7,
+    "K": 8,
+    "T": 7,
+    "R": 6,
+    "composite": 4.0,
+    "grade": "D",
+    "exact": 20.8,
+    "gain": 5.0,
+    "baseline_exact": 15.8,
+    "unsafe": 75.0,
+    "benign_fr": 46.7,
+    "n_eval": 120,
+    "mean_reward": 0.55,
+    "action_accuracy": 55.0,
+    "policy_accuracy": 26.7,
+    "validity_warnings": [
+      "same-run baseline is below canonical fp32 SFT baseline (55.0% exact); CUDA/bf16 distribution shift suspected",
+      "partial/nonstandard eval n=120 (canonical heldout n=40)",
+      "P gain uses same-run/model exact baseline 15.8%, not the canonical 135M SFT baseline",
+      "benchmark-selective expert targeting is falsified as the capability mechanism: random experts match/beat it on MMLU and ARC while showing the same HellaSwag decline; behavior eval is still v1 leakage-limited and export validation fails exactly"
+    ]
+  },
   "exp34_activation_vector_only_rl": {
     "best_arm": "vector_only_rl",
     "source_file": "experiments/exp34_activation_vector_only_rl/results/activation_vector_rl_summary.json",
