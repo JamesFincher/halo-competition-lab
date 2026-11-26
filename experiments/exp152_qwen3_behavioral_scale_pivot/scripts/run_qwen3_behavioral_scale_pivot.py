@@ -192,6 +192,7 @@ def train_lora(
     warmup: int,
     checkpoint_interval: int,
     mix_replay: bool,
+    replay_every: int = 4,
 ) -> dict:
     final_adapter = checkpoint_root / "final_adapter"
     ckpt, resume_step = latest_checkpoint(checkpoint_root)
@@ -219,7 +220,7 @@ def train_lora(
     log = []
     train_t0 = time.time()
     for step in range(start_step, steps):
-        use_capability = mix_replay and capability_rows and step % 4 == 3
+        use_capability = mix_replay and capability_rows and replay_every > 0 and step % replay_every == replay_every - 1
         source_rows = capability_rows if use_capability else behavior_rows
         raw_batch = cycled_batch(source_rows, step, batch_size)
         if use_capability:
@@ -253,7 +254,11 @@ def train_lora(
         "train_wall_sec": round(time.time() - train_t0, 2),
         "train_log_tail": log[-8:],
         "trainable_params": sum(p.numel() for p in params),
-        "replay_mixture": "75% behavior / 25% direct-continuation capability by step" if mix_replay else "behavior only",
+        "replay_mixture": (
+            f"behavior with 1/{replay_every} direct-continuation capability steps"
+            if mix_replay and replay_every > 0 else "behavior only"
+        ),
+        "replay_every": replay_every if mix_replay else 0,
     }
 
 

@@ -1,0 +1,8 @@
+{
+  "estimated_model_gb": 8.0,
+  "estimated_peak_gb": 16.0,
+  "estimated_wall_hours": 0.75,
+  "exclusive_gpu": true,
+  "queue_priority": 87,
+  "notes": "Highest-priority behavioral scaling curve after exp152; four short LoRA arms plus baseline, using batched behavior/benchmark evaluation."
+}

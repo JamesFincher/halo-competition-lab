@@ -1,0 +1,8 @@
+{
+  "estimated_model_gb": 8.0,
+  "estimated_peak_gb": 16.0,
+  "estimated_wall_hours": 0.9,
+  "exclusive_gpu": true,
+  "queue_priority": 86,
+  "notes": "High-priority capability/behavior tradeoff curve after exp152; five short LoRA arms plus baseline, batched behavior and benchmark evaluation."
+}
