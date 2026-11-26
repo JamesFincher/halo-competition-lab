@@ -1,6 +1,6 @@
 # Experiment Analysis — Living Research Notes
 
-Last updated: 2026-11-26 10:40 UTC. This document is updated continuously as H100 swarm results land.
+Last updated: 2026-11-26 11:00 UTC. This document is updated continuously as H100 swarm results land.
 
 ## Current ingestion status
 
@@ -64,8 +64,25 @@ Last updated: 2026-11-26 10:40 UTC. This document is updated continuously as H10
 | 91 | `exp91_single_slider_depth_ablation` | queued/running | Is v1 survival specific to insertion layer 27? |
 | 92 | `exp92_shared_alpha_head_count_ablation` | queued/running | Does parallel head count alone cause collapse under one shared alpha? |
 | 93 | `exp93_v1_seed_replication` | queued/running | Is the v1 single-slider positive result seed-robust or a lucky stochastic replicate? |
+| 94 | `exp94_alpha_clamp_multilayer_bank` | queued/running | Does alpha clamping prevent the v2 multi-layer bank collapse? |
+| 95 | `exp95_validated_edit_strength_response` | queued/running | Does validated-edit gain scale monotonically with projection strength? |
+| 96 | `exp96_freeze_then_merge_schedule` | queued/running | Is bank collapse caused by simultaneous destructive interference during training? |
+| 97 | `exp97_independent_alpha_init_scale` | queued/running | Does tiny nonzero independent-alpha initialization prevent bank collapse? |
+| 98 | `exp98_validated_edit_column_count_response` | queued/running | Does widening the validated edit across more columns improve behavior? |
+| 99 | `exp99_validated_edit_layer_allocation` | queued/running | Is the validated effect specific to final-layer allocation? |
 | 94–99 | — | unassigned numbering gaps | Reserved/missing, not active collisions. |
 | 100 | `exp100_halo_native_transfer_path_showdown` | queued/running | Which post-edit restricted-RL transfer path best preserves the validated surgical edit? |
+| 101 | `exp101_merge_aware_served_weight_finetune` | queued/running | Can merge-aware served-weight action-token fine-tuning improve behavior without hidden-weight drift? |
+| 102 | `exp102_closed_form_decision_readout` | queued/running | Can a closed-form decision readout correct false refusal without gradient training? |
+| 103 | `exp103_failure_neuron_suppression_dose` | queued/running | Do failure-correlated neurons causally dose-control benign false refusal? |
+| 104, 106–110, 112–119 | — | unassigned numbering gaps | Reserved/missing after upstream renumbering, not active collisions. |
+| 105 | `exp105_slider_lr_response_bank` | queued/running | Is multi-layer slider collapse a learning-rate instability artifact? |
+| 111 | `exp111_alpha_norm_penalty_bank` | queued/running | Does penalizing independent-alpha magnitude prevent destructive negative drift? |
+| 120 | `exp120_drift_triggered_orthogonal_lanes` | queued/running | Can drift-triggered orthogonal rotations preserve capability lanes during adaptation? |
+
+## Pipeline scheduling note — newest-first starvation risk
+
+At 11:00 UTC the feeder queue synthesis prioritizes missing experiments by highest experiment number and caps each auto-wave at 8. With the current tree, that queue is exp120/111/105/103/102/101/100/99, which means exp93 seed replication, exp90–92 controlled slider ablations, exp24/27 replications/fixes, and exp50–87 can be starved indefinitely if exploratory experiments continue landing faster than waves finish. This is a scheduling risk, not a result-integrity violation; it was reported to the parent orchestrator at 11:00 UTC. Queue files themselves have no duplicate experiment names, and the transient exp103/104 collision was renumbered upstream to exp111/120.
 
 ## Measurement baseline and interpretation rules
 

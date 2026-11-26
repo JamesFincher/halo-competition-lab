@@ -1,6 +1,6 @@
 # Experiment Leaderboard — Quality-Controlled Rubric Grades
 
-Last updated: **2026-11-26 10:40 UTC** by the tracker/post-processor.
+Last updated: **2026-11-26 11:00 UTC** by the tracker/post-processor.
 
 Composite = `0.25·P + 0.20·S + 0.15·C + 0.10·E + 0.10·N + 0.10·K + 0.05·T + 0.05·R` (see `research/RUBRIC.md`). Machine-generated scores and the integrity scan are in `research/AUTOGRADED_SCORES.json` and `research/RESULT_INTEGRITY_REPORT.json`.
 
@@ -77,13 +77,13 @@ Rows below are sorted by raw composite score, **not by scientific trustworthines
 
 ## Current integrity and queue status
 
-- **No duplicate experiment numbers** are present in active `experiments/*/README.md` files.
+- **No duplicate experiment numbers** are present in active `experiments/*/README.md` files. A transient exp103/104 numbering collision introduced at 10:53–10:54 UTC was renumbered upstream within about one minute (rotation lanes are now exp120; alpha-penalty is exp111).
 - **Numbering collision fixed:** commit `cfc91d7` accidentally relabeled fp32-master as Exp 34, colliding with the resurrected activation-vector Exp 34, and added a stray top-level `experiments/README.md`. The tracker restored fp32-master to Exp 40 and removed the stray file. Current gaps are 44–49 and 68–79.
-- **Missing result artifacts:** `inverse_causal_patching` (exp27), `adaptive_k_proportional_edit` (exp24), exp50–67, exp80–87, exp90–93, exp100, and `benchmark_failure_tree`. Slider-fork iteration-1 summaries have landed and are graded above.
+- **Missing result artifacts:** `inverse_causal_patching` (exp27), `adaptive_k_proportional_edit` (exp24), exp50–67, exp80–87, exp90–103, exp105, exp111, exp120, and `benchmark_failure_tree`. Slider-fork iteration-1 summaries have landed and are graded above.
 - **Degenerate/invalid artifacts:** Exp 27's all-zero identity artifact has been preserved under `results/backup_invalid_identity/` and its script corrected/requeued; Exp 25 uses only 20-row dev/test splits; several gated edits are exact baseline copies because the gate rejected deployment or selected strength 0.0.
 - **In-place overwrite warnings:** commit `cfc91d7` overwrote Exp 1 CPU micro-RL output, the Exp 31 atlas wall time, and Exp 16 wall time in place. The tracker restored the pre-overwrite Exp 1 CPU artifacts and Exp 31 atlas side-by-side under `backup_pre_cfc91d7*`; earlier backup directories now exist for steering/stitched/whitened reruns. Future harvests must back up before overwrite, not after tracker intervention.
 - **NaN/crash scan:** no NaN/Inf values or invalid JSON objects were found in the 48 currently committed result JSON files. Exp24 remains the principal missing-output crash; slider-fork collapse rows are valid JSON/behavioral artifacts, not file corruption.
 
 ## Pending or not-yet-gradeable
 
-Exp24 still needs a successful rerun; exp27 has been fixed and requeued after backing up the invalid artifact; exp31 needs ground-truth policy-code categories; exp50–67/exp80–87/exp90–93/exp100 and benchmark-failure-tree are queued/running or awaiting committed results. Slider-fork iteration 1 is graded but incomplete relative to its stated benchmark program: no MMLU/ARC-Easy/HellaSwag scores are present, and trained head weight files are not committed (only metadata JSONs).
+Exp24 still needs a successful rerun; exp27 has been fixed and requeued after backing up the invalid artifact; exp31 needs ground-truth policy-code categories; exp50–67/exp80–87/exp90–103/exp105/exp111/exp120 and benchmark-failure-tree are queued/running or awaiting committed results. Slider-fork iteration 1 is graded but incomplete relative to its stated benchmark program: no MMLU/ARC-Easy/HellaSwag scores are present, and trained head weight files are not committed (only metadata JSONs).
