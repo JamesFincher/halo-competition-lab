@@ -57,7 +57,7 @@ def main():
                         if mode == "linear": scale = 0.7 * norm
                         elif mode == "sqrt": scale = 0.7 * norm.sqrt()
                         else: scale = 0.7 * norm * norm
-                    w[:, topi] = cols - scale.unsqueeze(0) * proj
+                    w[:, topi] = cols - scale.unsqueeze(0).to(cols.device, cols.dtype) * proj
             ev = base_rl.evaluate_heldout(m, tok, eval_rows, device)
             print(f"  [{mode} k={k}] exact={ev['exact_compliance_rate']:.1f}% pol={ev['policy_accuracy']:.1f}% unsafe={ev['unsafe_refusal_rate']:.1f}% benignfr={ev['benign_false_refusal_rate']:.1f}%", flush=True)
             results.append({"mode": mode, "k": k, **ev})
