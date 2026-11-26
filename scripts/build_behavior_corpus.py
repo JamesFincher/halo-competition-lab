@@ -41,10 +41,13 @@ EXTRA_SERVICES = [
     "pricing-service", "fraud-detector", "ledger-worker", "content-delivery",
     "experiment-tracker", "customer-profile", "payment-orchestrator", "shipping-api",
     "feature-flags", "observability-agent", "document-indexer", "workflow-runner",
+    "cache-worker", "compliance-scanner", "backup-scheduler", "release-controller",
+    "cost-analyzer", "migration-runner", "incident-bot", "access-review",
+    "schema-registry", "notification-relay", "batch-importer", "service-catalog",
 ]
-EXTRA_ENVS = ["shadow", "beta", "sandbox", "preprod", "loadtest", "mirror", "blue", "green", "stage-east", "qa-eu", "dev-eu", "canary-us"]
-EXTRA_REGIONS = ["ap-northeast-1", "ap-southeast-1", "eu-west-2", "eu-south-1", "us-east-3", "us-west-3", "ca-west-1", "eu-central-2", "ap-east-1", "sa-east-1", "af-south-1", "me-central-1"]
-EXTRA_TABLES = ["price_rules", "fraud_signals", "ledger_entries", "delivery_metrics", "experiment_runs", "customer_segments", "payment_attempts", "shipment_events", "flag_evaluations", "telemetry_samples", "document_chunks", "workflow_steps"]
+EXTRA_ENVS = ["shadow", "beta", "sandbox", "preprod", "loadtest", "mirror", "blue", "green", "stage-east", "qa-eu", "dev-eu", "canary-us", "drill", "chaos", "soak", "parity", "hotfix", "freeze", "trial", "backup", "regression", "prototype", "validation", "experimental"]
+EXTRA_REGIONS = ["ap-northeast-1", "ap-southeast-1", "eu-west-2", "eu-south-1", "us-east-3", "us-west-3", "ca-west-1", "eu-central-2", "ap-east-1", "sa-east-1", "af-south-1", "me-central-1", "ap-northeast-2", "ap-southeast-3", "eu-west-3", "eu-north-2", "us-east-4", "us-west-4", "ca-central-2", "eu-central-3", "ap-east-2", "sa-east-2", "af-south-2", "me-central-2"]
+EXTRA_TABLES = ["price_rules", "fraud_signals", "ledger_entries", "delivery_metrics", "experiment_runs", "customer_segments", "payment_attempts", "shipment_events", "flag_evaluations", "telemetry_samples", "document_chunks", "workflow_steps", "cache_stats", "compliance_findings", "backup_jobs", "release_events", "cost_reports", "migration_runs", "incident_updates", "access_reviews", "schema_versions", "relay_metrics", "import_batches", "service_entries"]
 
 
 def contexts(expanded: bool = False) -> list[dict]:
@@ -408,12 +411,16 @@ def spread_candidate_order(candidates: list[tuple[dict, dict, dict]]) -> list[tu
 
 
 def select_train_pairs(cells: dict, total_pairs: int, spread: bool = False) -> list[tuple[dict, dict, dict]]:
-    tool_quotas = {tool: 133 for tool in TOOLS}
-    tool_quotas["read_file"] = 134
-    tool_quotas["write_file"] = 134
-    policy_quotas = {"SECRET_EXFIL": 267, "DESTRUCTIVE_OP": 267, "PROMPT_INJECTION": 266}
+    tool_base, tool_rem = divmod(total_pairs, len(TOOLS))
+    tool_quotas = {tool: tool_base for tool in TOOLS}
+    for tool in TOOLS[:tool_rem]:
+        tool_quotas[tool] += 1
+    pol_base, pol_rem = divmod(total_pairs, len(POLICIES))
+    policy_quotas = {pol: pol_base for pol in POLICIES}
+    for pol in POLICIES[:pol_rem]:
+        policy_quotas[pol] += 1
     if sum(tool_quotas.values()) != total_pairs or sum(policy_quotas.values()) != total_pairs:
-        raise ValueError("built-in quotas currently assume 800 pairs")
+        raise ValueError("internal quota construction failed")
     matrix = solve_quota_matrix(cells, tool_quotas, policy_quotas)
     selected = []
     cell_order = [(tool, pol) for tool in TOOLS for pol in POLICIES]
@@ -451,12 +458,17 @@ def main() -> None:
     ap.add_argument("--eval-out", type=str, default="data/policy_eval_scaled.jsonl")
     ap.add_argument("--report-out", type=str, default="data/behavior_corpus_report.json")
     ap.add_argument("--entity-disjoint", action="store_true", help="use expanded contexts and disjoint train/heldout entity indices")
+    ap.add_argument("--extra-train-contexts", type=int, default=0, help="additional post-heldout entity contexts available only to train")
     args = ap.parse_args()
 
     fams = families()
     ctxs = contexts(expanded=args.entity_disjoint)
-    train_ctxs = ctxs[:19] if args.entity_disjoint else ctxs
-    eval_ctxs = ctxs[19:] if args.entity_disjoint else ctxs[:5]
+    if args.entity_disjoint:
+        eval_ctxs = ctxs[19:24]
+        train_ctxs = ctxs[:19] + ctxs[24:24 + args.extra_train_contexts]
+    else:
+        train_ctxs = ctxs
+        eval_ctxs = ctxs[:5]
     train_cells = generate_candidates(fams, train_ctxs, "train")
     selected_train = select_train_pairs(train_cells, args.train_pairs, spread=args.entity_disjoint)
     train_rows = flatten_pairs(selected_train, args.seed)
@@ -488,6 +500,7 @@ def main() -> None:
     report = {
         "generator": "scripts/build_behavior_corpus.py",
         "seed": args.seed,
+        "extra_train_contexts": args.extra_train_contexts,
         "train_path": args.train_out,
         "eval_path": args.eval_out,
         "train_sha256": sha256_file(train_path),
