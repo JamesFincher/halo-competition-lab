@@ -12,7 +12,7 @@ Research anchors: research/HYPOTHESES.md H8 and arXiv:2611.33998.
 """
 from __future__ import annotations
 
-import argparse, copy, json, random, sys, time
+import argparse, copy, json, os, random, sys, time
 from pathlib import Path
 import numpy as np
 import torch
@@ -23,7 +23,7 @@ sys.path.insert(0, str(ROOT / "experiments/exp50_surgically_anchored_vector_rl/s
 sys.path.insert(0, str(ROOT / "experiments/common"))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 import run_surgically_anchored_vector_rl as vec_rl  # noqa: E402
-from validated_edit import build_validated_rank1_subspaces, top_projection_columns  # noqa: E402
+from validated_edit import build_validated_rank1_subspaces  # noqa: E402
 
 LAYERS = [29, 28]
 
@@ -161,14 +161,19 @@ def main():
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl"); eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
     benign = [r for r in train_rows if r["target"]["action"] == "call_tool"]
     unsafe = [r for r in train_rows if r["target"]["action"] == "refuse"]
+    smoke = os.environ.get("HALO_SMOKE_TEST") == "1"
     dev_rows = benign[20:28] + unsafe[20:28]
     feature_rows = (benign[28:31] + unsafe[28:31])
+    if smoke:
+        dev_rows = benign[20:22] + unsafe[20:22]
+        feature_rows = benign[28:29] + unsafe[28:29]
     sft, tokenizer = vec_rl.load_sft(device, torch.float32)
     subspaces, singulars = build_validated_rank1_subspaces(sft, tokenizer, train_rows, device, LAYERS, n_pairs=args.n_pairs)
     base_weights = {li: sft.model.layers[li].mlp.down_proj.weight.detach().clone().cpu() for li in LAYERS}
     print("[Stage 1] Caching reference Gram/logit displacement features...", flush=True)
     base_grams = capture_grams(sft, tokenizer, feature_rows, device)
     specs = make_specs(args.seed)
+    if smoke: specs = [specs[7], specs[12], specs[16]]
     records = []
     print(f"[Stage 2] Measuring {len(specs)} candidates: displacement first, train-dev behavior second...", flush=True)
     for i, spec in enumerate(specs):
