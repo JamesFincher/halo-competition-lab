@@ -1,4 +1,4 @@
-# Experiment 58 — Architecture-Matched Warm GQA Slider Heads
+# Experiment 59 — Architecture-Matched Warm GQA Slider Heads
 
 **Research inspiration:** `research/HYPOTHESES.md` H1/H3, arXiv:2611.28483 (exact-zero gated weight inserts), arXiv:2611.31615 (attention-head functional interventions), and local Exp 42.
 
@@ -17,7 +17,7 @@ Exp 42 proved a zero-init scalar-gated attention insert can reduce false refusal
 ## Run
 
 ```bash
-python3 experiments/exp58_warm_gqa_slider_heads/scripts/run_warm_gqa_slider.py
+python3 experiments/exp59_warm_gqa_slider_heads/scripts/run_warm_gqa_slider.py
 ```
 
 ## Output

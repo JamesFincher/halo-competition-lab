@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Experiment 58: Architecture-Matched Warm GQA Slider Heads.
+"""Experiment 59: Architecture-Matched Warm GQA Slider Heads.
 
 Tests whether Exp 42's scalar-gated additive attention head improves when shaped like
 SmolLM2's real GQA lane (3 query heads sharing 1 KV head) and warm-copied from an
@@ -41,9 +41,9 @@ def main() -> None:
 
     t0 = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    out_dir = ROOT / "experiments/exp58_warm_gqa_slider_heads/results"
+    out_dir = ROOT / "experiments/exp59_warm_gqa_slider_heads/results"
     out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[Exp 58] Warm architecture-matched GQA slider heads on {device}", flush=True)
+    print(f"[Exp 59] Warm architecture-matched GQA slider heads on {device}", flush=True)
 
     train_rows = base_rl.load_rows(ROOT / "data/policy_train.jsonl")
     eval_rows = base_rl.load_rows(ROOT / "data/policy_eval.jsonl")
@@ -66,7 +66,7 @@ def main() -> None:
         ("warm_l29kv0_gqa_lane_l27", True),
     ]
     results = {
-        "experiment": "exp58_warm_gqa_slider_heads",
+        "experiment": "exp59_warm_gqa_slider_heads",
         "research_source": "research/HYPOTHESES.md H1/H3 + Exp 42 slider validation",
         "paper_inspiration": ["arXiv:2611.28483", "arXiv:2611.31615"],
         "config": vars(args),
@@ -129,7 +129,7 @@ def main() -> None:
     results["wall_sec"] = round(time.time() - t0, 2)
     path = out_dir / "warm_gqa_slider_summary.json"
     path.write_text(json.dumps(results, indent=2), encoding="utf-8")
-    print(f"[Exp 58 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
+    print(f"[Exp 59 DONE] wrote {path} in {results['wall_sec']}s", flush=True)
 
 
 if __name__ == "__main__":
