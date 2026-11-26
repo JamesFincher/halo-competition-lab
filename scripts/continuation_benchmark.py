@@ -35,14 +35,48 @@ def continuation_logprob(model, tok, device, context: str, choice: str, max_leng
 
 
 @torch.no_grad()
+def continuation_logprobs_batch(model, tok, device, context: str, choices: list[str], max_length: int = 384, batch_size: int = 4) -> list[dict]:
+    """Batched equivalent of continuation_logprob for same-context answer choices.
+
+    Right-padded positions are masked and excluded explicitly. Batching preserves the
+    causal prefix/answer token positions while reducing benchmark scoring forwards by
+    roughly the choice batch size on the large-model track.
+    """
+    prefix_len = len(tok(context, add_special_tokens=False)["input_ids"])
+    pad_id = tok.pad_token_id if tok.pad_token_id is not None else tok.eos_token_id
+    encoded = []
+    for choice in choices:
+        ids = tok(context + " " + choice, truncation=True, max_length=max_length, add_special_tokens=False)["input_ids"]
+        encoded.append((choice, ids))
+    out = []
+    for start in range(0, len(encoded), batch_size):
+        chunk = encoded[start:start + batch_size]
+        width = max(len(ids) for _, ids in chunk)
+        input_ids = torch.tensor([ids + [pad_id] * (width - len(ids)) for _, ids in chunk], device=device)
+        attention_mask = torch.tensor([[1] * len(ids) + [0] * (width - len(ids)) for _, ids in chunk], device=device)
+        logits = model(input_ids=input_ids, attention_mask=attention_mask).logits[:, :-1, :]
+        targets = input_ids[:, 1:]
+        log_probs = torch.log_softmax(logits, dim=-1).gather(-1, targets.unsqueeze(-1)).squeeze(-1)
+        for row, (choice, ids) in enumerate(chunk):
+            full_len = len(ids)
+            if full_len <= prefix_len or prefix_len < 1:
+                out.append({"sum": -1e18, "token_mean": -1e18, "byte_mean": -1e18, "n_tokens": 0})
+                continue
+            comp = log_probs[row, max(prefix_len - 1, 0):full_len - 1]
+            total = float(comp.sum().item())
+            n_tokens = int(comp.numel())
+            n_bytes = max(len(choice.encode("utf-8")), 1)
+            out.append({"sum": total, "token_mean": total / max(n_tokens, 1), "byte_mean": total / n_bytes, "n_tokens": n_tokens})
+    return out
+
+
+@torch.no_grad()
 def score_mc_continuation(model, tok, device, items) -> dict:
     correct_sum = correct_token = correct_byte = 0
     details = []
     for q in items:
-        scored = []
-        for ch in q["choices"]:
-            lp = continuation_logprob(model, tok, device, q["context"], ch)
-            scored.append((ch, lp))
+        choice_lps = continuation_logprobs_batch(model, tok, device, q["context"], q["choices"])
+        scored = list(zip(q["choices"], choice_lps))
         best_sum = max(scored, key=lambda x: x[1]["sum"])[0]
         best_token = max(scored, key=lambda x: x[1]["token_mean"])[0]
         best_byte = max(scored, key=lambda x: x[1]["byte_mean"])[0]
