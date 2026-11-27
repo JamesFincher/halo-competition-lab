@@ -7,7 +7,7 @@ while true; do
   sudo chown -R ubuntu:ubuntu experiments/ scripts/ 2>/dev/null
   mkdir -p ~/results_rescue
   git status --porcelain | grep '^??' | awk '{print $2}' | grep -E 'results|jsonl' | grep -Ev '^results/swarm_logs/|/results/crashes/' | while read -r f; do
-    mkdir -p "$HOME/results_rescue/$(dirname "$f")"; cp -a "$f" "$HOME/results_rescue/$f" 2>/dev/null; rm -rf "$f"
+    mkdir -p "$HOME/results_rescue/$(dirname "$f")"; cp -a "$f" "$HOME/results_rescue/$f" 2>/dev/null
   done
   if ! git reset -q --hard origin/main 2>/dev/null; then
     echo "$(date): git reset failed; leaving repo untouched and skipping cycle"
