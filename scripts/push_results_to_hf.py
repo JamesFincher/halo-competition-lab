@@ -38,6 +38,13 @@ def artifact_paths(root: Path) -> dict[str, Path]:
                 continue
             artifacts[f"{exp}/{rel.as_posix()}"] = artifact
 
+    for log in sorted((root / "results/swarm_logs").glob("*.log")):
+        artifacts[f"swarm_logs/{log.name}"] = log
+    for wave_artifact_name in ("wave_summary.json", "wave_gpu_log.csv", "swarm_gpu_log.csv"):
+        wave_artifact = root / "results" / wave_artifact_name
+        if wave_artifact.exists():
+            artifacts[f"wave/{wave_artifact_name}"] = wave_artifact
+
     for doc in sorted((root / "research").glob("*.md")) + [root / "docs/EXPERIMENT_LEADERBOARD.md"]:
         if doc.exists():
             artifacts[f"research/{doc.name}"] = doc
