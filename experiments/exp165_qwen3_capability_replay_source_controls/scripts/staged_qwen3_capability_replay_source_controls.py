@@ -110,7 +110,7 @@ def main():
   # Hold LoRA initialization fixed across source arms; only replay content/dose varies.
   random.seed(args.seed);torch.manual_seed(args.seed)
   model=exp152.load_model(exp152.MODEL_NAME,tok,device);model.eval()
-  ckpt_root=ckpt_base/arm;final_adapter=ckpt_root/'final_adapter';resume=final_adapter if final_adapter.exists() else exp152.latest_checkpoint(ckpt_root)[0]
+  ckpt_root=ckpt_base/arm;final_adapter=ckpt_root/'final_adapter';resume=exp152.select_resume_adapter(ckpt_root)
   model=exp152.make_lora(model,exp152.ATTN_MLP_TARGETS,None,resume,args.rank,args.lora_alpha,args.lora_dropout)
   rows={'benchmark':capability_rows,'general':general_rows,'shuffled':shuffled_rows}.get(replay_source,[])
   use_replay=replay_source is not None

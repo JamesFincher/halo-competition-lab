@@ -147,9 +147,67 @@ def cycled_batch(rows: list[dict], step: int, batch_size: int) -> list[dict]:
     return [rows[(step * batch_size + i) % len(rows)] for i in range(batch_size)]
 
 
+def valid_adapter_checkpoint(path: Path | None) -> bool:
+    """True only for a complete, loadable PEFT adapter checkpoint.
+
+    A preempted save can leave a partial final_adapter directory behind. Treating
+    directory existence as completion is dangerous: it makes training skip all
+    optimizer steps and then evaluates an untrained adapter. Require config, a
+    nonzero parseable weight file, and a loadable trainer_state instead.
+    """
+    if path is None or not path.is_dir():
+        return False
+    if not (path / "adapter_config.json").is_file() or (path / "adapter_config.json").stat().st_size == 0:
+        return False
+    weight_candidates = [path / "adapter_model.safetensors", path / "adapter_model.bin"]
+    weight_path = next((x for x in weight_candidates if x.is_file() and x.stat().st_size > 0), None)
+    if weight_path is None:
+        return False
+    try:
+        if weight_path.suffix == ".safetensors":
+            try:
+                from safetensors import safe_open
+                with safe_open(str(weight_path), framework="pt") as f:
+                    if not list(f.keys()):
+                        return False
+            except ImportError:
+                raw = weight_path.read_bytes()
+                if len(raw) < 10:
+                    return False
+                header_len = int.from_bytes(raw[:8], "little")
+                if header_len <= 2 or 8 + header_len > len(raw):
+                    return False
+                if not json.loads(raw[8:8 + header_len].decode("utf-8")):
+                    return False
+        else:
+            state = torch.load(weight_path, map_location="cpu", weights_only=True)
+            if not state:
+                return False
+    except Exception:
+        return False
+    state_path = path / "trainer_state.pt"
+    if not state_path.is_file() or state_path.stat().st_size == 0:
+        return False
+    try:
+        state = torch.load(state_path, map_location="cpu", weights_only=False)
+        return int(state.get("step", 0)) > 0
+    except Exception:
+        return False
+
+
+def select_resume_adapter(checkpoint_root: Path) -> Path | None:
+    final_adapter = checkpoint_root / "final_adapter"
+    if valid_adapter_checkpoint(final_adapter):
+        return final_adapter
+    ckpt, _step = latest_checkpoint(checkpoint_root)
+    return ckpt if ckpt is not None and valid_adapter_checkpoint(ckpt) else None
+
+
 def make_lora(model, targets: list[str], layers: list[int] | None, adapter_path: Path | None, rank: int, alpha: int, dropout: float):
-    if adapter_path is not None and (adapter_path / "adapter_config.json").exists():
+    if valid_adapter_checkpoint(adapter_path):
         return PeftModel.from_pretrained(model, str(adapter_path), is_trainable=True)
+    if adapter_path is not None and adapter_path.exists():
+        print(f"  ignoring incomplete adapter checkpoint: {adapter_path}", flush=True)
     cfg = LoraConfig(
         r=rank,
         lora_alpha=alpha,
@@ -162,21 +220,32 @@ def make_lora(model, targets: list[str], layers: list[int] | None, adapter_path:
 
 
 def save_checkpoint(model, optimizer, step: int, path: Path) -> None:
-    path.mkdir(parents=True, exist_ok=True)
-    model.save_pretrained(str(path))
-    tmp = path / "trainer_state.pt.tmp"
-    torch.save({"optimizer": optimizer.state_dict(), "step": step}, tmp)
-    tmp.replace(path / "trainer_state.pt")
+    tmp_dir = path.with_name(path.name + ".tmp")
+    if tmp_dir.exists():
+        shutil.rmtree(tmp_dir)
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    model.save_pretrained(str(tmp_dir))
+    torch.save({"optimizer": optimizer.state_dict(), "step": step}, tmp_dir / "trainer_state.pt")
+    if path.exists():
+        if path.is_dir():
+            shutil.rmtree(path)
+        else:
+            path.unlink()
+    tmp_dir.replace(path)
 
 
 def latest_checkpoint(path: Path) -> tuple[Path | None, int]:
     candidates = sorted(path.glob("checkpoint-step-*"), key=lambda p: int(p.name.rsplit("-", 1)[1]) if p.name.rsplit("-", 1)[1].isdigit() else -1)
-    if not candidates:
-        return None, 0
-    ckpt = candidates[-1]
-    state_path = ckpt / "trainer_state.pt"
-    step = int(torch.load(state_path, map_location="cpu", weights_only=False)["step"]) if state_path.exists() else int(ckpt.name.rsplit("-", 1)[1])
-    return ckpt, step
+    for ckpt in reversed(candidates):
+        if not valid_adapter_checkpoint(ckpt):
+            continue
+        state_path = ckpt / "trainer_state.pt"
+        try:
+            step = int(torch.load(state_path, map_location="cpu", weights_only=False)["step"])
+        except Exception:
+            step = int(ckpt.name.rsplit("-", 1)[1])
+        return ckpt, step
+    return None, 0
 
 
 def train_lora(
@@ -196,13 +265,13 @@ def train_lora(
 ) -> dict:
     final_adapter = checkpoint_root / "final_adapter"
     ckpt, resume_step = latest_checkpoint(checkpoint_root)
-    if final_adapter.exists():
+    if valid_adapter_checkpoint(final_adapter):
         start_step = steps
     else:
         start_step = resume_step if ckpt is not None else 0
     params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.AdamW(params, lr=lr, weight_decay=0.0)
-    if ckpt is not None and not final_adapter.exists() and (ckpt / "trainer_state.pt").exists():
+    if ckpt is not None and not valid_adapter_checkpoint(final_adapter) and (ckpt / "trainer_state.pt").exists():
         try:
             state = torch.load(ckpt / "trainer_state.pt", map_location="cpu", weights_only=False)
             optimizer.load_state_dict(state["optimizer"])
@@ -500,7 +569,7 @@ def main() -> None:
         if spec["train"]:
             ckpt_root = checkpoint_base / arm
             final_adapter = ckpt_root / "final_adapter"
-            resume_adapter = final_adapter if final_adapter.exists() else latest_checkpoint(ckpt_root)[0]
+            resume_adapter = select_resume_adapter(ckpt_root)
             lora_layers = None
             model = make_lora(model, ATTN_MLP_TARGETS, lora_layers, resume_adapter, args.rank, args.lora_alpha, args.lora_dropout)
             train_info = train_lora(

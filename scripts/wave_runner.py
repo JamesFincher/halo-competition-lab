@@ -26,7 +26,11 @@ def main():
     procs = {}
     for name, script in exps:
         lf = open(logdir / f"{name}.log", "w")
+        lf.write(f"[WAVE LOG] experiment={name} script={script} wave_started_epoch={t0:.3f} log_started_epoch={time.time():.3f}\n")
+        lf.flush()
         p = subprocess.Popen([sys.executable, "-u", str(ROOT / script)], stdout=lf, stderr=subprocess.STDOUT, cwd=str(ROOT))
+        lf.write(f"[WAVE LOG] pid={p.pid}\n")
+        lf.flush()
         procs[name] = (p, lf)
         print(f"[WAVE] launched {name} pid={p.pid}", flush=True)
     status = {}

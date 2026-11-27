@@ -1,0 +1,10 @@
+{
+  "exclusive_gpu": true,
+  "queue_priority": 84,
+  "model_size": "4B",
+  "estimated_peak_gb": 28,
+  "estimated_wall_hours": 0.75,
+  "allow_parallel": true,
+  "parallel_notes": "Same measured Qwen4B LoRA training envelope as exp163/164/167; safe pairwise packing under the 64GB scheduler budget.",
+  "notes": "Low-data fixed-compute floor follow-up to the ceilinged exp163 curve; row-level instrumentation included from launch."
+}

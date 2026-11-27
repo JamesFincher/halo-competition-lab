@@ -175,7 +175,7 @@ def main():
         if device.type=='cuda':torch.cuda.reset_peak_memory_stats(device)
         random.seed(args.seed);torch.manual_seed(args.seed)
         model=exp152.load_model(exp152.MODEL_NAME,tok,device);model.eval()
-        ckpt_root=ckpt_base/arm;final_adapter=ckpt_root/'final_adapter';resume=final_adapter if final_adapter.exists() else exp152.latest_checkpoint(ckpt_root)[0]
+        ckpt_root=ckpt_base/arm;final_adapter=ckpt_root/'final_adapter';resume=exp152.select_resume_adapter(ckpt_root)
         model=exp152.make_lora(model,exp152.ATTN_MLP_TARGETS,None,resume,args.rank,args.lora_alpha,args.lora_dropout)
         if interleaving=='alternating':
             train_info=exp152.train_lora(model,tok,behavior_rows,capability_rows,device,ckpt_root,args.steps,args.batch_size,args.max_len,args.lr,args.warmup,args.checkpoint_interval,True,args.replay_every)
