@@ -1,0 +1,10 @@
+{
+  "exclusive_gpu": true,
+  "queue_priority": 58,
+  "model_size": "4B",
+  "estimated_peak_gb": 28,
+  "estimated_wall_hours": 1.1,
+  "allow_parallel": true,
+  "parallel_notes": "Same measured Qwen4B LoRA training envelope as exp164/167; pairwise packing only after activation.",
+  "notes": "Staged counterfactual-pair structure mechanism ablation; activate only after exp163/exp167 scaling outcomes justify it."
+}
