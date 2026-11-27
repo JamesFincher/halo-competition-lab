@@ -4,5 +4,7 @@
   "estimated_wall_hours": 1.25,
   "exclusive_gpu": true,
   "queue_priority": 74,
-  "notes": "Staged no-training width ablation; activate after exp152 H22 outcome is known."
+  "notes": "Staged no-training width ablation; activate after exp152 H22 outcome is known.",
+  "allow_parallel": true,
+  "parallel_notes": "No-training Qwen evaluation/edit-only profile estimated at 20GB; safe pairwise packing with another measured <=28GB job under the 64GB scheduler budget."
 }

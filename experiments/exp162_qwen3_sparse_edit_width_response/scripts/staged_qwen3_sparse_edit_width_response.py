@@ -16,7 +16,8 @@ sys.path.insert(0,str(ROOT/'experiments/edit_then_target_rl/scripts'))
 sys.path.insert(0,str(ROOT))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
-from scripts.continuation_benchmark import run_continuation_benchmark  # noqa: E402
+from experiments.common.behavior_stats import comparisons_against_reference, benchmark_comparisons_against_reference  # noqa: E402
+from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
 def load_module():
  spec=importlib.util.spec_from_file_location('exp152mod',ROOT/'experiments/exp152_qwen3_behavioral_scale_pivot/scripts/run_qwen3_behavioral_scale_pivot.py')
@@ -34,7 +35,7 @@ def done():
  return {json.loads(x)['arm'] for x in ARM_JSONL.read_text().splitlines() if x.strip()}
 
 def measure(model,tok,eval_rows,device,max_new_tokens,continuation_n):
- return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=4),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n)}
+ return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=8,include_rows=True),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n,include_rows=True),'transfer_benchmark':run_transfer_benchmark(model,tok,device,continuation_n,include_rows=True)}
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--max-new-tokens',type=int,default=72);ap.add_argument('--continuation-n',type=int,default=100);ap.add_argument('--strength',type=float,default=0.9);ap.add_argument('--n-pairs',type=int,default=12);ap.add_argument('--seed',type=int,default=42);args=ap.parse_args()
@@ -59,6 +60,6 @@ def main():
   del model
   if device.type=='cuda':torch.cuda.empty_cache()
  arms=[json.loads(x) for x in ARM_JSONL.read_text().splitlines() if x.strip()]
- write_json(RESULTS_DIR/'qwen3_sparse_edit_width_summary.json',{'experiment':'exp162_qwen3_sparse_edit_width_response','model':exp152.MODEL_NAME,'question':'How does sparse-edit column width affect Qwen3-4B behavior/capability collateral at fixed strength and architecture-mapped layers?','arms':arms,'wall_sec':round(time.time()-t0,2),'smoke_test':smoke()})
+ write_json(RESULTS_DIR/'qwen3_sparse_edit_width_summary.json',{'experiment':'exp162_qwen3_sparse_edit_width_response','model':exp152.MODEL_NAME,'question':'How does sparse-edit column width affect Qwen3-4B behavior/capability collateral at fixed strength and architecture-mapped layers?','arms':arms,'behavior_row_statistics':{'versus_baseline_zero_shot':comparisons_against_reference(arms,'baseline_zero_shot'),'versus_columns_64':comparisons_against_reference(arms,'columns_64')},'capability_row_statistics':{'continuation_versus_baseline_zero_shot':benchmark_comparisons_against_reference(arms,'baseline_zero_shot','continuation_benchmark'),'continuation_versus_columns_64':benchmark_comparisons_against_reference(arms,'columns_64','continuation_benchmark'),'transfer_versus_baseline_zero_shot':benchmark_comparisons_against_reference(arms,'baseline_zero_shot','transfer_benchmark'),'transfer_versus_columns_64':benchmark_comparisons_against_reference(arms,'columns_64','transfer_benchmark')},'wall_sec':round(time.time()-t0,2),'smoke_test':smoke()})
  print(f'[DONE] exp162 arms={len(arms)} wall={round(time.time()-t0,2)}s',flush=True)
 if __name__=='__main__':main()
