@@ -45,6 +45,27 @@ def done():
 def measure(model,tok,eval_rows,device,max_new_tokens,continuation_n):
  return {'behavior_scaled120':base_rl.evaluate_heldout(model,tok,eval_rows,device,max_new_tokens=max_new_tokens,use_cache=True,batch_size=8,include_rows=True),'continuation_benchmark':run_continuation_benchmark(model,tok,device,continuation_n,include_rows=True),'transfer_benchmark':run_transfer_benchmark(model,tok,device,continuation_n,include_rows=True)}
 
+def shuffle_answers_within_source(rows:list[dict])->list[dict]:
+ """Destroy context-answer coherence while preserving each source's answer multiset/format."""
+ by_source={}
+ for index,row in enumerate(rows):by_source.setdefault(row.get('source','unknown'),[]).append(index)
+ out=list(rows)
+ for source,indices in by_source.items():
+  if len(indices)<2:raise ValueError(f'not enough rows to shuffle answers within {source}')
+  offset=997%len(indices) or 1
+  for position,row_index in enumerate(indices):
+   donor_index=indices[(position+offset)%len(indices)]
+   donor=rows[donor_index];bad=dict(rows[row_index])
+   bad['original_answer_text']=rows[row_index]['answer_text']
+   bad['answer_text']=donor['answer_text']
+   bad['text']=rows[row_index]['context'].strip()+' '+bad['answer_text'].strip()
+   bad['correct_choice_index']=None
+   bad['correct_choice_label']=None
+   bad['shuffled_within_source']=True
+   bad['shuffled_answer_donor_dataset_id']=donor.get('dataset_id')
+   out[row_index]=bad
+ return out
+
 def memory_stats(device):
  if device.type!='cuda':return {'device':'cpu'}
  return {'device':torch.cuda.get_device_name(device),'max_allocated_gb':round(torch.cuda.max_memory_allocated(device)/1e9,2),'max_reserved_gb':round(torch.cuda.max_memory_reserved(device)/1e9,2)}
@@ -71,11 +92,9 @@ def main():
  rng=random.Random(args.seed);rng.shuffle(behavior_rows);rng.shuffle(capability_rows)
  general_rows=[json.loads(x) for x in (ROOT/'data/capability_train_general_v1.jsonl').read_text().splitlines() if x.strip()]
  rng.shuffle(general_rows)
- # Rotate answers by one: preserves answer-token/format statistics while destroying
- # context-answer coherence. This separates interference/displacement from learning.
- shuffled_rows=[]
- for i,row in enumerate(capability_rows):
-  bad=dict(row);bad['answer_text']=capability_rows[(i+1)%len(capability_rows)]['answer_text'];shuffled_rows.append(bad)
+ # Within-source answer permutation preserves source-specific answer-token/format
+ # statistics while destroying context-answer coherence.
+ shuffled_rows=shuffle_answers_within_source(capability_rows)
  matched_behavior_steps=max(1,int(args.steps*0.75))
  armspecs=[
   (f'behavior_only_{args.steps}_steps',None,args.steps),

@@ -320,13 +320,27 @@ def main():
       if source == "shuffled_answer_control":
         per_source=max(1,min(source_counts.values())//len(source_names))
         grouped={src:[r for r in cap_train if r.get("source")==src][:per_source] for src in source_names}
-        balanced=[]
+        shuffled_by_source={}
+        for src,rows_for_source in grouped.items():
+          if len(rows_for_source)<2:raise ValueError(f'not enough rows to shuffle answers within {src}')
+          offset=997%len(rows_for_source) or 1
+          rotated=[]
+          for i,r in enumerate(rows_for_source):
+            donor=rows_for_source[(i+offset)%len(rows_for_source)]
+            rr=dict(r)
+            rr['original_answer_text']=r['answer_text']
+            rr['answer_text']=donor['answer_text']
+            rr['text']=r['context'].strip()+' '+rr['answer_text'].strip()
+            rr['correct_choice_index']=None
+            rr['correct_choice_label']=None
+            rr['shuffled_within_source']=True
+            rr['shuffled_answer_donor_dataset_id']=donor.get('dataset_id')
+            rotated.append(rr)
+          shuffled_by_source[src]=rotated
+        train_rows=[]
         for i in range(per_source):
           for src in source_names:
-            if i < len(grouped[src]): balanced.append(grouped[src][i])
-        train_rows=[]
-        for i,r in enumerate(balanced):
-          rr=dict(r); rr["answer_text"]=balanced[(i+997)%len(balanced)]["answer_text"]; train_rows.append(rr)
+            if i < len(shuffled_by_source[src]): train_rows.append(shuffled_by_source[src][i])
       else:
         train_rows=[r for r in cap_train if r.get("source")==source]
         train_rows=train_rows[:min(source_counts.values())]
