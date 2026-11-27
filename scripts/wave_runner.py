@@ -30,6 +30,22 @@ def main():
         procs[name] = (p, lf)
         print(f"[WAVE] launched {name} pid={p.pid}", flush=True)
     status = {}
+    status_path = ROOT / "results/wave_status.json"
+
+    def write_status(final=False):
+        payload = {
+            "wave": str(queue_path),
+            "started_at_epoch": t0,
+            "elapsed_sec": round(time.time() - t0, 1),
+            "running": sorted(procs),
+            "finished": status,
+            "final": bool(final),
+        }
+        tmp = status_path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(payload, indent=2, sort_keys=True))
+        tmp.replace(status_path)
+
+    write_status()
     while procs:
         for name, (p, lf) in list(procs.items()):
             rc = p.poll()
@@ -52,10 +68,12 @@ def main():
                     except Exception as exc:
                         print(f"[WAVE] crash artifact write failed for {name}: {type(exc).__name__}: {exc}", flush=True)
                 del procs[name]
+                write_status()
         time.sleep(3)
     gpu_mon.terminate()
     summary = {"wave": str(queue_path), "total_wall_sec": round(time.time() - t0, 1), "experiments": status}
     (ROOT / "results/wave_summary.json").write_text(json.dumps(summary, indent=2))
+    write_status(final=True)
     print(f"[WAVE DONE] {len(exps)} experiments in {summary['total_wall_sec']}s", flush=True)
 
 if __name__ == "__main__":
