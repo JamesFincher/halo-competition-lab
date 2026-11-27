@@ -50,6 +50,7 @@ def main():
         tmp.replace(status_path)
 
     write_status()
+    last_status_write = time.time()
     while procs:
         for name, (p, lf) in list(procs.items()):
             rc = p.poll()
@@ -73,6 +74,9 @@ def main():
                         print(f"[WAVE] crash artifact write failed for {name}: {type(exc).__name__}: {exc}", flush=True)
                 del procs[name]
                 write_status()
+        if time.time() - last_status_write >= 10:
+            write_status()
+            last_status_write = time.time()
         time.sleep(3)
     gpu_mon.terminate()
     summary = {"wave": str(queue_path), "total_wall_sec": round(time.time() - t0, 1), "experiments": status}
