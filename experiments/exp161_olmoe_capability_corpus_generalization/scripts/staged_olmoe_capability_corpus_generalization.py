@@ -30,6 +30,7 @@ sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
+from experiments.common.behavior_stats import comparisons_against_reference, benchmark_comparisons_against_reference  # noqa: E402
 from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
 MODEL_NAME = "allenai/OLMoE-1B-7B-0125-Instruct"
@@ -287,9 +288,9 @@ def main():
     random_sel={li:sorted(rng.sample(range(n_exp),min(args.top_experts_per_layer,n_exp))) for li in range(n_layers)}
     behavior_eval=base_rl.load_rows(ROOT/"data/policy_eval_scaled_v2.jsonl")
     baseline={
-      "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4),
-      "continuation_benchmark":run_continuation_benchmark(probe_model,tok,device,args.continuation_n),
-      "transfer_benchmark":run_transfer_benchmark(probe_model,tok,device,args.continuation_n // 2),
+      "behavior_scaled120":base_rl.evaluate_heldout(probe_model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=8,include_rows=True),
+      "continuation_benchmark":run_continuation_benchmark(probe_model,tok,device,args.continuation_n,include_rows=True),
+      "transfer_benchmark":run_transfer_benchmark(probe_model,tok,device,args.continuation_n,include_rows=True),
       "cache_consistency":cache_consistency(probe_model,tok,device),
     }
     del probe_model
@@ -332,16 +333,19 @@ def main():
         raise ValueError(f"insufficient rows for {source}: {len(train_rows)}")
       train_info=train_bank(model,bank,tok,train_rows,device,args.steps,args.batch_size,args.max_len,args.lr,ckpt_base / arm,args.checkpoint_interval)
       train_info["training_source"]=source; train_info["training_rows"]=len(train_rows)
-      behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=4)
-      continuation=run_continuation_benchmark(model,tok,device,args.continuation_n)
-      transfer=run_transfer_benchmark(model,tok,device,args.continuation_n // 2)
+      behavior=base_rl.evaluate_heldout(model,tok,behavior_eval,device,max_new_tokens=args.max_new_tokens,use_cache=True,batch_size=8,include_rows=True)
+      continuation=run_continuation_benchmark(model,tok,device,args.continuation_n,include_rows=True)
+      transfer=run_transfer_benchmark(model,tok,device,args.continuation_n,include_rows=True)
       cache=cache_consistency(model,tok,device)
       rec={"arm":arm,"selections":selections if smoke() else {str(k):v for k,v in selections.items()},"rank_per_selected_expert":rank,"parameter_matching":"fixed random-expert rank-8 adapter bank; corpus composition is the only intended arm variable","train_info":train_info,"behavior_scaled120":behavior,"continuation_benchmark":continuation,"transfer_benchmark":transfer,"baseline":baseline,"cache_consistency_after_training":cache,"wall_sec":round(time.time()-arm_t0,2),"smoke_test":smoke()}
       append_arm(rec)
       del model,bank
       if device.type=="cuda": torch.cuda.empty_cache()
     arms=[json.loads(x) for x in ARM_JSONL.read_text().splitlines() if x.strip()]
-    write_json(RESULTS_DIR/"olmoe_capability_corpus_generalization_summary.json",{"experiment":"exp161_olmoe_capability_corpus_generalization","model":MODEL_NAME,"question":"Does capability improvement depend on benchmark-train mixture exposure, or does a benchmark-independent general corpus produce equal/better held-out transfer under identical random-expert adapter training?","baseline":baseline,"arms":arms,"wall_sec":round(time.time()-t0,2),"smoke_test":smoke()})
+    baseline_stat=dict(baseline,arm="baseline_zero_shot",measurement=baseline)
+    stats_arms=[baseline_stat]+[dict(rec,measurement=rec) for rec in arms]
+    reference="random_experts_benchmark_train_mixture"
+    write_json(RESULTS_DIR/"olmoe_capability_corpus_generalization_summary.json",{"experiment":"exp161_olmoe_capability_corpus_generalization","model":MODEL_NAME,"question":"Does capability improvement depend on benchmark-train mixture exposure, or does a benchmark-independent general corpus produce equal/better held-out transfer under identical random-expert adapter training?","baseline":baseline,"arms":arms,"behavior_row_statistics":{"versus_baseline_zero_shot":comparisons_against_reference(stats_arms,"baseline_zero_shot","behavior_scaled120"),"versus_benchmark_train_mixture":comparisons_against_reference(stats_arms,reference,"behavior_scaled120")},"continuation_row_statistics":{"versus_baseline_zero_shot":benchmark_comparisons_against_reference(stats_arms,"baseline_zero_shot","continuation_benchmark"),"versus_benchmark_train_mixture":benchmark_comparisons_against_reference(stats_arms,reference,"continuation_benchmark")},"transfer_row_statistics":{"versus_baseline_zero_shot":benchmark_comparisons_against_reference(stats_arms,"baseline_zero_shot","transfer_benchmark"),"versus_benchmark_train_mixture":benchmark_comparisons_against_reference(stats_arms,reference,"transfer_benchmark")},"wall_sec":round(time.time()-t0,2),"smoke_test":smoke()})
     if smoke(): shutil.rmtree(ckpt_base,ignore_errors=True)
     print(f"[DONE] exp161 arms={len(arms)} wall={round(time.time()-t0,2)}s",flush=True)
 

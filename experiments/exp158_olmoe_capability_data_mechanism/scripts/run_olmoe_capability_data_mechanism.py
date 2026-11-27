@@ -28,6 +28,7 @@ sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT))
 import run_micro_targeted_rl as base_rl  # noqa: E402
 from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
+from experiments.common.behavior_stats import comparisons_against_reference, benchmark_comparisons_against_reference  # noqa: E402
 from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
 MODEL_NAME = "allenai/OLMoE-1B-7B-0125-Instruct"
@@ -340,7 +341,10 @@ def main():
       del model,bank
       if device.type=="cuda": torch.cuda.empty_cache()
     arms=[json.loads(x) for x in ARM_JSONL.read_text().splitlines() if x.strip()]
-    write_json(RESULTS_DIR/"olmoe_capability_data_mechanism_summary.json",{"experiment":"exp158_olmoe_capability_data_mechanism","model":MODEL_NAME,"question":"Does generic random-expert capability improvement come from source-specific supervision or answer-only continuation structure rather than expert selectivity, with adapter initialization held fixed across data arms?","baseline":baseline,"arms":arms,"wall_sec":round(time.time()-t0,2),"smoke_test":smoke()})
+    baseline_stat=dict(baseline,arm="baseline_zero_shot",measurement=baseline)
+    stats_arms=[baseline_stat]+[dict(rec,measurement=rec) for rec in arms]
+    reference="random_experts_shuffled_answer_control"
+    write_json(RESULTS_DIR/"olmoe_capability_data_mechanism_summary.json",{"experiment":"exp158_olmoe_capability_data_mechanism","model":MODEL_NAME,"question":"Does generic random-expert capability improvement come from source-specific supervision or answer-only continuation structure rather than expert selectivity, with adapter initialization held fixed across data arms?","baseline":baseline,"arms":arms,"behavior_row_statistics":{"versus_baseline_zero_shot":comparisons_against_reference(stats_arms,"baseline_zero_shot","behavior_scaled120"),"versus_shuffled_answer_control":comparisons_against_reference(stats_arms,reference,"behavior_scaled120")},"continuation_row_statistics":{"versus_baseline_zero_shot":benchmark_comparisons_against_reference(stats_arms,"baseline_zero_shot","continuation_benchmark"),"versus_shuffled_answer_control":benchmark_comparisons_against_reference(stats_arms,reference,"continuation_benchmark")},"transfer_row_statistics":{"versus_baseline_zero_shot":benchmark_comparisons_against_reference(stats_arms,"baseline_zero_shot","transfer_benchmark"),"versus_shuffled_answer_control":benchmark_comparisons_against_reference(stats_arms,reference,"transfer_benchmark")},"wall_sec":round(time.time()-t0,2),"smoke_test":smoke()})
     if smoke(): shutil.rmtree(ckpt_base,ignore_errors=True)
     print(f"[DONE] exp158 arms={len(arms)} wall={round(time.time()-t0,2)}s",flush=True)
 
