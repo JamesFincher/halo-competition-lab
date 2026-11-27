@@ -172,11 +172,11 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "no selectivity advantage was observed under unmatched adapter initialization: random experts matched/beat selective experts on MMLU and ARC while showing the same HellaSwag decline, but init was not controlled across arms; behavior eval is still v1 leakage-limited and export validation fails exactly"
     ],
     "exp155_olmoe_expert_surface_controls": [
-        "behavior surfaces retain row-level outcomes, while continuation/transfer rows use fixed random benchmark subsets; use same-file baseline and paired comparisons rather than numerical comparison with Exp154 first-n results",
+        "behavior surfaces retain row-level outcomes, continuation/transfer rows use fixed random script-default n=100 subsets, and the summary writes paired behavior/capability statistics versus baseline and the lowest-answer-token control; use those within-experiment comparisons rather than numerical comparison with Exp154 first-n results",
         "comparator control experiment: lowest-answer-token expert and dense-attention arms are interpretive controls, not deployment candidates; primary behavior_scaled120 is entity-disjoint corpus v2 with v1 only as a bridge"
     ],
     "exp158_olmoe_capability_data_mechanism": [
-        "behavior surfaces retain row-level outcomes, while continuation/transfer rows use fixed random benchmark subsets; use same-file baseline and paired comparisons rather than numerical comparison with Exp154 first-n results",
+        "behavior surfaces retain row-level outcomes, continuation/transfer rows use fixed random script-default n=100 subsets, and the summary writes paired behavior/capability statistics versus baseline and the shuffled-answer control; use those within-experiment comparisons rather than numerical comparison with Exp154 first-n results",
         "capability-source mechanism ablation: source-specific and shuffled-answer arms are mechanism controls rather than deployment candidates; adapter initialization is fixed and source-specific row counts are balanced, so mixture is close to the intended causal variable"
     ],
     "exp157_olmoe_expert_adapter_export_validation": [
@@ -187,6 +187,7 @@ EXPERIMENT_VALIDITY_NOTES: dict[str, list[str]] = {
         "no-training benchmark-level export fidelity diagnostic: continuation/transfer score preservation is necessary but not sufficient for deployment validity because exact logits/greedy equality already failed in exp157 and behavior safety is not re-evaluated"
     ],
     "exp161_olmoe_capability_corpus_generalization": [
+        "planned summary writes paired behavior/continuation/transfer statistics versus baseline and the benchmark-train mixture on fixed random script-default n=100 subsets; use within-experiment comparisons rather than cross-measurement-regime absolute rates",
         "staged/inactive until exp158 establishes the source/format mechanism; fixed random-expert initialization makes corpus composition the intended causal variable, with held-out transfer primary and entity-disjoint behavior collateral secondary"
     ],
     "exp156_qwen3_entity_disjoint_seed_replication": [
