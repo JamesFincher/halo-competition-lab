@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "experiments/edit_then_target_rl/scripts"))
 sys.path.insert(0, str(ROOT))
 from experiments.common.serialization_utils import json_safe, write_json  # noqa: E402
+from experiments.common.behavior_stats import compare_behavior_rows  # noqa: E402
 from scripts.continuation_benchmark import run_continuation_benchmark, run_transfer_benchmark  # noqa: E402
 
 
@@ -89,6 +90,28 @@ def dataset_scores(suite: dict) -> dict[str, float]:
         for dataset, metrics in suite.get(group, {}).items():
             if isinstance(metrics, dict) and "token_norm_acc" in metrics:
                 out[f"{group}/{dataset}"] = float(metrics["token_norm_acc"])
+    return out
+
+
+def paired_export_statistics(pre_suite: dict, post_suite: dict) -> dict:
+    """Paired row-level evidence for whether export changes benchmark outcomes."""
+    out = {}
+    for suite_key in ("continuation_benchmark", "transfer_benchmark"):
+        suite_out = {}
+        pre_group = pre_suite.get(suite_key, {})
+        post_group = post_suite.get(suite_key, {})
+        for dataset in sorted(set(pre_group) & set(post_group)):
+            pre_rows = pre_group.get(dataset, {}).get("rows") if isinstance(pre_group.get(dataset), dict) else None
+            post_rows = post_group.get(dataset, {}).get("rows") if isinstance(post_group.get(dataset), dict) else None
+            if not pre_rows or not post_rows:
+                continue
+            try:
+                suite_out[dataset] = compare_behavior_rows(pre_rows, post_rows, metric="correct_sum")
+                suite_out[dataset]["direction"] = "pre_merge_minus_post_merge"
+            except ValueError as exc:
+                suite_out[dataset] = {"error": str(exc)}
+        if suite_out:
+            out[suite_key] = suite_out
     return out
 
 
@@ -163,6 +186,7 @@ def main() -> None:
         merge_info = exp157.merge_bank_into_experts(model, bank)
         post_suite = evaluate_suite(model, tok, device, continuation_n)
         comparison = compare_scores(pre_suite, post_suite, baseline_scores)
+        paired_export_stats = paired_export_statistics(pre_suite, post_suite)
         rec = {
             "arm": arm,
             "checkpoint_step": int(state.get("step", 0)),
@@ -171,6 +195,7 @@ def main() -> None:
             "pre_merge_scores": dataset_scores(pre_suite),
             "post_merge_scores": dataset_scores(post_suite),
             "comparison": comparison,
+            "paired_export_statistics": paired_export_stats,
             "pre_merge_suite": pre_suite,
             "post_merge_suite": post_suite,
             "wall_sec": round(time.time() - arm_t0, 2),
