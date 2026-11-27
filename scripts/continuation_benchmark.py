@@ -7,6 +7,7 @@ reports raw summed-logprob accuracy plus token- and byte-normalized accuracy.
 """
 from __future__ import annotations
 
+import hashlib
 import os
 import random
 from functools import lru_cache
@@ -25,11 +26,20 @@ def cached_dataset(path: str, config: str | None, split: str):
 
 def deterministic_subset(rows, n: int, seed: int = 20261126):
     """Fixed random subset shared by every arm, avoiding dataset-order/subject bias."""
-    if n >= len(rows):
-        return rows
     indices = list(range(len(rows)))
-    random.Random(seed).shuffle(indices)
-    return rows.select(indices[:n])
+    if n < len(rows):
+        random.Random(seed).shuffle(indices)
+    selected = indices[:n] if n < len(rows) else indices
+    out = []
+    for source_index in selected:
+        row = dict(rows[int(source_index)])
+        row["_subset_source_index"] = int(source_index)
+        out.append(row)
+    return out
+
+
+def context_sha256(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 @torch.no_grad()
@@ -127,7 +137,7 @@ def score_mc_continuation_fast(model, tok, device, items, max_length: int = 384,
         best_sum = max(scored, key=lambda x: x[1]["sum"])[0]; best_token = max(scored, key=lambda x: x[1]["token_mean"])[0]; best_byte = max(scored, key=lambda x: x[1]["byte_mean"])[0]
         cs = best_sum == q["answer"]; ct = best_token == q["answer"]; cb = best_byte == q["answer"]
         correct_sum += int(cs); correct_token += int(ct); correct_byte += int(cb)
-        rows.append({"index": index, "answer": q["answer"], "best_sum": best_sum, "best_token": best_token, "best_byte": best_byte, "correct_sum": bool(cs), "correct_token": bool(ct), "correct_byte": bool(cb)})
+        rows.append({"index": index, "dataset_index": q.get("dataset_index"), "context_sha256": context_sha256(q["context"]), "answer": q["answer"], "best_sum": best_sum, "best_token": best_token, "best_byte": best_byte, "correct_sum": bool(cs), "correct_token": bool(ct), "correct_byte": bool(cb)})
         details.append({"index": index, "context": q["context"][:160], "answer": q["answer"], "best_sum": best_sum, "best_token": best_token, "best_byte": best_byte})
     n = max(len(items), 1)
     return {"sum_acc": round(100.0 * correct_sum / n, 2), "token_norm_acc": round(100.0 * correct_token / n, 2), "byte_norm_acc": round(100.0 * correct_byte / n, 2), "sum_acc_wilson95": wilson95(correct_sum, len(items)), "token_norm_acc_wilson95": wilson95(correct_token, len(items)), "byte_norm_acc_wilson95": wilson95(correct_byte, len(items)), "n": len(items), "subset_method": "deterministic_random_subset_seed_20261126", "scoring_batch_size": batch_size, "rows": rows, "details": details}
@@ -163,6 +173,8 @@ def score_mc_continuation_legacy(model, tok, device, items) -> dict:
         correct_byte += int(is_correct_byte)
         rows.append({
             "index": index,
+            "dataset_index": q.get("dataset_index"),
+            "context_sha256": context_sha256(q["context"]),
             "answer": q["answer"],
             "best_sum": best_sum,
             "best_token": best_token,
@@ -200,7 +212,7 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
     res = {}
     try:
         rows = deterministic_subset(cached_dataset("cais/mmlu", "all", "test"), n)
-        items = [{"context": r["question"], "choices": list(r["choices"]), "answer": r["choices"][r["answer"]]} for r in rows]
+        items = [{"context": r["question"], "choices": list(r["choices"]), "answer": r["choices"][r["answer"]], "dataset_index": r.get("_subset_source_index")} for r in rows]
         out = score_mc_continuation(model, tok, device, items)
         if not include_details:
             out.pop("details", None)
@@ -217,7 +229,7 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
         for r in rows:
             choices = list(r["choices"]["text"])
             labels = list(r["choices"]["label"])
-            items.append({"context": r["question"], "choices": choices, "answer": choices[labels.index(r["answerKey"])]})
+            items.append({"context": r["question"], "choices": choices, "answer": choices[labels.index(r["answerKey"])], "dataset_index": r.get("_subset_source_index")})
         out = score_mc_continuation(model, tok, device, items)
         if not include_details:
             out.pop("details", None)
@@ -230,7 +242,7 @@ def run_continuation_benchmark(model, tok, device, n: int = 100, include_details
         print(f"  continuation ARC failed: {str(exc)[:80]}", flush=True)
     try:
         rows = deterministic_subset(cached_dataset("Rowan/hellaswag", None, "validation"), n)
-        items = [{"context": r["ctx"], "choices": list(r["endings"]), "answer": r["endings"][int(r["label"])]} for r in rows]
+        items = [{"context": r["ctx"], "choices": list(r["endings"]), "answer": r["endings"][int(r["label"])], "dataset_index": r.get("_subset_source_index")} for r in rows]
         out = score_mc_continuation(model, tok, device, items)
         if not include_details:
             out.pop("details", None)
@@ -271,7 +283,7 @@ def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: boo
         for r in rows:
             choices = list(r["choices"]["text"])
             labels = list(r["choices"]["label"])
-            items.append({"context": r["question"], "choices": choices, "answer": choices[labels.index(r["answerKey"])]})
+            items.append({"context": r["question"], "choices": choices, "answer": choices[labels.index(r["answerKey"])], "dataset_index": r.get("_subset_source_index")})
         finish("arc_challenge", items)
     except Exception as exc:
         res["arc_challenge"] = {"error": f"{type(exc).__name__}: {exc}"}
@@ -282,7 +294,7 @@ def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: boo
         for r in rows:
             choices = list(r["choices"]["text"])
             labels = list(r["choices"]["label"])
-            items.append({"context": r["question_stem"], "choices": choices, "answer": choices[labels.index(r["answerKey"])]})
+            items.append({"context": r["question_stem"], "choices": choices, "answer": choices[labels.index(r["answerKey"])], "dataset_index": r.get("_subset_source_index")})
         finish("openbookqa", items)
     except Exception as exc:
         res["openbookqa"] = {"error": f"{type(exc).__name__}: {exc}"}
@@ -290,7 +302,7 @@ def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: boo
     try:
         rows = deterministic_subset(cached_dataset("allenai/winogrande", "winogrande_xl", "validation"), n)
         items = [
-            {"context": r["sentence"], "choices": [r["option1"], r["option2"]], "answer": r["option1"] if str(r["answer"]) == "1" else r["option2"]}
+            {"context": r["sentence"], "choices": [r["option1"], r["option2"]], "answer": r["option1"] if str(r["answer"]) == "1" else r["option2"], "dataset_index": r.get("_subset_source_index")}
             for r in rows
         ]
         finish("winogrande", items)
@@ -303,7 +315,7 @@ def run_transfer_benchmark(model, tok, device, n: int = 50, include_details: boo
         for r in rows:
             choices = list(r["mc1_targets"]["choices"])
             labels = list(r["mc1_targets"]["labels"])
-            items.append({"context": r["question"], "choices": choices, "answer": choices[labels.index(1)]})
+            items.append({"context": r["question"], "choices": choices, "answer": choices[labels.index(1)], "dataset_index": r.get("_subset_source_index")})
         finish("truthfulqa_mc1", items)
     except Exception as exc:
         res["truthfulqa_mc1"] = {"error": f"{type(exc).__name__}: {exc}"}

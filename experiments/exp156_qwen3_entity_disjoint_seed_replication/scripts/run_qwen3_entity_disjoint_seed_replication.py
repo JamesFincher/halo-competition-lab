@@ -354,6 +354,7 @@ def evaluate_behavior_detailed(model, tokenizer, eval_rows: list[dict], device: 
 
         row_results.append({
             "index": row_index,
+            "messages_sha256": base_rl.messages_sha256(row["messages"]),
             "exact": bool(info["exact"]),
             "json_valid": bool(info["json_valid"]),
             "action_ok": bool(info["action_ok"]),

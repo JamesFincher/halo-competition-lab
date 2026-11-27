@@ -20,6 +20,9 @@ def require_matched_rows(rows_a: list[dict], rows_b: list[dict]) -> None:
             raise ValueError(f"matched eval rows diverge at position {i}")
         if "answer" in a and "answer" in b and a.get("answer") != b.get("answer"):
             raise ValueError(f"matched benchmark rows diverge at position {i}")
+        for provenance_key in ("context_sha256", "messages_sha256", "dataset_index"):
+            if provenance_key in a and provenance_key in b and a.get(provenance_key) != b.get(provenance_key):
+                raise ValueError(f"matched row provenance diverges at position {i}: {provenance_key}")
 
 
 def binary_values(rows: Iterable[dict], metric: str) -> list[int]:

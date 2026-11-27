@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
 import math
 import os
@@ -80,6 +81,11 @@ def build_prompt(tokenizer: AutoTokenizer, messages: list[dict]) -> str:
     return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
 
+def messages_sha256(messages: list[dict]) -> str:
+    canonical = json.dumps(messages, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 @torch.no_grad()
 def evaluate_heldout(
     model: torch.nn.Module,
@@ -124,6 +130,7 @@ def evaluate_heldout(
         if include_rows:
             row_results.append({
                 "index": len(row_results),
+                "messages_sha256": messages_sha256(row["messages"]),
                 "exact": bool(info["exact"]),
                 "json_valid": bool(info["json_valid"]),
                 "action_ok": bool(info["action_ok"]),
